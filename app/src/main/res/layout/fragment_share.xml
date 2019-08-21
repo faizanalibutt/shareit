@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+             tools:context=".ui.fragment.ShareFragment">
+
+    <ImageView
+            android:contentDescription="@string/app_name"
+            android:id="@+id/sharebanner"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/text1"
+            app:layout_constraintTop_toBottomOf="@+id/sharebanner"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/home_title"
+            android:gravity="center"
+            android:layout_marginTop="100dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text2"
+            android:text="@string/home_desc"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/text1"
+            app:layout_constraintStart_toStartOf="@+id/text1"
+            app:layout_constraintEnd_toEndOf="@+id/text1"
+            android:layout_marginTop="44dp"/>
+
+    <Button
+            android:text="@string/home_send"
+            android:drawableStart="@drawable/ic_launcher_background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/send_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/receive_button"
+            android:layout_marginTop="64dp"
+            android:textColor="@color/white"
+            android:background="@color/button_color"
+            app:layout_constraintTop_toBottomOf="@+id/text2"/>
+
+    <Button
+            android:text="@string/hoem_receive"
+            android:layout_width="wrap_content"
+            android:background="@color/button_color"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_launcher_background"
+            android:id="@+id/receive_button"
+            app:layout_constraintBaseline_toBaselineOf="@+id/send_button"
+            app:layout_constraintStart_toEndOf="@+id/send_button"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

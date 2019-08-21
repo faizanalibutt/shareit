@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">File Transfer</string>
+    <string name="home_title">Fast file sharing\nwithout Internet</string>
+    <string name="home_desc">Securely send videos, apps,\nmusics, photos and more\nto nearby friends</string>
+    <string name="home_send">Send</string>
+    <string name="hoem_receive">Receive</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
