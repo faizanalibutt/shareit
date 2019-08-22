@@ -7,6 +7,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val no = 0
     }
+
+    interface OnBackPressedListener {
+        fun onBackPressed(): Boolean
+    }
+
 }

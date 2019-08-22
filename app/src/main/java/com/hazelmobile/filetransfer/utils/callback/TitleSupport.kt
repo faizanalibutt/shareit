@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer.ui.callback
+package com.hazelmobile.filetransfer.utils.callback
 
 import android.content.Context
 
@@ -7,6 +7,6 @@ import android.content.Context
  * Date: 08/21/19 11:47 AM
  */
 
-interface TitleSupprt {
+interface TitleSupport {
     fun getTitle(context: Context) : CharSequence
 }
