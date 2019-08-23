@@ -15,24 +15,6 @@ import com.hazelmobile.filetransfer.utils.callback.TitleSupport
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(), TitleSupport, BaseActivity.OnBackPressedListener {
-    override fun getTitle(context: Context): CharSequence {
-        return context.getString(R.string.text_home)
-    }
-
-    override fun onBackPressed(): Boolean {
-
-        val activeItem = mAdapter.getItem(mViewPager.currentItem)
-
-        if (activeItem is BaseActivity.OnBackPressedListener && activeItem.onBackPressed())
-            return true
-
-        if (mViewPager.currentItem > 0) {
-            mViewPager.setCurrentItem(0, true)
-            return true
-        }
-
-        return false
-    }
 
     private lateinit var mAdapter: SmartFragmentPagerAdapter
 
@@ -72,6 +54,23 @@ class HomeFragment : Fragment(), TitleSupport, BaseActivity.OnBackPressedListene
         }
 
     }
+    override fun getTitle(context: Context): CharSequence {
+        return context.getString(R.string.text_home)
+    }
 
+    override fun onBackPressed(): Boolean {
+
+        val activeItem = mAdapter.getItem(mViewPager.currentItem)
+
+        if (activeItem is BaseActivity.OnBackPressedListener && activeItem.onBackPressed())
+            return true
+
+        if (mViewPager.currentItem > 0) {
+            mViewPager.setCurrentItem(0, true)
+            return true
+        }
+
+        return false
+    }
 
 }

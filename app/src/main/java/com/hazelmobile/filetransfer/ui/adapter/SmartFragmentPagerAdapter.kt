@@ -16,7 +16,7 @@ import com.hazelmobile.filetransfer.utils.callback.IconSupport
 import com.hazelmobile.filetransfer.utils.callback.TitleSupport
 
 class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManager) :
-    FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    FragmentPagerAdapter(fm/*, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT*/) {
 
 
     private var mItems: MutableList<StableItem> = ArrayList()
@@ -42,7 +42,7 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
                     tab.setIcon(fragment.getIconRes())
 
                 if (!stableItem.iconOnly && text)
-                    if (stableItem.title.isNotEmpty())
+                    if (stableItem.title!!.isNotEmpty())
                         tab.text = stableItem.title
                     else if (fragment is TitleSupport)
                         tab.text = fragment.getTitle(context)
@@ -54,17 +54,16 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
 
     fun createTabs(bottomNavigationView: BottomNavigationView) {
         if (count > 0) {
-            for (iterator in 0..count) {
+            for (iterator in 0 until count) {
                 val stableItem = getStableItem(iterator)
                 val fragment = getItem(iterator)
                 val menuTitle: CharSequence
 
-                if (stableItem.title.isNotEmpty())
-                    menuTitle = stableItem.title
-                else if (fragment is TitleSupport)
-                    menuTitle = fragment.getTitle(context)
-                else
-                    menuTitle = iterator.toString()
+                menuTitle = when {
+                    stableItem.title != null && stableItem.title!!.isNotEmpty() -> stableItem.title!!
+                    fragment is TitleSupport -> fragment.getTitle(context)
+                    else -> iterator.toString()
+                }
 
                 val menuItem: MenuItem = bottomNavigationView.menu
                     .add(0, iterator, iterator, menuTitle)
@@ -78,7 +77,7 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
     @NonNull
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
 
-        val fragment : Fragment = super.instantiateItem(container, position) as Fragment
+        val fragment: Fragment = super.instantiateItem(container, position) as Fragment
         val stableItem = getStableItem(position)
         stableItem.mInitiatedItem = fragment
         stableItem.mCurrentPosition = position
@@ -92,8 +91,16 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
     override fun getItem(position: Int): Fragment {
 
         val stableItem = getStableItem(position)
-        val instantiatedItem = stableItem.getInitiatedItem()
-        instantiatedItem.arguments = stableItem.arguments
+
+        var instantiatedItem: Fragment? = null
+
+        if (stableItem.mInitiatedItem != null) {
+            instantiatedItem = stableItem.getInitiatedItem()
+            instantiatedItem.arguments = stableItem.arguments
+        } else {
+            instantiatedItem = Fragment.instantiate(context, stableItem.clazzName)
+            instantiatedItem.arguments = stableItem.arguments
+        }
 
         return instantiatedItem
     }
@@ -108,7 +115,9 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
 
     override fun getPageTitle(position: Int): CharSequence? {
         val fragment = getItem(position)
-        return if (fragment is TitleSupport) fragment.getTitle(context) else super.getPageTitle(position)
+        return if (fragment is TitleSupport) fragment.getTitle(context) else super.getPageTitle(
+            position
+        )
     }
 
     private fun getStableItem(position: Int): StableItem {
@@ -122,19 +131,31 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
     companion object {
 
         // to get every fragment information
-        class StableItem(itemId: Long, clazzName: String, arguments: Bundle) : Parcelable {
+        class StableItem() : Parcelable {
 
-            constructor(parcel: Parcel) : this(
-                parcel.readLong(),
-                parcel.readString()!!,
-                parcel.readBundle(ClassLoader.getSystemClassLoader())!!
-            )
+            constructor(itemId: Long, clazzName: String, arguments: Bundle) : this() {
+                this.itemId = itemId
+                this.clazzName = clazzName
+                this.arguments = arguments
+            }
 
-            constructor(itemId: Long, clazz: Class<out Fragment>, arguments: Bundle?) : this(
+            constructor(
+                itemId: Long,
+                clazz: Class<out Fragment>, @NonNull arguments: Bundle?
+            ) : this(
                 itemId,
                 clazz.name,
                 arguments!!
             )
+
+            constructor(parcel: Parcel) : this(
+                parcel.readLong(),
+                parcel.readString()!!,
+                parcel.readBundle(/*ClassLoader.getSystemClassLoader()*/)!!
+            ) {
+                setTitle(parcel.readString()!!)
+                setIconOnly(parcel.readInt() == 1)
+            }
 
             override fun writeToParcel(dest: Parcel?, flags: Int) {
                 dest?.writeLong(itemId)
@@ -153,7 +174,7 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
             }
 
             fun getInitiatedItem(): Fragment {
-                return mInitiatedItem
+                return mInitiatedItem!!
             }
 
             fun setIconOnly(iconOnly: Boolean): StableItem {
@@ -166,13 +187,13 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
                 return this
             }
 
-            var itemId: Long = 0
-            lateinit var clazzName: String
-            lateinit var arguments: Bundle
-            lateinit var title: String
+            var itemId: Long = -1
+            var clazzName: String = ""
+            var arguments: Bundle? = null
+            var title: String? = null
             var iconOnly: Boolean = false
-            lateinit var mInitiatedItem: Fragment
-            var mCurrentPosition: Int = 0
+            var mInitiatedItem: Fragment? = null
+            var mCurrentPosition: Int = -1
 
             companion object CREATOR : Parcelable.Creator<StableItem> {
                 override fun createFromParcel(parcel: Parcel): StableItem {
