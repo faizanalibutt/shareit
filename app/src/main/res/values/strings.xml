@@ -8,6 +8,8 @@
     <string name="text_Share">Share</string>
     <string name="text_Browser">Browser</string>
     <string name="text_Premium">Premium</string>
+    <string name="mode_middleDot" translatable="false"> · </string>
+    <string name="text_listEmpty">No items</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
