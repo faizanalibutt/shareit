@@ -1,10 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
+
+    <color name="colorPrimary">#1a73e9</color>
     <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimaryDark23">#ffffffff</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorControlNormal">#222222</color>
+    <color name="colorError">#afb42b</color>
+    <color name="colorOnPrimary">@color/colorControlNormal</color>
+    <color name="colorOnSecondary">@color/colorControlNormal</color>
+    <color name="colorSecondary">#66bb6a</color>
+    <color name="colorSurface">#fefefe</color>
+    <color name="windowBackground">#ffffff</color>
+    <!-- local objects coloring -->
+    <color name="colorDonation">#f44336</color>
+    <color name="colorDivider">#eeeeee</color>
+    <color name="colorPassive">#20000000</color>
+    <color name="colorSelection">#20000000</color>
+    <color name="colorShadowBeginning">#00D0D0D0</color>
+    <color name="colorShadowEnd">#50D0D0D0</color>
+    <color name="colorTranslucent">#b0ffffff</color>
+    <color name="contentShowingBackground">#cfcfcf</color>
+
+    <!-- SEPARATOR FOR DARK COLOR -->
+    <color name="dark_colorSecondary">#66bb6a</color>
+
     <color name="button_color">#1a73e9</color>
     <color name="white">#FFFFFF</color>
     <color name="dark_colorShadowEnd">#500E171A</color>
     <color name="black_dominant">#000000</color>
+    <color name="light_grey">#737373</color>
+
 </resources>

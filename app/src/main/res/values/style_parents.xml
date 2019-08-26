@@ -53,19 +53,50 @@
 
 
     <!-- prototype begins -->
-    <style name="Theme.Prototype.Hazel.Base" parent="Theme.MaterialComponents.Light">
-
+    <style name="Theme.Prototype.Hazel.Base" parent="Theme.MaterialComponents">
         <item name="alertDialogTheme">@style/Widget.Hazel.DialogTheme</item>
         <item name="buttonStyle">@style/Widget.Hazel.ButtonStyle</item>
         <item name="borderlessButtonStyle">@style/Widget.Hazel.ButtonStyle.TextButton</item>
         <item name="bottomNavigationStyle">@style/Widget.Hazel.ButtonStyle.TextButton</item>
         <item name="cardViewStyle">@style/Widget.Hazel.CardView</item>
-
-
+        <item name="colorControlNormal">@color/colorControlNormal</item>
+        <item name="colorError">@color/colorError</item>
+        <item name="colorOnPrimary">@color/colorPrimary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSurface">@color/colorSurface</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-
-
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <!-- app styling -->
+        <item name="backgroundDialog">@drawable/background_dialog</item>
+        <item name="backgroundEdgeAction">@drawable/background_edge_action</item>
+        <item name="backgroundGradient">@drawable/background_gradient</item>
+        <item name="backgroundGradientBottom">@drawable/background_gradient_bottom</item>
+        <item name="backgroundGradientTop">@drawable/background_gradient_top</item>
+        <item name="backgroundPopupMenu">@drawable/background_popup_menu</item>
+        <item name="colorDonation">@color/colorDonation</item>
+        <item name="colorDivider">@color/colorDivider</item>
+        <item name="colorPassive">@color/colorPassive</item>
+        <item name="colorSelection">@color/colorSelection</item>
+        <item name="colorTranslucent">@color/colorTranslucent</item>
+        <item name="contentShowingBackground">@color/contentShowingBackground</item>
+        <item name="fastScrollBackground">@drawable/fastscroll_default_bubble</item>
+        <item name="rectSelector">@drawable/rect_selector</item>
+        <item name="rippleBackground">@drawable/ripple_background</item>
+        <item name="roundSelector">@drawable/round_selector</item>
+        <item name="roundProgressBar">@drawable/round_progress_bar</item>
+        <item name="selectionAccentColor">@color/selection_accent</item>
+        <item name="selectionColor">@color/selection</item>
+        <item name="selectableItemBackground">@drawable/selectable_item_background</item>
+        <item name="snackbarBackground">@drawable/background_snackbar</item>
+        <item name="stateSelectedImage">@drawable/state_selected_image</item>
+        <item name="stateSelectedImageRounded">@drawable/state_selected_image_rounded</item>
+        <item name="stateSelectedImageRoundedGuiding">
+            @drawable/state_selected_image_rounded_guiding
+        </item>
+        <item name="stateSelectedImageSquare">@drawable/state_selected_image_square</item>
+        <!-- general theme styling -->
         <item name="dialogTheme">@style/Widget.Hazel.DialogTheme</item>
         <item name="floatingActionButtonStyle">@style/Widget.Hazel.FloatingActionButtonStyle</item>
         <item name="materialButtonStyle">@style/Widget.Hazel.ButtonStyle</item>
@@ -74,11 +105,17 @@
         <item name="popupTheme">@style/Widget.Hazel.PopupTheme</item>
         <item name="tabStyle">@style/Widget.Hazel.TabLayout</item>
         <item name="textAppearanceButton">@style/TextAppearance.Button</item>
-
-
         <item name="statusBarColor">@android:color/transparent</item>
         <item name="useLightStatusBar">true</item>
 
+        <!--styling framework-->
+        <item name="genfw_customListFragmentEmptyImageStyle">
+            @style/CustomListFragmentEmptyImageStyle
+        </item>
+        <item name="genfw_customListFragmentEmptyTextStyle">
+            @style/CustomListFragmentEmptyTextStyle
+        </item>
+        <item name="genfw_customListFragmentEmptyActionButtonStyle">?buttonStyle</item>
 
     </style>
 
@@ -155,7 +192,7 @@
         <item name="popupTheme">@style/Widget.Hazel.PopupTheme</item>
         <!--<item name="snackbarStyle">@style/Widget.Hazel.Snackbar</item>-->
         <item name="tabStyle">@style/Widget.Hazel.TabLayout</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
+        <!--<item name="textAppearanceButton">@style/TextAppearance.Button</item>-->
         <!--<item name="android:textColorPrimary">@color/dark_colorControlNormal</item>-->
 
         <item name="statusBarColor">@android:color/transparent</item>

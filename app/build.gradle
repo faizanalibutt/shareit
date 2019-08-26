@@ -20,6 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion = '28.0.3'
 }
 
 dependencies {
@@ -41,6 +42,9 @@ dependencies {
 
     // circular image view
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    // genonbeta frameworks
+    implementation 'com.genonbeta.android:framework:1.0.2.8'
 
     // frameworks to test your blunders
     testImplementation 'junit:junit:4.12'
