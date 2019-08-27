@@ -38,4 +38,11 @@
     <dimen name="space_list_grid">8dp</dimen>
     <dimen name="material_radius_default">8dp</dimen>
     <dimen name="dp_64">64dp</dimen>
+    <dimen name="default_margin_size">8dp</dimen>
+    <dimen name="send_img_size">16dp</dimen>
+    <dimen name="material_radius_small">4dp</dimen>
+    <dimen name="send_btn_width_size">100dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
+    <dimen name="receive_btn_width_size">120dp</dimen>
+    <dimen name="medium_margin_size">16dp</dimen>
 </resources>

@@ -18,7 +18,7 @@ class ShareFragment : Fragment(), IconSupport, TitleSupport {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_share, container, false)
+        return inflater.inflate(R.layout.layout, container, false)
     }
 
     override fun getIconRes(): Int {
