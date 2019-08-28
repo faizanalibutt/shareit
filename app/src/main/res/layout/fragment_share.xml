@@ -7,43 +7,55 @@
     android:orientation="vertical"
     tools:context=".ui.fragment.ShareFragment">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/sharebanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ad_demo" />
+
     <TextView
         android:id="@+id/text2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:gravity="center"
         android:text="@string/home_desc"
         android:textColor="@color/light_grey"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text1"
+        app:layout_constraintStart_toStartOf="@+id/text1"
         app:layout_constraintTop_toBottomOf="@+id/text1" />
 
     <TextView
         android:id="@+id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:text="@string/home_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/black_dominant"
         android:textSize="28sp"
-        app:layout_constraintBottom_toTopOf="@+id/text2"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sharebanner" />
+        app:layout_constraintTop_toTopOf="@+id/sharebanner" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text2">
+        app:layout_constraintStart_toStartOf="parent">
 
 
         <LinearLayout
@@ -103,15 +115,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/sharebanner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/app_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ad_demo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

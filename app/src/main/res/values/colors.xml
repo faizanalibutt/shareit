@@ -30,5 +30,8 @@
     <color name="dark_colorShadowEnd">#500E171A</color>
     <color name="black_dominant">#000000</color>
     <color name="light_grey">#737373</color>
+    <color name="main_heading_text_size">#5F6469</color>
+    <color name="user_icon_default_color">#AA47BC</color>
+    <color name="data_color">#5E6367</color>
 
 </resources>

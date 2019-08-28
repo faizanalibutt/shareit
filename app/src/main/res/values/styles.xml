@@ -13,7 +13,7 @@
 
     <style name="Theme.Hazel.NoActionBar" parent="Theme.Hazel.Base.NoActionBar" />
 
-    <style name="Theme.Hazel.NoActionBar.StaticStatusBar"  parent="Theme.Hazel.NoActionBar" />
+    <style name="Theme.Hazel.NoActionBar.StaticStatusBar" parent="Theme.Hazel.NoActionBar" />
 
     <style name="Theme.Hazel.Dark" parent="Theme.Hazel.Dark.Base" />
 
@@ -79,8 +79,7 @@
         <item name="android:popupBackground">?backgroundPopupMenu</item>
     </style>
 
-    <style name="Widget.Hazel.BottomNavigationView"
-        parent="Widget.MaterialComponents.BottomNavigationView">
+    <style name="Widget.Hazel.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemTextColor">?attr/selectionAccentColor</item>
         <item name="itemIconTint">?attr/selectionAccentColor</item>
         <item name="android:elevation" tools:targetApi="21">5dp</item>
@@ -289,4 +288,13 @@
     </style>
 
     <string name="str_name">Name</string>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
