@@ -53,11 +53,11 @@
 
 
     <!-- prototype begins -->
-    <style name="Theme.Prototype.Hazel.Base" parent="Theme.MaterialComponents">
+    <style name="Theme.Prototype.Hazel.Base" parent="Theme.MaterialComponents.Light">
         <item name="alertDialogTheme">@style/Widget.Hazel.DialogTheme</item>
         <item name="buttonStyle">@style/Widget.Hazel.ButtonStyle</item>
         <item name="borderlessButtonStyle">@style/Widget.Hazel.ButtonStyle.TextButton</item>
-        <item name="bottomNavigationStyle">@style/Widget.Hazel.ButtonStyle.TextButton</item>
+        <item name="bottomNavigationStyle">@style/Widget.Hazel.BottomNavigationView</item>
         <item name="cardViewStyle">@style/Widget.Hazel.CardView</item>
         <item name="colorControlNormal">@color/colorControlNormal</item>
         <item name="colorError">@color/colorError</item>
