@@ -26,5 +26,5 @@
     <string name="text_rate">Rate Us</string>
     <string name="text_privacy">Privacy Policy</string>
     <string name="text_about">About</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
 </resources>

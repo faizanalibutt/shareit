@@ -33,5 +33,6 @@
     <color name="main_heading_text_size">#5F6469</color>
     <color name="user_icon_default_color">#AA47BC</color>
     <color name="data_color">#5E6367</color>
+    <color name="demo_color">#59ABA7</color>
 
 </resources>

@@ -14,7 +14,7 @@
         android:background="@color/white"
         android:orientation="vertical"
         tools:context=".ui.activity.SideMenu"
-        android:paddingBottom="@dimen/dp_8">
+        android:paddingBottom="@dimen/margin_medium_size">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
