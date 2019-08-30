@@ -30,4 +30,5 @@
     <attr name="stateSelectedImageSquare" format="reference" />
     <attr name="statusBarColor" format="reference" />
     <attr name="useLightStatusBar" format="boolean" />
+    <attr name="OverflowButtonStyle" format="reference" />
 </resources>

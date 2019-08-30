@@ -12,7 +12,17 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="actionBarTheme">@style/AppTheme.ActionBarTheme</item> <!-- used for the back arrow on the action bar -->
     </style>
+
+    <style name="AppTheme.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/black_dominant</item>
+    </style>
+
+    <!-- to change button color in appbar -->
+    <!--<style name="actionOverflowButtonStyle" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/black_dominant</item>
+    </style>-->
 
     <!-- generalization start -->
     <style name="Theme.Hazel" parent="Theme.Hazel.Base" />

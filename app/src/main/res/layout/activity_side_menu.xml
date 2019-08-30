@@ -30,17 +30,19 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:layout_width="@dimen/dp_16"
-                    android:layout_height="@dimen/dp_16"
-                    android:layout_marginStart="@dimen/dp_24"
-                    android:layout_marginTop="@dimen/dp_24"
-                    android:onClick="closeMenu"
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
                     android:contentDescription="@string/text_back_arrow_icon"
+                    android:onClick="closeMenu"
+                    android:padding="@dimen/dp_8"
+                    android:layout_marginStart="@dimen/dp_16"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imageView"
                     app:srcCompat="@drawable/ic_back_24dp" />
 
                 <ImageView
+                    android:id="@+id/imageView"
                     android:layout_width="@dimen/dp_16"
                     android:layout_height="@dimen/dp_16"
                     android:layout_marginTop="@dimen/dp_24"
