@@ -36,9 +36,13 @@ dependencies {
 
     // third party libraries, gilde to load images smoothly
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-    annotationProcessor 'androidx.annotation:annotation:1.1.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation 'com.github.bumptech.glide:okhttp3-integration:4.8.0'
+
+    // view model library
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0'
+    annotationProcessor 'androidx.annotation:annotation:1.1.0'
 
     // circular image view
     implementation 'de.hdodenhof:circleimageview:2.2.0'
