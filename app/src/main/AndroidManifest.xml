@@ -14,7 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask">
@@ -24,15 +23,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:parentActivityName=".ui.activity.SideMenu"
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
+            android:parentActivityName=".ui.activity.SideMenu"
             android:theme="@style/AppTheme.Dark" />
-
         <activity android:name=".ui.activity.SideMenu" />
-
+        <activity
+            android:name=".ui.activity.ContentSharingActivity"
+            android:label="@string/title_activity_content_sharing"
+            android:parentActivityName=".ui.activity.MainActivity"
+            android:theme="@style/AppTheme.White" />
     </application>
 
 </manifest>

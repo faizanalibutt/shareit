@@ -33,7 +33,7 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
 
     fun createTabs(tabLayout: TabLayout, icons: Boolean, text: Boolean) {
         if (count > 0) {
-            for (iterator in 0..count) {
+            for (iterator in 0 until count) {
                 val stableItem = getStableItem(iterator)
                 val fragment = getItem(iterator)
                 val tab = tabLayout.newTab()
@@ -42,7 +42,7 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
                     tab.setIcon(fragment.getIconRes())
 
                 if (!stableItem.iconOnly && text)
-                    if (stableItem.title!!.isNotEmpty())
+                    if (stableItem.title != null)
                         tab.text = stableItem.title
                     else if (fragment is TitleSupport)
                         tab.text = fragment.getTitle(context)
@@ -133,7 +133,7 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
         // to get every fragment information
         class StableItem() : Parcelable {
 
-            constructor(itemId: Long, clazzName: String, arguments: Bundle) : this() {
+            constructor(itemId: Long, clazzName: String, arguments: Bundle?) : this() {
                 this.itemId = itemId
                 this.clazzName = clazzName
                 this.arguments = arguments
@@ -145,7 +145,7 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
             ) : this(
                 itemId,
                 clazz.name,
-                arguments!!
+                arguments
             )
 
             constructor(parcel: Parcel) : this(
@@ -182,7 +182,7 @@ class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManage
                 return this
             }
 
-            fun setTitle(title: String): StableItem {
+            fun setTitle(title: String?): StableItem {
                 this.title = title
                 return this
             }

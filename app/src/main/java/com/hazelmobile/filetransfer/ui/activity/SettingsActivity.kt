@@ -8,7 +8,10 @@ class SettingsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar.let {
+            it?.setDisplayHomeAsUpEnabled(true)
+            it?.setHomeAsUpIndicator(R.drawable.ic_back_24dp)
+        }
 
     }
 

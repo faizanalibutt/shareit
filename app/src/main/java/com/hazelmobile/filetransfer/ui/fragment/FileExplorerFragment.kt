@@ -1,5 +1,6 @@
 package com.hazelmobile.filetransfer.ui.fragment
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,11 +10,18 @@ import android.view.ViewGroup
 
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.ui.viewmodel.FileExplorerViewModel
+import com.hazelmobile.filetransfer.utils.callback.TitleSupport
 
-class FileExplorerFragment : Fragment() {
+class FileExplorerFragment : Fragment(), TitleSupport {
+
+    override fun getTitle(context: Context): CharSequence {
+        return "Files"
+    }
 
     companion object {
         fun newInstance() = FileExplorerFragment()
+        @JvmStatic
+        val ARG_SELECT_BY_CLICK = "argSelectByClick"
     }
 
     private lateinit var viewModel: FileExplorerViewModel

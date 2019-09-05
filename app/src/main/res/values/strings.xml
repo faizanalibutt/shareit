@@ -29,4 +29,9 @@
     <string name="title_activity_settings">Settings</string>
     <string name="other_settings_text">OTHER SETTINGS</string>
     <string name="search_history_text_settings">search history</string>
+    <string name="title_activity_tab">TabActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="title_activity_content_sharing">File Transfer</string>
+    <string name="text_files">Files</string>
 </resources>

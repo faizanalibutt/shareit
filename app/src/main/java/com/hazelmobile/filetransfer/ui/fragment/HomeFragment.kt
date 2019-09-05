@@ -34,9 +34,9 @@ class HomeFragment : Fragment(), TitleSupport, BaseActivity.OnBackPressedListene
 
         mAdapter = SmartFragmentPagerAdapter(context, childFragmentManager)
 
-        mAdapter.add(SmartFragmentPagerAdapter.Companion.StableItem(0, ShareFragment::class.java, Bundle()))
-        mAdapter.add(SmartFragmentPagerAdapter.Companion.StableItem(1, BrowseFragment::class.java, Bundle()))
-        mAdapter.add(SmartFragmentPagerAdapter.Companion.StableItem(2, PremiumFragment::class.java, Bundle()))
+        mAdapter.add(SmartFragmentPagerAdapter.Companion.StableItem(0, ShareFragment::class.java, null))
+        mAdapter.add(SmartFragmentPagerAdapter.Companion.StableItem(1, BrowseFragment::class.java, null))
+        mAdapter.add(SmartFragmentPagerAdapter.Companion.StableItem(2, PremiumFragment::class.java, null))
 
 
         mAdapter.createTabs(bottomNavigationView)

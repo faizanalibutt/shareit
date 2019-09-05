@@ -108,6 +108,7 @@
             android:id="@+id/v1"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_6"
+            app:layout_constraintBottom_toTopOf="@+id/c1"
             app:layout_constraintTop_toBottomOf="@+id/app_bar"
             android:background="@drawable/app_bar_shadow" />
 
