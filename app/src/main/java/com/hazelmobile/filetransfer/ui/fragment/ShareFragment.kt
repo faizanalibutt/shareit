@@ -2,6 +2,7 @@ package com.hazelmobile.filetransfer.ui.fragment
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,16 +10,26 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.hazelmobile.filetransfer.R
+import com.hazelmobile.filetransfer.ui.activity.ContentSharingActivity
 import com.hazelmobile.filetransfer.utils.callback.IconSupport
 import com.hazelmobile.filetransfer.utils.callback.TitleSupport
+import kotlinx.android.synthetic.main.fragment_share.*
 
-class ShareFragment : Fragment(), IconSupport, TitleSupport {
+class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_share, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        send_button.setOnClickListener {
+            startActivity(Intent(context, ContentSharingActivity::class.java))
+        }
     }
 
     override fun getIconRes(): Int {
