@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
             app:tabSelectedTextColor="@color/colorPrimary"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center_horizontal|start"
             android:minHeight="?attr/actionBarSize"
             app:tabTextColor="@color/color_content_send_txt"
             app:tabMode="scrollable" />
