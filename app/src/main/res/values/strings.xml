@@ -34,4 +34,5 @@
     <string name="tab_text_2">Tab 2</string>
     <string name="title_activity_content_sharing">File Transfer</string>
     <string name="text_files">Files</string>
+    <string name="text_application">Apps</string>
 </resources>
