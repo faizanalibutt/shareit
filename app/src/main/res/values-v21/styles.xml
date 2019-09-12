@@ -5,6 +5,10 @@
         <item name="android:statusBarColor">?statusBarColor</item>
     </style>
 
+    <style name="Theme.Hazel.White" parent="Theme.Hazel.Base.White">
+        <item name="colorPrimary">@color/white</item>
+    </style>
+
     <style name="Theme.Hazel.Dark.Base" parent="Theme.Prototype.Hazel.Dark.Base">
         <item name="android:statusBarColor">?statusBarColor</item>
     </style>
@@ -15,6 +19,7 @@
     </style>
 
     <style name="Theme.Hazel.NoActionBar.StaticStatusBar" parent="Theme.Hazel.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
         <item name="statusBarColor">?colorPrimaryDark</item>
     </style>
 </resources>

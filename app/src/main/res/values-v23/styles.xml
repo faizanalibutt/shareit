@@ -9,6 +9,10 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
+    <style name="Theme.Hazel.White" parent="Theme.Hazel.Base.White">
+        <item name="colorPrimary">@color/white</item>
+    </style>
+
     <style name="Theme.Hazel.Dark.Base" parent="Theme.Prototype.Hazel.Dark.Base">
         <item name="colorPrimaryDark">?colorPrimaryDark23</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -24,6 +28,7 @@
     </style>
 
     <style name="Theme.Hazel.NoActionBar.StaticStatusBar" parent="Theme.Hazel.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
         <item name="statusBarColor">@android:color/transparent</item>
     </style>
 </resources>

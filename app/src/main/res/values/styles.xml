@@ -11,7 +11,7 @@
     <style name="AppTheme.White" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">@color/black_dominant</item>
         <item name="actionBarTheme">@style/AppTheme.ActionBarTheme</item> <!-- used for the back arrow on the action bar -->
         <item name="actionOverflowButtonStyle">@style/actionOverflowButtonStyle</item> <!-- used to change color of menu -->
     </style>
@@ -56,6 +56,10 @@
 
     <style name="Theme.Hazel.BarcodeScannerActivity" parent="Theme.Hazel.Dark.NoActionBar">
         <item name="statusBarColor">@color/dark_colorShadowEnd</item>
+    </style>
+
+    <style name="Theme.Hazel.White" parent="Theme.Hazel.Base.White">
+        <item name="colorPrimary">@color/white</item>
     </style>
 
     <style name="BalckPatch">
@@ -104,6 +108,7 @@
     <style name="Widget.Hazel.ButtonStyle" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/text_button_text_color_selector</item>
         <item name="cornerRadius">8dp</item>
+        <item name="android:background">@drawable/background_content_share_button</item>
         <item name="android:textColor">@color/button_text_color_selector</item>
         <!--<item name="android:textAllCaps">false</item>-->
     </style>

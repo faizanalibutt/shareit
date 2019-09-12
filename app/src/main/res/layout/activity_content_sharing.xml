@@ -8,14 +8,12 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            android:layout_height="?attr/actionBarSize">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -32,11 +30,8 @@
             android:id="@+id/activity_content_sharing_tab_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
-            app:tabSelectedTextColor="@color/colorPrimary"
             android:layout_gravity="center_horizontal|start"
             android:minHeight="?attr/actionBarSize"
-            app:tabTextColor="@color/color_content_send_txt"
             app:tabMode="scrollable" />
 
     </com.google.android.material.appbar.AppBarLayout>

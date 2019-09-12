@@ -65,6 +65,7 @@
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorAccent">@color/black_dominant</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/windowBackground</item>
@@ -118,6 +119,51 @@
         <item name="genfw_customListFragmentEmptyActionButtonStyle">?buttonStyle</item>
 
     </style>
+
+    <style name="Theme.Prototype.Hazel.Dark.Base" parent="Theme.MaterialComponents">
+        <!--<item name="actionBarPopupTheme">@style/Widget.Hazel.PopupTheme</item>-->
+        <item name="alertDialogTheme">@style/Widget.Hazel.DialogTheme</item>
+        <item name="buttonStyle">@style/Widget.Hazel.ButtonStyle</item>
+        <item name="borderlessButtonStyle">@style/Widget.Hazel.ButtonStyle.TextButton</item>
+        <item name="bottomNavigationStyle">@style/Widget.Hazel.BottomNavigationView</item>
+        <item name="cardViewStyle">@style/Widget.Hazel.CardView</item>
+
+        <item name="dialogTheme">@style/Widget.Hazel.DialogTheme</item>
+        <item name="floatingActionButtonStyle">@style/Widget.Hazel.FloatingActionButtonStyle</item>
+        <item name="materialButtonStyle">@style/Widget.Hazel.ButtonStyle</item>
+        <item name="navigationViewStyle">@style/Widget.Hazel.NavigationView</item>
+        <item name="android:popupMenuStyle">@style/Widget.Hazel.PopupMenuStyle</item>
+        <item name="popupTheme">@style/Widget.Hazel.PopupTheme</item>
+        <!--<item name="snackbarStyle">@style/Widget.Hazel.Snackbar</item>-->
+        <item name="tabStyle">@style/Widget.Hazel.TabLayout</item>
+        <!--<item name="textAppearanceButton">@style/TextAppearance.Button</item>-->
+        <!--<item name="android:textColorPrimary">@color/dark_colorControlNormal</item>-->
+
+        <item name="statusBarColor">@android:color/transparent</item>
+        <item name="useLightStatusBar">false</item>
+
+    </style>
+    <!-- prototype end -->
+
+    <!--generalization start-->
+    <style name="Theme.Hazel.Base" parent="Theme.Prototype.Hazel.Base" />
+
+    <style name="Theme.Hazel.Dark.Base" parent="Theme.Prototype.Hazel.Dark.Base" />
+
+    <style name="Theme.Hazel.Base.White" parent="Theme.Hazel.Base">
+        <item name="colorPrimary">@color/white</item>
+    </style>
+
+    <style name="Theme.Hazel.Base.NoActionBar" parent="@style/Theme.Hazel.Base">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Hazel.Dark.Base.NoActionBar" parent="@style/Theme.Hazel.Dark.Base">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <!-- generalization end -->
 
     <!--
     After Car View Style
@@ -175,46 +221,5 @@
     <item name="genfw_customListFragmentEmptyActionButtonStyle">?buttonStyle</item>
 
     -->
-
-    <style name="Theme.Prototype.Hazel.Dark.Base" parent="Theme.MaterialComponents">
-        <!--<item name="actionBarPopupTheme">@style/Widget.Hazel.PopupTheme</item>-->
-        <item name="alertDialogTheme">@style/Widget.Hazel.DialogTheme</item>
-        <item name="buttonStyle">@style/Widget.Hazel.ButtonStyle</item>
-        <item name="borderlessButtonStyle">@style/Widget.Hazel.ButtonStyle.TextButton</item>
-        <item name="bottomNavigationStyle">@style/Widget.Hazel.BottomNavigationView</item>
-        <item name="cardViewStyle">@style/Widget.Hazel.CardView</item>
-
-        <item name="dialogTheme">@style/Widget.Hazel.DialogTheme</item>
-        <item name="floatingActionButtonStyle">@style/Widget.Hazel.FloatingActionButtonStyle</item>
-        <item name="materialButtonStyle">@style/Widget.Hazel.ButtonStyle</item>
-        <item name="navigationViewStyle">@style/Widget.Hazel.NavigationView</item>
-        <item name="android:popupMenuStyle">@style/Widget.Hazel.PopupMenuStyle</item>
-        <item name="popupTheme">@style/Widget.Hazel.PopupTheme</item>
-        <!--<item name="snackbarStyle">@style/Widget.Hazel.Snackbar</item>-->
-        <item name="tabStyle">@style/Widget.Hazel.TabLayout</item>
-        <!--<item name="textAppearanceButton">@style/TextAppearance.Button</item>-->
-        <!--<item name="android:textColorPrimary">@color/dark_colorControlNormal</item>-->
-
-        <item name="statusBarColor">@android:color/transparent</item>
-        <item name="useLightStatusBar">false</item>
-
-    </style>
-    <!-- prototype end -->
-
-    <!--generalization start-->
-    <style name="Theme.Hazel.Base" parent="Theme.Prototype.Hazel.Base" />
-
-    <style name="Theme.Hazel.Dark.Base" parent="Theme.Prototype.Hazel.Dark.Base" />
-
-    <style name="Theme.Hazel.Base.NoActionBar" parent="@style/Theme.Hazel.Base">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.Hazel.Dark.Base.NoActionBar" parent="@style/Theme.Hazel.Dark.Base">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-    <!-- generalization end -->
 
 </resources>
