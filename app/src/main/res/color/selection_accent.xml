@@ -3,6 +3,6 @@
     <item
         android:color="@color/colorSecondary"
         android:state_checked="true" />
-    <item android:color="@color/color_heading_file_transfer" />
+    <item android:color="@color/hazel_text_color" />
 
 </selector>

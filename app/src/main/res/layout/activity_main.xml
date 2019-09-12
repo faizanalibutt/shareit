@@ -28,7 +28,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/text_file_transfer"
-                android:textColor="@color/color_heading_file_transfer"
+                android:textColor="@color/hazel_text_color"
                 android:textSize="@dimen/font_size_big" />
 
             <ImageView

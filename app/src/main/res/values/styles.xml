@@ -104,7 +104,7 @@
 
     <style name="Widget.Hazel.TabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
         <item name="tabIndicatorColor">?colorSecondary</item>
-        <item name="tabTextColor">@color/color_heading_file_transfer</item>
+        <item name="tabTextColor">@color/hazel_text_color</item>
     </style>
 
     <style name="TextAppearance">

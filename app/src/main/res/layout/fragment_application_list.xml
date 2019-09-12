@@ -1,14 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/applicationListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragment.ApplicationListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/myAppsText"
+        style="@style/TextAppearance.Primary.Big"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_smaller_size"
+        android:layout_marginTop="@dimen/margin_smaller_size"
+        android:text="My Apps ( 38 )"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <TextView
+        style="@style/TextAppearance.Primary"
+        app:layout_constraintEnd_toStartOf="@+id/selectAllApps"
+        app:layout_constraintTop_toTopOf="@id/myAppsText"
+        app:layout_constraintBottom_toBottomOf="@+id/myAppsText"
+        android:id="@+id/select_text"
+        android:layout_marginEnd="@dimen/margin_absolute_size"
+        android:text="Select"
+        android:textColor="@color/hazel_text_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatRadioButton
+        android:id="@+id/selectAllApps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/default_margin_size"
+        app:layout_constraintTop_toTopOf="@id/myAppsText"
+        app:layout_constraintBottom_toBottomOf="@+id/myAppsText"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/appsList"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small_size"
+        android:layout_marginEnd="@dimen/margin_small_size"
+        app:layout_constraintEnd_toEndOf="@+id/selectAllApps"
+        app:layout_constraintStart_toStartOf="@id/myAppsText"
+        app:layout_constraintTop_toBottomOf="@+id/myAppsText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
