@@ -65,7 +65,7 @@
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSurface">@color/colorSurface</item>
-        <item name="colorAccent">@color/black_dominant</item>
+        <item name="colorAccent">@color/text_color_gray</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/windowBackground</item>

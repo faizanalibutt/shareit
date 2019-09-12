@@ -35,7 +35,7 @@
     <color name="data_color">#5E6367</color>
     <color name="demo_color">#59ABA7</color>
     <color name="color_heading_file_transfer">#3C4043</color>
-    <color name="color_content_send_txt">#A6A8A9</color>
+    <color name="text_color_gray">#A6A8A9</color>
     <color name="color_content_share_button">#E8E8E8</color>
 
 </resources>
