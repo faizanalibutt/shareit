@@ -24,4 +24,6 @@ class ApplicationListFragment : Fragment(), TitleSupport {
         return context.getString(R.string.text_application)
     }
 
+
+
 }

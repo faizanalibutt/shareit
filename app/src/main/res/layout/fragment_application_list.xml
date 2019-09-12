@@ -19,25 +19,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        style="@style/TextAppearance.Primary"
-        app:layout_constraintEnd_toStartOf="@+id/selectAllApps"
-        app:layout_constraintTop_toTopOf="@id/myAppsText"
-        app:layout_constraintBottom_toBottomOf="@+id/myAppsText"
         android:id="@+id/select_text"
+        style="@style/TextAppearance.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_absolute_size"
         android:text="Select"
         android:textColor="@color/hazel_text_color"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        app:layout_constraintBottom_toBottomOf="@+id/myAppsText"
+        app:layout_constraintEnd_toStartOf="@+id/selectAllApps"
+        app:layout_constraintTop_toTopOf="@id/myAppsText" />
 
     <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/selectAllApps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/default_margin_size"
-        app:layout_constraintTop_toTopOf="@id/myAppsText"
         app:layout_constraintBottom_toBottomOf="@+id/myAppsText"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/myAppsText" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appsList"

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/appIcon"
+        android:layout_width="@dimen/app_icon_size"
+        android:layout_height="@dimen/app_icon_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_icon_blue" />
+
+    <ImageView
+        android:id="@+id/appTick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/appIcon"
+        app:layout_constraintTop_toBottomOf="@+id/appIcon"
+        app:layout_constraintTop_toTopOf="@+id/appIcon"
+        app:srcCompat="@drawable/ic_tick_icon_blue" />
+
+    <TextView
+        android:id="@+id/appSize"
+        style="@style/TextAppearance.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Drive"
+        app:layout_constraintEnd_toEndOf="@+id/appIcon"
+        app:layout_constraintStart_toStartOf="@+id/appIcon"
+        app:layout_constraintTop_toBottomOf="@+id/appIcon" />
+
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="21MB"
+        app:layout_constraintEnd_toEndOf="@+id/appSize"
+        app:layout_constraintStart_toStartOf="@+id/appSize"
+        app:layout_constraintTop_toBottomOf="@+id/appSize" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
