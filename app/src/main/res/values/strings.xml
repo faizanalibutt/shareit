@@ -35,4 +35,8 @@
     <string name="title_activity_content_sharing">File Transfer</string>
     <string name="text_files">Files</string>
     <string name="text_application">Apps</string>
+    <string name="item_text_app_icon">item_app_icon</string>
+    <string name="app_tick_text">tick_text</string>
+    <string name="item_app_demo_text">App Demo Text</string>
+    <string name="app_size_item_text">21MB</string>
 </resources>

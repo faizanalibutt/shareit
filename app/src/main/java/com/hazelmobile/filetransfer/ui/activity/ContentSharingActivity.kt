@@ -11,6 +11,7 @@ import com.hazelmobile.filetransfer.ui.fragment.*
 
 import kotlinx.android.synthetic.main.activity_content_sharing.*
 import kotlinx.android.synthetic.main.content_sharing.*
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class ContentSharingActivity : BaseActivity() {
 
@@ -79,6 +80,8 @@ class ContentSharingActivity : BaseActivity() {
         content_sharing_viewPager.addOnPageChangeListener(
             TabLayout.TabLayoutOnPageChangeListener(activity_content_sharing_tab_layout)
         )
+
+        activity_content_sharing_tab_layout.setupWithViewPager(content_sharing_viewPager)
 
     }
 

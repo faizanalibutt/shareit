@@ -4,10 +4,13 @@ package com.hazelmobile.filetransfer.ui.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.bottomnavigation.BottomNavigationItemView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.ui.activity.BaseActivity
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
@@ -34,9 +37,27 @@ class HomeFragment : Fragment(), TitleSupport, BaseActivity.OnBackPressedListene
 
         mAdapter = SmartFragmentPagerAdapter(context, childFragmentManager)
 
-        mAdapter.add(SmartFragmentPagerAdapter.Companion.StableItem(0, ShareFragment::class.java, null))
-        mAdapter.add(SmartFragmentPagerAdapter.Companion.StableItem(1, BrowseFragment::class.java, null))
-        mAdapter.add(SmartFragmentPagerAdapter.Companion.StableItem(2, PremiumFragment::class.java, null))
+        mAdapter.add(
+            SmartFragmentPagerAdapter.Companion.StableItem(
+                0,
+                ShareFragment::class.java,
+                null
+            )
+        )
+        mAdapter.add(
+            SmartFragmentPagerAdapter.Companion.StableItem(
+                1,
+                BrowseFragment::class.java,
+                null
+            )
+        )
+        mAdapter.add(
+            SmartFragmentPagerAdapter.Companion.StableItem(
+                2,
+                PremiumFragment::class.java,
+                null
+            )
+        )
 
 
         mAdapter.createTabs(bottomNavigationView)
@@ -44,8 +65,16 @@ class HomeFragment : Fragment(), TitleSupport, BaseActivity.OnBackPressedListene
 
         mViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-            override fun onPageSelected(position: Int) {}
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                bottomNavigationView.selectedItemId = position
+            }
         })
 
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
@@ -54,6 +83,7 @@ class HomeFragment : Fragment(), TitleSupport, BaseActivity.OnBackPressedListene
         }
 
     }
+
     override fun getTitle(context: Context): CharSequence {
         return context.getString(R.string.text_home)
     }

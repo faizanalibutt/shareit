@@ -42,9 +42,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appsList"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_small_size"
         android:layout_marginEnd="@dimen/margin_small_size"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/selectAllApps"
         app:layout_constraintStart_toStartOf="@id/myAppsText"
         app:layout_constraintTop_toBottomOf="@+id/myAppsText" />
