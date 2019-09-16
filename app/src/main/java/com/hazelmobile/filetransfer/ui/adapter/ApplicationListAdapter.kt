@@ -54,6 +54,7 @@ class ApplicationListAdapter(private val appItem: List<PackageHolder>, val conte
                 .override(80)
                 .centerCrop()
                 .into(appIcon!!)
+
         }
     }
 

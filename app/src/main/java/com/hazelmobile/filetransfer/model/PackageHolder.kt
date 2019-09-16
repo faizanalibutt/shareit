@@ -1,6 +1,7 @@
 package com.hazelmobile.filetransfer.model
 
 import android.content.pm.ApplicationInfo
+import android.graphics.drawable.Drawable
 import com.genonbeta.android.framework.util.FileUtils
 import java.io.File
 
