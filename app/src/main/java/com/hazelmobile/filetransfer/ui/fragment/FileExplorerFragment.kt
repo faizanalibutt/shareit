@@ -10,7 +10,7 @@ import android.view.ViewGroup
 
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.ui.viewmodel.FileExplorerViewModel
-import com.hazelmobile.filetransfer.utils.callback.TitleSupport
+import com.hazelmobile.filetransfer.util.callback.TitleSupport
 
 class FileExplorerFragment : Fragment(), TitleSupport {
 

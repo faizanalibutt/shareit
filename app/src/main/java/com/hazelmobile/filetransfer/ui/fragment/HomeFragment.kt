@@ -4,17 +4,14 @@ package com.hazelmobile.filetransfer.ui.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.ui.activity.BaseActivity
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
-import com.hazelmobile.filetransfer.utils.callback.TitleSupport
+import com.hazelmobile.filetransfer.util.callback.TitleSupport
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(), TitleSupport, BaseActivity.OnBackPressedListener {

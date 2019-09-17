@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.hazelmobile.filetransfer.R
-import com.hazelmobile.filetransfer.utils.callback.IconSupport
-import com.hazelmobile.filetransfer.utils.callback.TitleSupport
+import com.hazelmobile.filetransfer.util.callback.IconSupport
+import com.hazelmobile.filetransfer.util.callback.TitleSupport
 
 
 class PremiumFragment : Fragment(), IconSupport, TitleSupport {

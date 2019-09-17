@@ -12,8 +12,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
-import com.hazelmobile.filetransfer.utils.callback.IconSupport
-import com.hazelmobile.filetransfer.utils.callback.TitleSupport
+import com.hazelmobile.filetransfer.util.callback.IconSupport
+import com.hazelmobile.filetransfer.util.callback.TitleSupport
 
 class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManager) :
     FragmentPagerAdapter(fm/*, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT*/) {

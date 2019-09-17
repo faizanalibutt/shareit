@@ -1,23 +1,20 @@
 package com.hazelmobile.filetransfer.ui.fragment
 
 import android.content.Context
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.genonbeta.android.framework.util.FileUtils
 
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.model.SongHolder
 import com.hazelmobile.filetransfer.ui.adapter.MusicListAdapter
-import com.hazelmobile.filetransfer.ui.viewmodel.MusicListViewModel
-import com.hazelmobile.filetransfer.utils.callback.TitleSupport
+import com.hazelmobile.filetransfer.util.TimeUtils
+import com.hazelmobile.filetransfer.util.callback.TitleSupport
 import kotlinx.android.synthetic.main.music_list_fragment.*
 
 class MusicListFragment : Fragment(), TitleSupport {
@@ -54,10 +51,15 @@ class MusicListFragment : Fragment(), TitleSupport {
 
                 do {
                     val songSize = songCursor.getString(sizeIndex)
-                    val songDate = songCursor.getString(dateIndex)
-                    val songHolder = SongHolder(songCursor.getString(nameIndex), songSize + songDate)
+                    val songDate = songCursor.getLong(dateIndex)
+                    val songHolder = SongHolder(
+                        songCursor.getString(nameIndex),
+                        FileUtils.sizeExpression(songSize.toLong(), false) + ", " +
+                                TimeUtils.formatDateTime(context, songCursor.getLong(dateIndex) * 1000)
+                    )
                     audioList.add(songHolder)
                 } while (songCursor.moveToNext())
+
             }
 
             songCursor.close()

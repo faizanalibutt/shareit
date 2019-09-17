@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer.utils.callback
+package com.hazelmobile.filetransfer.util.callback
 
 import android.content.Context
 

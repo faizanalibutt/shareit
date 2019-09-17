@@ -14,8 +14,7 @@ import com.genonbeta.android.framework.util.FileUtils
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.model.PackageHolder
 import com.hazelmobile.filetransfer.ui.adapter.ApplicationListAdapter
-import com.hazelmobile.filetransfer.utils.callback.TitleSupport
-import kotlinx.android.synthetic.main.fragment_application_list.*
+import com.hazelmobile.filetransfer.util.callback.TitleSupport
 import kotlinx.android.synthetic.main.fragment_application_list.appsList
 import kotlinx.android.synthetic.main.fragment_application_list.view.*
 import java.io.File
