@@ -3,52 +3,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="wrap_content">
 
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/audio_icon"
         android:layout_width="@dimen/audio_icon_size"
-        android:layout_height="0dp"
-        android:layout_marginBottom="1dp"
+        android:layout_height="@dimen/audio_icon_size"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_audio_icon" />
+        app:srcCompat="@drawable/ic_audio_icon"
+        android:contentDescription="@string/audio_icon" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/audioTitle"
         style="@style/TextAppearance.Primary.Big.SingleLine"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="An_audio_file"
+        app:layout_constraintEnd_toStartOf="@+id/appTick"
         android:layout_marginStart="@dimen/margin_smallest_size"
+        android:layout_marginEnd="@dimen/margin_smallest_size"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintStart_toEndOf="@+id/audio_icon"
+        app:layout_constraintBottom_toTopOf="@+id/audioSize"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/audioSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0.0 MB, 0 hours ago"
-        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintStart_toStartOf="@+id/audioTitle"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/audioTitle" />
 
-    <RadioButton
-        android:id="@+id/radioButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/appTick"
+        android:layout_width="@dimen/dp_22"
+        android:layout_height="@dimen/dp_22"
+        android:visibility="visible"
+        android:layout_marginEnd="@dimen/dp_16"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:srcCompat="@drawable/ic_tick_icon_blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/tick_text" />
+
+    <!--app:srcCompat="@drawable/state_selected_image_rounded"-->
 
     <View
         android:id="@+id/view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="2dp"
+        app:layout_constraintStart_toEndOf="@+id/audio_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/colorShadowEnd"
         app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

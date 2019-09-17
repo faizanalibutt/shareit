@@ -48,7 +48,6 @@ class MusicListFragment : Fragment(), TitleSupport {
         if (songCursor != null) {
             if (songCursor.moveToFirst()) {
 
-                val songIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
                 val nameIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)
                 val dateIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED)
                 val sizeIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.SIZE)
@@ -56,7 +55,7 @@ class MusicListFragment : Fragment(), TitleSupport {
                 do {
                     val songSize = songCursor.getString(sizeIndex)
                     val songDate = songCursor.getString(dateIndex)
-                    val songHolder = SongHolder(songCursor.getString(songIndex), songSize + songDate)
+                    val songHolder = SongHolder(songCursor.getString(nameIndex), songSize + songDate)
                     audioList.add(songHolder)
                 } while (songCursor.moveToNext())
             }
@@ -66,9 +65,9 @@ class MusicListFragment : Fragment(), TitleSupport {
 
 
         audioView.apply {
-            layoutManager = LinearLayoutManager(context)
-            val applicationListAdapter = MusicListAdapter(audioList, context)
-            audioView.adapter = applicationListAdapter
+            audioView.layoutManager = LinearLayoutManager(context)
+            val musiListAdapter = MusicListAdapter(audioList, context)
+            audioView.adapter = musiListAdapter
         }
 
     }

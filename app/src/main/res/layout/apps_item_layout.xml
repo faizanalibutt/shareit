@@ -23,7 +23,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appIcon"
         app:layout_constraintTop_toTopOf="@+id/appIcon"
         app:srcCompat="@drawable/ic_tick_icon_blue"
-        android:contentDescription="@string/app_tick_text" />
+        android:contentDescription="@string/tick_text" />
 
     <TextView
         android:id="@+id/appName"

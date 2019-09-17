@@ -37,8 +37,8 @@ class MusicListAdapter(private val appItem: List<SongHolder>, val context: Conte
         private var musicDateSize: TextView? = null
 
         init {
-            musicName = itemView.findViewById(R.id.appName)
-            musicDateSize = itemView.findViewById(R.id.appSize)
+            musicName = itemView.findViewById(R.id.audioTitle)
+            musicDateSize = itemView.findViewById(R.id.audioSize)
         }
 
         fun bind(songHolder: SongHolder) {
