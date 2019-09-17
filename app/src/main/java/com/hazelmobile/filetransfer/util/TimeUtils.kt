@@ -2,6 +2,7 @@ package com.hazelmobile.filetransfer.util
 
 import android.content.Context
 import android.text.format.DateUtils
+import com.genonbeta.android.framework.util.date.ElapsedTime
 
 object TimeUtils {
 
@@ -13,36 +14,36 @@ object TimeUtils {
         )
     }
 
-    /*public static String getDuration(long milliseconds) {
-        StringBuilder string = new StringBuilder();
+    fun getDuration(milliseconds: Long): String {
+        val string = StringBuilder()
 
-        ElapsedTime.ElapsedTimeCalculator calculator = new ElapsedTime.ElapsedTimeCalculator(milliseconds / 1000);
+        val calculator = ElapsedTime.ElapsedTimeCalculator(milliseconds / 1000)
 
-        long hours = calculator.crop(3600);
-        long minutes = calculator.crop(60);
-        long seconds = calculator.getLeftTime();
+        val hours = calculator.crop(3600)
+        val minutes = calculator.crop(60)
+        val seconds = calculator.leftTime
 
         if (hours > 0) {
             if (hours < 10)
-                string.append("0");
+                string.append("0")
 
-            string.append(hours);
-            string.append(":");
+            string.append(hours)
+            string.append(":")
         }
 
         if (minutes < 10)
-            string.append("0");
+            string.append("0")
 
-        string.append(minutes);
-        string.append(":");
+        string.append(minutes)
+        string.append(":")
 
         if (seconds < 10)
-            string.append("0");
+            string.append("0")
 
-        string.append(seconds);
+        string.append(seconds)
 
-        return string.toString();
-    }*/
+        return string.toString()
+    }
 
     /*public static String getFriendlyElapsedTime(Context context, long estimatedTime) {
         ElapsedTime elapsedTime = new ElapsedTime(estimatedTime);

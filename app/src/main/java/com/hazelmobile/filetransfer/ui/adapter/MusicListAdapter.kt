@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.model.SongHolder
 
-class MusicListAdapter(private val appItem: List<SongHolder>, val context: Context) :
+class MusicListAdapter(private val musicItem: List<SongHolder>, val context: Context) :
     RecyclerView.Adapter<MusicListAdapter.MusicViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicViewHolder {
@@ -23,11 +23,11 @@ class MusicListAdapter(private val appItem: List<SongHolder>, val context: Conte
     }
 
     override fun getItemCount(): Int {
-        return appItem.size
+        return musicItem.size
     }
 
     override fun onBindViewHolder(holder: MusicViewHolder, position: Int) {
-        val songHolder: SongHolder = appItem[position]
+        val songHolder: SongHolder = musicItem[position]
         holder.bind(songHolder)
     }
 
