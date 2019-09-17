@@ -55,7 +55,7 @@ class MusicListFragment : Fragment(), TitleSupport {
                     val songHolder = SongHolder(
                         songCursor.getString(nameIndex),
                         FileUtils.sizeExpression(songSize.toLong(), false) + ", " +
-                                TimeUtils.formatDateTime(context, songCursor.getLong(dateIndex) * 1000)
+                                TimeUtils.formatDateTime(context!!, songCursor.getLong(dateIndex) * 1000)
                     )
                     audioList.add(songHolder)
                 } while (songCursor.moveToNext())
