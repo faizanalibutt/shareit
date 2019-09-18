@@ -8,11 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.genonbeta.android.framework.util.FileUtils
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.model.VideoHolder
+import com.hazelmobile.filetransfer.ui.adapter.VideoListAdapter
 import com.hazelmobile.filetransfer.util.TimeUtils
 import com.hazelmobile.filetransfer.util.callback.TitleSupport
+import kotlinx.android.synthetic.main.video_list_fragment.*
 import kotlinx.android.synthetic.main.video_list_fragment.view.*
 
 class VideoListFragment : Fragment(), TitleSupport {
@@ -59,7 +62,7 @@ class VideoListFragment : Fragment(), TitleSupport {
                     val holder = VideoHolder(
                         videoCursor.getString(displayIndex),
                         FileUtils.sizeExpression(videoCursor.getLong(sizeIndex), false),
-                        Uri.parse("${MediaStore.Video.Media.EXTERNAL_CONTENT_URI} / + ${videoCursor.getInt(idIndex)}"),
+                        Uri.parse("${MediaStore.Video.Media.EXTERNAL_CONTENT_URI}/${videoCursor.getInt(idIndex)}"),
                         TimeUtils.getDuration(videoCursor.getLong(lengthIndex))
                     )
 
@@ -72,6 +75,12 @@ class VideoListFragment : Fragment(), TitleSupport {
         }
 
         view.myVideosText.text = "Video(${videoList.size})"
+
+        videoList.apply {
+            videoView.layoutManager = LinearLayoutManager(context)
+            val videoListAdapter = VideoListAdapter(videoList, context!!)
+            videoView.adapter = videoListAdapter
+        }
     }
 
 }

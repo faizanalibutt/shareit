@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.genonbeta.android.framework.util.FileUtils
 
 import com.hazelmobile.filetransfer.R
@@ -50,7 +51,7 @@ class ApplicationListFragment : BaseFragment(), TitleSupport {
         view.myAppsText.text = "My Apps ( ${appList.size} )"
 
         appsList.apply {
-            layoutManager = GridLayoutManager(context, 4)
+            appsList.layoutManager = GridLayoutManager(context, 4)
             val applicationListAdapter = ApplicationListAdapter(appList, context)
             appsList.adapter = applicationListAdapter
         }

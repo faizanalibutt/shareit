@@ -29,14 +29,17 @@
         app:layout_constraintEnd_toStartOf="@+id/selectAllApps"
         app:layout_constraintTop_toTopOf="@id/myVideosText" />
 
-    <androidx.appcompat.widget.AppCompatRadioButton
+    <ImageView
         android:id="@+id/selectAllApps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/default_margin_size"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:contentDescription="@string/tick_text"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/myVideosText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/myVideosText" />
+        app:layout_constraintTop_toTopOf="@id/myVideosText"
+        app:srcCompat="@drawable/ic_tick_icon_blue" />
 
     <View
         android:background="@color/colorShadowEnd"
@@ -46,5 +49,15 @@
         app:layout_constraintTop_toBottomOf="@+id/myVideosText"
         android:layout_marginTop="@dimen/margin_smaller_size"
         android:layout_height="@dimen/margin_zero_size" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/videoView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_small_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/myVideosText"
+        app:layout_constraintTop_toBottomOf="@+id/myVideosText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

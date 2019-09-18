@@ -7,56 +7,87 @@
 
     <ImageView
         android:id="@+id/videoThumbnail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        android:layout_width="@dimen/video_thumbnail_size_width"
+        android:layout_height="@dimen/video_thumbnail_size"
+        app:layout_constraintBottom_toTopOf="@+id/layer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
         android:id="@+id/videoIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_32"
+        android:layout_height="@dimen/dp_32"
         app:layout_constraintBottom_toBottomOf="@+id/videoThumbnail"
-        app:layout_constraintEnd_toEndOf="@+id/videoSize"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/videoThumbnail"
+        app:layout_constraintStart_toStartOf="@+id/videoThumbnail"
+        app:layout_constraintTop_toTopOf="@+id/videoThumbnail"
         app:srcCompat="@drawable/ic_play_black" />
 
     <TextView
         android:id="@+id/videoTitle"
-        style="@style/TextAppearance.Primary.Big.SingleLine"
-        android:layout_width="wrap_content"
+        style="@style/TextAppearance.Primary.Normal.SingleLine"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="@dimen/margin_smallest_size"
         android:text="Video_Title"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:paddingEnd="@dimen/dp_5"
+        android:paddingStart="@dimen/dp_5"
+        app:layout_constraintEnd_toStartOf="@+id/appTick"
+        app:layout_constraintBottom_toTopOf="@+id/videoSize"
+        app:layout_constraintStart_toEndOf="@+id/videoThumbnail"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/videoSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
         android:text="Video_Size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.504" />
+        android:textSize="@dimen/font_size_tiny"
+        android:paddingEnd="@dimen/dp_5"
+        android:paddingStart="@dimen/dp_5"
+        app:layout_constraintBottom_toTopOf="@+id/layer"
+        app:layout_constraintStart_toStartOf="@+id/videoTitle"
+        app:layout_constraintTop_toBottomOf="@+id/videoTitle" />
 
     <TextView
         android:id="@+id/videoDuration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:text="Video_Size"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="@dimen/dp_44"
+        android:layout_height="@dimen/dp_24"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:text="0:00"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@drawable/background_video_duration"
+        android:textSize="@dimen/font_size_small"
+        android:layout_marginEnd="@dimen/dp_8"
+        app:layout_constraintBottom_toBottomOf="@+id/videoThumbnail"
+        app:layout_constraintEnd_toEndOf="@+id/videoThumbnail"
+        app:layout_constraintStart_toEndOf="@+id/videoIcon" />
+
+    <View
+        android:id="@+id/layer"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/margin_zero_size"
+        android:layout_marginTop="@dimen/default_margin_size"
+        android:background="@color/colorShadowEnd"
+        android:layout_marginBottom="@dimen/dp_8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/videoThumbnail"
+        app:layout_constraintTop_toBottomOf="@id/videoThumbnail" />
+
+    <ImageView
+        android:id="@+id/appTick"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:contentDescription="@string/tick_text"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_tick_icon_blue" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

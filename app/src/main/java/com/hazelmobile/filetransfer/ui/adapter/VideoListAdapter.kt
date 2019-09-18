@@ -54,7 +54,6 @@ class VideoListAdapter(private val videoItem: List<VideoHolder>, val context: Co
             videoThumbnail.let {
                 GlideApp.with(context)
                     .load(videoHolder.videoUri)
-                    .override(300)
                     .centerCrop()
                     .into(it!!)
             }
