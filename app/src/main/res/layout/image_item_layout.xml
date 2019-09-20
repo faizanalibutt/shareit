@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/imageDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3 Jun 2019"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/imageAlbumLength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:text="( 1 )"
+        app:layout_constraintBottom_toBottomOf="@+id/imageDate"
+        app:layout_constraintStart_toEndOf="@+id/imageDate"
+        app:layout_constraintTop_toTopOf="@+id/imageDate" />
+
+    <ImageView
+        android:id="@+id/imageIcon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_image_item_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageDate"
+        android:layout_marginTop="@dimen/margin_smallest_size"
+        tools:srcCompat="@tools:sample/avatars[3]" />
+
+    <TextView
+        android:id="@+id/select_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select"
+        app:layout_constraintBottom_toBottomOf="@+id/imageDate"
+        app:layout_constraintEnd_toStartOf="@+id/appTick"
+        app:layout_constraintTop_toTopOf="@+id/imageDate" />
+
+    <ImageView
+        android:id="@+id/appTick"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:contentDescription="@string/tick_text"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/imageDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageDate"
+        app:srcCompat="@drawable/ic_tick_icon_blue" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
