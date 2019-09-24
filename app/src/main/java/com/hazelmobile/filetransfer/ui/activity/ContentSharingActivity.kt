@@ -50,12 +50,12 @@ class ContentSharingActivity : BaseActivity() {
             }
         }*/
 
+        var istrue = false
         val pagerAdapter = object :
             SmartFragmentPagerAdapter(this@ContentSharingActivity, supportFragmentManager) {
             override fun onItemInstantiated(item: Companion.StableItem) {
 
                 // todo change this fuction for all adapters #14
-                var istrue = false
                 if (content_sharing_viewPager.currentItem == 3 && !istrue) {
                     istrue = true
                     val fragmentImpl: EditableListFragmentImpl<Editable> =
