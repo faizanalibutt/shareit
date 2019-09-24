@@ -1,4 +1,5 @@
 <resources>
+    <string name="text_appName" translatable="false">File Transfer</string>
     <string name="app_name">File Transfer</string>
     <string name="home_title">Fast file sharing\nwithout Internet</string>
     <string name="home_desc">Securely send videos, apps,\nmusics, photos and more\nto nearby friends</string>
@@ -8,8 +9,10 @@
     <string name="text_Share">Share</string>
     <string name="text_Browser">Browser</string>
     <string name="text_Premium">Premium</string>
+    <string name="text_photo">Photo</string>
     <string name="mode_middleDot" translatable="false"> · </string>
     <string name="text_listEmpty">No items</string>
+    <string name="text_image">Image</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_file_transfer">File Transfer</string>
@@ -40,4 +43,79 @@
     <string name="item_app_demo_text">App Demo Text</string>
     <string name="app_size_item_text">21MB</string>
     <string name="audio_icon">audio_icon</string>
+
+    <!-- GROUP BY TEXT -->
+    <string name="text_groupByNothing">Nothing</string>
+    <string name="text_groupByDate">Date</string>
+    <string name="text_groupByAlbum">Album</string>
+    <string name="text_groupByArtist">Artist</string>
+    <string name="text_groupByFolder">Folder</string>
+
+    <!-- BUTTON TEXT -->
+    <string name="butn_groupBy">Group by</string>
+    <string name="butn_show">Show</string>
+    <string name="butn_open">Open</string>
+
+    <!-- EMPTY TEXT -->
+    <string name="text_emptySymbol">-</string>
+    <string name="text_listEmptyImage">No photos here</string>
+
+    <!-- FILE TEXT -->
+    <string name="mesg_newFilesReceived">New files have been received</string>
+    <string name="mesg_fileReceived">%s has been received</string>
+    <string name="mesg_errorReadFolder">Can not access \"%s\"</string>
+    <string name="butn_mountDirectory">Mount folder</string>
+    <string name="mesg_mountDirectoryHelp">Select the folder you want to access</string>
+    <string name="butn_ejectDirectory">Unmount folder</string>
+    <string name="butn_changeSavePath">Change save path</string>
+    <string name="butn_removeShortcut">Remove shortcut</string>
+    <string name="butn_copyHere">Copy here</string>
+    <string name="butn_rename">Rename</string>
+    <string name="butn_delete">Delete</string>
+    <string name="text_storagePath">Storage path</string>
+    <string name="text_storagePathSummary">New files will be saved to this folder</string>
+    <string name="mesg_pathUnavailable">%s currently unavailable</string>
+    <string name="butn_gotIt">Got it</string>
+    <string name="text_listEmptyFiles">No files here</string>
+    <string name="mesg_somethingWentWrong">Something went wrong</string>
+    <string name="butn_addShortcut">Add shortcut</string>
+    <string name="mesg_removed">Removed</string>
+    <string name="mesg_added">Added</string>
+    <string name="mesg_helpFolderSelection">To select a folder, tap its icon</string>
+    <string name="text_createFolder">Create folder</string>
+    <string name="butn_close">Close</string>
+    <string name="text_renameMultipleItems">Rename multiple items</string>
+    <string name="text_rename">Rename</string>
+    <string name="text_folder">Folder</string>
+    <string name="mesg_openFailure">Can not view \"%s\"</string>
+    <string name="text_downloads">Downloads</string>
+    <string name="text_documents">Documents</string>
+    <string name="text_music">Music</string>
+    <string name="text_fileRoot">File root</string>
+    <string name="text_receivedFiles">Received files</string>
+    <string name="text_storage">Storage</string>
+    <string name="text_internalStorage">Internal storage</string>
+    <string name="text_emulatedMediaDirectory">Emulated (%s)</string>
+    <string name="text_shortcuts">Shortcuts</string>
+    <string name="text_recentFiles">Recent files</string>
+    <string name="text_pendingTransfers">Pending transfers</string>
+    <string name="text_file">File</string>
+    <string name="mesg_notValidTransfer">Transfer expired</string>
+    <string name="text_shortcut">Shortcut</string>
+    <string name="text_deleteConfirm">Confirm deletion</string>
+    <string name="butn_cancel">Cancel</string>
+    <string name="text_deletingFilesOngoing">Deleting selected files</string>
+    <string name="text_fileExplorer">File explorer</string>
+    <string name="mesg_currentPathUnavailable">This folder cannot be used </string>
+    <string name="butn_create">Create</string>
+    <string name="mesg_folderCreateError">Folder could not be created</string>
+
+    <!-- SHARE TEXT -->
+    <string name="butn_shareWithTrebleshot">Share with TrebleShot</string>
+    <string name="butn_shareWithOtherApps">Share with other apps</string>
+
+    <!-- TRANSFER TEXT -->
+    <string name="mesg_removing">Removing… May take long</string>
+
+
 </resources>

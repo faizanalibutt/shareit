@@ -1,3 +1,4 @@
+/*
 package com.hazelmobile.filetransfer.ui.fragment
 
 
@@ -92,3 +93,4 @@ class ImageListFragment : Fragment(), TitleSupport {
 
     }
 }
+*/

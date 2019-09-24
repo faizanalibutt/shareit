@@ -15,13 +15,13 @@ import com.google.android.material.tabs.TabLayout
 import com.hazelmobile.filetransfer.util.callback.IconSupport
 import com.hazelmobile.filetransfer.util.callback.TitleSupport
 
-class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManager) :
+open class SmartFragmentPagerAdapter(private var context: Context, fm: FragmentManager) :
     FragmentPagerAdapter(fm/*, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT*/) {
 
 
     private var mItems: MutableList<StableItem> = ArrayList()
 
-    fun onItemInstantiated(item: StableItem) {}
+    open fun onItemInstantiated(item: StableItem) {}
 
     fun add(fragment: StableItem) {
         mItems.add(fragment)

@@ -1,3 +1,4 @@
+/*
 package com.hazelmobile.filetransfer.ui.adapter
 
 import android.content.Context
@@ -58,4 +59,4 @@ class ImageListAdapter(private val imageList: List<ImageHolder>, val context: Co
         }
 
     }
-}
+}*/

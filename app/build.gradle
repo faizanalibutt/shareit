@@ -15,6 +15,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
     buildTypes {
         release {
@@ -51,6 +54,8 @@ dependencies {
 
     // genonbeta frameworks
     implementation 'com.genonbeta.android:framework:1.0.2.8'
+    implementation 'com.genonbeta.android:gdatabase:1.0.2.6.1'
+    implementation 'com.genonbeta.coolsocket:main:1.0.3.1'
 
     // frameworks to test your blunders
     testImplementation 'junit:junit:4.12'

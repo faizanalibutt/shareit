@@ -39,4 +39,7 @@
     <color name="color_content_share_button">#E8E8E8</color>
     <color name="black_transparent">#54000000</color>
 
+
+    <color name="dark_colorShadowBeginning">#000E171A</color>
+
 </resources>

@@ -1,3 +1,4 @@
+/*
 package com.hazelmobile.filetransfer.ui.fragment
 
 import android.content.Context
@@ -40,3 +41,4 @@ class FileExplorerFragment : Fragment(), TitleSupport {
     }
 
 }
+*/
