@@ -38,18 +38,6 @@ class ContentSharingActivity : BaseActivity() {
             it?.setHomeAsUpIndicator(R.drawable.ic_back_24dp)
         }
 
-        /*val pagerAdapter = SmartFragmentPagerAdapter(
-            this@ContentSharingActivity,
-            supportFragmentManager
-        ) *//*{
-            override fun onItemInstantiated(item: SmartFragmentPagerAdapter.Companion.StableItem) {
-
-                val fragmentImpl = item.getInitiatedItem() as EditableListFragmentImpl<Editable>
-                if (content_sharing_viewPager.getCurrentItem() == item.getCurrentPosition())
-                    attachListeners(fragmentImpl)
-            }
-        }*/
-
         var istrue = false
         val pagerAdapter = object :
             SmartFragmentPagerAdapter(this@ContentSharingActivity, supportFragmentManager) {

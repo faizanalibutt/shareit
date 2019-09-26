@@ -30,6 +30,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class FileListAdapter
@@ -86,10 +88,10 @@ public class FileListAdapter
                 }
             }
         } else {
-            List<File> referencedDirectoryList = new ArrayList<>();
-            DocumentFile defaultFolder = FileUtils.getApplicationDirectory(getContext());
 
-            lister.offerObliged(this, new DirectoryHolder(defaultFolder, getContext().getString(R.string.text_receivedFiles), R.drawable.ic_trebleshot_rounded_white_24dp_static));
+            /*DocumentFile defaultFolder = FileUtils.getApplicationDirectory(getContext());
+
+            lister.offerObliged(this, new DirectoryHolder(defaultFolder, getContext().getString(R.string.text_receivedFiles), R.drawable.ic_trebleshot_rounded_white_24dp_static));*/
 
             lister.offerObliged(this, new PublicDirectoryHolder(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
@@ -101,20 +103,16 @@ public class FileListAdapter
                         getContext().getString(R.string.text_documents), R.drawable.ic_library_books_white_24dp));
 
             lister.offerObliged(this, new PublicDirectoryHolder(Environment
-                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                    getContext().getString(R.string.text_downloads), R.drawable.ic_file_download_white_24dp));
-
-            lister.offerObliged(this, new PublicDirectoryHolder(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
                     getContext().getString(R.string.text_music), R.drawable.ic_music_note_white_24dp));
 
-            File fileSystemRoot = new File(".");
 
-            if (fileSystemRoot.canRead())
-                lister.offerObliged(this, new DirectoryHolder(DocumentFile.fromFile(fileSystemRoot),
-                        getContext().getString(R.string.text_fileRoot),
-                        getContext().getString(R.string.text_folder),
-                        R.drawable.ic_folder_white_24dp));
+            lister.offerObliged(this, new PublicDirectoryHolder(Environment
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                    getContext().getString(R.string.text_downloads), R.drawable.ic_file_download_white_24dp));
+
+
+            List<File> referencedDirectoryList = new ArrayList<>();
 
             if (Build.VERSION.SDK_INT >= 21)
                 referencedDirectoryList.addAll(Arrays.asList(getContext().getExternalMediaDirs()));
@@ -153,6 +151,14 @@ public class FileListAdapter
 
                 lister.offerObliged(this, fileHolder);
             }
+
+            /*File fileSystemRoot = new File(".");
+
+            if (fileSystemRoot.canRead())
+                lister.offerObliged(this, new DirectoryHolder(DocumentFile.fromFile(fileSystemRoot),
+                        getContext().getString(R.string.text_fileRoot),
+                        getContext().getString(R.string.text_folder),
+                        R.drawable.ic_folder_white_24dp));*/
 
             /*List<FileShortcutObject> shortcutList = AppUtils.getDatabase(getContext())
                     .castQuery(new SQLQuery.Select(AccessDatabase.TABLE_FILEBOOKMARK), FileShortcutObject.class);
@@ -234,6 +240,7 @@ public class FileListAdapter
                         lister.offerObliged(this, new RecentFileHolder(getContext(), documentFile));
                 }*/
             }
+
         }
     }
 
@@ -590,9 +597,9 @@ public class FileListAdapter
         }
 
         public enum Type {
-            STORAGE,
             FOLDER,
             PUBLIC_FOLDER,
+            STORAGE,
             RECENT_FILE,
             FILE_PART,
             FILE

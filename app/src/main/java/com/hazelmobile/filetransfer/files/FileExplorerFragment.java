@@ -159,7 +159,7 @@ public class FileExplorerFragment
 
     @Override
     public CharSequence getTitle(Context context) {
-        return context.getString(R.string.text_fileExplorer);
+        return context.getString(R.string.text_files);
     }
 
     public void requestPath(DocumentFile file) {

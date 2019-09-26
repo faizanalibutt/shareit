@@ -11,6 +11,7 @@ import com.genonbeta.android.framework.util.listing.ComparableMerger;
 import com.genonbeta.android.framework.util.listing.Lister;
 import com.genonbeta.android.framework.util.listing.Merger;
 import com.genonbeta.android.framework.util.listing.merger.StringMerger;
+import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
