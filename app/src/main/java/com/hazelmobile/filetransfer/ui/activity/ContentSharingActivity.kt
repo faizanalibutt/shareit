@@ -1,30 +1,26 @@
 package com.hazelmobile.filetransfer.ui.activity
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.files.FileExplorerFragment
 import com.hazelmobile.filetransfer.files.SharingActionModeCallback
-import com.hazelmobile.filetransfer.pictures.Editable
-import com.hazelmobile.filetransfer.pictures.EditableListFragmentImpl
-import com.hazelmobile.filetransfer.pictures.ImageListFragment
+import com.hazelmobile.filetransfer.pictures.*
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
-import com.hazelmobile.filetransfer.ui.fragment.*
-
+import com.hazelmobile.filetransfer.ui.fragment.ApplicationListFragment
+import com.hazelmobile.filetransfer.ui.fragment.MusicListFragment
+import com.hazelmobile.filetransfer.ui.fragment.VideoListFragment
 import kotlinx.android.synthetic.main.activity_content_sharing.*
 import kotlinx.android.synthetic.main.content_sharing.*
-import kotlinx.android.synthetic.main.fragment_home.*
 
+@Suppress("UNCHECKED_CAST")
 class ContentSharingActivity : BaseActivity() {
 
-    private var mMode: PowerfulActionMode? = null
-    //private lateinit var mSelectionCallback: SharingActionModeCallback
+    private lateinit var mSelectionCallback: SharingActionModeCallback<Shareable>
     private var mBackPressedListener: OnBackPressedListener? = null
+    private lateinit var mMode: PowerfulActionMode
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,26 +34,39 @@ class ContentSharingActivity : BaseActivity() {
             it?.setHomeAsUpIndicator(R.drawable.ic_back_24dp)
         }
 
-        var istrue = false
+        mMode = activity_content_sharing_action_mode
+        mSelectionCallback = SharingActionModeCallback(null)
+        val selectorConnection = PowerfulActionMode.SelectorConnection(mMode, mSelectionCallback)
+
         val pagerAdapter = object :
             SmartFragmentPagerAdapter(this@ContentSharingActivity, supportFragmentManager) {
             override fun onItemInstantiated(item: Companion.StableItem) {
 
                 // todo change this fuction for all adapters #14
-                if (content_sharing_viewPager.currentItem == 3 && !istrue) {
-                    istrue = true
-                    val fragmentImpl: EditableListFragmentImpl<Editable> =
-                        item.getInitiatedItem() as EditableListFragmentImpl<Editable>
-                    attachListeners(fragmentImpl)
-                }
+                val fragmentImpl: EditableListFragmentImpl<Editable> = item.getInitiatedItem() as EditableListFragmentImpl<Editable>
 
+                fragmentImpl.setSelectorConnection(selectorConnection as PowerfulActionMode.SelectorConnection<Editable>)
+                fragmentImpl.setSelectionCallback(mSelectionCallback as EditableListFragment.SelectionCallback<Editable>)
+
+                if (content_sharing_viewPager.currentItem == item.getCurrentPosition())
+                    attachListeners(fragmentImpl)
 
             }
 
         }
 
-
+        val fileExplorerArgs = Bundle()
+        fileExplorerArgs.putBoolean(FileExplorerFragment.ARG_SELECT_BY_CLICK, true)
         pagerAdapter.add(
+            SmartFragmentPagerAdapter.Companion.StableItem(
+                0,
+                FileExplorerFragment::class.java,
+                fileExplorerArgs
+            )
+                .setTitle(getString(R.string.text_files))
+        )
+
+        /*pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 0,
                 ApplicationListFragment::class.java,
@@ -87,18 +96,8 @@ class ContentSharingActivity : BaseActivity() {
                 MusicListFragment::class.java,
                 null
             )
-        )
+        )*/
 
-        val fileExplorerArgs = Bundle()
-        fileExplorerArgs.putBoolean(FileExplorerFragment.ARG_SELECT_BY_CLICK, true)
-        pagerAdapter.add(
-            SmartFragmentPagerAdapter.Companion.StableItem(
-                4,
-                FileExplorerFragment::class.java,
-                fileExplorerArgs
-            )
-                .setTitle(getString(R.string.text_files))
-        )
 
         pagerAdapter.createTabs(activity_content_sharing_tab_layout, icons = false, text = true)
         content_sharing_viewPager.adapter = pagerAdapter
@@ -107,6 +106,37 @@ class ContentSharingActivity : BaseActivity() {
         )
 
         activity_content_sharing_tab_layout.setupWithViewPager(content_sharing_viewPager)
+
+        // todo baby its need to be iimplemented commented #15
+        /*val tabLayout = activity_content_sharing_tab_layout
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+
+                final EditableListFragment fragment = (EditableListFragment) pagerAdapter.getItem(tab.getPosition());
+
+                attachListeners(fragment);
+
+                if (fragment.getAdapterImpl() != null)
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fragment.getAdapterImpl().notifyAllSelectionChanges();
+                        }
+                    }, 200);
+            }
+
+            @Override
+            public void onTabUnselected(final TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });*/
 
     }
 
@@ -118,14 +148,15 @@ class ContentSharingActivity : BaseActivity() {
 
     override fun onBackPressed() {
         if (mBackPressedListener == null || !mBackPressedListener!!.onBackPressed()) {
-            /*if (mMode!!.hasActive(mSelectionCallback))
-                mMode!!.finish(mSelectionCallback)
-            else*/
-            super.onBackPressed()
+            if (mMode.hasActive(mSelectionCallback))
+                mMode.finish(mSelectionCallback)
+            else
+                super.onBackPressed()
         }
     }
 
     fun attachListeners(fragment: EditableListFragmentImpl<Editable>) {
+        mSelectionCallback.updateProvider(fragment as EditableListFragmentImpl<Shareable>)
         mBackPressedListener = if (fragment is OnBackPressedListener)
             fragment
         else
