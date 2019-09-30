@@ -2,6 +2,7 @@ package com.hazelmobile.filetransfer.ui.activity
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
 import com.hazelmobile.filetransfer.R
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_content_sharing.*
 import kotlinx.android.synthetic.main.content_sharing.*
 
 @Suppress("UNCHECKED_CAST")
-class ContentSharingActivity : BaseActivity() {
+class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
 
     private lateinit var mSelectionCallback: SharingActionModeCallback<Shareable>
     private var mBackPressedListener: OnBackPressedListener? = null
@@ -31,12 +32,14 @@ class ContentSharingActivity : BaseActivity() {
         supportActionBar.let {
             it?.setDisplayHomeAsUpEnabled(true)
             it?.setDisplayShowTitleEnabled(false)
-            it?.setHomeAsUpIndicator(R.drawable.ic_back_24dp)
+            //it?.setHomeAsUpIndicator(R.drawable.ic_back_24dp)
         }
 
         mMode = activity_content_sharing_action_mode
+        mMode.setOnSelectionTaskListener { started, _ -> toolbar.visibility = if (!started) View.VISIBLE else View.GONE }
+
         mSelectionCallback = SharingActionModeCallback(null)
-        val selectorConnection = PowerfulActionMode.SelectorConnection(mMode, mSelectionCallback)
+        val selectorConnection: PowerfulActionMode.SelectorConnection<Shareable> = PowerfulActionMode.SelectorConnection(mMode, mSelectionCallback)
 
         val pagerAdapter = object :
             SmartFragmentPagerAdapter(this@ContentSharingActivity, supportFragmentManager) {
@@ -161,6 +164,10 @@ class ContentSharingActivity : BaseActivity() {
             fragment
         else
             null
+    }
+
+    override fun getPowerfulActionMode(): PowerfulActionMode {
+        return mMode
     }
 
 }
