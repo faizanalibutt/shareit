@@ -45,11 +45,11 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
             SmartFragmentPagerAdapter(this@ContentSharingActivity, supportFragmentManager) {
             override fun onItemInstantiated(item: Companion.StableItem) {
 
-                // todo change this fuction for all adapters #14
+                // todo change this function for all adapters #14
                 val fragmentImpl: EditableListFragmentImpl<Editable> = item.getInitiatedItem() as EditableListFragmentImpl<Editable>
 
                 fragmentImpl.setSelectorConnection(selectorConnection as PowerfulActionMode.SelectorConnection<Editable>)
-                fragmentImpl.setSelectionCallback(mSelectionCallback as EditableListFragment.SelectionCallback<Editable>)
+                fragmentImpl.selectionCallback = mSelectionCallback as EditableListFragment.SelectionCallback<Editable>
 
                 if (content_sharing_viewPager.currentItem == item.getCurrentPosition())
                     attachListeners(fragmentImpl)
@@ -65,17 +65,18 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
                 0,
                 FileExplorerFragment::class.java,
                 fileExplorerArgs
-            )
-                .setTitle(getString(R.string.text_files))
+            ).setTitle(getString(R.string.text_files))
         )
 
-        /*pagerAdapter.add(
+        pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
-                0,
+                1,
                 ApplicationListFragment::class.java,
                 null
             )
         )
+
+        /*
 
         pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(

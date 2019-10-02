@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="text_appName" translatable="false">File Transfer</string>
     <string name="app_name">File Transfer</string>
     <string name="home_title">Fast file sharing\nwithout Internet</string>
@@ -117,5 +117,7 @@
     <!-- TRANSFER TEXT -->
     <string name="mesg_removing">Removing… May take long</string>
 
+    <!-- DEFAULT TEXT -->
+    <string name="text_listEmptyApp">No apps here</string>
 
 </resources>

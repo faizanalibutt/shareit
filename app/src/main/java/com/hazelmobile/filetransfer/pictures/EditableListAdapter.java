@@ -135,6 +135,7 @@ abstract public class EditableListAdapter<T extends Editable, V extends Editable
         return getCount();
     }
 
+    // this function gives item of any kind from any kind of list
     public T getItem(int position) throws NotReadyException {
         if (position >= getCount() || position < 0)
             throw new NotReadyException("The list does not contain  this index: " + position);
