@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/myAppsText"
-        style="@style/TextAppearance.Primary.Big"
+        style="@style/TextAppearance.Primary.Normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_smaller_size"
@@ -20,7 +20,7 @@
 
     <TextView
         android:id="@+id/select_text"
-        style="@style/TextAppearance.Primary"
+        style="@style/TextAppearance.Primary.Normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_absolute_size"
@@ -32,19 +32,20 @@
 
     <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/selectAllApps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/default_margin_size"
+        android:layout_width="@dimen/dp_28"
+        android:layout_height="@dimen/dp_24"
+        android:paddingEnd="@dimen/dp_5"
+        android:paddingStart="@dimen/dp_5"
+        android:layout_marginEnd="@dimen/dp_16"
         app:layout_constraintBottom_toBottomOf="@+id/myAppsText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/myAppsText" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/appsList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_small_size"
-        android:layout_marginEnd="@dimen/margin_small_size"
+        android:layout_marginTop="@dimen/margin_smaller_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/selectAllApps"
         app:layout_constraintStart_toStartOf="@id/myAppsText"

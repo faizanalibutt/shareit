@@ -60,17 +60,17 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
 
         val fileExplorerArgs = Bundle()
         fileExplorerArgs.putBoolean(FileExplorerFragment.ARG_SELECT_BY_CLICK, true)
-        pagerAdapter.add(
+        /*pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 0,
                 FileExplorerFragment::class.java,
                 fileExplorerArgs
             ).setTitle(getString(R.string.text_files))
-        )
+        )*/
 
         pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
-                1,
+                0,
                 ApplicationListFragment::class.java,
                 null
             )

@@ -71,8 +71,8 @@ abstract public class RecyclerViewFragment<T, V extends RecyclerViewAdapter.View
 
 		recyclerView.setLayoutManager(onLayoutManager());
 
-		recyclerView.setLayoutParams(new GridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-				ViewGroup.LayoutParams.MATCH_PARENT));
+		/*recyclerView.setLayoutParams(new GridLayoutManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.MATCH_PARENT));*/
 
 		listViewContainer.addView(recyclerView);
 

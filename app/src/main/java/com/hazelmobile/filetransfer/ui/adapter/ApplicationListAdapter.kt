@@ -47,9 +47,6 @@ open class ApplicationListAdapter(private val mContext: Context, val preferences
             }
         }
 
-        // todo get me out of it myAppsText commented #16
-        //view.myAppsText.text = "My Apps ( ${appList.size} )"
-
         Collections.sort(appList, defaultComparator)
 
         return appList
