@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appsItemLayoutId"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -8,32 +9,32 @@
         android:id="@+id/appIcon"
         android:layout_width="@dimen/app_icon_size"
         android:layout_height="@dimen/app_icon_size"
+        android:contentDescription="@string/item_text_app_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_icon_blue"
-        android:contentDescription="@string/item_text_app_icon" />
+        app:srcCompat="@drawable/ic_icon_blue" />
 
     <ImageView
-        android:id="@+id/appTick"
         android:layout_width="@dimen/dp_14"
         android:layout_height="@dimen/dp_14"
+        android:contentDescription="@string/tick_text"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/appIcon"
         app:layout_constraintTop_toBottomOf="@+id/appIcon"
         app:layout_constraintTop_toTopOf="@+id/appIcon"
-        app:srcCompat="@drawable/ic_tick_icon_blue"
-        android:contentDescription="@string/tick_text" />
+        app:srcCompat="@drawable/ic_tick_icon_blue" />
 
     <TextView
         android:id="@+id/appName"
+        android:background="?stateSelectedImageRounded"
         style="@style/TextAppearance.Primary.Small.SingleLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/item_app_demo_text"
         android:gravity="center"
         android:paddingStart="@dimen/dp_8"
         android:paddingEnd="@dimen/dp_8"
+        android:text="@string/item_app_demo_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appIcon" />
@@ -42,13 +43,23 @@
         android:id="@+id/appSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:gravity="center"
         android:text="@string/app_size_item_text"
         android:textSize="@dimen/font_size_tiny"
-        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/dp_16"/>
+        app:layout_constraintTop_toBottomOf="@+id/appName" />
+
+    <View
+        android:id="@+id/appTick"
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="@dimen/dp_24"
+        android:contentDescription="@string/tick_text"
+        app:layout_constraintEnd_toEndOf="@+id/appIcon"
+        app:layout_constraintTop_toBottomOf="@+id/appIcon"
+        app:layout_constraintTop_toTopOf="@+id/appIcon"
+        android:background="?stateSelectedImageRounded" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

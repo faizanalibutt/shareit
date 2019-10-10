@@ -1,6 +1,5 @@
 package com.hazelmobile.filetransfer.ui.fragment
 
-
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -13,8 +12,11 @@ import com.hazelmobile.filetransfer.pictures.EditableListAdapter
 import com.hazelmobile.filetransfer.pictures.EditableListFragment
 import com.hazelmobile.filetransfer.ui.adapter.ApplicationListAdapter
 import com.hazelmobile.filetransfer.util.callback.TitleSupport
+import com.hazelmobile.filetransfer.widget.getToast
+import kotlinx.android.synthetic.main.apps_item_layout.*
+import kotlinx.android.synthetic.main.apps_item_layout.view.*
 import kotlinx.android.synthetic.main.fragment_application_list.*
-import kotlinx.android.synthetic.main.generic_view_selection_rounded.view.*
+import kotlinx.android.synthetic.main.generic_view_selection_rounded_custom.view.*
 
 class ApplicationListFragment : EditableListFragment<PackageHolder, EditableListAdapter.EditableViewHolder, ApplicationListAdapter>(), TitleSupport {
 
@@ -59,11 +61,14 @@ class ApplicationListFragment : EditableListFragment<PackageHolder, EditableList
     override fun onAdapter(): ApplicationListAdapter {
         val quickActions: AppUtils.QuickActions<EditableListAdapter.EditableViewHolder> = AppUtils.QuickActions { clazz ->
             registerLayoutViewClicks(clazz)
-            /*clazz.view.selector.setOnClickListener {
+            clazz.view.appTick.setOnClickListener {
                 if (selectionConnection != null) {
                     selectionConnection.setSelected(clazz.adapterPosition)
                 }
-            }*/
+            }
+            clazz.view.appName.setOnClickListener {
+                getToast("yes its color", context!!)
+            }
         }
 
         return object : ApplicationListAdapter(context!!, AppUtils.getDefaultPreferences(context)) {
