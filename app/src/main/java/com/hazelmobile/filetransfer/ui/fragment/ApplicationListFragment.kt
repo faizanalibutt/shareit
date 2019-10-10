@@ -59,11 +59,11 @@ class ApplicationListFragment : EditableListFragment<PackageHolder, EditableList
     override fun onAdapter(): ApplicationListAdapter {
         val quickActions: AppUtils.QuickActions<EditableListAdapter.EditableViewHolder> = AppUtils.QuickActions { clazz ->
             registerLayoutViewClicks(clazz)
-            clazz.view.selector.setOnClickListener {
-                /*if (selectionConnection != null) {
+            /*clazz.view.selector.setOnClickListener {
+                if (selectionConnection != null) {
                     selectionConnection.setSelected(clazz.adapterPosition)
-                }*/
-            }
+                }
+            }*/
         }
 
         return object : ApplicationListAdapter(context!!, AppUtils.getDefaultPreferences(context)) {
