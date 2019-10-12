@@ -11,8 +11,6 @@ import com.hazelmobile.filetransfer.files.SharingActionModeCallback
 import com.hazelmobile.filetransfer.pictures.*
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
 import com.hazelmobile.filetransfer.ui.fragment.ApplicationListFragment
-import com.hazelmobile.filetransfer.ui.fragment.MusicListFragment
-import com.hazelmobile.filetransfer.ui.fragment.VideoListFragment
 import kotlinx.android.synthetic.main.activity_content_sharing.*
 import kotlinx.android.synthetic.main.content_sharing.*
 
@@ -60,17 +58,18 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
 
         val fileExplorerArgs = Bundle()
         fileExplorerArgs.putBoolean(FileExplorerFragment.ARG_SELECT_BY_CLICK, true)
-        /*pagerAdapter.add(
+
+        pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 0,
                 FileExplorerFragment::class.java,
                 fileExplorerArgs
             ).setTitle(getString(R.string.text_files))
-        )*/
+        )
 
         pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
-                0,
+                1,
                 ApplicationListFragment::class.java,
                 null
             )

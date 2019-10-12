@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.model.PackageHolder
@@ -12,11 +14,9 @@ import com.hazelmobile.filetransfer.pictures.EditableListAdapter
 import com.hazelmobile.filetransfer.pictures.EditableListFragment
 import com.hazelmobile.filetransfer.ui.adapter.ApplicationListAdapter
 import com.hazelmobile.filetransfer.util.callback.TitleSupport
-import com.hazelmobile.filetransfer.widget.getToast
-import kotlinx.android.synthetic.main.apps_item_layout.*
-import kotlinx.android.synthetic.main.apps_item_layout.view.*
 import kotlinx.android.synthetic.main.fragment_application_list.*
-import kotlinx.android.synthetic.main.generic_view_selection_rounded_custom.view.*
+import kotlinx.android.synthetic.main.apps_item_layout.view.*
+import kotlinx.android.synthetic.main.generic_view_selection_rounded.view.*
 
 class ApplicationListFragment : EditableListFragment<PackageHolder, EditableListAdapter.EditableViewHolder, ApplicationListAdapter>(), TitleSupport {
 
@@ -55,19 +55,31 @@ class ApplicationListFragment : EditableListFragment<PackageHolder, EditableList
     }
 
     override fun onDefaultClickAction(holder: EditableListAdapter.EditableViewHolder?): Boolean {
-        return if (selectionConnection != null) selectionConnection.setSelected(holder) else performLayoutClickOpen(holder)
+        return if (selectionConnection != null) {
+            /*hello = */selectionConnection.setSelected(holder!!.adapterPosition)
+            /*if (hello) {
+                holder.view.selector.visibility = View.VISIBLE
+                hello
+            } else {
+                holder.view.selector.visibility = View.INVISIBLE
+                hello
+            }*/
+        } else performLayoutClickOpen(holder)
     }
+
+    var hello: Boolean = false
 
     override fun onAdapter(): ApplicationListAdapter {
         val quickActions: AppUtils.QuickActions<EditableListAdapter.EditableViewHolder> = AppUtils.QuickActions { clazz ->
             registerLayoutViewClicks(clazz)
-            clazz.view.appTick.setOnClickListener {
-                if (selectionConnection != null) {
-                    selectionConnection.setSelected(clazz.adapterPosition)
-                }
-            }
-            clazz.view.appName.setOnClickListener {
-                getToast("yes its color", context!!)
+            clazz.view.selector.setOnClickListener {
+                if (selectionConnection != null)
+                /*hello = */ selectionConnection.setSelected(clazz.adapterPosition)
+                /*if (hello) {
+                    clazz.view.selector.visibility = View.VISIBLE
+                } else {
+                    clazz.view.selector.visibility = View.INVISIBLE
+                }*/
             }
         }
 

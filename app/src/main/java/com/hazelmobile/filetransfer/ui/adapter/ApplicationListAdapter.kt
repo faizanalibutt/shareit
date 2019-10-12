@@ -53,7 +53,7 @@ open class ApplicationListAdapter(private val mContext: Context, val preferences
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditableViewHolder {
-        return EditableViewHolder(inflater.inflate(R.layout.apps_item_layout, parent, false))
+        return EditableViewHolder(inflater.inflate(R.layout.list_application, parent, false))
     }
 
     override fun onBindViewHolder(@NonNull holder: EditableViewHolder, position: Int) {
