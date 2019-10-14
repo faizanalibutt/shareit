@@ -2,9 +2,9 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <corners android:radius="50dp" />
+            <corners android:radius="60dp" />
 
-            <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
+            <padding android:bottom="5dp" android:left="5dp" android:right="5dp" android:top="5dp" />
 
             <solid android:color="@color/colorSecondary" />
         </shape>
@@ -12,6 +12,7 @@
     <item android:gravity="center">
         <bitmap
             android:gravity="center"
+
             android:src="@drawable/ic_check_white_24dp_static" />
         <!-- app compat src definition is not available here, there is a separate png icons
         for this reason-->

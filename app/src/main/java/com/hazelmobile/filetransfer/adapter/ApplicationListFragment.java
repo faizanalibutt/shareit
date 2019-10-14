@@ -1,34 +1,45 @@
 package com.hazelmobile.filetransfer.adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.genonbeta.TrebleShot.R;
-import com.genonbeta.TrebleShot.app.EditableListFragment;
-import com.genonbeta.TrebleShot.ui.callback.TitleSupport;
-import com.genonbeta.TrebleShot.util.AppUtils;
-import com.genonbeta.TrebleShot.widget.EditableListAdapter;
+import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.model.PackageHolder;
+import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.pictures.EditableListAdapter;
+import com.hazelmobile.filetransfer.pictures.EditableListFragment;
+import com.hazelmobile.filetransfer.util.callback.TitleSupport;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ApplicationListFragment
-        extends EditableListFragment<ApplicationListAdapter.PackageHolder, EditableListAdapter.EditableViewHolder, ApplicationListAdapter>
+        extends EditableListFragment<PackageHolder, EditableListAdapter.EditableViewHolder, ApplicationListAdapter>
         implements TitleSupport {
+
+    private TextView appsSize;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setFilteringSupported(true);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setDefaultViewingGridSize(4, 8);
+        setUseDefaultPaddingDecoration(false);
     }
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -36,6 +47,20 @@ public class ApplicationListFragment
 
         setEmptyImage(R.drawable.ic_android_head_white_24dp);
         setEmptyText(getString(R.string.text_listEmptyApp));
+        appsSize = view.findViewById(R.id.myAppsText);
+    }
+
+    @Override
+    public boolean onSetListAdapter(ApplicationListAdapter adapter) {
+        if (super.onSetListAdapter(adapter)) {
+            appsSize.setText(getApplicationListSize(adapter));
+            return true;
+        } else
+            return false;
+    }
+
+    private String getApplicationListSize(ApplicationListAdapter adapter){
+        return "My Apps ( " + adapter.onLoad().size()+ " )";
     }
 
     @Override
@@ -45,20 +70,24 @@ public class ApplicationListFragment
             public void onQuickActions(final EditableListAdapter.EditableViewHolder clazz) {
                 registerLayoutViewClicks(clazz);
 
-                clazz.getView().findViewById(R.id.visitView).setOnClickListener(
+                /*clazz.getView().findViewById(R.id.visitView).setOnClickListener(
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 performLayoutClickOpen(clazz);
                             }
-                        });
+                        });*/
 
                 clazz.getView().findViewById(R.id.selector).setOnClickListener(
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (getSelectionConnection() != null)
+                                if (getSelectionConnection() != null) {
                                     getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                    mutableLiveData.setValue(true);
+                                } else {
+                                    mutableLiveData.setValue(false);
+                                }
                             }
                         });
             }
@@ -73,14 +102,39 @@ public class ApplicationListFragment
         };
     }
 
-    @Override
-    public boolean onDefaultClickAction(EditableListAdapter.EditableViewHolder holder) {
-        return getSelectionConnection() != null
-                ? getSelectionConnection().setSelected(holder)
-                : performLayoutClickOpen(holder);
+    private static MutableLiveData<Boolean> mutableLiveData = new MutableLiveData<>();
+
+    public static LiveData<Boolean> getColor() {
+        return mutableLiveData;
     }
 
     @Override
+    public boolean onDefaultClickAction(EditableListAdapter.EditableViewHolder holder) {
+        /*return getSelectionConnection() != null
+                ? getSelectionConnection().setSelected(holder)
+                : performLayoutClickOpen(holder);*/
+
+        if (getSelectionConnection() != null) {
+            mutableLiveData.setValue(true);
+            return getSelectionConnection().setSelected(holder);
+        } else {
+            mutableLiveData.setValue(false);
+            return performLayoutClickOpen(holder);
+        }
+    }
+
+
+
+    @Override
+    protected RecyclerView onListView(View mainContainer, ViewGroup listViewContainer) {
+
+        View adaptedView = getLayoutInflater().inflate(R.layout.fragment_application_list, null, false);
+        listViewContainer.addView(adaptedView);
+
+        return super.onListView(mainContainer, (ViewGroup) adaptedView.findViewById(R.id.appsList));
+    }
+
+    /*@Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.actions_application, menu);
@@ -108,8 +162,9 @@ public class ApplicationListFragment
 
         MenuItem menuSystemApps = menu.findItem(R.id.show_system_apps);
         menuSystemApps.setChecked(AppUtils.getDefaultPreferences(getContext()).getBoolean("show_system_apps", false));
-    }
+    }*/
 
+    @NotNull
     @Override
     public CharSequence getTitle(Context context) {
         return context.getString(R.string.text_application);
@@ -118,11 +173,11 @@ public class ApplicationListFragment
     @Override
     public boolean performLayoutClickOpen(EditableListAdapter.EditableViewHolder holder) {
         try {
-            final ApplicationListAdapter.PackageHolder appInfo = getAdapter().getItem(holder);
-            final Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage(appInfo.packageName);
+            final PackageHolder appInfo = getAdapter().getItem(holder);
+            final Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage(appInfo.getAppfriendlyName());
 
             if (launchIntent != null) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                /*AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
 
                 dialogBuilder.setMessage(R.string.ques_launchApplication);
                 dialogBuilder.setNegativeButton(R.string.butn_cancel, null);
@@ -133,14 +188,20 @@ public class ApplicationListFragment
                     }
                 });
 
-                dialogBuilder.show();
+                dialogBuilder.show();*/
             } else
-                Toast.makeText(getActivity(), R.string.mesg_launchApplicationError, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), R.string.mesg_launchApplicationError, Toast.LENGTH_SHORT).show();
 
-            return true;
+                return true;
         } catch (Exception e) {
         }
 
         return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mutableLiveData.setValue(false);
     }
 }

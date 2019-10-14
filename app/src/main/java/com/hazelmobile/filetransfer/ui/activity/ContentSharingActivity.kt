@@ -3,14 +3,17 @@ package com.hazelmobile.filetransfer.ui.activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.lifecycle.Observer
 import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
 import com.hazelmobile.filetransfer.R
+import com.hazelmobile.filetransfer.adapter.ApplicationListFragment
 import com.hazelmobile.filetransfer.files.FileExplorerFragment
 import com.hazelmobile.filetransfer.files.SharingActionModeCallback
 import com.hazelmobile.filetransfer.pictures.*
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
-import com.hazelmobile.filetransfer.ui.fragment.ApplicationListFragment
 import kotlinx.android.synthetic.main.activity_content_sharing.*
 import kotlinx.android.synthetic.main.content_sharing.*
 
@@ -62,20 +65,19 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
         pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 0,
-                FileExplorerFragment::class.java,
-                fileExplorerArgs
-            ).setTitle(getString(R.string.text_files))
-        )
-
-        pagerAdapter.add(
-            SmartFragmentPagerAdapter.Companion.StableItem(
-                1,
                 ApplicationListFragment::class.java,
                 null
             )
         )
 
         /*
+        pagerAdapter.add(
+            SmartFragmentPagerAdapter.Companion.StableItem(
+                1,
+                FileExplorerFragment::class.java,
+                fileExplorerArgs
+            ).setTitle(getString(R.string.text_files))
+        )
 
         pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
@@ -140,6 +142,49 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
 
             }
         });*/
+
+        val nameObserver = Observer<Boolean> { select -> selectionCallback(select) }
+        ApplicationListFragment.getColor().observe(this, nameObserver)
+
+    }
+
+    private fun selectionCallback(select: Boolean) {
+
+        val sendButton = content_send_button
+        val tabLayout = activity_content_sharing_tab_layout
+        val whiteColor = ContextCompat.getColor(this@ContentSharingActivity, R.color.white)
+
+        if (select) {
+
+            sendButton.setTextColor(whiteColor)
+            sendButton.setBackgroundResource(R.drawable.background_content_share_button_select)
+            ViewCompat.setBackgroundTintList(
+                sendButton,
+                ContextCompat.getColorStateList(this@ContentSharingActivity, R.color.button_text_color_selector_blue)
+            )
+
+            tabLayout.setBackgroundResource(R.color.colorPrimary)
+            tabLayout.setTabTextColors(
+                whiteColor,
+                whiteColor
+            )
+            tabLayout.setSelectedTabIndicatorColor(whiteColor)
+
+            mMode.setBackgroundColor(ContextCompat.getColor(this@ContentSharingActivity, R.color.colorPrimary))
+            mMode.setTitleTextColor(whiteColor)
+            mMode.overflowIcon = resources.getDrawable(R.drawable.ic_tick_icon_blue)
+            mMode.setNavigationIcon(R.drawable.ic_tick_icon_blue)
+
+        } else {
+
+            sendButton.setTextColor(ContextCompat.getColor(this@ContentSharingActivity, R.color.button_text_color_selector))
+            sendButton.setBackgroundResource(R.drawable.background_content_share_button)
+            ViewCompat.setBackgroundTintList(
+                sendButton,
+                ContextCompat.getColorStateList(this@ContentSharingActivity, R.color.button_text_color_selector)
+            )
+
+        }
 
     }
 

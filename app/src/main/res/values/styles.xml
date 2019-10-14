@@ -240,6 +240,11 @@
         </item>
     </style>
 
+    <style name="ListContentIconStyleExtended">
+        <item name="android:layout_width">@dimen/icon_size_list_normal_extend</item>
+        <item name="android:layout_height">@dimen/icon_size_list_normal_extend</item>
+    </style>
+
     <!--@drawable/ic_trebleshot_white_24dp_static-->
     <style name="CustomListFragmentEmptyImageStyle">
         <item name="android:background">?rippleBackground</item>
@@ -328,4 +333,5 @@
         <item name="android:tint">@color/black_dominant</item>
     </style>
 
+    <dimen name="icon_size_list_normal_extend">20dp</dimen>
 </resources>
