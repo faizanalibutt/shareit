@@ -10,6 +10,7 @@ import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.adapter.ApplicationListFragment
+import com.hazelmobile.filetransfer.adapter.SelectionCallbackGlobal
 import com.hazelmobile.filetransfer.files.FileExplorerFragment
 import com.hazelmobile.filetransfer.files.SharingActionModeCallback
 import com.hazelmobile.filetransfer.pictures.*
@@ -143,8 +144,8 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
             }
         });*/
 
-        val nameObserver = Observer<Boolean> { select -> selectionCallback(select) }
-        ApplicationListFragment.getColor().observe(this, nameObserver)
+        val selectObserver = Observer<Boolean> { select -> selectionCallback(select) }
+        SelectionCallbackGlobal.getColor().observe(this, selectObserver)
 
     }
 
@@ -153,6 +154,8 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
         val sendButton = content_send_button
         val tabLayout = activity_content_sharing_tab_layout
         val whiteColor = ContextCompat.getColor(this@ContentSharingActivity, R.color.white)
+        val colorPrimary = ContextCompat.getColor(this@ContentSharingActivity, R.color.colorPrimary)
+        val colorBlack = ContextCompat.getColor(this@ContentSharingActivity, R.color.black_transparent)
 
         if (select) {
 
@@ -160,7 +163,7 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
             sendButton.setBackgroundResource(R.drawable.background_content_share_button_select)
             ViewCompat.setBackgroundTintList(
                 sendButton,
-                ContextCompat.getColorStateList(this@ContentSharingActivity, R.color.button_text_color_selector_blue)
+                ContextCompat.getColorStateList(this@ContentSharingActivity, R.color.text_button_text_color_selector_blue)
             )
 
             tabLayout.setBackgroundResource(R.color.colorPrimary)
@@ -170,19 +173,25 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
             )
             tabLayout.setSelectedTabIndicatorColor(whiteColor)
 
-            mMode.setBackgroundColor(ContextCompat.getColor(this@ContentSharingActivity, R.color.colorPrimary))
+            mMode.setBackgroundColor(colorPrimary)
             mMode.setTitleTextColor(whiteColor)
-            mMode.overflowIcon = resources.getDrawable(R.drawable.ic_tick_icon_blue)
-            mMode.setNavigationIcon(R.drawable.ic_tick_icon_blue)
+            mMode.overflowIcon = resources.getDrawable(R.drawable.ic_action_over_flow_icon_white_24dp)
 
         } else {
 
-            sendButton.setTextColor(ContextCompat.getColor(this@ContentSharingActivity, R.color.button_text_color_selector))
+            sendButton.setTextColor(ContextCompat.getColor(this@ContentSharingActivity, R.color.text_color_gray))
             sendButton.setBackgroundResource(R.drawable.background_content_share_button)
             ViewCompat.setBackgroundTintList(
                 sendButton,
-                ContextCompat.getColorStateList(this@ContentSharingActivity, R.color.button_text_color_selector)
+                ContextCompat.getColorStateList(this@ContentSharingActivity, R.color.text_button_text_color_selector)
             )
+
+            tabLayout.setBackgroundResource(R.color.white)
+            tabLayout.setTabTextColors(
+                colorBlack,
+                colorPrimary
+            )
+            tabLayout.setSelectedTabIndicatorColor(colorPrimary)
 
         }
 
@@ -196,8 +205,10 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
 
     override fun onBackPressed() {
         if (mBackPressedListener == null || !mBackPressedListener!!.onBackPressed()) {
-            if (mMode.hasActive(mSelectionCallback))
+            if (mMode.hasActive(mSelectionCallback)){
                 mMode.finish(mSelectionCallback)
+                SelectionCallbackGlobal.setColor(false)
+            }
             else
                 super.onBackPressed()
         }

@@ -1,7 +1,6 @@
 package com.hazelmobile.filetransfer.pictures;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.net.Uri;
@@ -9,14 +8,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.collection.ArrayMap;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +28,6 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.pictures.recyclerview.PaddingItemDecoration;
 import com.hazelmobile.filetransfer.pictures.recyclerview.SwipeTouchSelectionListener;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -761,7 +757,7 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
                     .getSelectedItemList()
                     .size();
 
-            actionMode.setTitle(String.valueOf(selectedSize));
+            actionMode.setTitle(selectedSize + " Selected");
         }
 
         @Override

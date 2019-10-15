@@ -9,8 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hazelmobile.filetransfer.R;
@@ -84,9 +82,9 @@ public class ApplicationListFragment
                             public void onClick(View v) {
                                 if (getSelectionConnection() != null) {
                                     getSelectionConnection().setSelected(clazz.getAdapterPosition());
-                                    mutableLiveData.setValue(true);
+                                    SelectionCallbackGlobal.setColor(true);
                                 } else {
-                                    mutableLiveData.setValue(false);
+                                    SelectionCallbackGlobal.setColor(false);
                                 }
                             }
                         });
@@ -102,12 +100,6 @@ public class ApplicationListFragment
         };
     }
 
-    private static MutableLiveData<Boolean> mutableLiveData = new MutableLiveData<>();
-
-    public static LiveData<Boolean> getColor() {
-        return mutableLiveData;
-    }
-
     @Override
     public boolean onDefaultClickAction(EditableListAdapter.EditableViewHolder holder) {
         /*return getSelectionConnection() != null
@@ -115,10 +107,10 @@ public class ApplicationListFragment
                 : performLayoutClickOpen(holder);*/
 
         if (getSelectionConnection() != null) {
-            mutableLiveData.setValue(true);
+            SelectionCallbackGlobal.setColor(true);
             return getSelectionConnection().setSelected(holder);
         } else {
-            mutableLiveData.setValue(false);
+            SelectionCallbackGlobal.setColor(false);
             return performLayoutClickOpen(holder);
         }
     }
@@ -202,6 +194,6 @@ public class ApplicationListFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mutableLiveData.setValue(false);
+        SelectionCallbackGlobal.setColor(false);
     }
 }

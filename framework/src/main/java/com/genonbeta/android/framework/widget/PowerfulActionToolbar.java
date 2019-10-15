@@ -7,15 +7,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
-import com.genonbeta.android.framework.R;
-import com.genonbeta.android.framework.object.Selectable;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
+import com.genonbeta.android.framework.R;
+import com.genonbeta.android.framework.object.Selectable;
+
+import java.lang.reflect.Method;
+
 abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject extends PowerfulActionEngine.PowerfulActionEngineImpl>
-        implements PowerfulActionEngine.EngineCallback<ReturningObject>
-{
+        implements PowerfulActionEngine.EngineCallback<ReturningObject> {
     private E mToolbar;
     private Context mContext;
     private View mContainerLayout;
@@ -24,61 +25,50 @@ abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject e
     private PowerfulActionEngine.OnSelectionTaskListener<ReturningObject> mTaskListener;
     private boolean mFinishAllowed = true;
 
-    public PowerfulActionToolbar(Context context, E toolbar)
-    {
+    public PowerfulActionToolbar(Context context, E toolbar) {
         mContext = context;
         mToolbar = toolbar;
         mMenuInflater = new MenuInflater(getContext());
         mEngine = new PowerfulActionEngine(context, this);
     }
 
-    public boolean isFinishAllowed()
-    {
+    public boolean isFinishAllowed() {
         return mFinishAllowed;
     }
 
-    public View getContainerLayout()
-    {
+    public View getContainerLayout() {
         return mContainerLayout;
     }
 
-    public Context getContext()
-    {
+    public Context getContext() {
         return mContext;
     }
 
-    public PowerfulActionEngine getEngine()
-    {
+    public PowerfulActionEngine getEngine() {
         return mEngine;
     }
 
-    public MenuInflater getMenuInflater()
-    {
+    public MenuInflater getMenuInflater() {
         return mMenuInflater;
     }
 
-    public E getToolbar()
-    {
+    public E getToolbar() {
         return mToolbar;
     }
 
-    public void setContainerLayout(View containerLayout)
-    {
+    public void setContainerLayout(View containerLayout) {
         mContainerLayout = containerLayout;
     }
 
-    public void setOnSelectionTaskListener(PowerfulActionEngine.OnSelectionTaskListener taskListener)
-    {
+    public void setOnSelectionTaskListener(PowerfulActionEngine.OnSelectionTaskListener taskListener) {
         mTaskListener = taskListener;
     }
 
-    public void setFinishAllowed(boolean allow)
-    {
+    public void setFinishAllowed(boolean allow) {
         mFinishAllowed = allow;
     }
 
-    protected void updateVisibility(int visibility)
-    {
+    protected void updateVisibility(int visibility) {
         int animationId = visibility == View.VISIBLE ? android.R.anim.fade_in : android.R.anim.fade_out;
         View view = getContainerLayout() == null ? mToolbar : getContainerLayout();
 
@@ -98,28 +88,31 @@ abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject e
     }
 
     @Override
-    public <T extends Selectable> boolean onStart(@NonNull PowerfulActionEngine.Callback<T, ReturningObject> callback, boolean forceStart)
-    {
+    public <T extends Selectable> boolean onStart(@NonNull PowerfulActionEngine.Callback<T, ReturningObject> callback, boolean forceStart) {
         return callback instanceof ToolbarCallback
                 && ((ToolbarCallback<T, ReturningObject>) callback).onPrepareActionMenu(getContext(), onReturningObject());
     }
 
     @Override
-    public boolean onReload(final PowerfulActionEngine.Callback callback)
-    {
+    public boolean onReload(final PowerfulActionEngine.Callback callback) {
         getToolbar().getMenu().clear();
 
         updateVisibility(View.VISIBLE);
 
         if (mFinishAllowed) {
-            getToolbar().setNavigationIcon(R.drawable.genfw_close_white_24dp);
+            getToolbar().setNavigationIcon(R.drawable.ic_cross);
             getToolbar().setNavigationContentDescription(android.R.string.cancel);
-            getToolbar().setNavigationOnClickListener(new View.OnClickListener()
-            {
+            getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view)
-                {
+                public void onClick(View view) {
                     mEngine.finish(callback);
+                    // make LiveData and call it when click on it.
+                    try {
+                        Method setColor = Class.forName("com.hazelmobile.filetransfer.adapter.SelectionCallbackGlobal")
+                                .getDeclaredMethod("setColor", boolean.class);
+                        boolean select = (boolean) setColor.invoke(null, false);
+                    } catch (Exception e) {
+                    }
                 }
             });
         }
@@ -129,11 +122,9 @@ abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject e
 
         // As we can't define the !?*_- listener with ease I had to hack into it using this
         if (result) {
-            MenuItem.OnMenuItemClickListener defListener = new MenuItem.OnMenuItemClickListener()
-            {
+            MenuItem.OnMenuItemClickListener defListener = new MenuItem.OnMenuItemClickListener() {
                 @Override
-                public boolean onMenuItemClick(MenuItem menuItem)
-                {
+                public boolean onMenuItemClick(MenuItem menuItem) {
                     boolean didTrigger = callback instanceof ToolbarCallback
                             && ((ToolbarCallback) callback).onActionMenuItemSelected(getContext(), onReturningObject(), menuItem);
 
@@ -154,21 +145,18 @@ abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject e
     }
 
     @Override
-    public <E extends Selectable> boolean onCheck(PowerfulActionEngine.Callback<E, ReturningObject> callback, E selectable, boolean selected, int position)
-    {
+    public <E extends Selectable> boolean onCheck(PowerfulActionEngine.Callback<E, ReturningObject> callback, E selectable, boolean selected, int position) {
         return true;
     }
 
     @Override
-    public boolean onFinish(PowerfulActionEngine.Callback callback)
-    {
+    public boolean onFinish(PowerfulActionEngine.Callback callback) {
         updateVisibility(View.GONE);
         return true;
     }
 
     public interface ToolbarCallback<T extends Selectable, ReturningObject extends PowerfulActionEngine.PowerfulActionEngineImpl>
-            extends PowerfulActionEngine.Callback<T, ReturningObject>
-    {
+            extends PowerfulActionEngine.Callback<T, ReturningObject> {
         boolean onPrepareActionMenu(Context context, ReturningObject actionMode);
 
         boolean onCreateActionMenu(Context context, ReturningObject actionMode, Menu menu);
