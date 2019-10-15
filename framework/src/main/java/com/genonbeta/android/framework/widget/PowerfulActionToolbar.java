@@ -100,7 +100,7 @@ abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject e
         updateVisibility(View.VISIBLE);
 
         if (mFinishAllowed) {
-            getToolbar().setNavigationIcon(R.drawable.ic_cross);
+            getToolbar().setNavigationIcon(R.drawable.ic_close_white_24dp);
             getToolbar().setNavigationContentDescription(android.R.string.cancel);
             getToolbar().setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
