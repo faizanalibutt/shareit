@@ -1,7 +1,6 @@
 package com.hazelmobile.filetransfer.ui.activity
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -193,14 +192,12 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
             )
             tabLayout.setSelectedTabIndicatorColor(colorPrimary)
 
+            /*mMode.setBackgroundColor(whiteColor)
+            mMode.setTitleTextColor(colorBlack)
+            mMode.overflowIcon = mMode.overflowIcon*/
+
         }
 
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.share_menu, menu)
-        return true
     }
 
     override fun onBackPressed() {

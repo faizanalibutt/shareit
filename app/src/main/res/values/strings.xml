@@ -120,4 +120,7 @@
     <!-- DEFAULT TEXT -->
     <string name="text_listEmptyApp">No apps here</string>
 
+    <!-- MENU TEXT -->
+    <string name="butn_showSystemApps">Show system apps</string>
+
 </resources>

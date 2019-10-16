@@ -705,6 +705,11 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
             updateProvider(fragment);
         }
 
+        public SelectionCallback(boolean selection, EditableListFragmentImpl<T> fragment) {
+            updateProvider(fragment);
+            setSelection(selection);
+        }
+
         public EditableListAdapterImpl<T> getAdapter() {
             return mFragment.getAdapterImpl();
         }
