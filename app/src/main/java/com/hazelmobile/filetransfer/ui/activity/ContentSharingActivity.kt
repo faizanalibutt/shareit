@@ -1,6 +1,8 @@
 package com.hazelmobile.filetransfer.ui.activity
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -110,38 +112,30 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
             TabLayout.TabLayoutOnPageChangeListener(activity_content_sharing_tab_layout)
         )
 
-        activity_content_sharing_tab_layout.setupWithViewPager(content_sharing_viewPager)
+        //activity_content_sharing_tab_layout.setupWithViewPager(content_sharing_viewPager)
 
         // todo baby its need to be iimplemented commented #15
-        /*val tabLayout = activity_content_sharing_tab_layout
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+        val tabLayout = activity_content_sharing_tab_layout
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                content_sharing_viewPager.currentItem = tab.position
 
-                final EditableListFragment fragment = (EditableListFragment) pagerAdapter.getItem(tab.getPosition());
+                val fragment: EditableListFragmentImpl<Editable> = pagerAdapter.getItem(tab.position) as EditableListFragmentImpl<Editable>
 
-                attachListeners(fragment);
+                attachListeners(fragment)
 
-                if (fragment.getAdapterImpl() != null)
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            fragment.getAdapterImpl().notifyAllSelectionChanges();
-                        }
-                    }, 200);
+                if (fragment.adapterImpl != null)
+                    Handler(Looper.getMainLooper()).postDelayed({ fragment.adapterImpl.notifyAllSelectionChanges() }, 200)
             }
 
-            @Override
-            public void onTabUnselected(final TabLayout.Tab tab) {
+            override fun onTabUnselected(tab: TabLayout.Tab) {
 
             }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            override fun onTabReselected(tab: TabLayout.Tab) {
 
             }
-        });*/
+        })
 
         val selectObserver = Observer<Boolean> { select -> selectionCallback(select) }
         SelectionCallbackGlobal.getColor().observe(this, selectObserver)
@@ -202,11 +196,10 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
 
     override fun onBackPressed() {
         if (mBackPressedListener == null || !mBackPressedListener!!.onBackPressed()) {
-            if (mMode.hasActive(mSelectionCallback)){
+            if (mMode.hasActive(mSelectionCallback)) {
                 mMode.finish(mSelectionCallback)
                 SelectionCallbackGlobal.setColor(false)
-            }
-            else
+            } else
                 super.onBackPressed()
         }
     }
