@@ -93,6 +93,7 @@
         <item name="snackbarBackground">@drawable/background_snackbar</item>
         <item name="stateSelectedImage">@drawable/state_selected_image</item>
         <item name="stateSelectedImageRounded">@drawable/state_selected_image_rounded</item>
+        <item name="stateSelectedImageRoundedCustom">@drawable/state_selected_image_rounded_blue</item>
         <item name="stateSelectedImageRoundedGuiding">
             @drawable/state_selected_image_rounded_guiding
         </item>

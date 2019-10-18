@@ -5,60 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
     <ImageView
         android:id="@+id/audio_icon"
         android:layout_width="@dimen/audio_icon_size"
         android:layout_height="@dimen/audio_icon_size"
+        android:contentDescription="@string/audio_icon"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_audio_icon"
-        android:contentDescription="@string/audio_icon" />
+        app:srcCompat="@drawable/ic_audio_icon" />
 
     <TextView
         android:id="@+id/audioTitle"
         style="@style/TextAppearance.Primary.Big.SingleLine"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/appTick"
         android:layout_marginStart="@dimen/margin_smallest_size"
         android:layout_marginEnd="@dimen/margin_smallest_size"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/audio_icon"
         app:layout_constraintBottom_toTopOf="@+id/audioSize"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/layout_image"
+        app:layout_constraintStart_toEndOf="@+id/audio_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/audioSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/audioTitle"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/audioTitle"
         app:layout_constraintTop_toBottomOf="@+id/audioTitle" />
 
-    <ImageView
-        android:id="@+id/appTick"
-        android:layout_width="@dimen/dp_22"
-        android:layout_height="@dimen/dp_22"
-        android:visibility="visible"
+    <FrameLayout
+        android:id="@+id/layout_image"
+        style="@style/ListContentIconStyleExtended"
         android:layout_marginEnd="@dimen/dp_16"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_tick_icon_blue"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/tick_text" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <!--app:srcCompat="@drawable/state_selected_image_rounded"-->
+        <include layout="@layout/generic_view_selection_rounded_custom" />
+
+    </FrameLayout>
 
     <View
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="2dp"
-        app:layout_constraintStart_toEndOf="@+id/audio_icon"
-        app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/colorShadowEnd"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/audio_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.adapter.ApplicationListFragment
+import com.hazelmobile.filetransfer.adapter.MusicListFragment
 import com.hazelmobile.filetransfer.adapter.SelectionCallbackGlobal
 import com.hazelmobile.filetransfer.files.FileExplorerFragment
 import com.hazelmobile.filetransfer.files.SharingActionModeCallback
@@ -68,6 +69,14 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
             SmartFragmentPagerAdapter.Companion.StableItem(
                 0,
                 ApplicationListFragment::class.java,
+                null
+            )
+        )
+
+        pagerAdapter.add(
+            SmartFragmentPagerAdapter.Companion.StableItem(
+                1,
+                MusicListFragment::class.java,
                 null
             )
         )
