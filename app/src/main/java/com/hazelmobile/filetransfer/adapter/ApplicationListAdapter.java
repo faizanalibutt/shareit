@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,8 +16,8 @@ import androidx.annotation.NonNull;
 import com.hazelmobile.filetransfer.GlideApp;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.files.FileUtils;
-import com.hazelmobile.filetransfer.model.PackageHolder;
 import com.hazelmobile.filetransfer.pictures.EditableListAdapter;
+import com.hazelmobile.filetransfer.pictures.Shareable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ApplicationListAdapter
-        extends EditableListAdapter<PackageHolder, EditableListAdapter.EditableViewHolder> {
+        extends EditableListAdapter<ApplicationListAdapter.PackageHolder, EditableListAdapter.EditableViewHolder> {
     private SharedPreferences mPreferences;
     private PackageManager mManager;
 
@@ -76,16 +77,42 @@ public class ApplicationListAdapter
             TextView text2 = parentView.findViewById(R.id.appSize);
 
             text1.setText(object.friendlyName);
-            text2.setText(object.getAppSize());
+            text2.setText(object.appSize);
 
             parentView.setSelected(object.isSelectableSelected());
 
             GlideApp.with(getContext())
-                    .load(object.getAppInfo())
+                    .load(object.appInfo)
                     .override(160)
                     .centerCrop()
                     .into(image);
         } catch (Exception e) {
+        }
+    }
+
+    public static class PackageHolder extends Shareable {
+        public static final String FORMAT = ".apk";
+        public static final String MIME_TYPE = FileUtils.getFileContentType(FORMAT);
+
+        public ApplicationInfo appInfo;
+        public String version;
+        public String packageName;
+        public String appSize;
+
+        public PackageHolder(String friendlyName, ApplicationInfo appInfo, String version,
+                             String packageName, File executableFile, String appSize) {
+            super(appInfo.packageName.hashCode(),
+                    friendlyName,
+                    friendlyName + "_" + version + ".apk",
+                    MIME_TYPE,
+                    executableFile.lastModified(),
+                    executableFile.length(),
+                    Uri.fromFile(executableFile));
+
+            this.appInfo = appInfo;
+            this.version = version;
+            this.packageName = packageName;
+            this.appSize = appSize;
         }
     }
 }

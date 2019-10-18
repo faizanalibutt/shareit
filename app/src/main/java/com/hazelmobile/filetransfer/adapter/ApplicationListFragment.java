@@ -14,10 +14,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.model.PackageHolder;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.EditableListAdapter;
 import com.hazelmobile.filetransfer.pictures.EditableListFragment;
@@ -25,8 +25,10 @@ import com.hazelmobile.filetransfer.util.callback.TitleSupport;
 
 import org.jetbrains.annotations.NotNull;
 
+/*import com.hazelmobile.filetransfer.model.PackageHolder;*/
+
 public class ApplicationListFragment
-        extends EditableListFragment<PackageHolder, EditableListAdapter.EditableViewHolder, ApplicationListAdapter>
+        extends EditableListFragment<ApplicationListAdapter.PackageHolder, EditableListAdapter.EditableViewHolder, ApplicationListAdapter>
         implements TitleSupport {
 
     private TextView appsSize;
@@ -47,7 +49,6 @@ public class ApplicationListFragment
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setEmptyImage(R.drawable.ic_android_head_white_24dp);
         setEmptyText(getString(R.string.text_listEmptyApp));
         appsSize = view.findViewById(R.id.myAppsText);
@@ -57,10 +58,22 @@ public class ApplicationListFragment
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 new SelectionCallback<>(isChecked, ApplicationListFragment.this);
-                SelectionCallbackGlobal.setColor(true);
+                if (isChecked) {
+                    SelectionCallbackGlobal.setColor(true);
+                }
             }
         });
 
+
+        final Observer<Boolean> selectObserver = new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable final Boolean select) {
+                if (!select) {
+                    selectAll.setChecked(false);
+                }
+            }
+        };
+        SelectionCallbackGlobal.getColor().observe(ApplicationListFragment.this, selectObserver);
     }
 
     @Override
@@ -167,8 +180,8 @@ public class ApplicationListFragment
     @Override
     public boolean performLayoutClickOpen(EditableListAdapter.EditableViewHolder holder) {
         try {
-            final PackageHolder appInfo = getAdapter().getItem(holder);
-            final Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage(appInfo.getAppfriendlyName());
+            final ApplicationListAdapter.PackageHolder appInfo = getAdapter().getItem(holder);
+            final Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage(appInfo.friendlyName);
 
             if (launchIntent != null) {
                 /*AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
