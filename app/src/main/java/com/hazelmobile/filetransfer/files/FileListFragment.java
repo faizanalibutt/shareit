@@ -24,6 +24,7 @@ import com.genonbeta.android.framework.io.LocalDocumentFile;
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.adapter.SelectionCallbackGlobal;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.GroupEditableListAdapter;
 import com.hazelmobile.filetransfer.pictures.GroupEditableListFragment;
@@ -250,15 +251,31 @@ public class FileListFragment
                 if (!clazz.isRepresentative()) {
                     registerLayoutViewClicks(clazz);
 
-                    clazz.getView().findViewById(R.id.layout_image).setOnClickListener(new View.OnClickListener() {
+                    /*clazz.getView().findViewById(R.id.layout_image).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (getSelectionConnection() != null)
+                            if (getSelectionConnection() != null) {
                                 getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                SelectionCallbackGlobal.setColor(true);
+                            } else {
+                                SelectionCallbackGlobal.setColor(false);
+                            }
+                        }
+                    });*/
+
+                    clazz.getView().findViewById(R.id.selector).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (getSelectionConnection() != null) {
+                                getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                SelectionCallbackGlobal.setColor(true);
+                            } else {
+                                SelectionCallbackGlobal.setColor(false);
+                            }
                         }
                     });
 
-                    clazz.getView().findViewById(R.id.menu).setOnClickListener(new View.OnClickListener() {
+                    /*clazz.getView().findViewById(R.id.menu).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             final FileListAdapter.GenericFileHolder fileHolder = getAdapter().getList().get(clazz.getAdapterPosition());
@@ -338,7 +355,7 @@ public class FileListFragment
 
                             popupMenu.show();
                         }
-                    });
+                    });*/
                 }
             }
         };
@@ -361,6 +378,14 @@ public class FileListFragment
 
     @Override
     public boolean onDefaultClickAction(GroupEditableListAdapter.GroupViewHolder holder) {
+        // todo See this for your own good selection call back #18
+        /*if (getSelectionConnection() != null) {
+            SelectionCallbackGlobal.setColor(true);
+            return getSelectionConnection().setSelected(holder);
+        } else {
+            SelectionCallbackGlobal.setColor(false);
+            return performLayoutClickOpen(holder);
+        }*/
         performLayoutClickOpen(holder);
         return true;
     }

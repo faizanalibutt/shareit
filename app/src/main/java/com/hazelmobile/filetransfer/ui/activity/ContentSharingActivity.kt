@@ -50,7 +50,6 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
             SmartFragmentPagerAdapter(this@ContentSharingActivity, supportFragmentManager) {
             override fun onItemInstantiated(item: Companion.StableItem) {
 
-                // todo change this function for all adapters #14
                 val fragmentImpl: EditableListFragmentImpl<Editable> = item.getInitiatedItem() as EditableListFragmentImpl<Editable>
 
                 fragmentImpl.setSelectorConnection(selectorConnection as PowerfulActionMode.SelectorConnection<Editable>)
@@ -63,39 +62,12 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
 
         }
 
-        val fileExplorerArgs = Bundle()
-        fileExplorerArgs.putBoolean(FileExplorerFragment.ARG_SELECT_BY_CLICK, true)
-
         pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 0,
                 ApplicationListFragment::class.java,
                 null
             )
-        )
-
-        pagerAdapter.add(
-            SmartFragmentPagerAdapter.Companion.StableItem(
-                1,
-                MusicListFragment::class.java,
-                null
-            )
-        )
-
-        pagerAdapter.add(
-            SmartFragmentPagerAdapter.Companion.StableItem(
-                2,
-                VideoListFragment::class.java,
-                null
-            )
-        )
-
-        /*pagerAdapter.add(
-            SmartFragmentPagerAdapter.Companion.StableItem(
-                1,
-                FileExplorerFragment::class.java,
-                fileExplorerArgs
-            ).setTitle(getString(R.string.text_files))
         )
 
         pagerAdapter.add(
@@ -109,7 +81,7 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
         pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 2,
-                VideoListFragment::class.java,
+                MusicListFragment::class.java,
                 null
             )
         )
@@ -117,10 +89,20 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
         pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 3,
-                MusicListFragment::class.java,
+                VideoListFragment::class.java,
                 null
             )
-        )*/
+        )
+
+        val fileExplorerArgs = Bundle()
+        fileExplorerArgs.putBoolean(FileExplorerFragment.ARG_SELECT_BY_CLICK, true)
+        pagerAdapter.add(
+            SmartFragmentPagerAdapter.Companion.StableItem(
+                4,
+                FileExplorerFragment::class.java,
+                fileExplorerArgs
+            ).setTitle(getString(R.string.text_files))
+        )
 
 
         pagerAdapter.createTabs(activity_content_sharing_tab_layout, icons = false, text = true)
@@ -129,9 +111,6 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
             TabLayout.TabLayoutOnPageChangeListener(activity_content_sharing_tab_layout)
         )
 
-        //activity_content_sharing_tab_layout.setupWithViewPager(content_sharing_viewPager)
-
-        // todo baby its need to be iimplemented commented #15
         val tabLayout = activity_content_sharing_tab_layout
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {

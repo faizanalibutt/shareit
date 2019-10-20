@@ -2,21 +2,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/ListContentLayoutStyle.Narrow.WithOverflowButton"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?rectSelector">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/menu"
         style="@style/OverflowButton"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="center_vertical" />
+        android:visibility="invisible"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/app_name" />
+
+    <include
+        layout="@layout/generic_view_selection_rounded_custom"
+        android:layout_width="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_10"
+        android:layout_height="@dimen/dp_20"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"/>
 
     <FrameLayout
         android:id="@+id/layout_image"
         style="@style/ListContentIconStyle"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true">
 
         <ImageView
@@ -34,11 +41,6 @@
             app:srcCompat="@drawable/ic_folder_white_24dp"
             app:tint="?colorSecondary" />
 
-        <include
-            layout="@layout/generic_view_selection_rounded"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
     </FrameLayout>
 
     <LinearLayout
@@ -46,9 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@id/menu"
-        android:layout_toLeftOf="@id/menu"
         android:layout_toEndOf="@id/layout_image"
-        android:layout_toRightOf="@id/layout_image"
         android:orientation="vertical">
 
         <TextView
