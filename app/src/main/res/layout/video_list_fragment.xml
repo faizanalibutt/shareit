@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragment.VideoListFragment">
+    tools:context=".adapter.VideoListFragment">
 
     <TextView
         android:id="@+id/myVideosText"
@@ -26,14 +26,16 @@
         android:text="Select"
         android:textColor="@color/hazel_text_color"
         app:layout_constraintBottom_toBottomOf="@+id/myVideosText"
-        app:layout_constraintEnd_toStartOf="@+id/selectAllApps"
+        app:layout_constraintEnd_toStartOf="@+id/selectAll"
         app:layout_constraintTop_toTopOf="@id/myVideosText" />
 
-    <ImageView
-        android:id="@+id/selectAllApps"
+    <CheckBox
+        android:id="@+id/selectAll"
         android:layout_width="@dimen/dp_20"
         android:layout_height="@dimen/dp_20"
         android:layout_marginEnd="@dimen/dp_16"
+        android:background="@drawable/state_selected_image_rounded_blue"
+        android:button="@null"
         android:contentDescription="@string/tick_text"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/myVideosText"
@@ -42,22 +44,23 @@
         app:srcCompat="@drawable/ic_tick_icon_blue" />
 
     <View
-        android:background="@color/colorShadowEnd"
         android:layout_width="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myVideosText"
+        android:layout_height="@dimen/margin_zero_size"
         android:layout_marginTop="@dimen/margin_smaller_size"
-        android:layout_height="@dimen/margin_zero_size" />
+        android:background="@color/colorShadowEnd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myVideosText" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/videoView"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/videosList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_small_size"
+        android:layout_marginTop="@dimen/margin_smaller_size"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/selectAll"
         app:layout_constraintStart_toStartOf="@id/myVideosText"
         app:layout_constraintTop_toBottomOf="@+id/myVideosText" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

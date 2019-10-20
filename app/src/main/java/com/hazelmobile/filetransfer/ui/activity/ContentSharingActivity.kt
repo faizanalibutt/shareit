@@ -13,6 +13,7 @@ import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.adapter.ApplicationListFragment
 import com.hazelmobile.filetransfer.adapter.MusicListFragment
 import com.hazelmobile.filetransfer.adapter.SelectionCallbackGlobal
+import com.hazelmobile.filetransfer.adapter.VideoListFragment
 import com.hazelmobile.filetransfer.files.FileExplorerFragment
 import com.hazelmobile.filetransfer.files.SharingActionModeCallback
 import com.hazelmobile.filetransfer.pictures.*
@@ -81,8 +82,15 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
             )
         )
 
-        /*
         pagerAdapter.add(
+            SmartFragmentPagerAdapter.Companion.StableItem(
+                2,
+                VideoListFragment::class.java,
+                null
+            )
+        )
+
+        /*pagerAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 1,
                 FileExplorerFragment::class.java,

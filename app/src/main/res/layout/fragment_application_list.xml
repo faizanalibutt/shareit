@@ -27,11 +27,11 @@
         android:text="Select"
         android:textColor="@color/hazel_text_color"
         app:layout_constraintBottom_toBottomOf="@+id/myAppsText"
-        app:layout_constraintEnd_toStartOf="@+id/selectAllApps"
+        app:layout_constraintEnd_toStartOf="@+id/selectAll"
         app:layout_constraintTop_toTopOf="@id/myAppsText" />
 
     <CheckBox
-        android:id="@+id/selectAllApps"
+        android:id="@+id/selectAll"
         android:layout_width="@dimen/dp_24"
         android:layout_height="@dimen/dp_24"
         android:background="@drawable/state_selected_image_rounded_blue"
@@ -49,7 +49,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_smaller_size"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/selectAllApps"
+        app:layout_constraintEnd_toEndOf="@+id/selectAll"
         app:layout_constraintStart_toStartOf="@id/myAppsText"
         app:layout_constraintTop_toBottomOf="@+id/myAppsText" />
 

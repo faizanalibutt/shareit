@@ -25,6 +25,8 @@ import com.hazelmobile.filetransfer.util.callback.TitleSupport;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /*import com.hazelmobile.filetransfer.model.PackageHolder;*/
 
 public class ApplicationListFragment
@@ -52,7 +54,7 @@ public class ApplicationListFragment
         setEmptyImage(R.drawable.ic_android_head_white_24dp);
         setEmptyText(getString(R.string.text_listEmptyApp));
         appsSize = view.findViewById(R.id.myAppsText);
-        final CheckBox selectAll = view.findViewById(R.id.selectAllApps);
+        final CheckBox selectAll = view.findViewById(R.id.selectAll);
 
         selectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -68,7 +70,7 @@ public class ApplicationListFragment
         final Observer<Boolean> selectObserver = new Observer<Boolean>() {
             @Override
             public void onChanged(@Nullable final Boolean select) {
-                if (!select) {
+                if (select != null && !select) {
                     selectAll.setChecked(false);
                 }
             }
@@ -181,7 +183,7 @@ public class ApplicationListFragment
     public boolean performLayoutClickOpen(EditableListAdapter.EditableViewHolder holder) {
         try {
             final ApplicationListAdapter.PackageHolder appInfo = getAdapter().getItem(holder);
-            final Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage(appInfo.friendlyName);
+            final Intent launchIntent = Objects.requireNonNull(getActivity()).getPackageManager().getLaunchIntentForPackage(appInfo.friendlyName);
 
             if (launchIntent != null) {
                 /*AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());

@@ -34,7 +34,7 @@
         app:layout_constraintVertical_chainStyle="packed"
         android:paddingEnd="@dimen/dp_5"
         android:paddingStart="@dimen/dp_5"
-        app:layout_constraintEnd_toStartOf="@+id/appTick"
+        app:layout_constraintEnd_toStartOf="@+id/layout_image"
         app:layout_constraintBottom_toTopOf="@+id/videoSize"
         app:layout_constraintStart_toEndOf="@+id/videoThumbnail"
         app:layout_constraintTop_toTopOf="parent" />
@@ -78,7 +78,7 @@
         app:layout_constraintStart_toStartOf="@id/videoThumbnail"
         app:layout_constraintTop_toBottomOf="@id/videoThumbnail" />
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/appTick"
         android:layout_width="@dimen/dp_20"
         android:layout_height="@dimen/dp_20"
@@ -88,6 +88,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_tick_icon_blue" />
+        app:srcCompat="@drawable/ic_tick_icon_blue" />-->
+
+    <FrameLayout
+        android:id="@+id/layout_image"
+        style="@style/ListContentIconStyleExtended"
+        android:layout_marginEnd="@dimen/dp_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include layout="@layout/generic_view_selection_rounded_custom" />
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
