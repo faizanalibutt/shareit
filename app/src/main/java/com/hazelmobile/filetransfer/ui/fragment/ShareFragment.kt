@@ -10,6 +10,7 @@ import android.view.ViewGroup
 
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.ui.activity.ContentSharingActivity
+import com.hazelmobile.filetransfer.ui.activity.ReceiverActivity
 import com.hazelmobile.filetransfer.util.callback.IconSupport
 import com.hazelmobile.filetransfer.util.callback.TitleSupport
 import kotlinx.android.synthetic.main.fragment_share.*
@@ -28,6 +29,10 @@ class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
 
         send_button.setOnClickListener {
             startActivity(Intent(context, ContentSharingActivity::class.java))
+        }
+
+        receive_button.setOnClickListener {
+            startActivity(Intent(context, ReceiverActivity::class.java))
         }
     }
 

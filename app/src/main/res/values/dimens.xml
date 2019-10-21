@@ -102,4 +102,7 @@
     <dimen name="video_thumbnail_size">100dp</dimen>
     <dimen name="video_thumbnail_size_width">150dp</dimen>
 
+    <dimen name="rippleStrokeWidth">2dp</dimen>
+    <dimen name="rippleRadius">64dp</dimen>
+
 </resources>

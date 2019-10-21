@@ -42,4 +42,6 @@
 
     <color name="dark_colorShadowBeginning">#000E171A</color>
 
+    <color name="rippelColor">#9EB6E6</color>
+
 </resources>
