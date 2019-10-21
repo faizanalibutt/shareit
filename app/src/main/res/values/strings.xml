@@ -94,7 +94,8 @@
     <string name="text_music">Music</string>
     <string name="text_fileRoot">File root</string>
     <string name="text_receivedFiles">Received files</string>
-    <string name="text_storage">STORAGE DEVICES</string>
+    <string name="text_storage">Storage</string>
+    <string name="text_storage_devices">STORAGE DEVICES</string>
     <string name="text_internalStorage">Internal storage</string>
     <string name="text_emulatedMediaDirectory">Emulated (%s)</string>
     <string name="text_shortcuts">CATEGORIES</string>

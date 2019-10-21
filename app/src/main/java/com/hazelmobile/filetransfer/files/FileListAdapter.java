@@ -13,8 +13,6 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.genonbeta.android.database.CursorItem;
-import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.genonbeta.android.framework.util.MathUtils;
 import com.genonbeta.android.framework.util.listing.ComparableMerger;
@@ -27,11 +25,8 @@ import com.hazelmobile.filetransfer.pictures.NotReadyException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class FileListAdapter
@@ -350,7 +345,7 @@ public class FileListAdapter
         if (merger instanceof FileHolderMerger) {
             switch (((FileHolderMerger) merger).getType()) {
                 case STORAGE:
-                    return getContext().getString(R.string.text_storage);
+                    return getContext().getString(R.string.text_storage_devices);
                 case PUBLIC_FOLDER:
                     return getContext().getString(R.string.text_shortcuts);
                 case FOLDER:
@@ -518,6 +513,7 @@ public class FileListAdapter
         }
 
         // Don't let these folders be selected
+        // yes please it will ruin our logic
         @Override
         public boolean setSelectableSelected(boolean selected) {
             return false;
