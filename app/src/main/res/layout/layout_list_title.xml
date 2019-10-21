@@ -19,12 +19,4 @@
         android:paddingEnd="@dimen/padding_list_content_icon_main_margin_left"
         android:paddingRight="@dimen/padding_list_content_icon_main_margin_left" />
 
-    <CheckBox
-        android:layout_width="@dimen/dp_20"
-        android:layout_height="@dimen/dp_20"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/state_selected_image_rounded_blue"
-        android:button="@null" />
-
 </RelativeLayout>

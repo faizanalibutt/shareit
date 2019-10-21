@@ -94,6 +94,7 @@
         <item name="stateSelectedImage">@drawable/state_selected_image</item>
         <item name="stateSelectedImageRounded">@drawable/state_selected_image_rounded</item>
         <item name="stateSelectedImageRoundedCustom">@drawable/state_selected_image_rounded_custom</item>
+        <item name="stateSelectedImageRoundedFile">@drawable/state_selected_image_rounded_file</item>
         <item name="stateSelectedImageRoundedGuiding">
             @drawable/state_selected_image_rounded_guiding
         </item>

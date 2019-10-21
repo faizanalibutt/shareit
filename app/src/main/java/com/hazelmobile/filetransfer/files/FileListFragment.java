@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,7 +30,6 @@ import com.hazelmobile.filetransfer.pictures.GroupEditableListFragment;
 import com.hazelmobile.filetransfer.pictures.NotReadyException;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FileListFragment
@@ -250,18 +248,6 @@ public class FileListFragment
             public void onQuickActions(final GroupEditableListAdapter.GroupViewHolder clazz) {
                 if (!clazz.isRepresentative()) {
                     registerLayoutViewClicks(clazz);
-
-                    /*clazz.getView().findViewById(R.id.layout_image).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (getSelectionConnection() != null) {
-                                getSelectionConnection().setSelected(clazz.getAdapterPosition());
-                                SelectionCallbackGlobal.setColor(true);
-                            } else {
-                                SelectionCallbackGlobal.setColor(false);
-                            }
-                        }
-                    });*/
 
                     clazz.getView().findViewById(R.id.selector).setOnClickListener(new View.OnClickListener() {
                         @Override

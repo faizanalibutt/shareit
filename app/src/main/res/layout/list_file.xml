@@ -2,7 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/ListContentLayoutStyle.Narrow.WithOverflowButton"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_file">
 
     <ImageView
         android:id="@+id/menu"
@@ -13,7 +14,7 @@
         android:contentDescription="@string/app_name" />
 
     <include
-        layout="@layout/generic_view_selection_rounded_custom"
+        layout="@layout/generic_view_selection_rounded_file"
         android:layout_width="@dimen/dp_20"
         android:layout_marginStart="@dimen/dp_10"
         android:layout_height="@dimen/dp_20"

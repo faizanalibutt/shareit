@@ -94,10 +94,10 @@
     <string name="text_music">Music</string>
     <string name="text_fileRoot">File root</string>
     <string name="text_receivedFiles">Received files</string>
-    <string name="text_storage">Storage</string>
+    <string name="text_storage">STORAGE DEVICES</string>
     <string name="text_internalStorage">Internal storage</string>
     <string name="text_emulatedMediaDirectory">Emulated (%s)</string>
-    <string name="text_shortcuts">Shortcuts</string>
+    <string name="text_shortcuts">CATEGORIES</string>
     <string name="text_recentFiles">Recent files</string>
     <string name="text_pendingTransfers">Pending transfers</string>
     <string name="text_file">File</string>
