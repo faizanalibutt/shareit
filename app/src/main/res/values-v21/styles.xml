@@ -22,4 +22,6 @@
         <item name="colorPrimary">@color/white</item>
         <item name="statusBarColor">?colorPrimaryDark</item>
     </style>
+
+    <dimen name="font_size_monster">48sp</dimen>
 </resources>

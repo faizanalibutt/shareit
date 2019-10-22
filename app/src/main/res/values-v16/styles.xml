@@ -3,4 +3,6 @@
     <style name="TextAppearance.Ubuntu">
         <item name="android:fontFamily">@font/ubuntu_formatted</item>
     </style>
+
+    <dimen name="font_size_monster">48sp</dimen>
 </resources>

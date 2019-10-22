@@ -118,6 +118,10 @@
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
+    <style name="TextAppearance.Primary.Enlarge">
+        <item name="android:textSize">@dimen/font_size_monster</item>
+    </style>
+
     <style name="TextAppearance.Primary.SingleLine">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
@@ -334,4 +338,5 @@
     </style>
 
     <dimen name="icon_size_list_normal_extend">20dp</dimen>
+    <dimen name="font_size_monster">48sp</dimen>
 </resources>

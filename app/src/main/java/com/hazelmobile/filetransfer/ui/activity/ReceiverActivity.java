@@ -26,25 +26,6 @@ public class ReceiverActivity extends AppCompatActivity {
 
         final RippleBackground pulse = findViewById(R.id.content);
         pulse.startRippleAnimation();
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                foundDevice();
-            }
-        },3000);*/
     }
 
-    /*private void foundDevice(){
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(400);
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        ArrayList<Animator> animatorList=new ArrayList<Animator>();
-        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(foundDevice, "ScaleX", 0f, 1.2f, 1f);
-        animatorList.add(scaleXAnimator);
-        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(foundDevice, "ScaleY", 0f, 1.2f, 1f);
-        animatorList.add(scaleYAnimator);
-        animatorSet.playTogether(animatorList);
-        foundDevice.setVisibility(View.VISIBLE);
-        animatorSet.start();
-    }*/
 }
