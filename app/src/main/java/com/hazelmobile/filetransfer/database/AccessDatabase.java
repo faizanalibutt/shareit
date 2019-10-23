@@ -1,4 +1,3 @@
-/*
 package com.hazelmobile.filetransfer.database;
 
 import android.app.Activity;
@@ -10,40 +9,34 @@ import android.database.SQLException;
 
 import androidx.collection.ArrayMap;
 
-
 import com.genonbeta.android.database.CursorItem;
 import com.genonbeta.android.database.DatabaseObject;
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLType;
 import com.genonbeta.android.database.SQLValues;
 import com.genonbeta.android.database.SQLiteDatabase;
-import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.files.TransferGroup;
 import com.hazelmobile.filetransfer.files.TransferObject;
-import com.hazelmobile.filetransfer.files.TransferUtils;
-import com.hazelmobile.filetransfer.files.WorkerService;
+import com.hazelmobile.filetransfer.util.TransferUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-*/
 /**
  * Created by: veli
- * Date: 4/14/17 11:47 PM
- *//*
+ * Date: 4/14/17 11:47 PM*/
+
 
 
 public class AccessDatabase extends SQLiteDatabase {
-    */
-/*
-     * New database versioning notes;
+     /** New database versioning notes;
      * A- Do not remove all the available tables whenever the database is updated
      * B- Starting with the version 7, it is decided that individual changes to the database are healthier
      * C- From now on, the changes to the database will be separated to sections, one of which is belonging to
-     * 		below version 6 and the other which is new generation 7
-     *//*
+     * 		below version 6 and the other which is new generation 7*/
+
 
 
     public static final String TAG = AccessDatabase.class.getSimpleName();
@@ -141,12 +134,8 @@ public class AccessDatabase extends SQLiteDatabase {
     public void onUpgrade(android.database.sqlite.SQLiteDatabase database, int old, int current) {
         // Database Migration Rules
 
-        */
-/*
-         * Version 6 was until version 1.2.5.12 and we don't have any new changes compared to version
-         * 6, so we only included version 5 which we did not note the changes
-         *//*
-
+         /**Version 6 was until version 1.2.5.12 and we don't have any new changes compared to version
+         * 6, so we only included version 5 which we did not note the changes*/
 
         SQLValues databaseTables = getDatabaseTables();
 
@@ -439,7 +428,8 @@ public class AccessDatabase extends SQLiteDatabase {
         if (activity == null || activity.isFinishing())
             return;
 
-        new WorkerService.RunningTask() {
+        // TODO: 10/23/2019 AccessDb WorkerService call commented #32
+       /* new WorkerService.RunningTask() {
             @Override
             protected void onRun() {
                 if (getService() != null)
@@ -448,7 +438,7 @@ public class AccessDatabase extends SQLiteDatabase {
                 runnable.run();
             }
         }.setTitle(activity.getString(R.string.mesg_removing))
-                .run(activity);
+                .run(activity);*/
     }
 
     @Override
@@ -471,4 +461,3 @@ public class AccessDatabase extends SQLiteDatabase {
     }
 }
 
-*/

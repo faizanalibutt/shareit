@@ -10,11 +10,11 @@ import androidx.lifecycle.Observer
 import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
 import com.hazelmobile.filetransfer.R
-import com.hazelmobile.filetransfer.adapter.ApplicationListFragment
-import com.hazelmobile.filetransfer.adapter.MusicListFragment
-import com.hazelmobile.filetransfer.adapter.SelectionCallbackGlobal
-import com.hazelmobile.filetransfer.adapter.VideoListFragment
-import com.hazelmobile.filetransfer.files.FileExplorerFragment
+import com.hazelmobile.filetransfer.ui.fragment.ApplicationListFragment
+import com.hazelmobile.filetransfer.ui.fragment.MusicListFragment
+import com.hazelmobile.filetransfer.SelectionCallbackGlobal
+import com.hazelmobile.filetransfer.ui.fragment.VideoListFragment
+import com.hazelmobile.filetransfer.ui.fragment.FileExplorerFragment
 import com.hazelmobile.filetransfer.files.SharingActionModeCallback
 import com.hazelmobile.filetransfer.pictures.*
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter

@@ -1,0 +1,951 @@
+/*
+package com.hazelmobile.filetransfer.ui.fragment;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Service;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.genonbeta.android.framework.util.Interrupter;
+import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.model.Bluetooth;
+import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.pictures.Keyword;
+import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
+import com.hazelmobile.filetransfer.ui.UITask;
+import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
+import com.hazelmobile.filetransfer.ui.callback.IconSupport;
+import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
+import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
+import com.hazelmobile.filetransfer.util.ConnectionUtils;
+import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
+*/
+/**
+ * created by: veli
+ * modified by: faizi
+ * date: 12/04/18 17:21
+ *//*
+
+
+public class BarcodeConnectFragmentDemo
+        extends com.genonbeta.android.framework.app.Fragment
+        implements TitleSupport, UITask, IconSupport, ConnectionManagerActivity.DeviceSelectionSupport {
+
+    public static final String TAG = "BarcodeConnectFragment";
+    private static final int REQUEST_PERMISSION_CAMERA = 1;
+    private static final int REQUEST_PERMISSION_LOCATION = 2;
+    private static final int REQUEST_TURN_WIFI_ON = 4;
+    private static final int MSG_TO_FILE_SENDER_UI = 0X88;
+    private static final int MSG_TO_SHOW_SCAN_RESULT = 0X99;
+    private static final int STATE_LISTENING = 1;
+    private static final int STATE_CONNECTING = 2;
+    private static final int STATE_CONNECTED = 3;
+    private static final int STATE_CONNECTION_FAILED = 4;
+    static final int STATE_MESSAGE_RECEIVED = 5;
+    static final String APP_NAME = "BTChat";
+    //private ImageView retryButton;
+    static final UUID MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
+
+    //private DecoratedBarcodeView mBarcodeView;
+    private UIConnectionUtils mConnectionUtils;
+    private ViewGroup mConductContainer;
+    private TextView mConductText, status;
+    private ImageView mConductImage;
+    private ImageView mTextModeIndicator;
+    private Button mConductButton;
+    private Button mTaskInterruptButton;
+    private View mTaskContainer;
+    private IntentFilter mIntentFilter = new IntentFilter();
+    private IntentFilter buletoothIntentFilter = new IntentFilter();
+    private IntentFilter wifiIntentFilter = new IntentFilter();
+    private NetworkDeviceSelectedListener mDeviceSelectedListener;
+    private boolean mPermissionRequestedCamera = false;
+    private boolean mPermissionRequestedLocation = false;
+    private boolean mShowAsText = false;
+    private ListView lv_result, lvb_result;
+    private SendReceive sendReceive;
+    //private String mPreviousScanResult = null;
+    private List<Bluetooth> mScanBResultList;
+    //private BluetoothScanResultAdapter bluetoothScanResultAdapter;
+    private ClientClass clientClass;
+    private List<ScanResult> mScanResultList;
+    private List<ScanResult> mPreviousList;
+    //private WifiScanResultAdapter wifiScanResultAdapter;
+
+    // #bReceiver
+    private final BroadcastReceiver bReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // When discovery finds a device
+            assert action != null;
+            switch (action) {
+                case BluetoothAdapter.ACTION_STATE_CHANGED:
+
+                    final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                    if (state == BluetoothAdapter.STATE_ON) {
+                        showMessage("ACTION_STATE_CHANGED: STATE_ON");
+                        ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().startDiscovery();
+                        showMessage("Bluetooth Discovery Started.....");
+
+                        //if (bluetoothAdapter.isDiscovering()) {
+                        //    if (mScanBResultList.size() > 0) {
+                        //        retryButton.setVisibility(View.GONE);
+                        //    } else {
+                        //    }
+                        //    if (!Apputils.toggleDeviceScanning(getContext())) {
+                        //        int i = 0;
+                        //        Toast.makeText(getContext(), R.string.mesg_stopping, Toast.LENGTH_SHORT).show();
+                        //    }
+                    }
+                    break;
+                case BluetoothDevice.ACTION_FOUND:
+
+                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    showMessage("Others device name is " + device.getName() + " " + device.getAddress());
+                    if (device.getName() != null && (device.getName().startsWith("TS") || device.getName().startsWith("AndroidShare"))) {
+
+                        showMessage("Tshot device name is " + device.getName());
+                        for (Bluetooth device1 : mScanBResultList) {
+                            if (device1.getDevice().getAddress() != null && device.getAddress().equals(device1.getDevice().getAddress())) {
+                                return;
+                            }
+                        }
+                        //retryButton.setVisibility(View.GONE);
+                        mScanBResultList.add(new Bluetooth(device, device.getName()*/
+/* + "\n" + device.getAddress()*//*
+));
+                        //bluetoothScanResultAdapter.notifyDataSetChanged();
+                    }
+                    break;
+                case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
+
+                    showMessage("Bluetooth discovery finished");
+                    ConnectionUtils.getInstance(context).getBluetoothAdapter().startDiscovery();
+                    break;
+                case BluetoothAdapter.ACTION_DISCOVERY_STARTED:
+
+                    showMessage("Bluetooth discovery started");
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    // #wReceiver
+    private final BroadcastReceiver wReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            WifiManager wifiManager = ConnectionUtils.getInstance(getContext()).getWifiManager();
+            assert action != null;
+            switch (action) {
+                case WifiManager.WIFI_STATE_CHANGED_ACTION:
+
+                    int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
+                    if (state == WifiManager.WIFI_STATE_ENABLED) {
+                        wifiManager.startScan();
+                    }
+                    break;
+                case WifiManager.SCAN_RESULTS_AVAILABLE_ACTION:
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        boolean success = intent.getBooleanExtra(
+                                WifiManager.EXTRA_RESULTS_UPDATED, false);
+                        if (success) {
+
+                            showMessage("SendReceive: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
+                            if (mScanResultList.size() > 0) {
+                                mPreviousList = mScanResultList;
+                                mScanResultList.clear();
+                            }
+                            mScanResultList = wifiManager.getScanResults();
+                            mScanResultList = ListUtils.filterWithNoPassword(mScanResultList);
+                            if (mScanResultList.size() == 0) {
+                                mScanResultList = mPreviousList;
+                            }
+                            showMessage("mScanResultList: Open Wifi Network" + ListUtils.filterWithNoPassword(mScanResultList));
+                            showMessage("mScanResultList: " + mScanResultList);
+                            //removeOtherWifis(mScanResultList);
+                            //showMessage("mScanResultList: After Updating data" + mScanResultList);
+                            if (wifiScanResultAdapter != null) {
+                                wifiScanResultAdapter = null;
+                                wifiScanResultAdapter = new WifiScanResultAdapter(getContext(), mScanResultList);
+                                lv_result.setAdapter(wifiScanResultAdapter);
+                            }
+                        }
+                    }
+                    break;
+                case WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE:
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
+                            && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                        showMessage("SendReceive: Below API 23 Wifi Scan results are " + wifiManager.getScanResults());
+                        if (mScanResultList.size() > 0) {
+                            mPreviousList = mScanResultList;
+                            mScanResultList.clear();
+                        }
+                        mScanResultList = wifiManager.getScanResults();
+                        mScanResultList = ListUtils.filterWithNoPassword(mScanResultList);
+                        if (mScanResultList.size() == 0) {
+                            mScanResultList = mPreviousList;
+                        }
+                        showMessage("mScanResultList: Open Wifi Network" + ListUtils.filterWithNoPassword(mScanResultList));
+                        //removeOtherWifis(mScanResultList);
+                        //showMessage("mScanResultList: After Updating data" + mScanResultList);
+                        if (wifiScanResultAdapter != null && mScanResultList != null) {
+                            wifiScanResultAdapter = null;
+                            wifiScanResultAdapter = new WifiScanResultAdapter(getContext(), mScanResultList);
+                            lv_result.setAdapter(wifiScanResultAdapter);
+                        }
+                    }
+                    break;
+            }
+
+        }
+    };
+
+    private UIConnectionUtils.RequestWatcher mPermissionWatcher = new UIConnectionUtils.RequestWatcher() {
+        @Override
+        public void onResultReturned(boolean result, boolean shouldWait) {
+            if (isResumed()) // isResumed
+                updateState();
+            else
+                mBarcodeView.pauseAndWait();
+
+            // We don't want to keep this when the result is ok
+            // or not asked to wait
+            //if (!shouldWait || result)
+            //    mPreviousScanResult = null;
+        }
+    };
+
+
+    @SuppressLint("HandlerLeak")
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            */
+/*if (msg.what == MSG_TO_FILE_SENDER_UI) {
+                // here we will go for further actions just like jsonobject
+            } else*//*
+
+
+            if (msg.what == MSG_TO_SHOW_SCAN_RESULT) {
+                if (mScanBResultList.size() > 0) {
+                    //retryButton.setVisibility(View.GONE);
+                    return;
+                }
+                //retryButton.setVisibility(View.VISIBLE);
+                cancelDiscovery();
+                mScanBResultList.clear();
+            }
+
+            switch (msg.what) {
+                case STATE_LISTENING:
+                    status.setText("Listening");
+                    break;
+                case STATE_CONNECTING:
+                    status.setText("Connecting");
+                    break;
+                case STATE_CONNECTED:
+                    status.setText("Connected");
+                    break;
+                case STATE_CONNECTION_FAILED:
+                    status.setText("Connection Failed");
+                    break;
+                case STATE_MESSAGE_RECEIVED:
+                    byte[] readBuff = (byte[]) msg.obj;
+                    String tempMsg = new String(readBuff, 0, msg.arg1);
+                    status.setText(tempMsg);
+                    try {
+                        JSONObject hotspotInformation = new JSONObject(tempMsg);
+                        connectToHotspot(hotspotInformation);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    };
+
+    private void connectToHotspot(ScanResult scanResult) {
+        try {
+            NetworkDeviceListAdapter.HotspotNetwork hotspotNetwork = new NetworkDeviceListAdapter.HotspotNetwork();
+            final int accessPin = 0;
+            hotspotNetwork.SSID = scanResult.SSID;
+            hotspotNetwork.qrConnection = true;
+            hotspotNetwork.password = "";
+            hotspotNetwork.keyManagement = 0;
+            makeAcquaintance(hotspotNetwork, accessPin);
+        } catch (Exception e) {
+            showMessage("SendReceive: Connecting to Open Network " + e.getMessage());
+        }
+    }
+
+    private void connectToHotspot(final JSONObject hotspotInformation) {
+
+        final DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                updateState();
+            }
+        };
+
+        try {
+
+            NetworkDeviceListAdapter.HotspotNetwork hotspotNetwork = new NetworkDeviceListAdapter.HotspotNetwork();
+            final int accessPin = hotspotInformation.has(Keyword.NETWORK_PIN)
+                    ? hotspotInformation.getInt(Keyword.NETWORK_PIN)
+                    : -1;
+
+            if (hotspotInformation.has(Keyword.NETWORK_NAME)) {
+                hotspotNetwork.SSID = hotspotInformation.getString(Keyword.NETWORK_NAME);
+                hotspotNetwork.qrConnection = true;
+                boolean passProtected = hotspotInformation.has(Keyword.NETWORK_PASSWORD);
+
+                if (passProtected) {
+                    hotspotNetwork.password = hotspotInformation.getString(Keyword.NETWORK_PASSWORD);
+                    hotspotNetwork.keyManagement = hotspotInformation.getInt(Keyword.NETWORK_KEYMGMT);
+                }
+
+                makeAcquaintance(hotspotNetwork, accessPin);
+            } else if (hotspotInformation.has(Keyword.NETWORK_ADDRESS_IP)) {
+                final String bssid = hotspotInformation.getString(Keyword.NETWORK_ADDRESS_BSSID);
+                final String ipAddress = hotspotInformation.getString(Keyword.NETWORK_ADDRESS_IP);
+
+                WifiInfo wifiInfo = mConnectionUtils.getConnectionUtils().getWifiManager().getConnectionInfo();
+
+                if (wifiInfo != null
+                        && wifiInfo.getBSSID() != null
+                        && wifiInfo.getBSSID().equals(bssid))
+                    makeAcquaintance(ipAddress, accessPin);
+                else {
+                    assert getActivity() != null;
+                    new AlertDialog.Builder(getActivity())
+                            .setMessage(R.string.mesg_errorNotSameNetwork)
+                            .setNegativeButton(R.string.butn_close, null)
+                            .setPositiveButton(R.string.butn_skip, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    makeAcquaintance(ipAddress, accessPin);
+                                }
+                            })
+                            .setOnDismissListener(dismissListener)
+                            .show();
+                }
+            } else {
+                throw new JSONException("Failed to attain known variables.");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            assert getActivity() != null;
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.text_unrecognizedQrCode)
+                    .setMessage(hotspotInformation.toString())
+                    .setNegativeButton(R.string.butn_close, null)
+                    .setPositiveButton(R.string.butn_show, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            TextStreamObject textObject = new TextStreamObject(
+                                    AppUtils.getUniqueNumber(), hotspotInformation.toString());
+                            AppUtils.getDatabase(getContext()).publish(textObject);
+
+                            Toast.makeText(getContext(), R.string.mesg_textStreamSaved, Toast.LENGTH_SHORT).show();
+
+                            startActivity(new Intent(getContext(), TextEditorActivity.class)
+                                    .setAction(TextEditorActivity.ACTION_EDIT_TEXT)
+                                    .putExtra(TextEditorActivity.EXTRA_CLIPBOARD_ID, textObject.id));
+                        }
+                    })
+                    .setNeutralButton(R.string.butn_copyToClipboard, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (getContext() != null) {
+                                ClipboardManager manager = (ClipboardManager) getContext().getSystemService(
+                                        Service.CLIPBOARD_SERVICE);
+                                manager.setPrimaryClip(ClipData.newPlainText("copiedText", hotspotInformation.toString()));
+                                Toast.makeText(getContext(), R.string.mesg_textCopiedToClipboard, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .setOnDismissListener(dismissListener)
+                    .show();
+        }
+    }
+
+    private void updateUI() {
+        showMessage("View Created For Barcode Fragment");
+        getOrUpdateWifiScanResult();
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 12000);
+    }
+
+    private void cancelDiscovery() {
+
+        if (getContext() != null) {
+            BluetoothAdapter bluetoothAdapter = ConnectionUtils.getInstance(getContext()).getBluetoothAdapter();
+            if (bluetoothAdapter.isDiscovering()) {
+                bluetoothAdapter.cancelDiscovery();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            //getActivity().unregisterReceiver(mMessageReceiver);
+            // todo finding a way to close things
+            */
+/*
+             *             ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
+             *             connectionUtils.disableCurrentNetwork();
+             *             connectionUtils.getBluetoothAdapter().cancelDiscovery();
+             *             connectionUtils.getBluetoothAdapter().disable();
+             *//*
+
+            removeHanlderMessages();
+            if (sendReceive != null && sendReceive.bluetoothSocket != null)
+                sendReceive.bluetoothSocket.close();
+            if (sendReceive != null) {
+                sendReceive.interrupt();
+                sendReceive = null;
+            }
+            if (clientClass != null && clientClass.socket != null) clientClass.socket.close();
+            if (clientClass != null) {
+                clientClass.interrupt();
+                clientClass = null;
+            }
+            if (mScanBResultList != null && mScanBResultList.size() > 0) {
+                mScanBResultList.clear();
+            }
+            if (mScanResultList != null && mScanResultList.size() > 0) {
+                mScanResultList.clear();
+            }
+            if (mPreviousList != null && mPreviousList.size() > 0) {
+                mPreviousList.clear();
+            }
+            ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
+            if (connectionUtils.getBluetoothAdapter().isDiscovering())
+                connectionUtils.getBluetoothAdapter().cancelDiscovery();
+
+            Set<BluetoothDevice> bluetoothDeviceList = connectionUtils.getBluetoothAdapter().getBondedDevices();
+            if (bluetoothDeviceList.size() > 0) {
+                for (BluetoothDevice bluetoothDevice : bluetoothDeviceList) {
+                    try {
+                        if (bluetoothDevice.getName().contains("TS") || bluetoothDevice.getName().contains("AndroidShare")) {
+                            Method m = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
+                            m.invoke(bluetoothDevice, (Object[]) null);
+                            showMessage("SendReceive: Removed Device Name is: " + bluetoothDevice);
+                        }
+                    } catch (Exception e) {
+                        showMessage("SendReceive: Removing has been failed." + e.getMessage());
+                    }
+                }
+            }
+
+            connectionUtils.getBluetoothAdapter().disable();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showMessage("onDestroy(): " + e);
+        }
+    }
+
+    private void removeHanlderMessages() {
+        mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
+        mHandler.removeMessages(STATE_CONNECTED);
+        mHandler.removeMessages(STATE_CONNECTING);
+        mHandler.removeMessages(STATE_CONNECTION_FAILED);
+        mHandler.removeMessages(STATE_MESSAGE_RECEIVED);
+        mHandler.removeMessages(STATE_LISTENING);
+
+        mHandler = null;
+    }
+
+    public static void showMessage(String message) {
+        Log.d(ConnectionUtils.TAG, message);
+    }
+
+    private void getOrUpdateWifiScanResult() {
+
+        // google restricts startscan() call to every 2 minute for api 28 and above.
+        if (getContext() != null) {
+
+            // FOR DEVICES HAVING OREO BELOW
+            WifiManager wifiManager = ConnectionUtils.getInstance(getContext()).getWifiManager();
+            if (wifiManager.isWifiEnabled()) {
+                boolean success = wifiManager.startScan();
+                if (success) {
+                    showMessage("SendReceive: Wifi Scan results are " + wifiManager.getScanResults());
+                    mScanResultList = wifiManager.getScanResults();
+                    mScanResultList = ListUtils.filterWithNoPassword(mScanResultList);
+                    showMessage("mScanResultList: Open Wifi Network" + ListUtils.filterWithNoPassword(mScanResultList));
+                    Log.d(TAG, "mScanResultList: " + mScanResultList);
+                    //removeOtherWifis();
+                    //showMessage("mScanResultList: After Updating data" + mScanResultList);
+                }
+            } else {
+                ConnectionUtils.getInstance(getContext()).openWifi();
+            }
+
+            wifiScanResultAdapter = new WifiScanResultAdapter(getContext(), mScanResultList);
+            lv_result.setAdapter(wifiScanResultAdapter);
+            lv_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    ScanResult scanResult = mScanResultList.get(position);
+                    connectToHotspot(scanResult);
+                }
+            });
+
+            // FOR DEVICES HAVING OREO ABOVE
+            ConnectionUtils.getInstance(getContext()).openBluetooth();
+            showMessage("Bonded Devices are " + ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().getBondedDevices());
+            bluetoothScanResultAdapter = new BluetoothScanResultAdapter(getContext(), mScanBResultList);
+            lvb_result.setAdapter(bluetoothScanResultAdapter);
+            lvb_result.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Bluetooth bluetoothDevice = mScanBResultList.get(position);
+                    clientClass = new ClientClass(bluetoothDevice.getDevice());
+                    clientClass.start();
+                }
+            });
+
+        }
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())
+                    || ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())
+                    || LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction()))
+                updateState();
+        }
+    };
+
+    private NetworkDeviceLoader.OnDeviceRegisteredListener mRegisteredListener = new NetworkDeviceLoader.OnDeviceRegisteredListener() {
+        @Override
+        public void onDeviceRegistered(AccessDatabase database, final NetworkDevice device, final NetworkDevice.Connection connection) {
+            if (mDeviceSelectedListener != null)
+                mDeviceSelectedListener.onNetworkDeviceSelected(device, connection);
+        }
+    };
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mConnectionUtils = new UIConnectionUtils(ConnectionUtils.getInstance(getContext()), this);
+
+        mIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
+
+
+        buletoothIntentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+        buletoothIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        buletoothIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        buletoothIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+
+        wifiIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            wifiIntentFilter.addAction(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE);
+            wifiIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        }
+
+        setHasOptionsMenu(true);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.demo_layout_barcode_connect, container, false);
+
+        mConductContainer = view.findViewById(R.id.layout_barcode_connect_conduct_container);
+        mTextModeIndicator = view.findViewById(R.id.layout_barcode_connect_mode_text_indicator);
+        mConductButton = view.findViewById(R.id.layout_barcode_connect_conduct_button);
+        mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
+        mConductText = view.findViewById(R.id.layout_barcode_connect_conduct_text);
+        mConductImage = view.findViewById(R.id.layout_barcode_connect_conduct_image);
+        mTaskContainer = view.findViewById(R.id.container_task);
+        mTaskInterruptButton = view.findViewById(R.id.task_interrupter_button);
+        lv_result = view.findViewById(R.id.lv_result);
+        lvb_result = view.findViewById(R.id.lvb_result);
+        status = view.findViewById(R.id.status);
+        mScanBResultList = new ArrayList<>();
+        mScanResultList = new ArrayList<>();
+        mPreviousList = new ArrayList<>();
+        return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.actions_barcode_scanner, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.show_help) {
+            assert getActivity() != null;
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.text_scanQRCodeHelp)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+        } else if (id == R.id.change_mode) {
+            mShowAsText = !mShowAsText;
+            mTextModeIndicator.setVisibility(mShowAsText ? View.VISIBLE : View.GONE);
+            item.setIcon(mShowAsText ? R.drawable.ic_qrcode_white_24dp : R.drawable.ic_short_text_white_24dp);
+
+            createSnackbar(mShowAsText ? R.string.mesg_qrScannerTextMode : R.string.mesg_qrScannerDefaultMode)
+                    .show();
+
+            updateState();
+        } else
+            return super.onOptionsItemSelected(item);
+
+        return true;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mBarcodeView.decodeContinuous(new BarcodeCallback() {
+            @Override
+            public void barcodeResult(BarcodeResult result) {
+                //handleBarcode(result.getResult().getText());
+            }
+
+            @Override
+            public void possibleResultPoints(List<ResultPoint> resultPoints) {
+
+            }
+        });
+        updateUI();
+        */
+/*retryButton = view.findViewById(R.id.actions_transfer_receiver_retry_receiving);
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getOrUpdateWifiScanResult();
+                retryButton.setVisibility(View.GONE);
+                mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 20000);
+            }
+        });*//*
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getContext() != null) {
+            getContext().registerReceiver(mReceiver, mIntentFilter);
+            getContext().registerReceiver(bReceiver, buletoothIntentFilter);
+            getContext().registerReceiver(wReceiver, wifiIntentFilter);
+            BluetoothAdapter bluetoothAdapter = ConnectionUtils.getInstance(getContext()).getBluetoothAdapter();
+            if (!bluetoothAdapter.isDiscovering() && bluetoothAdapter.isEnabled()) {
+                ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().startDiscovery();
+            }
+        }
+        updateState();
+        //if (mPreviousScanResult != null)
+        //    handleBarcode(mPreviousScanResult);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (getContext() != null) {
+            getContext().unregisterReceiver(mReceiver);
+            getContext().unregisterReceiver(bReceiver);
+            getContext().unregisterReceiver(wReceiver);
+            if (ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().isDiscovering()) {
+                ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
+            }
+        }
+        mBarcodeView.pauseAndWait();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (permissions.length > 0)
+            for (int permIterator = 0; permIterator < permissions.length; permIterator++) {
+                if (Manifest.permission.CAMERA.equals(permissions[permIterator]) &&
+                        grantResults[permIterator] == PackageManager.PERMISSION_GRANTED) {
+                    updateState();
+                    mPermissionRequestedCamera = false;
+                }
+            }
+    }
+
+    @Override
+    public int getIconRes() {
+        return R.drawable.ic_qrcode_white_24dp;
+    }
+
+    @Override
+    public CharSequence getTitle(Context context) {
+        return context.getString(R.string.text_scanQrCode);
+    }
+
+    private void makeAcquaintance(Object object, int accessPin) {
+        mConnectionUtils.makeAcquaintance(getActivity(), BarcodeConnectFragmentDemo.this, object, accessPin, mRegisteredListener);
+    }
+
+    public void setDeviceSelectedListener(NetworkDeviceSelectedListener listener) {
+        mDeviceSelectedListener = listener;
+    }
+
+    private void updateState(boolean isConnecting, final Interrupter interrupter) {
+        if (!isAdded()) {
+            mBarcodeView.pauseAndWait();
+            return;
+        }
+
+        if (isConnecting) {
+            // Keep showing barcode view
+            mBarcodeView.pauseAndWait();
+            setConductItemsShowing(false);
+        } else {
+            mBarcodeView.resume();
+            updateState();
+        }
+
+        mTaskContainer.setVisibility(!isConnecting ? View.VISIBLE : View.GONE);
+
+        mTaskInterruptButton.setOnClickListener(isConnecting ? new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                interrupter.interrupt();
+            }
+        } : null);
+    }
+
+    private void updateState() {
+        if (!isAdded())
+            return;
+
+        final boolean wifiEnabled = mConnectionUtils.getConnectionUtils().getWifiManager().isWifiEnabled();
+        assert getContext() != null;
+        final boolean hasCameraPermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED;
+        final boolean hasLocationPermission = Build.VERSION.SDK_INT < 26 // With Android Oreo, to gather Wi-Fi information, minimal access to location is needed
+                || mConnectionUtils.getConnectionUtils().canAccessLocation();
+        final boolean state = (wifiEnabled || mShowAsText) && hasCameraPermission && hasLocationPermission;
+
+        if (!state) {
+            mBarcodeView.pauseAndWait();
+
+            if (!hasCameraPermission) {
+                mConductImage.setImageResource(R.drawable.ic_camera_white_144dp);
+                mConductText.setText(R.string.text_cameraPermissionRequired);
+                mConductButton.setText(R.string.butn_ask);
+
+                mConductButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (getActivity() != null)
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
+                    }
+                });
+
+                if (!mPermissionRequestedCamera && getActivity() != null)
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
+
+                mPermissionRequestedCamera = true;
+            } else if (!hasLocationPermission) {
+                mConductImage.setImageResource(R.drawable.ic_perm_device_information_white_144dp);
+                mConductText.setText(R.string.mesg_locationPermissionRequiredAny);
+                mConductButton.setText(R.string.butn_enable);
+
+                mConductButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mConnectionUtils.validateLocationPermission(getActivity(), REQUEST_PERMISSION_LOCATION, mPermissionWatcher);
+                    }
+                });
+
+                if (!mPermissionRequestedLocation && getActivity() != null)
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_CAMERA);
+
+                mPermissionRequestedLocation = true;
+            } else {
+                mConductImage.setImageResource(R.drawable.ic_signal_wifi_off_white_144dp);
+                mConductText.setText(R.string.text_scanQRWifiRequired);
+                mConductButton.setText(R.string.butn_enable);
+
+                mConductButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mConnectionUtils.turnOnWiFi(getActivity(), REQUEST_TURN_WIFI_ON, mPermissionWatcher);
+                    }
+                });
+            }
+        } else {
+            mBarcodeView.resume();
+            mConductText.setText(R.string.text_scanQRCodeHelp);
+        }
+
+        setConductItemsShowing(!state);
+        //mBarcodeView.setVisibility(state ? View.VISIBLE : View.GONE);
+    }
+
+    private void setConductItemsShowing(boolean showing) {
+        mConductContainer.setVisibility(showing ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void updateTaskStarted(Interrupter interrupter) {
+        updateState(true, interrupter);
+    }
+
+    @Override
+    public void updateTaskStopped() {
+        updateState(false, null);
+    }
+
+    private class ClientClass extends Thread {
+        private BluetoothDevice device;
+        private BluetoothSocket socket;
+
+        ClientClass(BluetoothDevice device1) {
+            device = device1;
+
+            try {
+                socket = device.createRfcommSocketToServiceRecord(MY_UUID);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void run() {
+            try {
+                socket.connect();
+                Message message = Message.obtain();
+                message.what = STATE_CONNECTED;
+                mHandler.sendMessage(message);
+
+                sendReceive = new SendReceive(socket);
+                sendReceive.start();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Message message = Message.obtain();
+                message.what = STATE_CONNECTION_FAILED;
+                if (mHandler != null) {
+                    mHandler.sendMessage(message);
+                }
+            }
+            showMessage("Client: I'm still on.");
+        }
+    }
+
+    private class SendReceive extends Thread {
+        private BluetoothSocket bluetoothSocket = null;
+        private final InputStream inputStream;
+        private final OutputStream outputStream;
+
+        SendReceive(BluetoothSocket socket) {
+
+            InputStream tempIn = null;
+            OutputStream tempOut = null;
+
+            try {
+                bluetoothSocket = socket;
+                tempIn = bluetoothSocket.getInputStream();
+                tempOut = bluetoothSocket.getOutputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            inputStream = tempIn;
+            outputStream = tempOut;
+        }
+
+        public void run() {
+            byte[] buffer = new byte[1024];
+            int bytes;
+
+            while (true) {
+                try {
+                    bytes = inputStream.read(buffer);
+                    mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    break;
+                }
+            }
+            showMessage("SendReceive: I'm still on.");
+        }
+
+        public void write(byte[] bytes) {
+            try {
+                outputStream.write(bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+}
+*/

@@ -1,6 +1,13 @@
 package com.hazelmobile.filetransfer.pictures;
 
 import android.content.Context;
+
+import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.files.AppConfig;
+import com.hazelmobile.filetransfer.files.TransferObject;
+import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.util.AddressedInterface;
+
 import java.text.NumberFormat;
 import java.util.HashMap;
 
@@ -11,7 +18,7 @@ import java.util.HashMap;
 
 public class TextUtils {
 
-    /*public static int getAdapterName(String adapterName) {
+    public static int getAdapterName(String adapterName) {
         HashMap<String, Integer> associatedNames = new HashMap<>();
 
         associatedNames.put("wlan", R.string.text_interfaceWireless);
@@ -34,16 +41,16 @@ public class TextUtils {
 
     public static String getAdapterName(Context context, AddressedInterface addressedInterface) {
         return getAdapterName(context, addressedInterface.getNetworkInterface().getDisplayName());
-    }*/
+    }
 
-    /*public static String getAdapterName(Context context, String adapterName) {
+    public static String getAdapterName(Context context, String adapterName) {
         int adapterNameResource = getAdapterName(adapterName);
 
         if (adapterNameResource == -1)
             return adapterName;
 
         return context.getString(adapterNameResource);
-    }*/
+    }
 
     public static String getLetters(String text, int length) {
         if (text == null || text.length() == 0)
@@ -65,7 +72,7 @@ public class TextUtils {
         return stringBuilder.toString().toUpperCase();
     }
 
-    /*public static String getTransactionFlagString(Context context, TransferObject transferObject, NumberFormat percentFormat) {
+    public static String getTransactionFlagString(Context context, TransferObject transferObject, NumberFormat percentFormat) {
         switch (transferObject.flag) {
             case DONE:
                 return percentFormat.format(1.0);
@@ -76,9 +83,9 @@ public class TextUtils {
             default:
                 return context.getString(getTransactionFlagString(transferObject.flag));
         }
-    }*/
+    }
 
-    /*public static int getTransactionFlagString(TransferObject.Flag flag) {
+    public static int getTransactionFlagString(TransferObject.Flag flag) {
         switch (flag) {
             case PENDING:
                 return R.string.text_flagPending;
@@ -88,20 +95,20 @@ public class TextUtils {
                 return R.string.text_flagInterrupted;
             case IN_PROGRESS:
                 return R.string.text_flagRunning;
-				*//*
-			case RESUME:
-				return R.string.text_flagResume; *//*
+
+			/*case RESUME:
+				return R.string.text_flagResume;*/
             case REMOVED:
                 return R.string.text_flagRemoved;
             default:
                 return R.string.text_unknown;
         }
-    }*/
+    }
 
-    /*public static String makeWebShareLink(Context context, String address) {
+    public static String makeWebShareLink(Context context, String address) {
         return context.getString(R.string.mode_webShareAddress, address, AppConfig
                 .SERVER_PORT_WEBSHARE);
-    }*/
+    }
 
     public static boolean searchWord(String word, String searchThis) {
         return searchThis == null

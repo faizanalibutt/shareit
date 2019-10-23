@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.util.callback.TitleSupport;
+import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 
 public class ImageListFragment
         extends GalleryGroupEditableListFragment<ImageListAdapter.ImageHolder, GroupEditableListAdapter.GroupViewHolder, ImageListAdapter>

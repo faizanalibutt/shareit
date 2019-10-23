@@ -11,7 +11,7 @@ import androidx.viewpager.widget.ViewPager
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.ui.activity.BaseActivity
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
-import com.hazelmobile.filetransfer.util.callback.TitleSupport
+import com.hazelmobile.filetransfer.ui.callback.TitleSupport
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(), TitleSupport, BaseActivity.OnBackPressedListener {

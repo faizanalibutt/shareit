@@ -17,4 +17,9 @@ class MainActivity : BaseActivity() {
 
     }
 
+    companion object {
+
+        val REQUEST_PERMISSION_ALL = 1
+    }
+
 }

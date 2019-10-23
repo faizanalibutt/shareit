@@ -7,12 +7,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.hazelmobile.filetransfer.R
+import com.hazelmobile.filetransfer.ui.activity.ConnectionManagerActivityDemo
 import com.hazelmobile.filetransfer.ui.activity.ContentSharingActivity
-import com.hazelmobile.filetransfer.ui.activity.ReceiverActivity
-import com.hazelmobile.filetransfer.util.callback.IconSupport
-import com.hazelmobile.filetransfer.util.callback.TitleSupport
+import com.hazelmobile.filetransfer.ui.activity.PermissionsActivity
+import com.hazelmobile.filetransfer.ui.callback.IconSupport
+import com.hazelmobile.filetransfer.ui.callback.TitleSupport
 import kotlinx.android.synthetic.main.fragment_share.*
 
 class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
@@ -32,7 +32,10 @@ class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
         }
 
         receive_button.setOnClickListener {
-            startActivity(Intent(context, ReceiverActivity::class.java))
+            startActivity(
+                Intent(context, PermissionsActivity::class.java)
+                    .putExtra(ConnectionManagerActivityDemo.RECEIVE, true)
+            )
         }
     }
 

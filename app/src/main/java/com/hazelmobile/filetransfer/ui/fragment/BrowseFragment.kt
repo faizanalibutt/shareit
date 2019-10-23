@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.hazelmobile.filetransfer.R
-import com.hazelmobile.filetransfer.util.callback.IconSupport
-import com.hazelmobile.filetransfer.util.callback.TitleSupport
+import com.hazelmobile.filetransfer.ui.callback.IconSupport
+import com.hazelmobile.filetransfer.ui.callback.TitleSupport
 
 class BrowseFragment : Fragment(), IconSupport, TitleSupport {
 

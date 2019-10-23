@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.ui.adapter.FileListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

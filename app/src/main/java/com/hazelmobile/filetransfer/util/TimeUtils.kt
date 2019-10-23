@@ -3,6 +3,7 @@ package com.hazelmobile.filetransfer.util
 import android.content.Context
 import android.text.format.DateUtils
 import com.genonbeta.android.framework.util.date.ElapsedTime
+import com.hazelmobile.filetransfer.R
 
 object TimeUtils {
 
@@ -45,58 +46,77 @@ object TimeUtils {
         return string.toString()
     }
 
-    /*public static String getFriendlyElapsedTime(Context context, long estimatedTime) {
-        ElapsedTime elapsedTime = new ElapsedTime(estimatedTime);
-        List<String> appendList = new ArrayList<>();
+    fun getFriendlyElapsedTime(context: Context, estimatedTime: Long): String {
+        val elapsedTime = ElapsedTime(estimatedTime)
+        val appendList = ArrayList<String>()
 
-        if (elapsedTime.getYears() > 0)
-            appendList.add(context.getString(R.string.text_yearCountShort, elapsedTime.getYears()));
+        if (elapsedTime.years > 0)
+            appendList.add(context.getString(R.string.text_yearCountShort, elapsedTime.years))
 
-        if (elapsedTime.getMonths() > 0)
-            appendList.add(context.getString(R.string.text_monthCountShort, elapsedTime.getMonths()));
+        if (elapsedTime.months > 0)
+            appendList.add(context.getString(R.string.text_monthCountShort, elapsedTime.months))
 
-        if (elapsedTime.getYears() == 0) {
-            if (elapsedTime.getDays() > 0)
-                appendList.add(context.getString(R.string.text_dayCountShort, elapsedTime.getDays()));
+        if (elapsedTime.years == 0L) {
+            if (elapsedTime.days > 0)
+                appendList.add(context.getString(R.string.text_dayCountShort, elapsedTime.days))
 
-            if (elapsedTime.getMonths() == 0) {
-                if (elapsedTime.getHours() > 0)
-                    appendList.add(context.getString(R.string.text_hourCountShort, elapsedTime.getHours()));
+            if (elapsedTime.months == 0L) {
+                if (elapsedTime.hours > 0)
+                    appendList.add(
+                        context.getString(
+                            R.string.text_hourCountShort,
+                            elapsedTime.hours
+                        )
+                    )
 
-                if (elapsedTime.getDays() == 0) {
-                    if (elapsedTime.getMinutes() > 0)
-                        appendList.add(context.getString(R.string.text_minuteCountShort, elapsedTime.getMinutes()));
+                if (elapsedTime.days == 0L) {
+                    if (elapsedTime.minutes > 0)
+                        appendList.add(
+                            context.getString(
+                                R.string.text_minuteCountShort,
+                                elapsedTime.minutes
+                            )
+                        )
 
-                    if (elapsedTime.getHours() == 0)
-                        // always applied
-                        appendList.add(context.getString(R.string.text_secondCountShort, elapsedTime.getSeconds()));
+                    if (elapsedTime.hours == 0L)
+                    // always applied
+                        appendList.add(
+                            context.getString(
+                                R.string.text_secondCountShort,
+                                elapsedTime.seconds
+                            )
+                        )
                 }
             }
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
+        val stringBuilder = StringBuilder()
 
-        for (String appendItem : appendList) {
-            if (stringBuilder.length() > 0)
-                stringBuilder.append(" ");
+        for (appendItem in appendList) {
+            if (stringBuilder.length > 0)
+                stringBuilder.append(" ")
 
-            stringBuilder.append(appendItem);
+            stringBuilder.append(appendItem)
         }
 
-        return stringBuilder.toString();
+        return stringBuilder.toString()
     }
 
-    public static String getTimeAgo(Context context, long time) {
-        int differ = (int) ((System.currentTimeMillis() - time) / 1000);
+    fun getTimeAgo(context: Context, time: Long): String {
+        val differ = ((System.currentTimeMillis() - time) / 1000).toInt()
 
         if (differ == 0)
-            return context.getString(R.string.text_timeJustNow);
+            return context.getString(R.string.text_timeJustNow)
         else if (differ < 60)
-            return context.getResources().getQuantityString(R.plurals.text_secondsAgo, differ, differ);
+            return context.resources.getQuantityString(R.plurals.text_secondsAgo, differ, differ)
         else if (differ < 3600)
-            return context.getResources().getQuantityString(R.plurals.text_minutesAgo, differ / 60, differ / 60);
+            return context.resources.getQuantityString(
+                R.plurals.text_minutesAgo,
+                differ / 60,
+                differ / 60
+            )
 
-        return context.getString(R.string.text_longAgo);
-    }*/
+        return context.getString(R.string.text_longAgo)
+    }
 
 }

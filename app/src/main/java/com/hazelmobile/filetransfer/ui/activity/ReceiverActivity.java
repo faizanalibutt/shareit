@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
+import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.library.RippleBackground;
 
-public class ReceiverActivity extends AppCompatActivity {
+public class ReceiverActivity extends BaseActivity
+        implements SnackbarSupport {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,4 +29,8 @@ public class ReceiverActivity extends AppCompatActivity {
         pulse.startRippleAnimation();
     }
 
+    @Override
+    public Snackbar createSnackbar(int resId, Object... objects) {
+        return null;
+    }
 }

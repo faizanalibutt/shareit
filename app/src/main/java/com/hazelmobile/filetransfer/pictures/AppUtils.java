@@ -23,12 +23,22 @@ import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.genonbeta.android.framework.preference.DbSharablePreferences;
 import com.genonbeta.android.framework.preference.SuperPreferences;
 import com.genonbeta.android.framework.util.PreferenceUtils;
 import com.hazelmobile.filetransfer.BuildConfig;
+import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.dialog.RationalePermissionRequest;
 import com.hazelmobile.filetransfer.files.App;
+import com.hazelmobile.filetransfer.files.AppConfig;
+import com.hazelmobile.filetransfer.graphics.drawable.TextDrawable;
+import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.util.AddressedInterface;
+import com.hazelmobile.filetransfer.util.FileUtils;
+import com.hazelmobile.filetransfer.util.NetworkUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,12 +55,12 @@ public class AppUtils {
     public static final String TAG = AppUtils.class.getSimpleName();
 
     private static int mUniqueNumber = 0;
-    //private static AccessDatabase mDatabase;
+    private static AccessDatabase mDatabase;
     private static SuperPreferences mDefaultPreferences;
     private static SuperPreferences mDefaultLocalPreferences;
     private static SuperPreferences mViewingPreferences;
 
-    /*public static void applyAdapterName(NetworkDevice.Connection connection) {
+    public static void applyAdapterName(NetworkDevice.Connection connection) {
         if (connection.ipAddress == null) {
             Log.e(AppUtils.class.getSimpleName(), "Connection should be provided with IP address");
             return;
@@ -176,14 +186,14 @@ public class AppUtils {
                 .shapeColor(ContextCompat.getColor(context, AppUtils.getReference(context, R.attr.colorPassive)));
 
         return builder;
-    }*/
+    }
 
-    /*public static AccessDatabase getDatabase(Context context) {
+    public static AccessDatabase getDatabase(Context context) {
         if (mDatabase == null)
             mDatabase = new AccessDatabase(context);
 
         return mDatabase;
-    }*/
+    }
 
     public static Keyword.Flavor getBuildFlavor() {
         try {
@@ -232,7 +242,7 @@ public class AppUtils {
         return mDefaultLocalPreferences;
     }
 
-    /*public static String getDeviceSerial(Context context) {
+    public static String getDeviceSerial(Context context) {
         return Build.VERSION.SDK_INT < 26
                 ? Build.SERIAL
                 : (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED ? Build.getSerial() : null);
@@ -315,7 +325,7 @@ public class AppUtils {
         }
 
         return permissionRequests;
-    }*/
+    }
 
     public static int getUniqueNumber() {
         return (int) (System.currentTimeMillis() / 1000) + (++mUniqueNumber);
@@ -328,7 +338,7 @@ public class AppUtils {
         return mViewingPreferences;
     }
 
-   /* public static boolean isLatestChangeLogSeen(Context context) {
+    public static boolean isLatestChangeLogSeen(Context context) {
         SharedPreferences preferences = getDefaultPreferences(context);
         NetworkDevice device = getLocalDevice(context);
         int lastSeenChangelog = preferences.getInt("changelog_seen_version", -1);
@@ -347,7 +357,6 @@ public class AppUtils {
                 .apply();
     }
 
-    */
 
     public static <T> T quickAction(T clazz, QuickActions<T> quickActions) {
         quickActions.onQuickActions(clazz);

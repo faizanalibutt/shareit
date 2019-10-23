@@ -1,4 +1,3 @@
-/*
 package com.hazelmobile.filetransfer.files;
 
 import android.annotation.SuppressLint;
@@ -11,6 +10,7 @@ import com.genonbeta.android.database.SQLiteDatabase;
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.pictures.Editable;
+import com.hazelmobile.filetransfer.util.FileUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -23,11 +23,10 @@ import static java.lang.annotation.ElementType.PACKAGE;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.CLASS;
 
-*/
 /**
  * Created by: veli
  * Date: 4/24/17 11:50 PM
- *//*
+ */
 
 
 public class TransferObject
@@ -268,4 +267,4 @@ public class TransferObject
     @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
     public @interface Virtual {
     }
-}*/
+}

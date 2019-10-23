@@ -1,25 +1,26 @@
-/*
 package com.hazelmobile.filetransfer.files;
 
 import android.content.ContentValues;
 
 import androidx.annotation.NonNull;
 
-
 import com.genonbeta.android.database.CursorItem;
+import com.genonbeta.android.database.DatabaseObject;
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLiteDatabase;
 import com.genonbeta.android.framework.object.Selectable;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.object.ShowingAssignee;
+import com.hazelmobile.filetransfer.util.TransferUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-*/
 /**
  * created by: veli
  * date: 06.04.2018 09:37
- *//*
+ */
 
 public class TransferGroup implements DatabaseObject<NetworkDevice>, Selectable {
     public long groupId;
@@ -212,4 +213,3 @@ public class TransferGroup implements DatabaseObject<NetworkDevice>, Selectable 
         }
     }
 }
-*/
