@@ -37,6 +37,7 @@ import com.hazelmobile.filetransfer.util.HotspotUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 import com.hazelmobile.filetransfer.util.NetworkUtils;
 import com.hazelmobile.filetransfer.util.TimeUtils;
+import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -545,6 +546,7 @@ public class CommunicationService extends Service {
     }
 
     public void sendHotspotStatusDisabling() {
+        ExtensionsUtils.getLogInfo("hotspot disabling");
         sendBroadcast(new Intent(ACTION_HOTSPOT_STATUS)
                 .putExtra(EXTRA_HOTSPOT_ENABLED, false)
                 .putExtra(EXTRA_HOTSPOT_DISABLING, true));
@@ -556,6 +558,7 @@ public class CommunicationService extends Service {
                 .putExtra(EXTRA_HOTSPOT_DISABLING, false);
 
         if (wifiConfiguration != null) {
+            ExtensionsUtils.getLogInfo("hotspot wifi configured");
             statusIntent.putExtra(EXTRA_HOTSPOT_NAME, wifiConfiguration.SSID)
                     .putExtra(EXTRA_HOTSPOT_PASSWORD, wifiConfiguration.preSharedKey)
                     .putExtra(EXTRA_HOTSPOT_KEY_MGMT, NetworkUtils.getAllowedKeyManagement(wifiConfiguration));

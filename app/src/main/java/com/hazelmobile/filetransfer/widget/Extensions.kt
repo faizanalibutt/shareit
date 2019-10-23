@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.Toast
 
 fun getLogInfo(logInfo: String?) {
-    Log.d("file_transfer_debug", logInfo)//ExtensionsUtils.getLogInfo(" ");
+    Log.d("RECEIVER_TAG", logInfo)//ExtensionsUtils.getLogInfo(" ");
 }
 
 fun getToast(logInfo: String?, context: Context) {

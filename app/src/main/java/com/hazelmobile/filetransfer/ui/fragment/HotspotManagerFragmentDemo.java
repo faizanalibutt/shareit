@@ -42,6 +42,7 @@ import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.HotspotUtils;
 import com.hazelmobile.filetransfer.util.NetworkUtils;
+import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
 import org.json.JSONObject;
 
@@ -570,22 +571,25 @@ public class HotspotManagerFragmentDemo
         showMenu();
 
         if (!isEnabled) {
+            ExtensionsUtils.getLogInfo("hotspot disabled");
             updateViewsWithBlank();
         } else if (getConnectionUtils().getHotspotUtils() instanceof HotspotUtils.HackAPI
                 && wifiConfiguration != null) {
             updateViews(wifiConfiguration.SSID, wifiConfiguration.preSharedKey, NetworkUtils.getAllowedKeyManagement(wifiConfiguration));
-        } else if (Build.VERSION.SDK_INT >= 26)
+        } else if (Build.VERSION.SDK_INT >= 26) {
             AppUtils.startForegroundService(getActivity(),
                     new Intent(getActivity(), CommunicationService.class)
                             .setAction(CommunicationService.ACTION_REQUEST_HOTSPOT_STATUS));
+            ExtensionsUtils.getLogInfo("hotspot status sending");
+        }
     }
 
     private class StatusReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction()))
+            if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction())) {
                 updateState();
-            else if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
+            } else if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
                 if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false))
                     updateViews(intent.getStringExtra(CommunicationService.EXTRA_HOTSPOT_NAME),
                             intent.getStringExtra(CommunicationService.EXTRA_HOTSPOT_PASSWORD),
