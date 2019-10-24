@@ -7,13 +7,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.pictures.EditableListAdapterImpl;
 import com.hazelmobile.filetransfer.pictures.EditableListFragment;
 import com.hazelmobile.filetransfer.pictures.EditableListFragmentImpl;
 import com.hazelmobile.filetransfer.pictures.Shareable;
+import com.hazelmobile.filetransfer.ui.activity.ShareActivity;
+import com.hazelmobile.filetransfer.ui.fragment.ShareableListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,18 +43,17 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
 
     @Override
     public boolean onActionMenuItemSelected(Context context, PowerfulActionMode actionMode, MenuItem item) {
-        int id = item.getItemId();
+        //int id = item.getItemId();
 
-        // todo handle share activity by here #5
-        /*List<T> selectedItemList = new ArrayList<>(getFragment().getSelectionConnection().getSelectedItemList());
+        List<T> selectedItemList = new ArrayList<>(getFragment().getSelectionConnection().getSelectedItemList());
 
         if (selectedItemList.size() > 0
-                && (id == R.id.action_mode_share_trebleshot || id == R.id.action_mode_share_all_apps)) {
+                && true/*(id == R.id.action_mode_share_trebleshot || id == R.id.action_mode_share_all_apps)*/) {
             Intent shareIntent = new Intent()
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    .setAction((item.getItemId() == R.id.action_mode_share_all_apps)
+                    .setAction((false)
                             ? (selectedItemList.size() > 1 ? Intent.ACTION_SEND_MULTIPLE : Intent.ACTION_SEND)
-                            : ""*//*(selectedItemList.size() > 1 ? ShareActivity.ACTION_SEND_MULTIPLE : ShareActivity.ACTION_SEND)*//*);
+                            : (selectedItemList.size() > 1 ? ShareActivity.ACTION_SEND_MULTIPLE : ShareActivity.ACTION_SEND));
 
             if (selectedItemList.size() > 1) {
                 ShareableListFragment.MIMEGrouper mimeGrouper = new ShareableListFragment.MIMEGrouper();
@@ -80,7 +80,7 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
             }
 
             try {
-                getFragment().getContext().startActivity(item.getItemId() == R.id.action_mode_share_all_apps
+                getFragment().getContext().startActivity((false)/*item.getItemId() == R.id.action_mode_share_all_apps*/
                         ? Intent.createChooser(shareIntent, getFragment().getContext().getString(R.string.text_fileShareAppChoose))
                         : shareIntent);
             } catch (Throwable e) {
@@ -90,7 +90,8 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
                 return false;
             }
         } else
-            return super.onActionMenuItemSelected(context, actionMode, item);*/
+            return false/*super.onActionMenuItemSelected(context, actionMode, item)*/;
+
 
         return true;
     }

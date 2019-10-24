@@ -1,13 +1,16 @@
 package com.hazelmobile.filetransfer.ui.activity
 
 import android.app.Activity
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.IBinder
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.request.Request
@@ -17,6 +20,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.hazelmobile.filetransfer.GlideApp
 import com.hazelmobile.filetransfer.files.AppConfig
 import com.hazelmobile.filetransfer.pictures.AppUtils
+import com.hazelmobile.filetransfer.service.WorkerService
 import java.io.FileNotFoundException
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -114,6 +118,41 @@ abstract class BaseActivity : AppCompatActivity() {
                         })
                 }
             }
+    }
+
+    fun attachRunningTask(task: WorkerService.RunningTask?) {
+        synchronized(mAttachedTasks) {
+            mAttachedTasks.add(task)
+        }
+    }
+
+    fun checkForTasks(): Boolean {
+        val serviceConnection = object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName, service: IBinder) {
+                val workerService = (service as WorkerService.LocalBinder).getService()
+
+                val task = workerService
+                    .findTaskByHash(WorkerService.intentHash(intent))
+
+                onPreviousRunningTask(task)
+
+                if (task != null)
+                    synchronized(mAttachedTasks) {
+                        attachRunningTask(task)
+                    }
+
+                unbindService(this)
+            }
+
+            override fun onServiceDisconnected(name: ComponentName) {
+
+            }
+        }
+
+        return bindService(
+            Intent(this@BaseActivity, WorkerService::class.java),
+            serviceConnection, Context.BIND_AUTO_CREATE
+        )
     }
 
     fun loadProfilePictureInto(deviceName: String, imageView: ImageView) {

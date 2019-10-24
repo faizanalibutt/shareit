@@ -213,4 +213,10 @@ class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
         return mMode
     }
 
+    fun sendFiles(view: View) {
+
+        mSelectionCallback.onActionMenuItemSelected(this, mMode, null)
+
+    }
+
 }
