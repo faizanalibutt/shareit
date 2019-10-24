@@ -13,7 +13,8 @@
     <item android:gravity="center">
         <shape android:shape="oval">
             <solid android:color="@color/user_icon_default_color" />
-            <size android:width="77dp"
+            <size
+                android:width="77dp"
                 android:height="77dp" />
         </shape>
     </item>

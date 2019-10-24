@@ -16,7 +16,7 @@ import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragmentDemo;
+import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
@@ -92,7 +92,7 @@ public class ConnectionManagerActivityDemo
 
         if (getIntent() != null) {
             if (getIntent().hasExtra(ConnectionManagerActivityDemo.RECEIVE) && getIntent().getBooleanExtra(ConnectionManagerActivityDemo.RECEIVE, false)) {
-                getSupportFragmentManager().beginTransaction().add(R.id.activity_connection_establishing_content_view, new HotspotManagerFragmentDemo()).commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.activity_connection_establishing_content_view, new HotspotManagerFragment()).commit();
             } else {
                 startCodeScanner();
             }

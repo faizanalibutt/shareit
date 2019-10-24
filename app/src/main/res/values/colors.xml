@@ -43,5 +43,6 @@
     <color name="dark_colorShadowBeginning">#000E171A</color>
 
     <color name="rippelColor">#9EB6E6</color>
+    <color name="user_icon_color_default">#EEEEEE</color>
 
 </resources>

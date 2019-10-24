@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.library.RippleBackground;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.receiver.NetworkStatusReceiver;
@@ -66,7 +67,7 @@ import static com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDem
  * date: 11/04/18 20:53
  */
 
-public class HotspotManagerFragmentDemo
+public class HotspotManagerFragment
         extends com.genonbeta.android.framework.app.Fragment
         implements TitleSupport, IconSupport {
 
@@ -141,6 +142,9 @@ public class HotspotManagerFragmentDemo
         showMessage("View Create For Hotspot Fragment");
         getorUpdateBluetoothDiscoverable();
         mHandle.sendMessageDelayed(mHandle.obtainMessage(STATE_BLUETOOTH_DISCOVERABLE_REQUESTING), 60000);
+
+        final RippleBackground pulse = view.findViewById(R.id.content);
+        pulse.startRippleAnimation();
 
     }
 

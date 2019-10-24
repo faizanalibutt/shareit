@@ -1,10 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activity.ReceiverActivity">
+
+
+    <FrameLayout
+        android:id="@+id/activity_connection_establishing_content_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!--android:layout_above="@id/app_bar"
+        android:layout_below="@id/activity_connection_establishing_progress_bar"-->
+
+    <View
+        style="@style/DividerStyle"
+        android:layout_gravity="bottom" />
 
     <ImageView
         android:id="@+id/receiver_back"
@@ -18,62 +33,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back_24dp" />
 
-    <com.hazelmobile.filetransfer.library.RippleBackground
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:rb_color="#9EB6E6"
-        app:rb_duration="3000"
-        app:rb_radius="@dimen/dp_48"
-        app:rb_rippleAmount="4"
-        app:rb_scale="6">
-
-        <ImageView
-            android:id="@+id/v2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/v5"
-            android:layout_toEndOf="@+id/v5"
-            android:src="@drawable/ic_back_24dp" />
-
-        <TextView
-            android:id="@+id/v5"
-            style="@style/TextAppearance.Primary.Enlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/background_user_icon_extended"
-            android:gravity="center"
-            android:text="A"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/v3"
-            style="@style/TextAppearance.Primary.Big"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/v5"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/margin_small_size"
-            android:text="Ali" />
-
-        <TextView
-            android:id="@+id/v4"
-            style="@style/TextAppearance.Primary.Normal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/v3"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/margin_absolute_size"
-            android:text="Ask your friend to open the app and tap\nSEND" />
-
-    </com.hazelmobile.filetransfer.library.RippleBackground>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

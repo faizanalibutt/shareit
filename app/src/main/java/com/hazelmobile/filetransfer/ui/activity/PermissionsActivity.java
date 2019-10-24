@@ -44,8 +44,8 @@ public class PermissionsActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         if (getIntent() != null) {
-            iSenderOrReceiver = getIntent().hasExtra(ConnectionManagerActivityDemo.RECEIVE)
-                    && getIntent().getBooleanExtra(ConnectionManagerActivityDemo.RECEIVE, false);
+            iSenderOrReceiver = getIntent().hasExtra(ReceiverActivity.RECEIVE)
+                    && getIntent().getBooleanExtra(ReceiverActivity.RECEIVE, false);
         }
 
         setContentView(R.layout.activity_permissions);
@@ -161,12 +161,12 @@ public class PermissionsActivity extends Activity {
             } else if (requestCode == REQUEST_CODE_CHOOSE_DEVICE
                     && data != null) {
 
-                if (data.hasExtra(ConnectionManagerActivityDemo.EXTRA_DEVICE_ID) && data.hasExtra(ConnectionManagerActivityDemo.EXTRA_CONNECTION_ADAPTER)) {
-                    String deviceId = data.getStringExtra(ConnectionManagerActivityDemo.EXTRA_DEVICE_ID);
-                    String connectionAdapter = data.getStringExtra(ConnectionManagerActivityDemo.EXTRA_CONNECTION_ADAPTER);
+                if (data.hasExtra(ReceiverActivity.EXTRA_DEVICE_ID) && data.hasExtra(ReceiverActivity.EXTRA_CONNECTION_ADAPTER)) {
+                    String deviceId = data.getStringExtra(ReceiverActivity.EXTRA_DEVICE_ID);
+                    String connectionAdapter = data.getStringExtra(ReceiverActivity.EXTRA_CONNECTION_ADAPTER);
                     setResult(RESULT_OK, new Intent()
-                            .putExtra(ConnectionManagerActivityDemo.EXTRA_DEVICE_ID, deviceId)
-                            .putExtra(ConnectionManagerActivityDemo.EXTRA_CONNECTION_ADAPTER, connectionAdapter)
+                            .putExtra(ReceiverActivity.EXTRA_DEVICE_ID, deviceId)
+                            .putExtra(ReceiverActivity.EXTRA_CONNECTION_ADAPTER, connectionAdapter)
                     );
                     finish();
                 } else if (data.hasExtra(EXTRA_CLOSE_PERMISSION_SCREEN)) {
@@ -244,11 +244,11 @@ public class PermissionsActivity extends Activity {
     public void shareIT(View view) {
         // TODO: 7/23/2019 go to share files
         if (iSenderOrReceiver) {
-            startActivityForResult(new Intent(PermissionsActivity.this, ConnectionManagerActivityDemo.class)
-                    .putExtra(ConnectionManagerActivityDemo.RECEIVE, true)
-                    .putExtra(ConnectionManagerActivityDemo.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
-                    .putExtra(ConnectionManagerActivityDemo.EXTRA_REQUEST_TYPE,
-                            ConnectionManagerActivityDemo.RequestType.MAKE_ACQUAINTANCE.toString()), REQUEST_CODE_CHOOSE_DEVICE);
+            startActivityForResult(new Intent(PermissionsActivity.this, ReceiverActivity.class)
+                    .putExtra(ReceiverActivity.RECEIVE, true)
+                    .putExtra(ReceiverActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
+                    .putExtra(ReceiverActivity.EXTRA_REQUEST_TYPE,
+                            ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()), REQUEST_CODE_CHOOSE_DEVICE);
         } else {
             startActivityForResult(new Intent(PermissionsActivity.this, ConnectionManagerActivityDemo.class)
                     .putExtra(ConnectionManagerActivityDemo.SEND, true)

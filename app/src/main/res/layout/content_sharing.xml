@@ -25,26 +25,6 @@
         app:layout_constraintTop_toBottomOf="@+id/content_sharing_viewPager"
         android:background="@drawable/send_bar_shadow" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/c1"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/content_sharing_viewPager"
-        app:layout_constraintStart_toStartOf="@+id/content_sharing_viewPager"
-        app:layout_constraintTop_toBottomOf="@id/content_sharing_viewPager">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/content_send_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginEnd="@dimen/dp_16"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:text="@string/home_send" />
-
-    </androidx.cardview.widget.CardView>
+    <include layout="@layout/file_transfer_general_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

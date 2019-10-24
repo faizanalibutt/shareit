@@ -32,10 +32,12 @@ import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.fragment.FileListFragment;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
+import com.hazelmobile.filetransfer.util.CommunicationNotificationHelper;
 import com.hazelmobile.filetransfer.util.FileUtils;
 import com.hazelmobile.filetransfer.util.HotspotUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 import com.hazelmobile.filetransfer.util.NetworkUtils;
+import com.hazelmobile.filetransfer.util.NsdDiscovery;
 import com.hazelmobile.filetransfer.util.TimeUtils;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
@@ -113,8 +115,8 @@ public class CommunicationService extends Service {
     private Receive mReceive = new Receive();
     private Send mSend = new Send();
     private ExecutorService mSelfExecutor = Executors.newFixedThreadPool(10);
-    //private NsdDiscovery mNsdDiscovery;
-    //private CommunicationNotificationHelper mNotificationHelper;
+    private NsdDiscovery mNsdDiscovery;
+    private CommunicationNotificationHelper mNotificationHelper;
     private WifiManager.WifiLock mWifiLock;
     private MediaScannerConnection mMediaScanner;
     private HotspotUtils mHotspotUtils;
@@ -132,8 +134,8 @@ public class CommunicationService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        /*mNotificationHelper = new CommunicationNotificationHelper(getNotificationUtils());
-        mNsdDiscovery = new NsdDiscovery(getApplicationContext(), getDatabase(), getDefaultPreferences());*/
+        mNotificationHelper = new CommunicationNotificationHelper(getNotificationUtils());
+        mNsdDiscovery = new NsdDiscovery(getApplicationContext(), getDatabase(), getDefaultPreferences());
         mMediaScanner = new MediaScannerConnection(this, null);
         mHotspotUtils = HotspotUtils.getInstance(this);
         mWifiLock = ((WifiManager) getApplicationContext()
@@ -144,7 +146,7 @@ public class CommunicationService extends Service {
         mSend.setNotifyDelay(AppConfig.DEFAULT_NOTIFICATION_DELAY);
 
         mMediaScanner.connect();
-        //mNsdDiscovery.registerService();
+        mNsdDiscovery.registerService();
 
         if (getWifiLock() != null)
             getWifiLock().acquire();
@@ -405,7 +407,7 @@ public class CommunicationService extends Service {
         mCommunicationServer.stop();
         mSeamlessServer.stop();
         mMediaScanner.disconnect();
-        //mNsdDiscovery.unregisterService();
+        mNsdDiscovery.unregisterService();
 
         {
             ContentValues values = new ContentValues();
@@ -482,9 +484,9 @@ public class CommunicationService extends Service {
         return mHotspotUtils;
     }
 
-    /*public CommunicationNotificationHelper getNotificationHelper() {
+    public CommunicationNotificationHelper getNotificationHelper() {
         return mNotificationHelper;
-    }*/
+    }
 
     public synchronized Map<Long, Interrupter> getOngoingIndexList() {
         return mOngoingIndexList;
@@ -582,9 +584,9 @@ public class CommunicationService extends Service {
             Log.d(TAG, "setupHotspot(): Start with TrustZone");
         }
 
-        if (isEnabled)
+        if (isEnabled){
             getHotspotUtils().enableConfigured(AppUtils.getHotspotName(this), null);
-        else {
+        } else {
             getHotspotUtils().disable();
 
             if (Build.VERSION.SDK_INT >= 26)
@@ -614,9 +616,9 @@ public class CommunicationService extends Service {
         if (broadcastStatus)
             sendTrustZoneStatus();
 
-        /*startForeground(CommunicationNotificationHelper.SERVICE_COMMUNICATION_FOREGROUND_NOTIFICATION_ID,
+        startForeground(CommunicationNotificationHelper.SERVICE_COMMUNICATION_FOREGROUND_NOTIFICATION_ID,
                 getNotificationHelper().getCommunicationServiceNotification(mSeamlessMode, mPinAccess,
-                        mWebShareServer != null && mWebShareServer.isAlive()).build());*/
+                        /*mWebShareServer != null && mWebShareServer.isAlive()*/false).build());
     }
 
     public void setWebShareEnabled(boolean enable, boolean updateServiceState) {
