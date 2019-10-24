@@ -2,8 +2,9 @@ package com.hazelmobile.filetransfer.ui.activity
 
 import android.os.Bundle
 import com.hazelmobile.filetransfer.R
+import com.hazelmobile.filetransfer.app.Activity
 
-class SettingsActivity : BaseActivity() {
+class SettingsActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

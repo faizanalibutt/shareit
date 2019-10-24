@@ -11,8 +11,10 @@ import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
@@ -26,7 +28,7 @@ import static com.hazelmobile.filetransfer.ui.activity.PermissionsActivity.EXTRA
 
 
 public class ConnectionManagerActivityDemo
-        extends BaseActivity
+        extends Activity
         implements SnackbarSupport {
 
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
@@ -107,12 +109,12 @@ public class ConnectionManagerActivityDemo
         if (requestCode == REQUEST_CHOOSE_DEVICE)
             if (resultCode == RESULT_OK && data != null) {
                 try {
-                    /*NetworkDevice device = new NetworkDevice(data.getStringExtra(BarcodeScannerActivityDemo.EXTRA_DEVICE_ID));
+                    NetworkDevice device = new NetworkDevice(data.getStringExtra(BarcodeScannerActivityDemo.EXTRA_DEVICE_ID));
                     AppUtils.getDatabase(ConnectionManagerActivityDemo.this).reconstruct(device);
                     NetworkDevice.Connection connection = new NetworkDevice.Connection(device.deviceId, data.getStringExtra(BarcodeScannerActivityDemo.EXTRA_CONNECTION_ADAPTER));
-                    AppUtils.getDatabase(ConnectionManagerActivityDemo.this).reconstruct(connection);*/
+                    AppUtils.getDatabase(ConnectionManagerActivityDemo.this).reconstruct(connection);
 
-//                    mDeviceSelectionListener.onNetworkDeviceSelected(device, connection);
+                    mDeviceSelectionListener.onNetworkDeviceSelected(device, connection);
                 } catch (Exception e) {
                     // do nothing
                 }
@@ -140,8 +142,8 @@ public class ConnectionManagerActivityDemo
     }
 
     private void startCodeScanner() {
-        /*startActivityForResult(new Intent(ConnectionManagerActivityDemo.this, BarcodeScannerActivityDemo.class),
-                REQUEST_CHOOSE_DEVICE);*/
+        startActivityForResult(new Intent(ConnectionManagerActivityDemo.this, BarcodeScannerActivityDemo.class),
+                REQUEST_CHOOSE_DEVICE);
     }
 
     public enum RequestType {
@@ -152,6 +154,10 @@ public class ConnectionManagerActivityDemo
     @Override
     public Snackbar createSnackbar(int resId, Object... objects) {
         return Snackbar.make(findViewById(R.id.activity_connection_establishing_content_view), getString(resId, objects), Snackbar.LENGTH_LONG);
+    }
+
+    public interface DeviceSelectionSupport {
+        void setDeviceSelectedListener(NetworkDeviceSelectedListener listener);
     }
 
 }

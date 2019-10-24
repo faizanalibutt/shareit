@@ -9,12 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.hazelmobile.filetransfer.R
-import com.hazelmobile.filetransfer.ui.activity.BaseActivity
+import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), TitleSupport, BaseActivity.OnBackPressedListener {
+class HomeFragment : Fragment(), TitleSupport, Activity.OnBackPressedListener {
 
     private lateinit var mAdapter: SmartFragmentPagerAdapter
 
@@ -89,7 +89,7 @@ class HomeFragment : Fragment(), TitleSupport, BaseActivity.OnBackPressedListene
 
         val activeItem = mAdapter.getItem(mViewPager.currentItem)
 
-        if (activeItem is BaseActivity.OnBackPressedListener && activeItem.onBackPressed())
+        if (activeItem is Activity.OnBackPressedListener && activeItem.onBackPressed())
             return true
 
         if (mViewPager.currentItem > 0) {
