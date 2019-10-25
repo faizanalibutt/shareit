@@ -40,15 +40,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.genonbeta.android.framework.util.Interrupter;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.model.Bluetooth;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
-import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
@@ -702,7 +699,7 @@ public class BarcodeConnectFragmentDemo
                 ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().startDiscovery();
             }
         }
-        updateState();
+        //updateState();
         //if (mPreviousScanResult != null)
         //    handleBarcode(mPreviousScanResult);
     }
@@ -778,7 +775,7 @@ public class BarcodeConnectFragmentDemo
         } : null);
     }
 
-    private void updateState() {
+    private void updateState() {}/*{
         if (!isAdded())
             return;
 
@@ -845,7 +842,7 @@ public class BarcodeConnectFragmentDemo
 
         setConductItemsShowing(!state);
         //mBarcodeView.setVisibility(state ? View.VISIBLE : View.GONE);
-    }
+    }*/
 
     private void setConductItemsShowing(boolean showing) {
         mConductContainer.setVisibility(showing ? View.VISIBLE : View.GONE);

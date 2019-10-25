@@ -182,7 +182,7 @@ public class AppUtils {
         builder.beginConfig()
                 .firstLettersOnly(true)
                 .textMaxLength(1)
-                .textColor(ContextCompat.getColor(context, AppUtils.getReference(context, R.attr.colorControlNormal)))
+                .textColor(ContextCompat.getColor(context, R.color.white))
                 .shapeColor(ContextCompat.getColor(context, AppUtils.getReference(context, R.attr.colorPassive)));
 
         return builder;

@@ -32,20 +32,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hazel"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".ui.activity.WelcomeActivity"
-            android:theme="@style/Theme.Hazel.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity
+            android:name=".ui.activity.WelcomeActivity"
+            android:theme="@style/Theme.Hazel.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.activity.ReceiverActivity"
             android:theme="@style/Theme.Hazel.NoActionBar" />
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.Hazel.Base.NoActionBar" />
+            android:theme="@style/Theme.Hazel.Base.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -61,7 +64,19 @@
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
         <activity android:name=".ui.activity.PermissionsActivity" />
         <activity android:name=".ui.activity.ConnectionManagerActivityDemo" />
-        <activity android:name=".ui.activity.ShareActivity" />
+        <activity android:name=".ui.activity.ShareActivity">
+            <intent-filter>
+                <action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <action android:name="genonbeta.intent.action.TREBLESHOT_SEND" />
+                <action android:name="genonbeta.intent.action.TREBLESHOT_SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.activity.AddDevicesToTransferActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar"/>
         <activity android:name=".ui.activity.BarcodeScannerActivityDemo" />

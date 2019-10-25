@@ -14,11 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -258,8 +256,11 @@ public class AddDevicesToTransferActivity extends Activity
     }
 
     private void startConnectionManagerActivityDemo() {
-        startActivityForResult(new Intent(AddDevicesToTransferActivity.this, ConnectionManagerActivityDemo.class)
-                .putExtra(ConnectionManagerActivityDemo.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_addDevicesToTransfer)), REQUEST_CODE_CHOOSE_DEVICE);
+        /*startActivityForResult(new Intent(AddDevicesToTransferActivity.this, ConnectionManagerActivityDemo.class)
+                .putExtra(ConnectionManagerActivityDemo.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_addDevicesToTransfer)), REQUEST_CODE_CHOOSE_DEVICE);*/
+        startActivityForResult(new Intent(AddDevicesToTransferActivity.this, PermissionsActivity.class)
+                .putExtra(ConnectionManagerActivityDemo.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_addDevicesToTransfer))
+                .putExtra(ConnectionManagerActivityDemo.SEND, true), REQUEST_CODE_CHOOSE_DEVICE);
     }
 
     public void takeOnProcessMode() {
