@@ -60,7 +60,13 @@
             android:parentActivityName=".ui.activity.MainActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
         <activity android:name=".ui.activity.PermissionsActivity" />
-        <activity android:name=".ui.activity.ConnectionManagerActivityDemo" /> <!-- SERVICES WILL BE HERE -->
+        <activity android:name=".ui.activity.ConnectionManagerActivityDemo" />
+        <activity android:name=".ui.activity.ShareActivity" />
+        <activity android:name=".ui.activity.AddDevicesToTransferActivity"
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar"/>
+        <activity android:name=".ui.activity.BarcodeScannerActivityDemo" />
+
+        <!-- SERVICES WILL BE HERE -->
         <service
             android:name=".service.CommunicationService"
             android:enabled="true"

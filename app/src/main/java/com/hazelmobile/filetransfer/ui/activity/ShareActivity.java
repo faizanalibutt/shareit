@@ -17,15 +17,17 @@ import com.genonbeta.android.framework.object.Selectable;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.task.OrganizeShareRunningTask;
+import com.hazelmobile.filetransfer.util.FileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShareActivity extends BaseActivity
+public class ShareActivity extends Activity
         implements SnackbarSupport, WorkerService.OnAttachListener {
     public static final String TAG = "ShareActivity";
 
@@ -36,7 +38,6 @@ public class ShareActivity extends BaseActivity
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
     public static final String EXTRA_GROUP_ID = "extraGroupId";
 
-    private Bundle mPreLoadingBundle = new Bundle();
     private Button mCancelButton;
     private ProgressBar mProgressBar;
     private TextView mProgressTextLeft;
@@ -179,11 +180,6 @@ public class ShareActivity extends BaseActivity
 
     public ProgressBar getProgressBar() {
         return mProgressBar;
-    }
-
-    @Override
-    public Bundle passPreLoadingArguments() {
-        return mPreLoadingBundle;
     }
 
     public void updateProgress(final int total, final int current) {

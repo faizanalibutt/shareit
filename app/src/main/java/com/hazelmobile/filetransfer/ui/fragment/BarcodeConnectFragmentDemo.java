@@ -1,4 +1,3 @@
-/*
 package com.hazelmobile.filetransfer.ui.fragment;
 
 import android.Manifest;
@@ -53,11 +52,15 @@ import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
+import com.hazelmobile.filetransfer.ui.activity.ConnectionManagerActivityDemo;
+import com.hazelmobile.filetransfer.ui.adapter.BluetoothScanResultAdapter;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
+import com.hazelmobile.filetransfer.ui.adapter.WifiScanResultAdapter;
 import com.hazelmobile.filetransfer.ui.callback.IconSupport;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
+import com.hazelmobile.filetransfer.util.ListUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
 import org.json.JSONException;
@@ -72,17 +75,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-*/
-/**
+/*
+ *
  * created by: veli
  * modified by: faizi
  * date: 12/04/18 17:21
- *//*
+
+ */
 
 
 public class BarcodeConnectFragmentDemo
         extends com.genonbeta.android.framework.app.Fragment
-        implements TitleSupport, UITask, IconSupport, ConnectionManagerActivity.DeviceSelectionSupport {
+        implements TitleSupport, UITask, IconSupport, ConnectionManagerActivityDemo.DeviceSelectionSupport {
 
     public static final String TAG = "BarcodeConnectFragment";
     private static final int REQUEST_PERMISSION_CAMERA = 1;
@@ -117,13 +121,13 @@ public class BarcodeConnectFragmentDemo
     private boolean mShowAsText = false;
     private ListView lv_result, lvb_result;
     private SendReceive sendReceive;
-    //private String mPreviousScanResult = null;
+    private String mPreviousScanResult = null;
     private List<Bluetooth> mScanBResultList;
-    //private BluetoothScanResultAdapter bluetoothScanResultAdapter;
+    private BluetoothScanResultAdapter bluetoothScanResultAdapter;
     private ClientClass clientClass;
     private List<ScanResult> mScanResultList;
     private List<ScanResult> mPreviousList;
-    //private WifiScanResultAdapter wifiScanResultAdapter;
+    private WifiScanResultAdapter wifiScanResultAdapter;
 
     // #bReceiver
     private final BroadcastReceiver bReceiver = new BroadcastReceiver() {
@@ -164,9 +168,9 @@ public class BarcodeConnectFragmentDemo
                             }
                         }
                         //retryButton.setVisibility(View.GONE);
-                        mScanBResultList.add(new Bluetooth(device, device.getName()*/
-/* + "\n" + device.getAddress()*//*
-));
+                        mScanBResultList.add(new Bluetooth(device, device.getName()
+                                + "\n" + device.getAddress()
+                        ));
                         //bluetoothScanResultAdapter.notifyDataSetChanged();
                     }
                     break;
@@ -263,8 +267,9 @@ public class BarcodeConnectFragmentDemo
         public void onResultReturned(boolean result, boolean shouldWait) {
             if (isResumed()) // isResumed
                 updateState();
-            else
-                mBarcodeView.pauseAndWait();
+            else {
+                //mBarcodeView.pauseAndWait();
+            }
 
             // We don't want to keep this when the result is ok
             // or not asked to wait
@@ -279,13 +284,9 @@ public class BarcodeConnectFragmentDemo
         @Override
         public void handleMessage(Message msg) {
 
-            */
-/*if (msg.what == MSG_TO_FILE_SENDER_UI) {
+            if (msg.what == MSG_TO_FILE_SENDER_UI) {
                 // here we will go for further actions just like jsonobject
-            } else*//*
-
-
-            if (msg.what == MSG_TO_SHOW_SCAN_RESULT) {
+            } else if (msg.what == MSG_TO_SHOW_SCAN_RESULT) {
                 if (mScanBResultList.size() > 0) {
                     //retryButton.setVisibility(View.GONE);
                     return;
@@ -401,7 +402,7 @@ public class BarcodeConnectFragmentDemo
                     .setPositiveButton(R.string.butn_show, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            TextStreamObject textObject = new TextStreamObject(
+                            /*TextStreamObject textObject = new TextStreamObject(
                                     AppUtils.getUniqueNumber(), hotspotInformation.toString());
                             AppUtils.getDatabase(getContext()).publish(textObject);
 
@@ -409,7 +410,7 @@ public class BarcodeConnectFragmentDemo
 
                             startActivity(new Intent(getContext(), TextEditorActivity.class)
                                     .setAction(TextEditorActivity.ACTION_EDIT_TEXT)
-                                    .putExtra(TextEditorActivity.EXTRA_CLIPBOARD_ID, textObject.id));
+                                    .putExtra(TextEditorActivity.EXTRA_CLIPBOARD_ID, textObject.id));*/
                         }
                     })
                     .setNeutralButton(R.string.butn_copyToClipboard, new DialogInterface.OnClickListener() {
@@ -450,13 +451,10 @@ public class BarcodeConnectFragmentDemo
         try {
             //getActivity().unregisterReceiver(mMessageReceiver);
             // todo finding a way to close things
-            */
-/*
-             *             ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
+            /*          ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
              *             connectionUtils.disableCurrentNetwork();
              *             connectionUtils.getBluetoothAdapter().cancelDiscovery();
-             *             connectionUtils.getBluetoothAdapter().disable();
-             *//*
+             *             connectionUtils.getBluetoothAdapter().disable();*/
 
             removeHanlderMessages();
             if (sendReceive != null && sendReceive.bluetoothSocket != null)
@@ -620,7 +618,7 @@ public class BarcodeConnectFragmentDemo
         mConductContainer = view.findViewById(R.id.layout_barcode_connect_conduct_container);
         mTextModeIndicator = view.findViewById(R.id.layout_barcode_connect_mode_text_indicator);
         mConductButton = view.findViewById(R.id.layout_barcode_connect_conduct_button);
-        mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
+        //mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
         mConductText = view.findViewById(R.id.layout_barcode_connect_conduct_text);
         mConductImage = view.findViewById(R.id.layout_barcode_connect_conduct_image);
         mTaskContainer = view.findViewById(R.id.container_task);
@@ -637,7 +635,7 @@ public class BarcodeConnectFragmentDemo
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.actions_barcode_scanner, menu);
+        //inflater.inflate(R.menu.actions_barcode_scanner, menu);
     }
 
     @Override
@@ -650,7 +648,7 @@ public class BarcodeConnectFragmentDemo
                     .setMessage(R.string.text_scanQRCodeHelp)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
-        } else if (id == R.id.change_mode) {
+        } /*else if (id == R.id.change_mode) {
             mShowAsText = !mShowAsText;
             mTextModeIndicator.setVisibility(mShowAsText ? View.VISIBLE : View.GONE);
             item.setIcon(mShowAsText ? R.drawable.ic_qrcode_white_24dp : R.drawable.ic_short_text_white_24dp);
@@ -659,7 +657,7 @@ public class BarcodeConnectFragmentDemo
                     .show();
 
             updateState();
-        } else
+        }*/ else
             return super.onOptionsItemSelected(item);
 
         return true;
@@ -668,7 +666,7 @@ public class BarcodeConnectFragmentDemo
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mBarcodeView.decodeContinuous(new BarcodeCallback() {
+        /*mBarcodeView.decodeContinuous(new BarcodeCallback() {
             @Override
             public void barcodeResult(BarcodeResult result) {
                 //handleBarcode(result.getResult().getText());
@@ -678,10 +676,9 @@ public class BarcodeConnectFragmentDemo
             public void possibleResultPoints(List<ResultPoint> resultPoints) {
 
             }
-        });
+        });*/
         updateUI();
-        */
-/*retryButton = view.findViewById(R.id.actions_transfer_receiver_retry_receiving);
+        /*retryButton = view.findViewById(R.id.actions_transfer_receiver_retry_receiving);
         retryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -689,7 +686,7 @@ public class BarcodeConnectFragmentDemo
                 retryButton.setVisibility(View.GONE);
                 mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 20000);
             }
-        });*//*
+        });*/
 
     }
 
@@ -721,7 +718,7 @@ public class BarcodeConnectFragmentDemo
                 ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
             }
         }
-        mBarcodeView.pauseAndWait();
+        //mBarcodeView.pauseAndWait();
     }
 
     @Override
@@ -740,7 +737,7 @@ public class BarcodeConnectFragmentDemo
 
     @Override
     public int getIconRes() {
-        return R.drawable.ic_qrcode_white_24dp;
+        return 0/*R.drawable.ic_qrcode_white_24dp*/;
     }
 
     @Override
@@ -757,7 +754,7 @@ public class BarcodeConnectFragmentDemo
     }
 
     private void updateState(boolean isConnecting, final Interrupter interrupter) {
-        if (!isAdded()) {
+        /*if (!isAdded()) {
             mBarcodeView.pauseAndWait();
             return;
         }
@@ -769,7 +766,7 @@ public class BarcodeConnectFragmentDemo
         } else {
             mBarcodeView.resume();
             updateState();
-        }
+        }*/
 
         mTaskContainer.setVisibility(!isConnecting ? View.VISIBLE : View.GONE);
 
@@ -794,10 +791,10 @@ public class BarcodeConnectFragmentDemo
         final boolean state = (wifiEnabled || mShowAsText) && hasCameraPermission && hasLocationPermission;
 
         if (!state) {
-            mBarcodeView.pauseAndWait();
+            //mBarcodeView.pauseAndWait();
 
             if (!hasCameraPermission) {
-                mConductImage.setImageResource(R.drawable.ic_camera_white_144dp);
+                //mConductImage.setImageResource(R.drawable.ic_camera_white_144dp);
                 mConductText.setText(R.string.text_cameraPermissionRequired);
                 mConductButton.setText(R.string.butn_ask);
 
@@ -814,7 +811,7 @@ public class BarcodeConnectFragmentDemo
 
                 mPermissionRequestedCamera = true;
             } else if (!hasLocationPermission) {
-                mConductImage.setImageResource(R.drawable.ic_perm_device_information_white_144dp);
+                //mConductImage.setImageResource(R.drawable.ic_perm_device_information_white_144dp);
                 mConductText.setText(R.string.mesg_locationPermissionRequiredAny);
                 mConductButton.setText(R.string.butn_enable);
 
@@ -830,7 +827,7 @@ public class BarcodeConnectFragmentDemo
 
                 mPermissionRequestedLocation = true;
             } else {
-                mConductImage.setImageResource(R.drawable.ic_signal_wifi_off_white_144dp);
+                ///mConductImage.setImageResource(R.drawable.ic_signal_wifi_off_white_144dp);
                 mConductText.setText(R.string.text_scanQRWifiRequired);
                 mConductButton.setText(R.string.butn_enable);
 
@@ -842,7 +839,7 @@ public class BarcodeConnectFragmentDemo
                 });
             }
         } else {
-            mBarcodeView.resume();
+            //mBarcodeView.resume();
             mConductText.setText(R.string.text_scanQRCodeHelp);
         }
 
@@ -948,4 +945,3 @@ public class BarcodeConnectFragmentDemo
     }
 
 }
-*/

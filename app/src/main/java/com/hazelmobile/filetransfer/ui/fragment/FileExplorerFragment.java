@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.files.PathResolverRecyclerAdapter;
 import com.hazelmobile.filetransfer.pictures.DetachListener;
-import com.hazelmobile.filetransfer.ui.activity.BaseActivity;
+
 import com.hazelmobile.filetransfer.ui.callback.IconSupport;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 
 public class FileExplorerFragment
         extends FileListFragment
-        implements BaseActivity.OnBackPressedListener, DetachListener, IconSupport, TitleSupport {
+        implements Activity.OnBackPressedListener, DetachListener, IconSupport, TitleSupport {
     public static final String TAG = FileExplorerFragment.class.getSimpleName();
 
     private RecyclerView mPathView;

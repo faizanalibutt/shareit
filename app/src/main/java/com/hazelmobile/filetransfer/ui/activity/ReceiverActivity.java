@@ -9,11 +9,12 @@ import android.widget.ImageView;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
 
 import static com.hazelmobile.filetransfer.ui.activity.PermissionsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
 
-public class ReceiverActivity extends BaseActivity
+public class ReceiverActivity extends Activity
         implements SnackbarSupport {
 
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";

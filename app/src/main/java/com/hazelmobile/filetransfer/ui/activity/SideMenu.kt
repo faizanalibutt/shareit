@@ -3,9 +3,11 @@ package com.hazelmobile.filetransfer.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat.startActivity
 import com.hazelmobile.filetransfer.R
+import com.hazelmobile.filetransfer.app.Activity
 
-class SideMenu : BaseActivity() {
+class SideMenu : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

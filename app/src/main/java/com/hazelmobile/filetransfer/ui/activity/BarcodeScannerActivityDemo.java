@@ -1,4 +1,3 @@
-/*
 package com.hazelmobile.filetransfer.ui.activity;
 
 import android.content.Intent;
@@ -7,11 +6,11 @@ import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 
-import com.genonbeta.TrebleShot.R;
-import com.genonbeta.TrebleShot.app.Activity;
-import com.genonbeta.TrebleShot.fragment.BarcodeConnectFragmentDemo;
-import com.genonbeta.TrebleShot.object.NetworkDevice;
-import com.genonbeta.TrebleShot.ui.callback.NetworkDeviceSelectedListener;
+import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.app.Activity;
+import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
+import com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo;
 
 public class BarcodeScannerActivityDemo extends Activity {
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
@@ -58,4 +57,3 @@ public class BarcodeScannerActivityDemo extends Activity {
         return true;
     }
 }
-*/

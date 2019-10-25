@@ -11,6 +11,7 @@ import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.SelectionCallbackGlobal
+import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.files.SharingActionModeCallback
 import com.hazelmobile.filetransfer.pictures.*
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
@@ -23,10 +24,10 @@ import kotlinx.android.synthetic.main.content_sharing.*
 import kotlinx.android.synthetic.main.file_transfer_general_button.*
 
 @Suppress("UNCHECKED_CAST")
-class ContentSharingActivity : BaseActivity(), PowerfulActionModeSupport {
+class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
 
     private lateinit var mSelectionCallback: SharingActionModeCallback<Shareable>
-    private var mBackPressedListener: OnBackPressedListener? = null
+    private var mBackPressedListener: Activity.OnBackPressedListener? = null
     private lateinit var mMode: PowerfulActionMode
 
     override fun onCreate(savedInstanceState: Bundle?) {
