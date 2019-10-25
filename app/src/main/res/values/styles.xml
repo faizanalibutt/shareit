@@ -338,5 +338,5 @@
     </style>
 
     <dimen name="icon_size_list_normal_extend">20dp</dimen>
-    <dimen name="font_size_monster">48sp</dimen>
+
 </resources>
