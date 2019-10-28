@@ -585,5 +585,6 @@
     <string name="butn_showAsQrCode">Show as QR code</string>
     <string name="text_showAsQrCode" translatable="false">@string/butn_showAsQrCode</string>
     <string name="next">Next</string>
+    <string name="text_default">Default</string>
 
 </resources>
