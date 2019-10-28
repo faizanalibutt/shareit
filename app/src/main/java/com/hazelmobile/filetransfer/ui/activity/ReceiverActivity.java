@@ -22,6 +22,7 @@ public class ReceiverActivity extends Activity
     public static final String EXTRA_ACTIVITY_SUBTITLE = "extraActivitySubtitle";
     public static final String RECEIVE = "receive";
     public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
+    private RequestType mRequestType = RequestType.RETURN_RESULT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
