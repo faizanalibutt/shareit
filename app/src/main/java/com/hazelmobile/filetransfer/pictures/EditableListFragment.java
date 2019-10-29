@@ -294,7 +294,7 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
         return super.onOptionsItemSelected(item);
     }*/
 
-    /*public void onSortingOptions(Map<String, Integer> options) {
+    public void onSortingOptions(Map<String, Integer> options) {
         options.put(getString(R.string.text_sortByName), EditableListAdapter.MODE_SORT_BY_NAME);
         options.put(getString(R.string.text_sortByDate), EditableListAdapter.MODE_SORT_BY_DATE);
         options.put(getString(R.string.text_sortBySize), EditableListAdapter.MODE_SORT_BY_SIZE);
@@ -305,7 +305,7 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
                 EditableListAdapter.MODE_SORT_ORDER_ASCENDING);
         options.put(getString(R.string.text_sortOrderDescending),
                 EditableListAdapter.MODE_SORT_ORDER_DESCENDING);
-    }*/
+    }
 
     @Override
     public void onPrepareDetach() {

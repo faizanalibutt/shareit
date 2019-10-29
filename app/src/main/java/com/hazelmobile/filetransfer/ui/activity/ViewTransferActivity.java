@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.dialog.TransferInfoDialog;
 import com.hazelmobile.filetransfer.files.TransferGroup;
 import com.hazelmobile.filetransfer.files.TransferObject;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
@@ -38,6 +39,7 @@ import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.pictures.PowerfulActionModeSupport;
 import com.hazelmobile.filetransfer.pictures.TextUtils;
 import com.hazelmobile.filetransfer.service.CommunicationService;
+import com.hazelmobile.filetransfer.ui.fragment.TransferFileExplorerFragment;
 import com.hazelmobile.filetransfer.util.FileUtils;
 import com.hazelmobile.filetransfer.util.TransferUtils;
 
@@ -364,35 +366,35 @@ public class ViewTransferActivity
             createSnackbar(R.string.mesg_retryReceivingNotice)
                     .show();
         } else if (id == R.id.actions_transfer_receiver_show_files) {
-            startActivity(new Intent(this, FileExplorerActivity.class)
+            /*startActivity(new Intent(this, FileExplorerActivity.class)
                     .putExtra(FileExplorerActivity.EXTRA_FILE_PATH,
-                            FileUtils.getSavePath(this, mGroup).getUri()));
+                            FileUtils.getSavePath(this, mGroup).getUri()));*/
         } else if (id == R.id.actions_transfer_sender_add_device) {
             startDeviceAddingActivity();
         } else if (id == R.id.actions_transfer_test_connection) {
             final List<ShowingAssignee> assignee = TransferUtils.loadAssigneeList(getDatabase(),
                     mGroup.groupId);
 
-            if (assignee.size() == 1)
-                new EstablishConnectionDialog(ViewTransferActivity.this,
-                        assignee.get(0).device, null).show();
-            else if (assignee.size() > 1) {
-                new SelectAssigneeDialog(this, assignee, new DialogInterface
+            if (assignee.size() == 1) {
+                /*new EstablishConnectionDialog(ViewTransferActivity.this,
+                        assignee.get(0).device, null).show();*/
+            //else if (assignee.size() > 1) {
+                /*new SelectAssigneeDialog(this, assignee, new DialogInterface
                         .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         new EstablishConnectionDialog(ViewTransferActivity.this,
                                 assignee.get(which).device, null).show();
                     }
-                }).show();
+                }).show();*/
             }
         } else if (item.getItemId() == R.id.actions_transfer_toggle_browser_share) {
             mGroup.isServedOnWeb = !mGroup.isServedOnWeb;
             getDatabase().update(mGroup);
             showMenus();
 
-            if (mGroup.isServedOnWeb)
-                AppUtils.startWebShareActivity(this, true);
+            /*if (mGroup.isServedOnWeb)
+                AppUtils.startWebShareActivity(this, true);*/
         } else if (item.getGroupId() == R.id.actions_abs_view_transfer_activity_settings) {
             mDeviceId = item.getOrder() < mTransactionIndex.assignees.size()
                     ? mTransactionIndex.assignees.get(item.getOrder()).deviceId
@@ -405,7 +407,7 @@ public class ViewTransferActivity
             if (fragment != null && fragment.setDeviceId(mDeviceId))
                 fragment.refreshList();
         } else if (item.getItemId() == R.id.actions_transfer_web_share_shortcut) {
-            AppUtils.startWebShareActivity(this, false);
+            /*AppUtils.startWebShareActivity(this, false);*/
         } else
             return super.onOptionsItemSelected(item);
 
@@ -555,9 +557,9 @@ public class ViewTransferActivity
                 toggleTaskForAssignee(assignee, getIndex().incomingCount > 0
                                 ? TransferObject.Type.INCOMING : TransferObject.Type.OUTGOING,
                         mActiveProcesses.contains(assignee.deviceId));
-            } else
+            } /*else
                 new ToggleMultipleTransferDialog(ViewTransferActivity.this,
-                        mGroup, assigneeList, mActiveProcesses, getIndex()).show();
+                        mGroup, assigneeList, mActiveProcesses, getIndex()).show();*/
         } else if (getIndex().outgoingCount > 0)
             startDeviceAddingActivity();
     }

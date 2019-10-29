@@ -81,6 +81,30 @@
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar"/>
         <activity android:name=".ui.activity.BarcodeScannerActivityDemo" />
 
+        <activity
+            android:name=".ui.activity.ViewTransferActivity"
+            android:label="@string/text_transactionViewer"
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <data android:host="*" />
+                <!-- expected file name pattern .5435-4543-4354-ewrw.tshare -->
+                <data android:pathPattern=".*\\.tshare" />
+                <data android:pathPattern=".*\\..*\\.tshare" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.activity.FilePickerActivity"
+            android:label="@string/text_fileExplorer" />
+
         <!-- SERVICES WILL BE HERE -->
         <service
             android:name=".service.CommunicationService"
