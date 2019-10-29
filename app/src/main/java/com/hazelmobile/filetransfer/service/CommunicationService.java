@@ -3,6 +3,7 @@ package com.hazelmobile.filetransfer.service;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.collection.ArrayMap;
@@ -19,35 +21,50 @@ import com.genonbeta.CoolSocket.CoolSocket;
 import com.genonbeta.CoolSocket.CoolTransfer;
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLiteDatabase;
+import com.genonbeta.android.database.exception.ReconstructionFailedException;
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.genonbeta.android.framework.io.LocalDocumentFile;
+import com.genonbeta.android.framework.io.StreamInfo;
 import com.genonbeta.android.framework.util.Interrupter;
+import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Service;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.exception.AssigneeNotFoundException;
+import com.hazelmobile.filetransfer.exception.ConnectionNotFoundException;
+import com.hazelmobile.filetransfer.exception.DeviceNotFoundException;
+import com.hazelmobile.filetransfer.exception.TransferGroupNotFoundException;
 import com.hazelmobile.filetransfer.files.AppConfig;
-import com.hazelmobile.filetransfer.files.TransferGroup;
-import com.hazelmobile.filetransfer.files.TransferObject;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.object.TransferGroup;
+import com.hazelmobile.filetransfer.object.TransferInstance;
+import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.fragment.FileListFragment;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
 import com.hazelmobile.filetransfer.util.CommunicationNotificationHelper;
+import com.hazelmobile.filetransfer.util.DynamicNotification;
 import com.hazelmobile.filetransfer.util.FileUtils;
 import com.hazelmobile.filetransfer.util.HotspotUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 import com.hazelmobile.filetransfer.util.NetworkUtils;
+import com.hazelmobile.filetransfer.util.NotificationUtils;
 import com.hazelmobile.filetransfer.util.NsdDiscovery;
 import com.hazelmobile.filetransfer.util.TimeUtils;
+import com.hazelmobile.filetransfer.util.TransferUtils;
+import com.hazelmobile.filetransfer.util.UpdateUtils;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StreamCorruptedException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
@@ -186,8 +203,6 @@ public class CommunicationService extends Service {
     public int onStartCommand(Intent intent, int flags, final int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        //android.os.Debug.waitForDebugger();
-
         if (intent != null)
             Log.d(TAG, "onStart() : action = " + intent.getAction());
 
@@ -195,18 +210,18 @@ public class CommunicationService extends Service {
             if (ACTION_FILE_TRANSFER.equals(intent.getAction())) {
                 final String deviceId = intent.getStringExtra(EXTRA_DEVICE_ID);
                 final long groupId = intent.getLongExtra(EXTRA_GROUP_ID, -1);
-                final int notificationId = 0 /*intent.getIntExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, -1)*/;
+                final int notificationId = intent.getIntExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, -1);
                 final boolean isAccepted = intent.getBooleanExtra(EXTRA_IS_ACCEPTED, false);
 
-                //getNotificationHelper().getUtils().cancel(notificationId);
+                getNotificationHelper().getUtils().cancel(notificationId);
 
                 try {
-                    //final TransferInstance transferInstance = new TransferInstance(getDatabase(), groupId, deviceId, true);
+                    final TransferInstance transferInstance = new TransferInstance(getDatabase(), groupId, deviceId, true);
 
                     CommunicationBridge.connect(getDatabase(), new CommunicationBridge.Client.ConnectionHandler() {
                         @Override
                         public void onConnect(CommunicationBridge.Client client) {
-                            /*try {
+                            try {
                                 CoolSocket.ActiveConnection activeConnection = client.communicate(transferInstance.getDevice(), transferInstance.getConnection());
 
                                 activeConnection.reply(new JSONObject()
@@ -219,26 +234,26 @@ public class CommunicationService extends Service {
                                 activeConnection.getSocket().close();
                             } catch (Exception e) {
                                 e.printStackTrace();
-                            }*/
+                            }
                         }
                     });
 
-                    /*if (isAccepted)
+                    if (isAccepted)
                         startFileReceiving(groupId, deviceId);
                     else
-                        getDatabase().remove(transferInstance.getGroup());*/
+                        getDatabase().remove(transferInstance.getGroup());
                 } catch (Exception e) {
                     e.printStackTrace();
 
-                    /*if (isAccepted)
-                        getNotificationHelper().showToast(R.string.mesg_somethingWentWrong);*/
+                    if (isAccepted)
+                        getNotificationHelper().showToast(R.string.mesg_somethingWentWrong);
                 }
             } else if (ACTION_IP.equals(intent.getAction())) {
                 String deviceId = intent.getStringExtra(EXTRA_DEVICE_ID);
                 boolean isAccepted = intent.getBooleanExtra(EXTRA_IS_ACCEPTED, false);
-                int notificationId = 0; /*intent.getIntExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, -1);*/
+                int notificationId = intent.getIntExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, -1);
 
-                //getNotificationHelper().getUtils().cancel(notificationId);
+                getNotificationHelper().getUtils().cancel(notificationId);
 
                 NetworkDevice device = new NetworkDevice(deviceId);
 
@@ -251,17 +266,18 @@ public class CommunicationService extends Service {
                     return START_NOT_STICKY;
                 }
             } else if (ACTION_CANCEL_INDEXING.equals(intent.getAction())) {
-                int notificationId = 0 /*intent.getIntExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, -1)*/;
+                int notificationId = intent.getIntExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, -1);
                 long groupId = intent.getLongExtra(EXTRA_GROUP_ID, -1);
 
-                //getNotificationHelper().getUtils().cancel(notificationId);
+                getNotificationHelper().getUtils().cancel(notificationId);
 
                 Interrupter interrupter = getOngoingIndexList().get(groupId);
 
                 if (interrupter != null)
                     interrupter.interrupt();
             } else if (ACTION_CLIPBOARD.equals(intent.getAction()) && intent.hasExtra(EXTRA_CLIPBOARD_ACCEPTED)) {
-                /*int notificationId = 0 *//*intent.getIntExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, -1)*//*;
+                // TODO: 10/29/2019 its related to text stream object commented #35
+                /*int notificationId = intent.getIntExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, -1);
                 long clipboardId = intent.getLongExtra(EXTRA_CLIPBOARD_ID, -1);
                 boolean isAccepted = intent.getBooleanExtra(EXTRA_CLIPBOARD_ACCEPTED, false);
 
@@ -290,16 +306,16 @@ public class CommunicationService extends Service {
                 try {
                     ProcessHolder process = findProcessById(groupId, deviceId);
 
-                    /*if (process == null)
+                    if (process == null)
                         startFileReceiving(groupId, deviceId);
                     else
-                        Toast.makeText(this, getString(R.string.mesg_groupOngoingNotice, process.transferObject.friendlyName), Toast.LENGTH_SHORT).show();*/
+                        Toast.makeText(this, getString(R.string.mesg_groupOngoingNotice, process.transferObject.friendlyName), Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else if (ACTION_CANCEL_JOB.equals(intent.getAction())
                     && intent.hasExtra(EXTRA_GROUP_ID)
-                    && intent.hasExtra(EXTRA_DEVICE_ID)) {/*
+                    && intent.hasExtra(EXTRA_DEVICE_ID)) {
                 int notificationId = intent.getIntExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, -1);
                 long groupId = intent.getLongExtra(EXTRA_GROUP_ID, -1);
                 String deviceId = intent.getStringExtra(CommunicationService.EXTRA_DEVICE_ID);
@@ -342,7 +358,6 @@ public class CommunicationService extends Service {
                         }
                     }
                 }
-            */
             } else if (ACTION_TOGGLE_SEAMLESS_MODE.equals(intent.getAction())) {
                 updateServiceState(!mSeamlessMode);
             } else if (ACTION_TOGGLE_HOTSPOT.equals(intent.getAction())
@@ -354,8 +369,9 @@ public class CommunicationService extends Service {
                     && intent.hasExtra(EXTRA_STATUS_STARTED)) {
                 boolean startRequested = intent.getBooleanExtra(EXTRA_STATUS_STARTED, false);
 
-                /*mDestroyApproved = !startRequested && !hasOngoingTasks() && (mWebShareServer == null
-                        || !mWebShareServer.isAlive());*/
+                // TODO: 10/29/2019 its possible to be out of comment ACTION_SERVICE_STATUS commented #36
+                mDestroyApproved = !startRequested && !hasOngoingTasks()/* && (mWebShareServer == null
+                        || !mWebShareServer.isAlive())*/;
 
                 if (mDestroyApproved)
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -599,14 +615,14 @@ public class CommunicationService extends Service {
                 .putExtra(EXTRA_STATUS_STARTED, mSeamlessMode));
     }
 
-    /*public void startFileReceiving(long groupId, String deviceId) throws TransferGroupNotFoundException, DeviceNotFoundException, ConnectionNotFoundException, AssigneeNotFoundException {
+    public void startFileReceiving(long groupId, String deviceId) throws TransferGroupNotFoundException, DeviceNotFoundException, ConnectionNotFoundException, AssigneeNotFoundException {
         // it should create its own devices
         startFileReceiving(new TransferInstance(getDatabase(), groupId, deviceId, true));
-    }*/
+    }
 
-    /*public void startFileReceiving(TransferInstance transferInstance) {
+    public void startFileReceiving(TransferInstance transferInstance) {
         CoolSocket.connect(new SeamlessClientHandler(transferInstance));
-    }*/
+    }
 
     public void updateServiceState(boolean seamlessMode) {
         boolean broadcastStatus = mSeamlessMode != seamlessMode;
@@ -669,11 +685,11 @@ public class CommunicationService extends Service {
                     getSelfExecutor().submit(new Runnable() {
                         @Override
                         public void run() {
-                            /*try {
+                            try {
                                 UpdateUtils.sendUpdate(getApplicationContext(), activeConnection.getClientAddress());
                             } catch (IOException e) {
                                 e.printStackTrace();
-                            }*/
+                            }
                         }
                     });
 
@@ -734,8 +750,8 @@ public class CommunicationService extends Service {
 
                         shouldContinue = true;
 
-                        /*if (device.isRestricted)
-                            getNotificationHelper().notifyConnectionRequest(device);*/
+                        if (device.isRestricted)
+                            getNotificationHelper().notifyConnectionRequest(device);
                     }
 
                     final NetworkDevice.Connection connection = NetworkDeviceLoader.processConnection(getDatabase(), device, activeConnection.getClientAddress());
@@ -762,11 +778,11 @@ public class CommunicationService extends Service {
                                     getSelfExecutor().submit(new Runnable() {
                                         @Override
                                         public void run() {
-                                            final JSONArray jsonArray = null;
+                                            final JSONArray jsonArray;
                                             final Interrupter interrupter = new Interrupter();
                                             TransferGroup group = new TransferGroup(groupId);
                                             TransferGroup.Assignee assignee = new TransferGroup.Assignee(group, finalDevice, connection);
-                                            /*final DynamicNotification notification = getNotificationHelper().notifyPrepareFiles(group, finalDevice);
+                                            final DynamicNotification notification = getNotificationHelper().notifyPrepareFiles(group, finalDevice);
 
                                             notification.setProgress(0, 0, true);
 
@@ -786,7 +802,7 @@ public class CommunicationService extends Service {
                                                 usePublishing = true;
                                             } catch (Exception e) {
                                                 e.printStackTrace();
-                                            }*/
+                                            }
 
                                             TransferObject transferObject = null;
 
@@ -839,7 +855,7 @@ public class CommunicationService extends Service {
                                                     if ((System.currentTimeMillis() - lastNotified) > 1000) {
                                                         lastNotified = System.currentTimeMillis();
                                                         Log.d(TAG, "updateProgress: see how the values go" + total);
-                                                        //notification.updateProgress(total, current, false);
+                                                        notification.updateProgress(total, current, false);
                                                     }
                                                 }
 
@@ -850,13 +866,13 @@ public class CommunicationService extends Service {
                                             };
 
                                             if (pendingRegistry.size() > 0) {
-                                                /*if (usePublishing)
+                                                if (usePublishing)
                                                     getDatabase().publish(pendingRegistry, progressUpdater);
                                                 else
-                                                    getDatabase().insert(pendingRegistry, progressUpdater);*/
+                                                    getDatabase().insert(pendingRegistry, progressUpdater);
                                             }
 
-                                            //notification.cancel();
+                                            notification.cancel();
 
                                             synchronized (getOngoingIndexList()) {
                                                 getOngoingIndexList().remove(group.groupId);
@@ -869,14 +885,14 @@ public class CommunicationService extends Service {
                                                         .putExtra(EXTRA_GROUP_ID, groupId)
                                                         .putExtra(EXTRA_DEVICE_ID, finalDevice.deviceId));
 
-                                                /*if (isSeamlessAvailable)
+                                                if (isSeamlessAvailable)
                                                     try {
                                                         startFileReceiving(group.groupId, finalDevice.deviceId);
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
                                                     }
                                                 else
-                                                    getNotificationHelper().notifyTransferRequest(transferObject, finalDevice, pendingRegistry.size());*/
+                                                    getNotificationHelper().notifyTransferRequest(transferObject, finalDevice, pendingRegistry.size());
                                             }
                                         }
                                     });
@@ -904,12 +920,13 @@ public class CommunicationService extends Service {
                                 break;
                             case (Keyword.REQUEST_CLIPBOARD):
                                 if (responseJSON.has(Keyword.TRANSFER_CLIPBOARD_TEXT)) {
+
                                     /*TextStreamObject textStreamObject = new TextStreamObject(AppUtils.getUniqueNumber(), responseJSON.getString(Keyword.TRANSFER_CLIPBOARD_TEXT));
 
                                     getDatabase().publish(textStreamObject);
-                                    getNotificationHelper().notifyClipboardRequest(device, textStreamObject);*/
+                                    getNotificationHelper().notifyClipboardRequest(device, textStreamObject);
 
-                                    result = true;
+                                    result = true;*/
                                 }
                                 break;
                             case (Keyword.REQUEST_ACQUAINTANCE):
@@ -935,7 +952,7 @@ public class CommunicationService extends Service {
                                         ProcessHolder process = findProcessById(groupId, device.deviceId);
 
                                         if (process == null) {
-                                            //startFileReceiving(groupId, device.deviceId);
+                                            startFileReceiving(groupId, device.deviceId);
                                             result = true;
                                         } else
                                             responseJSON.put(Keyword.ERROR,
@@ -974,7 +991,7 @@ public class CommunicationService extends Service {
         }
 
         @Override
-        protected void onConnected(ActiveConnection activeConnection) {}/*{
+        protected void onConnected(ActiveConnection activeConnection) {
             ProcessHolder processHolder = new ProcessHolder();
 
             TransferInstance transferInstance = null;
@@ -1189,10 +1206,10 @@ public class CommunicationService extends Service {
                     notifyTaskRunningListChange();
                 }
             }
-        }*/
+        }
     }
 
-    private class SeamlessClientHandler {}/*implements CoolSocket.Client.ConnectionHandler*/ /*{
+    private class SeamlessClientHandler implements CoolSocket.Client.ConnectionHandler {
         private TransferInstance mTransfer;
 
         public SeamlessClientHandler(TransferInstance transferInstance) {
@@ -1479,7 +1496,7 @@ public class CommunicationService extends Service {
                 }
             }
         }
-    }*/
+    }
 
     private void sendBroadcasts(CoolTransfer.TransferProgress<ProcessHolder> transferProgress, String receiver) {
         try {
@@ -1501,7 +1518,7 @@ public class CommunicationService extends Service {
                 error.printStackTrace();
 
             handler.getExtra().transferObject.flag = TransferObject.Flag.INTERRUPTED;
-            //getNotificationHelper().notifyReceiveError(handler.getExtra().transferObject);
+            getNotificationHelper().notifyReceiveError(handler.getExtra().transferObject);
 
             return Flag.CANCEL_ALL;
         }
@@ -1529,9 +1546,9 @@ public class CommunicationService extends Service {
                 e.printStackTrace();
             }
 
-            /*handler.getExtra().notification.setContentText(getString(R.string.text_remainingTime, TimeUtils.getDuration(handler.getTransferProgress().getTimeRemaining())));
+            handler.getExtra().notification.setContentText(getString(R.string.text_remainingTime, TimeUtils.INSTANCE.getDuration(handler.getTransferProgress().getTimeRemaining())));
             Log.d(TAG, "Receive: Percentage is: " + percentage);
-            handler.getExtra().notification.updateProgress(100, percentage, false);*/
+            handler.getExtra().notification.updateProgress(100, percentage, false);
 
 
             handler.getExtra().transferObject.flag = TransferObject.Flag.IN_PROGRESS;
@@ -1647,9 +1664,9 @@ public class CommunicationService extends Service {
                 e.printStackTrace();
             }
 
-            /*handler.getExtra().notification.setContentText(getString(R.string.text_remainingTime, TimeUtils.getDuration(handler.getTransferProgress().getTimeRemaining())));
+            handler.getExtra().notification.setContentText(getString(R.string.text_remainingTime, TimeUtils.INSTANCE.getDuration(handler.getTransferProgress().getTimeRemaining())));
             Log.d(TAG, "Send: Percentage is: " + percentage);
-            handler.getExtra().notification.updateProgress(100, percentage, false);*/
+            handler.getExtra().notification.updateProgress(100, percentage, false);
 
             handler.getExtra().transferObject.flag = TransferObject.Flag.IN_PROGRESS;
             handler.getExtra().transferObject.flag.setBytesValue(handler.getTransferProgress().getCurrentTransferredByte());
@@ -1718,7 +1735,7 @@ public class CommunicationService extends Service {
     public class ProcessHolder {
         public CoolTransfer.ParentBuilder<ProcessHolder> builder;
         public CoolSocket.ActiveConnection activeConnection;
-        //public DynamicNotification notification;
+        public DynamicNotification notification;
         public TransferObject transferObject;
         public DocumentFile currentFile;
         public TransferObject.Type type;

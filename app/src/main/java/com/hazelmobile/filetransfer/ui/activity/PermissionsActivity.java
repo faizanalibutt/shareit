@@ -1,7 +1,6 @@
 package com.hazelmobile.filetransfer.ui.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,10 +22,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 
+import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
+import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.app.Activity;
+import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 
-public class PermissionsActivity extends com.hazelmobile.filetransfer.app.Activity {
+import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_HOTSPOT_STATUS;
+import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_DISABLING;
+import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_ENABLED;
+
+public class PermissionsActivity extends Activity implements SnackbarSupport {
 
     private static final int LOCATION_PERMISSION_RESULT = 0;
     private static final int LOCATION_SERVICE_RESULT = 1;
@@ -35,6 +42,41 @@ public class PermissionsActivity extends com.hazelmobile.filetransfer.app.Activi
     private AppCompatButton gpsButton, nextScreen, bluetoothButton, wifiButton;
     private boolean isWifi, isBluetooth, isGps, isAllEnabled = false;
     private boolean iSenderOrReceiver = false;
+    private boolean mHotspotStartedExternally = false;
+
+    private UIConnectionUtils mConnectionUtils;
+
+    public UIConnectionUtils getUIConnectionUtils() {
+        if (mConnectionUtils == null)
+            mConnectionUtils = new UIConnectionUtils(ConnectionUtils.getInstance(this), this);
+
+        return mConnectionUtils;
+    }
+
+    private ConnectionUtils getConnectionUtils() {
+        return getUIConnectionUtils().getConnectionUtils();
+    }
+
+    @Override
+    public Snackbar createSnackbar(int resId, Object... objects) {
+        return null;
+    }
+
+    private class StatusReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            /*if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction()))
+                updateState();
+            else */if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
+                if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false))
+                    return;
+                else if (getConnectionUtils().getHotspotUtils().isEnabled()
+                        && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
+                    return;
+                }
+            }
+        }
+    }
 
     // TODO: 10/23/2019 remove this in future #33
     public static final int REQUEST_CODE_CHOOSE_DEVICE = 0;

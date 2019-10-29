@@ -1,17 +1,31 @@
 package com.hazelmobile.filetransfer.ui.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
+import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
+import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.service.CommunicationService;
+import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
+import com.hazelmobile.filetransfer.ui.UITask;
+import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
+import com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo;
 import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
+import com.hazelmobile.filetransfer.util.ConnectionUtils;
+import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
 import static com.hazelmobile.filetransfer.ui.activity.PermissionsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
 
@@ -32,13 +46,6 @@ public class ReceiverActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receiver);
-
-        /*if (getIntent() != null) {
-            if (getIntent().hasExtra(ConnectionManagerActivityDemo.RECEIVE) &&
-                    getIntent().getBooleanExtra(ConnectionManagerActivityDemo.RECEIVE, false)) {
-
-            }
-        }*/
 
         if (getIntent().hasExtra(EXTRA_REQUEST_TYPE))
             try {

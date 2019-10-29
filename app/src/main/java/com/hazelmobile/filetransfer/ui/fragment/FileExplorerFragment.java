@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
-import com.hazelmobile.filetransfer.files.PathResolverRecyclerAdapter;
+import com.hazelmobile.filetransfer.ui.adapter.PathResolverRecyclerAdapter;
 import com.hazelmobile.filetransfer.pictures.DetachListener;
 
 import com.hazelmobile.filetransfer.ui.callback.IconSupport;

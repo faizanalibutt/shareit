@@ -32,13 +32,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hazel"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
         <activity
             android:name=".ui.activity.WelcomeActivity"
             android:theme="@style/Theme.Hazel.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.activity.ReceiverActivity"
-            android:theme="@style/Theme.Hazel.NoActionBar" />
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
+
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
@@ -49,37 +52,54 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.activity.SideMenu"
             android:theme="@style/Theme.Hazel.White" />
+
         <activity
             android:name=".ui.activity.SideMenu"
             android:theme="@style/Theme.Hazel.Base.NoActionBar" />
+
         <activity
             android:name=".ui.activity.ContentSharingActivity"
             android:label="@string/title_activity_content_sharing"
+            android:launchMode="singleTask"
             android:parentActivityName=".ui.activity.MainActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-        <activity android:name=".ui.activity.PermissionsActivity" />
-        <activity android:name=".ui.activity.ConnectionManagerActivityDemo" />
-        <activity android:name=".ui.activity.ShareActivity">
+
+        <activity
+            android:name=".ui.activity.PermissionsActivity"
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
+
+        <activity
+            android:name=".ui.activity.ConnectionManagerActivityDemo"
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
+
+        <activity
+            android:name=".ui.activity.ShareActivity"
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
             <intent-filter>
-                <action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />
+                <!--<action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />-->
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
-                <action android:name="genonbeta.intent.action.TREBLESHOT_SEND" />
-                <action android:name="genonbeta.intent.action.TREBLESHOT_SEND_MULTIPLE" />
+                <action android:name="faizi.intent.action.HAZEL_SEND" />
+                <action android:name="faizi.intent.action.HAZEL_SEND_MULTIPLE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.AddDevicesToTransferActivity"
+
+        <activity
+            android:name=".ui.activity.AddDevicesToTransferActivity"
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
+
+        <activity android:name=".ui.activity.BarcodeScannerActivityDemo"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar"/>
-        <activity android:name=".ui.activity.BarcodeScannerActivityDemo" />
 
         <activity
             android:name=".ui.activity.ViewTransferActivity"
@@ -111,6 +131,7 @@
             android:enabled="true"
             android:label="@string/text_communicationService"
             android:process=":transfer" />
+
         <service
             android:name=".service.WorkerService"
             android:label="@string/text_workerService" />

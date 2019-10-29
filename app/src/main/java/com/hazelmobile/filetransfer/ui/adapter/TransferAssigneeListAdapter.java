@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.files.TransferGroup;
+import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.graphics.drawable.TextDrawable;
 import com.hazelmobile.filetransfer.object.ShowingAssignee;
 import com.hazelmobile.filetransfer.pictures.AppUtils;

@@ -1,6 +1,5 @@
 package com.hazelmobile.filetransfer.object;
 
-import com.hazelmobile.filetransfer.files.TransferGroup;
 import com.hazelmobile.filetransfer.pictures.Editable;
 
 import java.util.Locale;

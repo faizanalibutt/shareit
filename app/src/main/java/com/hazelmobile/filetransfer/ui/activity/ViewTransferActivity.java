@@ -30,8 +30,8 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.dialog.TransferInfoDialog;
-import com.hazelmobile.filetransfer.files.TransferGroup;
-import com.hazelmobile.filetransfer.files.TransferObject;
+import com.hazelmobile.filetransfer.object.TransferGroup;
+import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.ShowingAssignee;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
@@ -40,7 +40,6 @@ import com.hazelmobile.filetransfer.pictures.PowerfulActionModeSupport;
 import com.hazelmobile.filetransfer.pictures.TextUtils;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.ui.fragment.TransferFileExplorerFragment;
-import com.hazelmobile.filetransfer.util.FileUtils;
 import com.hazelmobile.filetransfer.util.TransferUtils;
 
 import java.util.ArrayList;

@@ -2,7 +2,7 @@
 <resources>
     <!-- generalization start -->
     <style name="Theme.Hazel.Base" parent="Theme.Prototype.Hazel.Base">
-        <item name="android:statusBarColor">?statusBarColor</item>
+        <item name="android:statusBarColor">?colorPrimaryDark</item>
     </style>
 
     <style name="Theme.Hazel.White" parent="Theme.Hazel.Base.White">

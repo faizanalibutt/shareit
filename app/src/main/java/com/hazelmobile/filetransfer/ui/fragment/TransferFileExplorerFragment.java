@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.files.PathResolverRecyclerAdapter;
+import com.hazelmobile.filetransfer.ui.adapter.PathResolverRecyclerAdapter;
 import com.hazelmobile.filetransfer.ui.adapter.TransferPathResolverRecyclerAdapter;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 

@@ -15,8 +15,8 @@ import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLType;
 import com.genonbeta.android.database.SQLValues;
 import com.genonbeta.android.database.SQLiteDatabase;
-import com.hazelmobile.filetransfer.files.TransferGroup;
-import com.hazelmobile.filetransfer.files.TransferObject;
+import com.hazelmobile.filetransfer.object.TransferGroup;
+import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.util.TransferUtils;
 
 import java.util.ArrayList;

@@ -13,8 +13,8 @@ import com.genonbeta.android.framework.io.DocumentFile;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.files.AppConfig;
-import com.hazelmobile.filetransfer.files.TransferGroup;
-import com.hazelmobile.filetransfer.files.TransferObject;
+import com.hazelmobile.filetransfer.object.TransferGroup;
+import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 
 import java.io.File;

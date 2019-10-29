@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.files.AppConfig;
-import com.hazelmobile.filetransfer.files.TransferObject;
+import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.util.AddressedInterface;
 

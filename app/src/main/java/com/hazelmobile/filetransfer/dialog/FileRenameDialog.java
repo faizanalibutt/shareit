@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer.files;
+package com.hazelmobile.filetransfer.dialog;
 
 import android.content.Context;
 
@@ -6,6 +6,8 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.object.FileShortcutObject;
+import com.hazelmobile.filetransfer.object.WritablePathObject;
 import com.hazelmobile.filetransfer.ui.adapter.FileListAdapter;
 
 import java.util.ArrayList;

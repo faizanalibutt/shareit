@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer.files;
+package com.hazelmobile.filetransfer.object;
 
 import android.content.ContentValues;
 
@@ -10,8 +10,6 @@ import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLiteDatabase;
 import com.genonbeta.android.framework.object.Selectable;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.object.NetworkDevice;
-import com.hazelmobile.filetransfer.object.ShowingAssignee;
 import com.hazelmobile.filetransfer.util.TransferUtils;
 
 import java.util.ArrayList;

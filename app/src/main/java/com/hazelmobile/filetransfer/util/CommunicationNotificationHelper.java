@@ -5,9 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
+import com.genonbeta.CoolSocket.CoolTransfer;
+import com.genonbeta.android.framework.io.DocumentFile;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.object.TransferGroup;
+import com.hazelmobile.filetransfer.object.TransferInstance;
+import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.pictures.Keyword;
+import com.hazelmobile.filetransfer.pictures.TextUtils;
+import com.hazelmobile.filetransfer.receiver.DialogEventReceiver;
 import com.hazelmobile.filetransfer.service.CommunicationService;
+import com.hazelmobile.filetransfer.ui.activity.ViewTransferActivity;
 
 /**
  * created by: Veli
@@ -61,7 +74,7 @@ public class CommunicationNotificationHelper {
         return mNotificationUtils;
     }
 
-    /*public DynamicNotification notifyConnectionRequest(NetworkDevice device) {
+    public DynamicNotification notifyConnectionRequest(NetworkDevice device) {
         DynamicNotification notification = getUtils().buildDynamicNotification(AppUtils.getUniqueNumber(), NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
 
         Intent acceptIntent = new Intent(getContext(), CommunicationService.class);
@@ -161,7 +174,7 @@ public class CommunicationNotificationHelper {
         return processHolder.notification;
     }
 
-    public DynamicNotification notifyClipboardRequest(NetworkDevice device, TextStreamObject object) {
+    /*public DynamicNotification notifyClipboardRequest(NetworkDevice device, TextStreamObject object) {
         DynamicNotification notification = getUtils().buildDynamicNotification(object.id, NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
 
         Intent acceptIntent = new Intent(getContext(), CommunicationService.class)
@@ -201,7 +214,7 @@ public class CommunicationNotificationHelper {
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         return notification.show();
-    }
+    }*/
 
     public DynamicNotification notifyFileReceived(CommunicationService.ProcessHolder processHolder, NetworkDevice device, DocumentFile savePath) {
         DynamicNotification notification = getUtils().buildDynamicNotification(
@@ -216,13 +229,13 @@ public class CommunicationNotificationHelper {
                 .setDefaults(getUtils().getNotificationSettings())
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 // todo here is total time elapsed logic pick it.
-                .setContentText(getContext().getString(R.string.text_receivedTransfer, FileUtils.sizeExpression(progress.getTransferredByte(), false), TimeUtils.getFriendlyElapsedTime(getContext(), progress.getTimeElapsed())));
+                .setContentText(getContext().getString(R.string.text_receivedTransfer, FileUtils.sizeExpression(progress.getTransferredByte(), false), TimeUtils.INSTANCE.getFriendlyElapsedTime(getContext(), progress.getTimeElapsed())));
 
         if (progress.getTransferredFileCount() != 1) {
-            notification
+            /*notification
                     .setContentTitle(getContext().getResources().getQuantityString(R.plurals.text_fileReceiveCompletedSummary, progress.getTransferredFileCount(), progress.getTransferredFileCount()))
                     .setContentIntent(PendingIntent.getActivity(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), FileExplorerActivity.class)
-                            .putExtra(FileExplorerActivity.EXTRA_FILE_PATH, savePath.getUri()), 0));
+                            .putExtra(FileExplorerActivity.EXTRA_FILE_PATH, savePath.getUri()), 0));*/
         } else {
             try {
                 Intent openIntent = FileUtils.getOpenIntent(getContext(), processHolder.currentFile);
@@ -230,11 +243,11 @@ public class CommunicationNotificationHelper {
             } catch (Exception e) {
             }
 
-            notification
+            /*notification
                     .setContentTitle(processHolder.transferObject.friendlyName)
                     .addAction(R.drawable.ic_folder_white_24dp_static, getContext().getString(R.string.butn_showFiles),
                             PendingIntent.getActivity(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), FileExplorerActivity.class)
-                                    .putExtra(FileExplorerActivity.EXTRA_FILE_PATH, savePath.getUri()), 0));
+                                    .putExtra(FileExplorerActivity.EXTRA_FILE_PATH, savePath.getUri()), 0));*/
         }
 
         return notification.show();
@@ -353,7 +366,7 @@ public class CommunicationNotificationHelper {
                         PendingIntent.getService(getContext(), AppUtils.getUniqueNumber(), killIntent, 0));
 
         return notification.show();
-    }*/
+    }
 
     public void showToast(String toastText) {
         Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();

@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer.files;
+package com.hazelmobile.filetransfer.object;
 
 import android.content.ContentValues;
 import android.net.Uri;
@@ -7,44 +7,49 @@ import com.genonbeta.android.database.CursorItem;
 import com.genonbeta.android.database.DatabaseObject;
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLiteDatabase;
+import com.hazelmobile.filetransfer.database.AccessDatabase;
 
-public class FileShortcutObject implements DatabaseObject<Object> {
+/**
+ * created by: Veli
+ * date: 16.02.2018 12:56
+ */
+
+public class WritablePathObject implements DatabaseObject<Object> {
     public String title;
     public Uri path;
 
-    public FileShortcutObject() {
+    public WritablePathObject() {
     }
 
-    public FileShortcutObject(Uri path) {
+    public WritablePathObject(Uri path) {
         this.path = path;
     }
 
-    public FileShortcutObject(String title, Uri path) {
+    public WritablePathObject(String title, Uri path) {
         this(path);
         this.title = title;
     }
 
     @Override
     public SQLQuery.Select getWhere() {
-        return null;/*new SQLQuery.Select(AccessDatabase.TABLE_FILEBOOKMARK).setWhere(
-                String.format("%s = ?", AccessDatabase.FIELD_FILEBOOKMARK_PATH), path.toString());*/
+        return new SQLQuery.Select(AccessDatabase.TABLE_WRITABLEPATH)
+                .setWhere(AccessDatabase.FIELD_WRITABLEPATH_PATH + "=?", path.toString());
     }
 
-    // TODO: 9/24/2019 fileshortcut dialog is commented. #13
     @Override
     public ContentValues getValues() {
         ContentValues contentValues = new ContentValues();
 
-        /*contentValues.put(AccessDatabase.FIELD_FILEBOOKMARK_TITLE, title);
-        contentValues.put(AccessDatabase.FIELD_FILEBOOKMARK_PATH, path.toString());*/
+        contentValues.put(AccessDatabase.FIELD_WRITABLEPATH_TITLE, title);
+        contentValues.put(AccessDatabase.FIELD_WRITABLEPATH_PATH, path.toString());
 
         return contentValues;
     }
 
     @Override
     public void reconstruct(CursorItem item) {
-/*        this.title = item.getString(AccessDatabase.FIELD_FILEBOOKMARK_TITLE);
-        this.path = Uri.parse(item.getString(AccessDatabase.FIELD_FILEBOOKMARK_PATH));*/
+        this.title = item.getString(AccessDatabase.FIELD_WRITABLEPATH_TITLE);
+        this.path = Uri.parse(item.getString(AccessDatabase.FIELD_WRITABLEPATH_PATH));
     }
 
     @Override
@@ -62,4 +67,3 @@ public class FileShortcutObject implements DatabaseObject<Object> {
 
     }
 }
-

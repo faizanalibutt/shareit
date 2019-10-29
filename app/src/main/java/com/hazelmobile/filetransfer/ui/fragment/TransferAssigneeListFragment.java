@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
@@ -16,16 +15,13 @@ import androidx.annotation.Nullable;
 
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.files.TransferGroup;
-import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.ShowingAssignee;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.EditableListAdapter;
 import com.hazelmobile.filetransfer.pictures.EditableListFragment;
-import com.hazelmobile.filetransfer.pictures.TextUtils;
 import com.hazelmobile.filetransfer.ui.adapter.TransferAssigneeListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
-import com.hazelmobile.filetransfer.util.TransferUtils;
 
 /**
  * created by: veli

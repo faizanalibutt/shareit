@@ -56,9 +56,9 @@ import java.util.Set;
 import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_HOTSPOT_STATUS;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_DISABLING;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_ENABLED;
-/*import static com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo.APP_NAME;
+import static com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo.APP_NAME;
 import static com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo.MY_UUID;
-import static com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo.STATE_MESSAGE_RECEIVED;*/
+import static com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo.STATE_MESSAGE_RECEIVED;
 
 
 /**
@@ -330,16 +330,16 @@ public class HotspotManagerFragment
 
 
         ServerClass(JSONObject hotspotInformations) {
-            /*try {
+            try {
                 serverSocket = ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().listenUsingRfcommWithServiceRecord(APP_NAME, MY_UUID);
                 hotspotInformation = hotspotInformations;
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
+            }
         }
 
         public void run() {
-            BluetoothSocket socket = null;
+            BluetoothSocket socket;
 
             while (true) {
                 try {
@@ -383,15 +383,15 @@ public class HotspotManagerFragment
     public void onDestroy() {
         super.onDestroy();
         try {
-            if (getContext() != null) {
+            /*if (getContext() != null) {
                 Intent intent = new Intent(getContext(), CommunicationService.class);
                 getContext().stopService(intent);
                 getContext().unregisterReceiver(mMessageReceiver);
-            }
+            }*/
             ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
             if (connectionUtils.getBluetoothAdapter().isDiscovering())
                 connectionUtils.getBluetoothAdapter().cancelDiscovery();
-            connectionUtils.disableCurrentNetwork();
+            //connectionUtils.disableCurrentNetwork();
             mHandle.removeMessages(STATE_BLUETOOTH_DISCOVERABLE_REQUESTING);
             //mHandle.removeMessages(STATE_PROGRESS);
             //openWifiOnce = false;
@@ -465,7 +465,7 @@ public class HotspotManagerFragment
             while (true) {
                 try {
                     bytes = inputStream.read(buffer);
-                    //new BarcodeConnectFragmentDemo().mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
+                    new BarcodeConnectFragmentDemo().mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
                 } catch (IOException e) {
                     e.printStackTrace();
                     showMessage("SendReceive: " + e);

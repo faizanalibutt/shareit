@@ -68,6 +68,7 @@
         <item name="colorAccent">@color/text_color_gray</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark23">@color/colorPrimaryDark23</item>
         <item name="android:windowBackground">@color/windowBackground</item>
         <!-- app styling -->
         <item name="backgroundDialog">@drawable/background_dialog</item>
@@ -87,6 +88,7 @@
         <item name="rippleBackground">@drawable/ripple_background</item>
         <item name="roundSelector">@drawable/round_selector</item>
         <item name="roundProgressBar">@drawable/round_progress_bar</item>
+        <item name="roundProgressBarShape">@drawable/round_progress_bar_shape</item>
         <item name="selectionAccentColor">@color/selection_accent</item>
         <item name="selectionColor">@color/selection</item>
         <item name="selectableItemBackground">@drawable/selectable_item_background</item>

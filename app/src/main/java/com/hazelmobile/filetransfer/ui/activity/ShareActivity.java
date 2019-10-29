@@ -31,8 +31,8 @@ public class ShareActivity extends Activity
         implements SnackbarSupport, WorkerService.OnAttachListener {
     public static final String TAG = "ShareActivity";
 
-    public static final String ACTION_SEND = "genonbeta.intent.action.TREBLESHOT_SEND";
-    public static final String ACTION_SEND_MULTIPLE = "genonbeta.intent.action.TREBLESHOT_SEND_MULTIPLE";
+    public static final String ACTION_SEND = "faizi.intent.action.HAZEL_SEND";
+    public static final String ACTION_SEND_MULTIPLE = "faizi.intent.action.HAZEL_SEND_MULTIPLE";
 
     public static final String EXTRA_FILENAME_LIST = "extraFileNames";
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";

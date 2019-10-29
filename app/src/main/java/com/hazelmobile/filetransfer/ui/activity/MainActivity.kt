@@ -23,4 +23,9 @@ class MainActivity : Activity() {
         val REQUEST_PERMISSION_ALL = 1
     }
 
+    override fun onDestroy() {
+        exitApp()
+        super.onDestroy()
+    }
+
 }

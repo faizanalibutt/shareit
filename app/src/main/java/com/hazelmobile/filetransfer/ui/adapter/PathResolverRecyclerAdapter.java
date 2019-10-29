@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer.files;
+package com.hazelmobile.filetransfer.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

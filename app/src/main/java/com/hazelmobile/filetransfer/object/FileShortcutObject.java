@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer.files;
+package com.hazelmobile.filetransfer.object;
 
 import android.content.ContentValues;
 import android.net.Uri;
@@ -8,48 +8,43 @@ import com.genonbeta.android.database.DatabaseObject;
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLiteDatabase;
 
-/**
- * created by: Veli
- * date: 16.02.2018 12:56
- */
-
-public class WritablePathObject implements DatabaseObject<Object> {
+public class FileShortcutObject implements DatabaseObject<Object> {
     public String title;
     public Uri path;
 
-    public WritablePathObject() {
+    public FileShortcutObject() {
     }
 
-    public WritablePathObject(Uri path) {
+    public FileShortcutObject(Uri path) {
         this.path = path;
     }
 
-    public WritablePathObject(String title, Uri path) {
+    public FileShortcutObject(String title, Uri path) {
         this(path);
         this.title = title;
     }
 
-    // TODO: 9/23/2019 writablepath is commented with some functions related to database #9
     @Override
     public SQLQuery.Select getWhere() {
-        return null;/*new SQLQuery.Select(AccessDatabase.TABLE_WRITABLEPATH)
-                .setWhere(AccessDatabase.FIELD_WRITABLEPATH_PATH + "=?", path.toString());*/
+        return null;/*new SQLQuery.Select(AccessDatabase.TABLE_FILEBOOKMARK).setWhere(
+                String.format("%s = ?", AccessDatabase.FIELD_FILEBOOKMARK_PATH), path.toString());*/
     }
 
+    // TODO: 9/24/2019 fileshortcut dialog is commented. #13
     @Override
     public ContentValues getValues() {
         ContentValues contentValues = new ContentValues();
 
-        /*contentValues.put(AccessDatabase.FIELD_WRITABLEPATH_TITLE, title);
-        contentValues.put(AccessDatabase.FIELD_WRITABLEPATH_PATH, path.toString());*/
+        /*contentValues.put(AccessDatabase.FIELD_FILEBOOKMARK_TITLE, title);
+        contentValues.put(AccessDatabase.FIELD_FILEBOOKMARK_PATH, path.toString());*/
 
         return contentValues;
     }
 
     @Override
     public void reconstruct(CursorItem item) {
-/*        this.title = item.getString(AccessDatabase.FIELD_WRITABLEPATH_TITLE);
-        this.path = Uri.parse(item.getString(AccessDatabase.FIELD_WRITABLEPATH_PATH));*/
+/*        this.title = item.getString(AccessDatabase.FIELD_FILEBOOKMARK_TITLE);
+        this.path = Uri.parse(item.getString(AccessDatabase.FIELD_FILEBOOKMARK_PATH));*/
     }
 
     @Override
@@ -67,3 +62,4 @@ public class WritablePathObject implements DatabaseObject<Object> {
 
     }
 }
+

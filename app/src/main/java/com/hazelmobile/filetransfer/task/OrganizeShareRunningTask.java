@@ -6,12 +6,13 @@ import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLiteDatabase;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.files.TransferGroup;
-import com.hazelmobile.filetransfer.files.TransferObject;
+import com.hazelmobile.filetransfer.object.TransferGroup;
+import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.activity.AddDevicesToTransferActivity;
 import com.hazelmobile.filetransfer.ui.activity.ShareActivity;
+import com.hazelmobile.filetransfer.ui.activity.ViewTransferActivity;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -117,7 +118,7 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<ShareAct
         } else {
             AppUtils.getDatabase(getService()).insert(groupInstance);
 
-            //ViewTransferActivity.startInstance(getService(), groupInstance.groupId);
+            ViewTransferActivity.startInstance(getService(), groupInstance.groupId);
             AddDevicesToTransferActivity.startInstance(getService(), groupInstance.groupId);
         }
 

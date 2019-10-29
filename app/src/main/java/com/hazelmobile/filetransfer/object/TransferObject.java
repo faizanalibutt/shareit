@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer.files;
+package com.hazelmobile.filetransfer.object;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;

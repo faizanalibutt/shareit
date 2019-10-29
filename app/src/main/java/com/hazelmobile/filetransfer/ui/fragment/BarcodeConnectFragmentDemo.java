@@ -77,7 +77,6 @@ import java.util.UUID;
  * created by: veli
  * modified by: faizi
  * date: 12/04/18 17:21
-
  */
 
 
@@ -86,9 +85,6 @@ public class BarcodeConnectFragmentDemo
         implements TitleSupport, UITask, IconSupport, ConnectionManagerActivityDemo.DeviceSelectionSupport {
 
     public static final String TAG = "BarcodeConnectFragment";
-    private static final int REQUEST_PERMISSION_CAMERA = 1;
-    private static final int REQUEST_PERMISSION_LOCATION = 2;
-    private static final int REQUEST_TURN_WIFI_ON = 4;
     private static final int MSG_TO_FILE_SENDER_UI = 0X88;
     private static final int MSG_TO_SHOW_SCAN_RESULT = 0X99;
     private static final int STATE_LISTENING = 1;
@@ -168,7 +164,7 @@ public class BarcodeConnectFragmentDemo
                         mScanBResultList.add(new Bluetooth(device, device.getName()
                                 + "\n" + device.getAddress()
                         ));
-                        //bluetoothScanResultAdapter.notifyDataSetChanged();
+                        bluetoothScanResultAdapter.notifyDataSetChanged();
                     }
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
@@ -245,8 +241,6 @@ public class BarcodeConnectFragmentDemo
                             mScanResultList = mPreviousList;
                         }
                         showMessage("mScanResultList: Open Wifi Network" + ListUtils.filterWithNoPassword(mScanResultList));
-                        //removeOtherWifis(mScanResultList);
-                        //showMessage("mScanResultList: After Updating data" + mScanResultList);
                         if (wifiScanResultAdapter != null && mScanResultList != null) {
                             wifiScanResultAdapter = null;
                             wifiScanResultAdapter = new WifiScanResultAdapter(getContext(), mScanResultList);

@@ -4,7 +4,6 @@ import android.content.Context;
 
 
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.files.PathResolverRecyclerAdapter;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 
 import java.io.File;

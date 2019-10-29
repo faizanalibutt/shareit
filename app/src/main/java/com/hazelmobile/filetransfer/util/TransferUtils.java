@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
@@ -16,11 +17,12 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.callback.OnDeviceSelectedListener;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.dialog.ConnectionChooserDialog;
-import com.hazelmobile.filetransfer.files.TransferGroup;
-import com.hazelmobile.filetransfer.files.TransferObject;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.ShowingAssignee;
+import com.hazelmobile.filetransfer.object.TransferGroup;
+import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.service.CommunicationService;
 
 import java.util.List;
 
@@ -194,12 +196,12 @@ public class TransferUtils {
 
     public static void pauseTransfer(Context context, long groupId, @Nullable String deviceId) {
         // TODO: 10/23/2019 Pause Transfer intent has been commented #29
-        /*Intent intent = new Intent(context, CommunicationService.class)
+        Intent intent = new Intent(context, CommunicationService.class)
                 .setAction(CommunicationService.ACTION_CANCEL_JOB)
                 .putExtra(CommunicationService.EXTRA_GROUP_ID, groupId)
-                .putExtra(CommunicationService.EXTRA_DEVICE_ID, deviceId);*/
+                .putExtra(CommunicationService.EXTRA_DEVICE_ID, deviceId);
 
-        //AppUtils.startForegroundService(context, intent);
+        AppUtils.startForegroundService(context, intent);
     }
 
     public static void requestStartSending(final Activity activity, final TransferGroup group,
