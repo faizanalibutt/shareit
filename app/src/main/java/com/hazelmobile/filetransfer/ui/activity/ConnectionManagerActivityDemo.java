@@ -3,6 +3,7 @@ package com.hazelmobile.filetransfer.ui.activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
+import com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo;
 import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
@@ -57,12 +59,12 @@ public class ConnectionManagerActivityDemo
                 UITask uiTask = new UITask() {
                     @Override
                     public void updateTaskStarted(Interrupter interrupter) {
-                        //Log.d(BarcodeConnectFragmentDemo.TAG, "sending file started");
+                        Log.d(BarcodeConnectFragmentDemo.TAG, "sending file started");
                     }
 
                     @Override
                     public void updateTaskStopped() {
-                        //Log.d(BarcodeConnectFragmentDemo.TAG, "sending file stopped due to some reason");
+                        Log.d(BarcodeConnectFragmentDemo.TAG, "sending file stopped due to some reason");
                     }
                 };
 

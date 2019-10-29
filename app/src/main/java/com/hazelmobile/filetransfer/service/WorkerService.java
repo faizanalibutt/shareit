@@ -12,9 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.genonbeta.android.framework.util.Interrupter;
+import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Service;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.util.DynamicNotification;
 import com.hazelmobile.filetransfer.util.InterruptAwareJob;
+import com.hazelmobile.filetransfer.util.NotificationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +42,8 @@ public class WorkerService extends Service {
     private final List<RunningTask> mTaskList = new ArrayList<>();
     private ExecutorService mExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private LocalBinder mBinder = new LocalBinder();
-    /*private NotificationUtils mNotificationUtils;
-    private DynamicNotification mNotification;*/
+    private NotificationUtils mNotificationUtils;
+    private DynamicNotification mNotification;
 
     public static int intentHash(@NonNull Intent intent) {
         StringBuilder builder = new StringBuilder();
@@ -61,7 +64,7 @@ public class WorkerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        //mNotificationUtils = new NotificationUtils(this, getDatabase(), getDefaultPreferences());
+        mNotificationUtils = new NotificationUtils(this, getDatabase(), getDefaultPreferences());
     }
 
     @Nullable
@@ -79,8 +82,8 @@ public class WorkerService extends Service {
                 RunningTask runningTask = findTaskByHash(taskHash);
 
                 if (runningTask == null || runningTask.getInterrupter().interrupted()) {
-                }//getNotificationUtils().cancel(taskHash);
-                else {
+                    getNotificationUtils().cancel(taskHash);
+                } else {
                     runningTask.getInterrupter().interrupt();
                     runningTask.onInterrupted();
                 }
@@ -121,7 +124,7 @@ public class WorkerService extends Service {
     }
 
     public void publishNotification(RunningTask runningTask) {
-        /*if (runningTask.mNotification == null) {
+        if (runningTask.mNotification == null) {
             PendingIntent cancelIntent = PendingIntent.getService(this, AppUtils.getUniqueNumber(),
                     new Intent(this, WorkerService.class)
                             .setAction(ACTION_KILL_SIGNAL)
@@ -134,7 +137,7 @@ public class WorkerService extends Service {
                     ? R.drawable.ic_autorenew_white_24dp_static
                     : runningTask.getIconRes())
                     .setContentTitle(getString(R.string.text_taskOngoing))
-                    .addAction(R.drawable.ic_close_white_24dp_static,
+                    .addAction(0,
                             getString(R.string.butn_cancel), cancelIntent);
 
             if (runningTask.mActivityIntent != null)
@@ -144,11 +147,11 @@ public class WorkerService extends Service {
         runningTask.mNotification.setContentTitle(runningTask.getTitle())
                 .setContentText(runningTask.getStatusText());
 
-        runningTask.mNotification.show();*/
+        runningTask.mNotification.show();
     }
 
     public void publishForegroundNotification() {
-        /*if (mNotification == null) {
+        if (mNotification == null) {
             mNotification = mNotificationUtils.buildDynamicNotification(ID_NOTIFICATION_FOREGROUND,
                     NotificationUtils.NOTIFICATION_CHANNEL_LOW);
             mNotification.setSmallIcon(R.drawable.ic_autorenew_white_24dp_static)
@@ -156,7 +159,7 @@ public class WorkerService extends Service {
         }
 
         mNotification.setContentText(getString(R.string.text_workerService));
-        startForeground(ID_NOTIFICATION_FOREGROUND, mNotification.build());*/
+        startForeground(ID_NOTIFICATION_FOREGROUND, mNotification.build());
     }
 
     protected synchronized void registerWork(RunningTask runningTask) {
@@ -184,7 +187,7 @@ public class WorkerService extends Service {
     }
 
     protected synchronized void unregisterWork(RunningTask runningTask) {
-        /*runningTask.mNotification.cancel();*/
+        runningTask.mNotification.cancel();
 
         synchronized (getTaskList()) {
             getTaskList().remove(runningTask);
@@ -206,7 +209,7 @@ public class WorkerService extends Service {
         private int mIconRes;
         private long mLastNotified = 0;
         private int mHash = 0;
-        //private DynamicNotification mNotification;
+        private DynamicNotification mNotification;
         private PendingIntent mActivityIntent;
         private T mAnchorListener;
 

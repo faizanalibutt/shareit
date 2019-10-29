@@ -26,7 +26,7 @@ import androidx.core.content.ContextCompat;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 
-public class PermissionsActivity extends Activity {
+public class PermissionsActivity extends com.hazelmobile.filetransfer.app.Activity {
 
     private static final int LOCATION_PERMISSION_RESULT = 0;
     private static final int LOCATION_SERVICE_RESULT = 1;

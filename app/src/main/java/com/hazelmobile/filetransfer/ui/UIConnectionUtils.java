@@ -330,7 +330,7 @@ public class UIConnectionUtils {
                     .show();*/
 
         AppUtils.startForegroundService(getConnectionUtils().getContext(), new Intent(getConnectionUtils().getContext(), CommunicationService.class)
-                .setAction(CommunicationService.ACTION_TOGGLE_HOTSPOT));
+                .setAction(CommunicationService.ACTION_TOGGLE_HOTSPOT)); // scan devices or on hotspot
 
         watcher.onResultReturned(true, false);
 
