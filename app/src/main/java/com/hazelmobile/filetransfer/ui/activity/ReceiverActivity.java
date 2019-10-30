@@ -4,11 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.util.Interrupter;
@@ -16,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.library.RippleBackground;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.service.CommunicationService;
@@ -42,6 +45,9 @@ public class ReceiverActivity extends Activity
     private RequestType mRequestType = RequestType.RETURN_RESULT;
     private final IntentFilter mFilter = new IntentFilter();
 
+    private ImageView user_image;
+    private TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +63,14 @@ public class ReceiverActivity extends Activity
         getSupportFragmentManager().beginTransaction().add
                 (R.id.activity_connection_establishing_content_view, new HotspotManagerFragment()).commit();
 
+        mFilter.addAction(CommunicationService.ACTION_DEVICE_ACQUAINTANCE);
+        mFilter.addAction(CommunicationService.ACTION_INCOMING_TRANSFER_READY);
+
+        initViews();
+
+    }
+
+    private void initViews() {
         final ImageView back = findViewById(R.id.receiver_back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,10 +78,13 @@ public class ReceiverActivity extends Activity
                 finish();
             }
         });
+        final RippleBackground pulse = findViewById(R.id.content);
+        pulse.startRippleAnimation();
 
-        mFilter.addAction(CommunicationService.ACTION_DEVICE_ACQUAINTANCE);
-        mFilter.addAction(CommunicationService.ACTION_INCOMING_TRANSFER_READY);
+        user_image = findViewById(R.id.userProfileImage);
+        textView = findViewById(R.id.text1);
 
+        setProfilePicture();
     }
 
     @Override
@@ -208,8 +225,22 @@ public class ReceiverActivity extends Activity
         }
     };
 
-    public interface DeviceSelectionSupport {
-        void setDeviceSelectedListener(NetworkDeviceSelectedListener listener);
+    private void setProfilePicture() {
+        NetworkDevice localDevice = AppUtils.getLocalDevice(ReceiverActivity.this);
+        textView.setText(localDevice.nickname);
+        loadProfilePictureInto(localDevice.nickname, user_image);
+        int color = AppUtils.getDefaultPreferences(ReceiverActivity.this).getInt("device_name_color", -1);
+
+        if (user_image.getDrawable() instanceof ShapeDrawable && color != -1) {
+            ShapeDrawable shapeDrawable = (ShapeDrawable) user_image.getDrawable();
+            shapeDrawable.getPaint().setColor(color);
+        } else {
+            user_image.setBackgroundResource(R.drawable.background_user_icon_default);
+        }
     }
+
+   /* public interface DeviceSelectionSupport {
+        void setDeviceSelectedListener(NetworkDeviceSelectedListener listener);
+    }*/
 
 }

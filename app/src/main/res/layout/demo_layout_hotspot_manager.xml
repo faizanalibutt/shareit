@@ -29,7 +29,7 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/receiver_back"
         android:layout_width="@dimen/dp_20"
         android:layout_height="@dimen/dp_20"
@@ -52,8 +52,8 @@
         app:rb_color="#9EB6E6"
         app:rb_duration="3000"
         app:rb_radius="@dimen/dp_48"
-        app:rb_rippleAmount="4"
-        app:rb_scale="6">
+        app:rb_rippleAmount="2"
+        app:rb_scale="3">
 
         <ImageView
             android:id="@+id/v2"
@@ -61,21 +61,20 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/userProfileImage"
             android:layout_toEndOf="@+id/userProfileImage"
-            android:src="@drawable/ic_back_24dp" />
+            android:src="@drawable/ic_bluetooth_black_24dp" />
 
-        <TextView
+        <ImageView
             android:id="@+id/userProfileImage"
             style="@style/TextAppearance.Primary.Enlarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/background_user_icon_extended"
+            android:background="@drawable/background_user_icon_default"
             android:gravity="center"
-            android:text="A"
             android:textColor="@color/white" />
 
         <TextView
-            android:id="@+id/v3"
+            android:id="@+id/text1"
             style="@style/TextAppearance.Primary.Big"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -90,12 +89,12 @@
             style="@style/TextAppearance.Primary.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/v3"
+            android:layout_below="@+id/text1"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:layout_marginTop="@dimen/margin_absolute_size"
             android:text="Ask your friend to open the app and tap\nSEND" />
 
-    </com.hazelmobile.filetransfer.library.RippleBackground>
+    </com.hazelmobile.filetransfer.library.RippleBackground>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

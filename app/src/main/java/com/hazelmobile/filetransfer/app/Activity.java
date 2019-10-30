@@ -35,7 +35,6 @@ import com.hazelmobile.filetransfer.files.AppConfig;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.service.WorkerService;
-import com.hazelmobile.filetransfer.ui.activity.WelcomeActivity;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -125,8 +124,8 @@ public abstract class Activity extends AppCompatActivity {
             recreate();
 
         if (!hasIntroductionShown() && !mWelcomePageDisallowed) {
-            startActivity(new Intent(this, WelcomeActivity.class));
-            finish();
+//            startActivity(new Intent(this, WelcomeActivity.class));
+//            finish();
         } else if (!AppUtils.checkRunningConditions(this)) {
             if (!mSkipPermissionRequest)
                 requestRequiredPermissions(true);
@@ -163,6 +162,13 @@ public abstract class Activity extends AppCompatActivity {
 
     protected void onPreviousRunningTask(@Nullable WorkerService.RunningTask task) {
 
+    }
+
+    public boolean checkPermissionsState()  {
+        if (Build.VERSION.SDK_INT < 23)
+            return true;
+
+        return AppUtils.checkRunningConditions(this);
     }
 
     @Override

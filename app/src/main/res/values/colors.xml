@@ -46,4 +46,30 @@
     <color name="user_icon_color_default">#EEEEEE</color>
     <color name="black_surface">#1a1a1a</color>
 
+
+
+    <!-- User profile text colors -->
+    <color name="user_profile_1">#F08989</color>
+    <color name="user_profile_2">#81CCC7</color>
+    <color name="user_profile_3">#0a7b74</color>
+    <color name="user_profile_4">#285143</color>
+    <color name="user_profile_5">#4a2b2b</color>
+    <color name="user_profile_6">#891b1b</color>
+    <color name="user_profile_7">#891b40</color>
+    <color name="user_profile_8">#894f1b</color>
+    <color name="user_profile_9">#3638a3</color>
+    <color name="user_profile_0">#ab47bc</color>
+    <array name="colorsList">
+        <item>@color/user_profile_0</item>
+        <item>@color/user_profile_1</item>
+        <item>@color/user_profile_2</item>
+        <item>@color/user_profile_3</item>
+        <item>@color/user_profile_4</item>
+        <item>@color/user_profile_5</item>
+        <item>@color/user_profile_6</item>
+        <item>@color/user_profile_7</item>
+        <item>@color/user_profile_8</item>
+        <item>@color/user_profile_9</item>
+    </array>
+
 </resources>

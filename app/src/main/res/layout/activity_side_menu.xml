@@ -76,6 +76,7 @@
 
                     <ImageView
                         android:id="@+id/user_image"
+                        android:onClick="setProfileImage"
                         android:layout_width="@dimen/dp_64"
                         android:layout_height="@dimen/dp_64"
                         android:contentDescription="@string/text_user_icon"
@@ -84,19 +85,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/background_user_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|top"
-                        android:text="@string/sample_username"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_size_giant_user"
-                        app:layout_constraintBottom_toTopOf="@+id/textView"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.26" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

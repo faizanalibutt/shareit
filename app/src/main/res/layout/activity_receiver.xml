@@ -33,4 +33,60 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back_24dp" />
 
+    <com.hazelmobile.filetransfer.library.RippleBackground
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rb_color="#9EB6E6"
+        app:rb_duration="3000"
+        app:rb_radius="@dimen/dp_48"
+        app:rb_rippleAmount="2"
+        app:rb_scale="3">
+
+        <ImageView
+            android:id="@+id/v2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/userProfileImage"
+            android:layout_toEndOf="@+id/userProfileImage"
+            android:src="@drawable/ic_bluetooth_black_24dp" />
+
+        <ImageView
+            android:id="@+id/userProfileImage"
+            style="@style/TextAppearance.Primary.Enlarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/background_user_icon_default"
+            android:gravity="center"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/text1"
+            style="@style/TextAppearance.Primary.Big"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userProfileImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_small_size"
+            android:text="Ali" />
+
+        <TextView
+            android:id="@+id/v4"
+            style="@style/TextAppearance.Primary.Normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text1"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/margin_absolute_size"
+            android:text="Ask your friend to open the app and tap\nSEND" />
+
+    </com.hazelmobile.filetransfer.library.RippleBackground>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
