@@ -3,6 +3,6 @@
     android:shape="oval">
     <solid android:color="@color/user_icon_color_default" />
     <size
-        android:width="80dp"
-        android:height="80dp" />
+        android:width="70dp"
+        android:height="70dp" />
 </shape>

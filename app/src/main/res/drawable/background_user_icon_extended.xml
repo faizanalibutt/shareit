@@ -5,8 +5,8 @@
         <shape android:shape="oval">
             <solid android:color="@color/white" />
             <size
-                android:width="80dp"
-                android:height="80dp" />
+                android:width="75dp"
+                android:height="75dp" />
         </shape>
     </item>
 
@@ -14,8 +14,8 @@
         <shape android:shape="oval">
             <solid android:color="@color/user_icon_default_color" />
             <size
-                android:width="77dp"
-                android:height="77dp" />
+                android:width="70dp"
+                android:height="70dp" />
         </shape>
     </item>
 
