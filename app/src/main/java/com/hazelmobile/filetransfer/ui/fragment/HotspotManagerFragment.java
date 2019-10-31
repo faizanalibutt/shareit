@@ -408,7 +408,7 @@ public class HotspotManagerFragment
             Set<BluetoothDevice> bluetoothDeviceList = connectionUtils.getBluetoothAdapter().getBondedDevices();
             if (bluetoothDeviceList.size() > 0) {
                 for (BluetoothDevice bluetoothDevice : bluetoothDeviceList) {
-                    
+
                     try {
                         /*if (bluetoothDevice.getName().contains("TS") || bluetoothDevice.getName().contains("AndroidShare")) {
                             Method m = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
