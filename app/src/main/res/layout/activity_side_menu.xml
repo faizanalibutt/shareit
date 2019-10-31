@@ -261,7 +261,6 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_settings"
-                android:onClick="openSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium_size">

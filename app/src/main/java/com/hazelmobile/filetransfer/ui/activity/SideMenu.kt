@@ -10,16 +10,34 @@ import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.pictures.AppUtils
 import kotlinx.android.synthetic.main.activity_side_menu.*
 
-class SideMenu : Activity() {
+class SideMenu : Activity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_side_menu)
         setProfilePicture()
+        init()
     }
 
-    fun openSettings(view: View) {
-        startActivity(Intent(this@SideMenu, SettingsActivity::class.java))
+    private fun init() {
+        menu_help.setOnClickListener(this@SideMenu)
+        menu_settings.setOnClickListener(this@SideMenu)
+        menu_feedback.setOnClickListener(this@SideMenu)
+        menu_rateus.setOnClickListener(this@SideMenu)
+        menu_privacy.setOnClickListener(this@SideMenu)
+        menu_about.setOnClickListener(this@SideMenu)
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.menu_help -> TODO("waiting for the design")
+            R.id.menu_settings -> startActivity(Intent(this@SideMenu, SettingsActivity::class.java))
+            R.id.menu_feedback -> TODO("waiting for the design")
+            R.id.rateus -> TODO("waiting for the design")
+            R.id.privacy -> TODO("waiting for the design")
+            R.id.about -> TODO("waiting for the design")
+            else -> return
+        }
     }
 
     fun closeMenu(view: View) {
