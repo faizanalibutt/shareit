@@ -194,6 +194,12 @@
     <string name="butn_startHotspot">Set up hotspot</string>
     <string name="text_startHotspot" translatable="false">@string/butn_startHotspot</string>
 
+    <!-- PREPARATIONS -->
+    <string name="bluetooth_desc">Due to the restrictions of Android version, turning\nBluetooth on make quick transfers between devices\n</string>
+    <string name="wifi_desc">WLAN is used to connect to your friend and transfer</string>
+    <string name="gps_desc">Android 6.0 or above requires you to open location\nservice to find friends nearby</string>
+    <string name="hotspot_off_desc">Turn off your mobile hotspot to receive files</string>
+
 
     <!-- LACK OF TIME WHAT SHOULD I DO -->
     <string name="text_navigationDrawerOpen">Open navigation drawer</string>n

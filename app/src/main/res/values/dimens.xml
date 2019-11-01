@@ -105,5 +105,7 @@
 
     <dimen name="rippleStrokeWidth">2dp</dimen>
     <dimen name="rippleRadius">64dp</dimen>
+    <dimen name="preparation_button_width">80dp</dimen>
+    <dimen name="preparation_button_height">30dp</dimen>
 
 </resources>

@@ -12,8 +12,8 @@
     tools:showIn="@layout/content_sharing">
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/content_send_button"
-        android:onClick="sendFiles"
+        android:id="@+id/button"
+        android:onClick="btnOnClick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

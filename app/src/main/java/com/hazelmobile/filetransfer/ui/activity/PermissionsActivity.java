@@ -122,12 +122,12 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
         }
 
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
-        wifiStatus = findViewById(R.id.wifiStatus);
+        /*wifiStatus = findViewById(R.id.wifiStatus);
         gpsStatus = findViewById(R.id.gpsStatus);
-        nextScreen = findViewById(R.id.nextScreen);
+        nextScreen = findViewById(R.id.button);
         wifiButton = findViewById(R.id.wifiClick);
         bluetoothButton = findViewById(R.id.bluetoothClick);
-        gpsButton = findViewById(R.id.gpsClick);
+        gpsButton = findViewById(R.id.gpsClick);*/
     }
 
     public void openBluetooth(View view) {

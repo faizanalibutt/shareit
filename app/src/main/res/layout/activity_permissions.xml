@@ -6,36 +6,46 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.PermissionsActivity">
 
-
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/v0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/margin_medium_size"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/image_illustration_large" />
+
+    <ImageView
+        android:id="@+id/i1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small_size"
+        android:background="@drawable/background_preparations_icon"
+        android:padding="@dimen/margin_absolute_size"
+        app:layout_constraintBottom_toBottomOf="@+id/bluetooth"
+        app:layout_constraintEnd_toStartOf="@+id/bluetooth"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bluetooth"
+        app:srcCompat="@drawable/ic_bluetooth_white_24dp" />
 
     <TextView
         android:id="@+id/bluetooth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="@dimen/margin_smaller_size"
+        android:layout_marginTop="@dimen/margin_small_size"
         android:text="Open Bluetooth"
-        android:textColor="@color/black_transparent"
+        android:textColor="@color/black_dominant"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/i1"
+        app:layout_constraintTop_toBottomOf="@+id/v0" />
 
     <ImageView
         android:id="@+id/bluetoothStatus"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="@dimen/margin_small_size"
         android:contentDescription="@string/app_name"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/bluetooth"
@@ -45,35 +55,55 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bluetoothClick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="OPEN"
+        android:layout_width="@dimen/preparation_button_width"
+        android:layout_height="@dimen/preparation_button_height"
+        android:layout_marginEnd="@dimen/margin_small_size"
+        android:background="@drawable/background_preparations_button"
         android:onClick="openBluetooth"
+        android:text="OPEN"
+        android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/bluetooth"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/bluetooth" />
 
     <TextView
+        android:id="@+id/v1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_smaller_size"
+        android:layout_marginEnd="@dimen/margin_smaller_size"
+        android:text="@string/bluetooth_desc"
+        app:layout_constraintEnd_toStartOf="@+id/bluetoothStatus"
+        app:layout_constraintStart_toStartOf="@+id/bluetooth"
+        app:layout_constraintTop_toBottomOf="@+id/bluetooth" />
+
+    <!--<TextView
         android:id="@+id/wifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
         android:text="Open WLAN"
-        android:textColor="@color/black_transparent"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/black_dominant"
         android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bluetooth" />
+        app:layout_constraintTop_toBottomOf="@+id/v1" />
+
+        <ImageView
+        android:id="@+id/i2"
+        android:padding="@dimen/margin_absolute_size"
+        app:srcCompat="@drawable/ic_bluetooth_black_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/background_preparations_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <ImageView
         android:id="@+id/wifiStatus"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:contentDescription="@string/app_name"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/wifi"
@@ -88,50 +118,50 @@
         android:text="OPEN"
         android:onClick="openWifi"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/wifi"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/wifi" />
 
     <TextView
+        android:id="@+id/v2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wifi_desc"
+        app:layout_constraintTop_toBottomOf="@+id/wifi" />
+
+    <TextView
         android:id="@+id/gps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="32dp"
         android:text="Open GPS"
         android:textColor="@color/black_transparent"
         android:textSize="16sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wifi" />
+        app:layout_constraintTop_toBottomOf="@+id/v2" />
+
+        <ImageView
+        android:id="@+id/i3"
+        android:padding="@dimen/margin_absolute_size"
+        app:srcCompat="@drawable/ic_bluetooth_black_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/background_preparations_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <ImageView
         android:id="@+id/gpsStatus"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:contentDescription="@string/app_name"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/gps"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/gps"
         app:srcCompat="@drawable/checked" />
-
-    <TextView
-        android:id="@+id/hotspot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
-        android:text="Open GPS"
-        android:textColor="@color/black_transparent"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wifi" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/gpsClick"
@@ -140,11 +170,38 @@
         android:text="OPEN"
         android:onClick="openGPS"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/gps"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/gps" />
+
+    <TextView
+        android:id="@+id/v3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gps_desc"
+        app:layout_constraintTop_toBottomOf="@+id/gps" />
+
+    <TextView
+        android:id="@+id/hotspot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="Open GPS"
+        android:textColor="@color/black_transparent"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/v3" />
+
+<ImageView
+        android:id="@+id/i4"
+        android:padding="@dimen/margin_absolute_size"
+        app:srcCompat="@drawable/ic_bluetooth_black_24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/background_preparations_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <ImageView
         android:id="@+id/hotspotStatus"
@@ -154,9 +211,9 @@
         android:layout_marginRight="16dp"
         android:contentDescription="@string/app_name"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/gps"
+        app:layout_constraintBottom_toBottomOf="@+id/hotspot"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/gps"
+        app:layout_constraintTop_toTopOf="@+id/hotspot"
         app:srcCompat="@drawable/checked" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -166,27 +223,19 @@
         android:text="OPEN"
         android:onClick="openGPS"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/gps"
+        app:layout_constraintBottom_toBottomOf="@+id/hotspot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/gps" />
+        app:layout_constraintTop_toTopOf="@+id/hotspot" />
 
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/nextScreen"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/v4"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"
-        android:enabled="false"
-        android:onClick="shareIT"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="@string/hotspot_off_desc"
+        app:layout_constraintTop_toBottomOf="@+id/hotspot" />-->
+
+
+    <include layout="@layout/file_transfer_general_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,8 +24,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.object.TransferGroup;
+import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.task.AddDeviceRunningTask;
 import com.hazelmobile.filetransfer.ui.fragment.TransferAssigneeListFragment;
@@ -260,7 +261,7 @@ public class AddDevicesToTransferActivity extends Activity
                 .putExtra(ConnectionManagerActivityDemo.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_addDevicesToTransfer)), REQUEST_CODE_CHOOSE_DEVICE);*/
         startActivityForResult(new Intent(AddDevicesToTransferActivity.this, PermissionsActivity.class)
                 .putExtra(ConnectionManagerActivityDemo.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_addDevicesToTransfer))
-                .putExtra(ConnectionManagerActivityDemo.SEND, true), REQUEST_CODE_CHOOSE_DEVICE);
+                .putExtra(Keyword.EXTRA_SEND, true), REQUEST_CODE_CHOOSE_DEVICE);
     }
 
     public void takeOnProcessMode() {

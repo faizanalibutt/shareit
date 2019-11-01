@@ -142,7 +142,7 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
 
     private fun selectionCallback(select: Boolean) {
 
-        val sendButton = content_send_button
+        val sendButton = button
         val tabLayout = activity_content_sharing_tab_layout
         val whiteColor = ContextCompat.getColor(this@ContentSharingActivity, R.color.white)
         val colorPrimary = ContextCompat.getColor(this@ContentSharingActivity, R.color.colorPrimary)
@@ -214,7 +214,7 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
         return mMode
     }
 
-    fun sendFiles(view: View) {
+    fun btnOnClick(view: View) {
 
         mSelectionCallback.onActionMenuItemSelected(this, mMode, null)
 

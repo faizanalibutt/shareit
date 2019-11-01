@@ -59,6 +59,7 @@
     <color name="user_profile_8">#894f1b</color>
     <color name="user_profile_9">#3638a3</color>
     <color name="user_profile_0">#ab47bc</color>
+    <color name="colorPreparations">#584F60</color>
     <array name="colorsList">
         <item>@color/user_profile_0</item>
         <item>@color/user_profile_1</item>
