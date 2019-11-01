@@ -16,6 +16,7 @@ import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
@@ -36,8 +37,6 @@ public class ConnectionManagerActivityDemo
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
     public static final String EXTRA_REQUEST_TYPE = "extraRequestType";
     public static final String EXTRA_ACTIVITY_SUBTITLE = "extraActivitySubtitle";
-    public static final String SEND = "send";
-    public static final String RECEIVE = "receive";
     public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
     public static final int REQUEST_CHOOSE_DEVICE = 100;
     private BluetoothAdapter bluetoothAdapter;
@@ -95,7 +94,7 @@ public class ConnectionManagerActivityDemo
         setContentView(R.layout.demo_activity_connection_manager);
 
         if (getIntent() != null) {
-            if (getIntent().hasExtra(ConnectionManagerActivityDemo.RECEIVE) && getIntent().getBooleanExtra(ConnectionManagerActivityDemo.RECEIVE, false)) {
+            if (getIntent().hasExtra(Keyword.EXTRA_RECEIVE) && getIntent().getBooleanExtra(Keyword.EXTRA_RECEIVE, false)) {
                 getSupportFragmentManager().beginTransaction().add(R.id.activity_connection_establishing_content_view, new HotspotManagerFragment()).commit();
             } else {
                 startCodeScanner();

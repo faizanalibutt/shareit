@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.PermissionsActivity">
 
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/margin_medium_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/image_illustration_large" />
+
     <TextView
         android:id="@+id/bluetooth"
         android:layout_width="wrap_content"
@@ -38,7 +48,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:text="OPEN"
         android:onClick="openBluetooth"
         app:layout_constraintBottom_toBottomOf="@+id/bluetooth"
@@ -111,8 +120,47 @@
         app:layout_constraintTop_toTopOf="@+id/gps"
         app:srcCompat="@drawable/checked" />
 
+    <TextView
+        android:id="@+id/hotspot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:text="Open GPS"
+        android:textColor="@color/black_transparent"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wifi" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/gpsClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OPEN"
+        android:onClick="openGPS"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/gps"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gps" />
+
+    <ImageView
+        android:id="@+id/hotspotStatus"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:contentDescription="@string/app_name"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/gps"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/gps"
+        app:srcCompat="@drawable/checked" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/hotspotClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="OPEN"

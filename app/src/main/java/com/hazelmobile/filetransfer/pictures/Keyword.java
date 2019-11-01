@@ -59,7 +59,9 @@ public class Keyword {
             NETWORK_ADDRESS_IP = "ipAdr",
             FLAG_TRANSFER_QR_CONNECTION = "flagTransferQRConnection",
             DATA_TRANSFER_TIME = "dataTransferTime",
-            DATA_TRANSFER_SPEED = "dataTransferSpeed";
+            DATA_TRANSFER_SPEED = "dataTransferSpeed",
+            EXTRA_SEND = "send",
+            EXTRA_RECEIVE = "receive";
 
     public enum Flavor {
         unknown,

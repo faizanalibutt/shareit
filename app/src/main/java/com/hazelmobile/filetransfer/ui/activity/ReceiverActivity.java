@@ -38,7 +38,6 @@ public class ReceiverActivity extends Activity
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
     public static final String EXTRA_REQUEST_TYPE = "extraRequestType";
     public static final String EXTRA_ACTIVITY_SUBTITLE = "extraActivitySubtitle";
-    public static final String RECEIVE = "receive";
     public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
     public static final int REQUEST_CHOOSE_DEVICE = 100;
 

@@ -26,8 +26,11 @@ import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
+import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
+
+import java.util.Objects;
 
 import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_HOTSPOT_STATUS;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_DISABLING;
@@ -41,7 +44,9 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
     private ImageView bluetoothStatus, wifiStatus, gpsStatus;
     private AppCompatButton gpsButton, nextScreen, bluetoothButton, wifiButton;
     private boolean isWifi, isBluetooth, isGps, isAllEnabled = false;
-    private boolean iSenderOrReceiver = false;
+    private boolean isSender = false;
+    private boolean isReceiver = false;
+
     private boolean mHotspotStartedExternally = false;
 
     private UIConnectionUtils mConnectionUtils;
@@ -67,12 +72,13 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
         public void onReceive(Context context, Intent intent) {
             /*if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction()))
                 updateState();
-            else */if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
+            else */
+            if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
                 if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false))
                     return;
                 else if (getConnectionUtils().getHotspotUtils().isEnabled()
                         && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
-                    return;
+
                 }
             }
         }
@@ -85,19 +91,7 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getIntent() != null) {
-            iSenderOrReceiver = getIntent().hasExtra(ReceiverActivity.RECEIVE)
-                    && getIntent().getBooleanExtra(ReceiverActivity.RECEIVE, false);
-        }
-
-        setContentView(R.layout.activity_permissions);
-        bluetoothStatus = findViewById(R.id.bluetoothStatus);
-        wifiStatus = findViewById(R.id.wifiStatus);
-        gpsStatus = findViewById(R.id.gpsStatus);
-        nextScreen = findViewById(R.id.nextScreen);
-        wifiButton = findViewById(R.id.wifiClick);
-        bluetoothButton = findViewById(R.id.bluetoothClick);
-        gpsButton = findViewById(R.id.gpsClick);
+        init();
 
         if (ConnectionUtils.getInstance(this).getBluetoothAdapter().isEnabled()) {
             enableBluetooth(bluetoothButton);
@@ -109,6 +103,31 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
             enableGPS(gpsButton);
         }
 
+    }
+
+    private void init() {
+        setContentView(R.layout.activity_permissions);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        if (getIntent() != null) {
+            isReceiver = getIntent().hasExtra(Keyword.EXTRA_RECEIVE)
+                    && getIntent().getBooleanExtra(Keyword.EXTRA_RECEIVE, false);
+            isSender = getIntent().hasExtra(Keyword.EXTRA_SEND)
+                    && getIntent().getBooleanExtra(Keyword.EXTRA_SEND, false);
+
+            if (isReceiver)
+                getSupportActionBar().setTitle(R.string.text_receivePreparations);
+            if (isSender)
+                getSupportActionBar().setTitle(R.string.text_sendPreparations);
+
+        }
+
+        bluetoothStatus = findViewById(R.id.bluetoothStatus);
+        wifiStatus = findViewById(R.id.wifiStatus);
+        gpsStatus = findViewById(R.id.gpsStatus);
+        nextScreen = findViewById(R.id.nextScreen);
+        wifiButton = findViewById(R.id.wifiClick);
+        bluetoothButton = findViewById(R.id.bluetoothClick);
+        gpsButton = findViewById(R.id.gpsClick);
     }
 
     public void openBluetooth(View view) {
@@ -265,8 +284,6 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
                 int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
                 switch (state) {
                     case BluetoothAdapter.STATE_ON:
-                        enableBluetooth(bluetoothButton);
-                        break;
                     case BluetoothAdapter.STATE_TURNING_ON:
                         enableBluetooth(bluetoothButton);
                         break;
@@ -284,16 +301,15 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
     };
 
     public void shareIT(View view) {
-        // TODO: 7/23/2019 go to share files
-        if (iSenderOrReceiver) {
+        if (isReceiver) {
             startActivityForResult(new Intent(PermissionsActivity.this, ReceiverActivity.class)
-                    .putExtra(ReceiverActivity.RECEIVE, true)
+                    .putExtra(Keyword.EXTRA_RECEIVE, true)
                     .putExtra(ReceiverActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
                     .putExtra(ReceiverActivity.EXTRA_REQUEST_TYPE,
                             ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()), REQUEST_CODE_CHOOSE_DEVICE);
-        } else {
+        } else if (isSender) {
             startActivityForResult(new Intent(PermissionsActivity.this, ConnectionManagerActivityDemo.class)
-                    .putExtra(ConnectionManagerActivityDemo.SEND, true)
+                    .putExtra(Keyword.EXTRA_SEND, true)
                     .putExtra(ConnectionManagerActivityDemo.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
                     .putExtra(ConnectionManagerActivityDemo.EXTRA_REQUEST_TYPE,
                             ConnectionManagerActivityDemo.RequestType.MAKE_ACQUAINTANCE.toString()), REQUEST_CODE_CHOOSE_DEVICE);

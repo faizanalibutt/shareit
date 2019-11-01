@@ -586,5 +586,7 @@
     <string name="text_showAsQrCode" translatable="false">@string/butn_showAsQrCode</string>
     <string name="next">Next</string>
     <string name="text_default">Default</string>
+    <string name="text_receivePreparations">Receive Preparations</string>
+    <string name="text_sendPreparations">Send Preparations</string>
 
 </resources>
