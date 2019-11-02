@@ -28,8 +28,8 @@ class WelcomeActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
 
-        setWelcomePageDisallowed(false)
-        defaultPreferences.edit().putBoolean("introduction_shown", false).apply()
+        setWelcomePageDisallowed(true)
+        defaultPreferences.edit().putBoolean("introduction_shown", true).apply()
         colorsList = resources.getIntArray(R.array.colorsList)
 
         editText.addTextChangedListener(object : TextWatcher {
