@@ -72,11 +72,11 @@
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
 
         <activity
-            android:name=".ui.activity.PermissionsActivity"
+            android:name=".ui.activity.PreparationsActivity"
             android:theme="@style/Theme.Hazel.White" />
 
         <activity
-            android:name=".ui.activity.ConnectionManagerActivityDemo"
+            android:name=".ui.activity.SenderActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
 
         <activity

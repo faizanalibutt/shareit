@@ -25,12 +25,12 @@ import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
-import static com.hazelmobile.filetransfer.ui.activity.PermissionsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
+import static com.hazelmobile.filetransfer.ui.activity.PreparationsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
 
 //import com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo;
 
 
-public class ConnectionManagerActivityDemo
+public class SenderActivity
         extends Activity
         implements SnackbarSupport {
 
@@ -52,8 +52,8 @@ public class ConnectionManagerActivityDemo
 
                 finish();
             } else {
-                ConnectionUtils connectionUtils = ConnectionUtils.getInstance(ConnectionManagerActivityDemo.this);
-                UIConnectionUtils uiConnectionUtils = new UIConnectionUtils(connectionUtils, ConnectionManagerActivityDemo.this);
+                ConnectionUtils connectionUtils = ConnectionUtils.getInstance(SenderActivity.this);
+                UIConnectionUtils uiConnectionUtils = new UIConnectionUtils(connectionUtils, SenderActivity.this);
 
                 UITask uiTask = new UITask() {
                     @Override
@@ -74,7 +74,7 @@ public class ConnectionManagerActivityDemo
                     }
                 };
 
-                uiConnectionUtils.makeAcquaintance(ConnectionManagerActivityDemo.this, uiTask,
+                uiConnectionUtils.makeAcquaintance(SenderActivity.this, uiTask,
                         connection.ipAddress, -1, registeredListener);
             }
 
@@ -111,9 +111,9 @@ public class ConnectionManagerActivityDemo
             if (resultCode == RESULT_OK && data != null) {
                 try {
                     NetworkDevice device = new NetworkDevice(data.getStringExtra(BarcodeScannerActivityDemo.EXTRA_DEVICE_ID));
-                    AppUtils.getDatabase(ConnectionManagerActivityDemo.this).reconstruct(device);
+                    AppUtils.getDatabase(SenderActivity.this).reconstruct(device);
                     NetworkDevice.Connection connection = new NetworkDevice.Connection(device.deviceId, data.getStringExtra(BarcodeScannerActivityDemo.EXTRA_CONNECTION_ADAPTER));
-                    AppUtils.getDatabase(ConnectionManagerActivityDemo.this).reconstruct(connection);
+                    AppUtils.getDatabase(SenderActivity.this).reconstruct(connection);
 
                     mDeviceSelectionListener.onNetworkDeviceSelected(device, connection);
                 } catch (Exception e) {
@@ -143,7 +143,7 @@ public class ConnectionManagerActivityDemo
     }
 
     private void startCodeScanner() {
-        startActivityForResult(new Intent(ConnectionManagerActivityDemo.this, BarcodeScannerActivityDemo.class),
+        startActivityForResult(new Intent(SenderActivity.this, BarcodeScannerActivityDemo.class),
                 REQUEST_CHOOSE_DEVICE);
     }
 

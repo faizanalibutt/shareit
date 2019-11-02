@@ -141,10 +141,10 @@ public class AddDevicesToTransferActivity extends Activity
         if (resultCode == android.app.Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_CHOOSE_DEVICE
                     && data != null
-                    && data.hasExtra(ConnectionManagerActivityDemo.EXTRA_DEVICE_ID)
-                    && data.hasExtra(ConnectionManagerActivityDemo.EXTRA_CONNECTION_ADAPTER)) {
-                String deviceId = data.getStringExtra(ConnectionManagerActivityDemo.EXTRA_DEVICE_ID);
-                String connectionAdapter = data.getStringExtra(ConnectionManagerActivityDemo.EXTRA_CONNECTION_ADAPTER);
+                    && data.hasExtra(SenderActivity.EXTRA_DEVICE_ID)
+                    && data.hasExtra(SenderActivity.EXTRA_CONNECTION_ADAPTER)) {
+                String deviceId = data.getStringExtra(SenderActivity.EXTRA_DEVICE_ID);
+                String connectionAdapter = data.getStringExtra(SenderActivity.EXTRA_CONNECTION_ADAPTER);
 
                 try {
                     NetworkDevice networkDevice = new NetworkDevice(deviceId);
@@ -257,10 +257,10 @@ public class AddDevicesToTransferActivity extends Activity
     }
 
     private void startConnectionManagerActivityDemo() {
-        /*startActivityForResult(new Intent(AddDevicesToTransferActivity.this, ConnectionManagerActivityDemo.class)
-                .putExtra(ConnectionManagerActivityDemo.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_addDevicesToTransfer)), REQUEST_CODE_CHOOSE_DEVICE);*/
-        startActivityForResult(new Intent(AddDevicesToTransferActivity.this, PermissionsActivity.class)
-                .putExtra(ConnectionManagerActivityDemo.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_addDevicesToTransfer))
+        /*startActivityForResult(new Intent(AddDevicesToTransferActivity.this, SenderActivity.class)
+                .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_addDevicesToTransfer)), REQUEST_CODE_CHOOSE_DEVICE);*/
+        startActivityForResult(new Intent(AddDevicesToTransferActivity.this, PreparationsActivity.class)
+                .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_addDevicesToTransfer))
                 .putExtra(Keyword.EXTRA_SEND, true), REQUEST_CODE_CHOOSE_DEVICE);
     }
 

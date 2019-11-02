@@ -26,6 +26,7 @@ import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.service.WorkerService;
+import com.hazelmobile.filetransfer.ui.activity.PreparationsActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
@@ -403,8 +404,8 @@ public class UIConnectionUtils {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             watcher.onResultReturned(false, true);
-                            activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                            activity.startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                                    /*.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)*/, PreparationsActivity.LOCATION_SERVICE_RESULT);
                         }
                     })
                     .show();

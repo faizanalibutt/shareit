@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.pictures.Keyword
 import com.hazelmobile.filetransfer.ui.activity.ContentSharingActivity
-import com.hazelmobile.filetransfer.ui.activity.PermissionsActivity
+import com.hazelmobile.filetransfer.ui.activity.PreparationsActivity
 import com.hazelmobile.filetransfer.ui.callback.IconSupport
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport
 import kotlinx.android.synthetic.main.fragment_share.*
@@ -33,7 +33,7 @@ class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
 
         receive_button.setOnClickListener {
             startActivity(
-                Intent(context, PermissionsActivity::class.java)
+                Intent(context, PreparationsActivity::class.java)
                     .putExtra(Keyword.EXTRA_RECEIVE, true)
             )
         }

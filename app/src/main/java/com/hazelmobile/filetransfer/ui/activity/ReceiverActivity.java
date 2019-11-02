@@ -30,7 +30,7 @@ import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
-import static com.hazelmobile.filetransfer.ui.activity.PermissionsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
+import static com.hazelmobile.filetransfer.ui.activity.PreparationsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
 
 public class ReceiverActivity extends Activity
         implements SnackbarSupport {

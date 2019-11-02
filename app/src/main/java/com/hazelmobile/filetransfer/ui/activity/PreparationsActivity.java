@@ -10,12 +10,11 @@ import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.Settings;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +25,10 @@ import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
+import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
+import com.hazelmobile.filetransfer.receiver.NetworkStatusReceiver;
+import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 
@@ -36,18 +38,20 @@ import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_H
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_DISABLING;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_ENABLED;
 
-public class PermissionsActivity extends Activity implements SnackbarSupport {
+public class PreparationsActivity extends Activity implements SnackbarSupport {
 
     private static final int LOCATION_PERMISSION_RESULT = 0;
-    private static final int LOCATION_SERVICE_RESULT = 1;
+    public static final int LOCATION_SERVICE_RESULT = 1;
     public static final String EXTRA_CLOSE_PERMISSION_SCREEN = "permissions";
-    private ImageView bluetoothStatus, wifiStatus, gpsStatus;
-    private AppCompatButton gpsButton, nextScreen, bluetoothButton, wifiButton;
-    private boolean isWifi, isBluetooth, isGps, isAllEnabled = false;
+    private ImageView bluetoothStatus, wifiStatus, gpsStatus, hotspotStatus;
+    private AppCompatButton gpsButton, nextScreen, bluetoothButton, wifiButton, hotspotButton;
+    private ProgressBar bluetoothPbr, wifiPbr, gpsPbr, hotspotPbr;
+    private boolean isWifi, isBluetooth, isGps, isAllEnabled, isHotspot = false;
     private boolean isSender = false;
     private boolean isReceiver = false;
 
     private boolean mHotspotStartedExternally = false;
+    IntentFilter mIntentFilter = new IntentFilter();
 
     private UIConnectionUtils mConnectionUtils;
 
@@ -64,14 +68,14 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
 
     @Override
     public Snackbar createSnackbar(int resId, Object... objects) {
-        return null;
+        return Snackbar.make(findViewById(R.id.c1), getString(resId, objects), Snackbar.LENGTH_SHORT);
     }
 
     private class StatusReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             /*if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction()))
-                updateState();
+                updateHotspotState();
             else */
             if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
                 if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false))
@@ -91,18 +95,27 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(ACTION_HOTSPOT_STATUS);
+        mIntentFilter.addAction(NetworkStatusReceiver.WIFI_AP_STATE_CHANGED);
+
         init();
 
+        // bluetooth check
         if (ConnectionUtils.getInstance(this).getBluetoothAdapter().isEnabled()) {
             enableBluetooth(bluetoothButton);
         }
+        // wifi check
         if (ConnectionUtils.getInstance(this).getWifiManager().isWifiEnabled()) {
             enableWifi(wifiButton);
         }
+        // gps check
         if (ConnectionUtils.getInstance(this).isLocationServiceEnabled()) {
-            enableGPS(gpsButton);
+            openGPS(gpsButton);
         }
-
+        // hotspot check
+        updateHotspotState();
     }
 
     private void init() {
@@ -122,19 +135,28 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
         }
 
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
-        /*wifiStatus = findViewById(R.id.wifiStatus);
-        gpsStatus = findViewById(R.id.gpsStatus);
-        nextScreen = findViewById(R.id.button);
-        wifiButton = findViewById(R.id.wifiClick);
         bluetoothButton = findViewById(R.id.bluetoothClick);
-        gpsButton = findViewById(R.id.gpsClick);*/
+        bluetoothPbr = findViewById(R.id.bluetoothPbr);
+        wifiStatus = findViewById(R.id.wifiStatus);
+        wifiButton = findViewById(R.id.wifiClick);
+        wifiPbr = findViewById(R.id.wifiPbr);
+        gpsStatus = findViewById(R.id.gpsStatus);
+        gpsButton = findViewById(R.id.gpsClick);
+        gpsPbr = findViewById(R.id.gpsPbr);
+        hotspotStatus = findViewById(R.id.hotspotStatus);
+        hotspotButton = findViewById(R.id.hotspotClick);
+        hotspotPbr = findViewById(R.id.hotspotPbr);
+        nextScreen = findViewById(R.id.button);
+        nextScreen.setText(getString(R.string.next));
+        enableButton();
     }
 
     public void openBluetooth(View view) {
         ConnectionUtils.getInstance(this).openBluetooth();
         if (!ConnectionUtils.getInstance(this).getBluetoothAdapter().isEnabled()) {
             bluetoothStatus.setVisibility(View.GONE);
-            view.setVisibility(View.VISIBLE);
+            view.setVisibility(View.GONE);
+            bluetoothPbr.setVisibility(View.VISIBLE);
             isBluetooth = false;
         } else {
             enableBluetooth(view);
@@ -144,17 +166,17 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
     private void enableBluetooth(View view) {
         view.setVisibility(View.GONE);
         bluetoothStatus.setVisibility(View.VISIBLE);
+        bluetoothPbr.setVisibility(View.GONE);
         isBluetooth = true;
-        isAllEnabled = isWifi && isGps;
-        if (isAllEnabled) {
-            nextScreen.setEnabled(true);
-        }
+        isAllEnabled = isWifi && isGps && isHotspot;
+        enableButton();
     }
 
     public void openWifi(View view) {
         ConnectionUtils.getInstance(this).openWifi();
         if (!ConnectionUtils.getInstance(this).getWifiManager().isWifiEnabled()) {
-            view.setVisibility(View.VISIBLE);
+            view.setVisibility(View.GONE);
+            wifiPbr.setVisibility(View.VISIBLE);
             wifiStatus.setVisibility(View.GONE);
             isWifi = false;
         } else {
@@ -165,30 +187,34 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
     private void enableWifi(View view) {
         isWifi = true;
         view.setVisibility(View.GONE);
+        wifiPbr.setVisibility(View.GONE);
         wifiStatus.setVisibility(View.VISIBLE);
-        isAllEnabled = isBluetooth && isGps;
-        if (isAllEnabled) {
-            nextScreen.setEnabled(true);
-        }
+        isAllEnabled = isBluetooth && isGps && isHotspot;
+        enableButton();
     }
 
     public void openGPS(View view) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(PermissionsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            if (ContextCompat.checkSelfPermission(PreparationsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 if (ConnectionUtils.getInstance(this).isLocationServiceEnabled()) {
                     enableGPS(view);
                     return;
                 }
             }
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_RESULT);
+            getUIConnectionUtils().validateLocationPermission(this, LOCATION_PERMISSION_RESULT, new UIConnectionUtils.RequestWatcher() {
+                @Override
+                public void onResultReturned(boolean result, boolean shouldWait) {
+                    // to stay away from exceptions please let it be we will fix it by update.
+                }
+            });
         } else {
             // check for location service
             if (ConnectionUtils.getInstance(this).isLocationServiceEnabled()) {
                 enableGPS(view);
             } else {
-                view.setVisibility(View.VISIBLE);
+                view.setVisibility(View.GONE);
+                gpsPbr.setVisibility(View.VISIBLE);
                 gpsStatus.setVisibility(View.GONE);
                 isGps = false;
                 startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SERVICE_RESULT);
@@ -198,9 +224,29 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
 
     private void enableGPS(View view) {
         view.setVisibility(View.GONE);
+        gpsPbr.setVisibility(View.GONE);
         gpsStatus.setVisibility(View.VISIBLE);
         isGps = true;
-        isAllEnabled = isBluetooth && isWifi;
+        isAllEnabled = isBluetooth && isWifi && isHotspot;
+        enableButton();
+    }
+
+    public void openHotspot(View view) {
+        if (mHotspotStartedExternally) {
+            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+        }
+    }
+
+    private void enableHostspot(View view) {
+        view.setVisibility(View.GONE);
+        hotspotPbr.setVisibility(View.GONE);
+        hotspotStatus.setVisibility(View.VISIBLE);
+        isHotspot = true;
+        isAllEnabled = isBluetooth && isWifi && isGps && isHotspot;
+        enableButton();
+    }
+
+    private void enableButton() {
         if (isAllEnabled) {
             nextScreen.setEnabled(true);
         }
@@ -217,7 +263,8 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
                     gpsButton.setVisibility(View.VISIBLE);
                     gpsStatus.setVisibility(View.GONE);
                     isGps = false;
-                    Toast.makeText(PermissionsActivity.this, "Please enable location service to proceed", Toast.LENGTH_SHORT).show();
+                    /*"Please enable location service to proceed and select option # 1"*/
+                    createSnackbar(R.string.mesg_locationDisabledSelfHotspot);
                 }
             } else if (requestCode == REQUEST_CODE_CHOOSE_DEVICE
                     && data != null) {
@@ -244,19 +291,25 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_RESULT) {
-            if (ContextCompat.checkSelfPermission(PermissionsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (!getConnectionUtils().hasLocationPermission(this)) {
                 // Permission is not granted
                 gpsButton.setVisibility(View.VISIBLE);
                 gpsStatus.setVisibility(View.GONE);
+                gpsPbr.setVisibility(View.GONE);
                 isGps = false;
-                Toast.makeText(PermissionsActivity.this, "Please allow location permission to proceed", Toast.LENGTH_SHORT).show();
+                createSnackbar(R.string.mesg_locationDisabledSelfHotspot);
             } else {
-                if (ConnectionUtils.getInstance(PermissionsActivity.this).isLocationServiceEnabled()) {
+                if (ConnectionUtils.getInstance(PreparationsActivity.this).isLocationServiceEnabled()) {
                     enableGPS(gpsButton);
                 } else {
                     startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SERVICE_RESULT);
                 }
+            }
+        } else if (requestCode == LOCATION_SERVICE_RESULT) {
+            if (ConnectionUtils.getInstance(PreparationsActivity.this).isLocationServiceEnabled()) {
+                enableGPS(gpsButton);
+            } else {
+                createSnackbar(R.string.mesg_locationDisabledSelfHotspot);
             }
         }
     }
@@ -264,10 +317,7 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
     @Override
     protected void onResume() {
         super.onResume();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        registerReceiver(mReceiver, intentFilter);
+        registerReceiver(mReceiver, mIntentFilter);
     }
 
     @Override
@@ -284,7 +334,7 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
                 int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
                 switch (state) {
                     case BluetoothAdapter.STATE_ON:
-                    case BluetoothAdapter.STATE_TURNING_ON:
+                        /*case BluetoothAdapter.STATE_TURNING_ON:*/
                         enableBluetooth(bluetoothButton);
                         break;
                 }
@@ -292,35 +342,69 @@ public class PermissionsActivity extends Activity implements SnackbarSupport {
                 int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
                 switch (state) {
                     case WifiManager.WIFI_STATE_ENABLED:
-                    case WifiManager.WIFI_STATE_ENABLING:
+                        /*case WifiManager.WIFI_STATE_ENABLING:*/
                         enableWifi(wifiButton);
                         break;
+                }
+            } else if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction()))
+                updateHotspotState();
+            else if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
+                if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false)) {
+                    mHotspotStartedExternally = true;
+                    isHotspot = true;
+                } else if (getConnectionUtils().getHotspotUtils().isEnabled()
+                        && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
+                    mHotspotStartedExternally = false;
+                    isHotspot = false;
                 }
             }
         }
     };
 
-    public void shareIT(View view) {
+    private void updateHotspotState() {
+        boolean isEnabled = getUIConnectionUtils().getConnectionUtils().getHotspotUtils().isEnabled();
+
+        if (!isEnabled) {
+            enableHostspot(hotspotButton);
+        } else if (Build.VERSION.SDK_INT >= 26) {
+            AppUtils.startForegroundService(this,
+                    new Intent(this, CommunicationService.class)
+                            .setAction(CommunicationService.ACTION_REQUEST_HOTSPOT_STATUS));
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home)
+            finish();
+        else return super.onOptionsItemSelected(item);
+
+        return true;
+    }
+
+    public void btnOnClick(View view) {
         if (isReceiver) {
-            startActivityForResult(new Intent(PermissionsActivity.this, ReceiverActivity.class)
+            startActivityForResult(new Intent(PreparationsActivity.this, ReceiverActivity.class)
                     .putExtra(Keyword.EXTRA_RECEIVE, true)
                     .putExtra(ReceiverActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
                     .putExtra(ReceiverActivity.EXTRA_REQUEST_TYPE,
                             ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()), REQUEST_CODE_CHOOSE_DEVICE);
         } else if (isSender) {
-            startActivityForResult(new Intent(PermissionsActivity.this, ConnectionManagerActivityDemo.class)
+            startActivityForResult(new Intent(PreparationsActivity.this, SenderActivity.class)
                     .putExtra(Keyword.EXTRA_SEND, true)
-                    .putExtra(ConnectionManagerActivityDemo.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
-                    .putExtra(ConnectionManagerActivityDemo.EXTRA_REQUEST_TYPE,
-                            ConnectionManagerActivityDemo.RequestType.MAKE_ACQUAINTANCE.toString()), REQUEST_CODE_CHOOSE_DEVICE);
+                    .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
+                    .putExtra(SenderActivity.EXTRA_REQUEST_TYPE,
+                            SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()), REQUEST_CODE_CHOOSE_DEVICE);
         }
     }
 
-    private static class MyHandler extends Handler {
+    /*private static class MyHandler extends Handler {
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
         }
-    }
+    }*/
 }

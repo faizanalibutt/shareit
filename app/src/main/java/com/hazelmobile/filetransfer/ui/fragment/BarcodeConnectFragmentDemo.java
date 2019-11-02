@@ -49,7 +49,7 @@ import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
-import com.hazelmobile.filetransfer.ui.activity.ConnectionManagerActivityDemo;
+import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.BluetoothScanResultAdapter;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.ui.adapter.WifiScanResultAdapter;
@@ -82,7 +82,7 @@ import java.util.UUID;
 
 public class BarcodeConnectFragmentDemo
         extends com.genonbeta.android.framework.app.Fragment
-        implements TitleSupport, UITask, IconSupport, ConnectionManagerActivityDemo.DeviceSelectionSupport {
+        implements TitleSupport, UITask, IconSupport, SenderActivity.DeviceSelectionSupport {
 
     public static final String TAG = "BarcodeConnectFragment";
     private static final int MSG_TO_FILE_SENDER_UI = 0X88;

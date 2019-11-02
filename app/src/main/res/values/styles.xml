@@ -72,6 +72,14 @@
         <!--<item name="android:textAllCaps">false</item>-->
     </style>
 
+    <style name="Widget.Hazel.ButtonStyle.Permission" parent="Widget.Hazel.ButtonStyle">
+        <item name="backgroundTint">@color/text_button_text_color_selector_blue</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:background">@drawable/background_preparations_button</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
     <style name="Widget.Hazel.PopupMenuStyle" parent="Widget.MaterialComponents.PopupMenu">
         <item name="android:popupBackground">?backgroundPopupMenu</item>
     </style>

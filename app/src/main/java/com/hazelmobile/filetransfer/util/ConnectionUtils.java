@@ -229,7 +229,7 @@ public class ConnectionUtils {
     }
 
     public boolean isLocationServiceEnabled() {
-        return mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     public boolean isMobileDataActive() {
