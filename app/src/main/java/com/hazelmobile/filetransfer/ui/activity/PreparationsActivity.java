@@ -50,7 +50,6 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
     private boolean isSender = false;
     private boolean isReceiver = false;
 
-    private boolean mHotspotStartedExternally = false;
     IntentFilter mIntentFilter = new IntentFilter();
 
     private UIConnectionUtils mConnectionUtils;
@@ -68,24 +67,7 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
 
     @Override
     public Snackbar createSnackbar(int resId, Object... objects) {
-        return Snackbar.make(findViewById(R.id.c1), getString(resId, objects), Snackbar.LENGTH_SHORT);
-    }
-
-    private class StatusReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            /*if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction()))
-                updateHotspotState();
-            else */
-            if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
-                if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false))
-                    return;
-                else if (getConnectionUtils().getHotspotUtils().isEnabled()
-                        && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
-
-                }
-            }
-        }
+        return Snackbar.make(findViewById(R.id.container), getString(resId, objects), Snackbar.LENGTH_SHORT);
     }
 
     // TODO: 10/23/2019 remove this in future #33
@@ -119,7 +101,7 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
     }
 
     private void init() {
-        setContentView(R.layout.activity_permissions);
+        setContentView(R.layout.activity_preparations);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         if (getIntent() != null) {
             isReceiver = getIntent().hasExtra(Keyword.EXTRA_RECEIVE)
@@ -176,8 +158,8 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
     public void openWifi(View view) {
         ConnectionUtils.getInstance(this).openWifi();
         if (!ConnectionUtils.getInstance(this).getWifiManager().isWifiEnabled()) {
-            if (mHotspotStartedExternally) {
-                createSnackbar(R.string.text_hotspotStartedExternallyNotice);
+            if (getConnectionUtils().getHotspotUtils().isEnabled()) {
+                createSnackbar(R.string.text_hotspotStartedExternallyNotice).show();
             } else {
                 view.setVisibility(View.GONE);
                 wifiPbr.setVisibility(View.VISIBLE);
@@ -269,7 +251,7 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
                     gpsStatus.setVisibility(View.GONE);
                     isGps = false;
                     /*"Please enable location service to proceed and select option # 1"*/
-                    createSnackbar(R.string.mesg_locationDisabledSelfHotspot);
+                    createSnackbar(R.string.mesg_locationDisabledSelfHotspot).show();
                 }
             } else if (requestCode == REQUEST_CODE_CHOOSE_DEVICE
                     && data != null) {
@@ -302,7 +284,7 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
                 gpsStatus.setVisibility(View.GONE);
                 gpsPbr.setVisibility(View.GONE);
                 isGps = false;
-                createSnackbar(R.string.mesg_locationDisabledSelfHotspot);
+                createSnackbar(R.string.mesg_locationDisabledSelfHotspot).show();
             } else {
                 if (ConnectionUtils.getInstance(PreparationsActivity.this).isLocationServiceEnabled()) {
                     enableGPS(gpsButton);
@@ -314,7 +296,7 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
             if (ConnectionUtils.getInstance(PreparationsActivity.this).isLocationServiceEnabled()) {
                 enableGPS(gpsButton);
             } else {
-                createSnackbar(R.string.mesg_locationDisabledSelfHotspot);
+                createSnackbar(R.string.mesg_locationDisabledSelfHotspot).show();
             }
         }
     }
@@ -355,11 +337,9 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
                 updateHotspotState();
             else if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
                 if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false)) {
-                    mHotspotStartedExternally = false;
                     isHotspot = true;
                 } else if (getConnectionUtils().getHotspotUtils().isEnabled()
                         && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
-                    mHotspotStartedExternally = true;
                     isHotspot = false;
                 }
             }
