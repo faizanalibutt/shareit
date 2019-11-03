@@ -148,6 +148,7 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
         hotspotPbr = findViewById(R.id.hotspotPbr);
         nextScreen = findViewById(R.id.button);
         nextScreen.setText(getString(R.string.next));
+        nextScreen.setEnabled(false);
         enableButton();
     }
 
@@ -175,10 +176,14 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
     public void openWifi(View view) {
         ConnectionUtils.getInstance(this).openWifi();
         if (!ConnectionUtils.getInstance(this).getWifiManager().isWifiEnabled()) {
-            view.setVisibility(View.GONE);
-            wifiPbr.setVisibility(View.VISIBLE);
-            wifiStatus.setVisibility(View.GONE);
-            isWifi = false;
+            if (mHotspotStartedExternally) {
+                createSnackbar(R.string.text_hotspotStartedExternallyNotice);
+            } else {
+                view.setVisibility(View.GONE);
+                wifiPbr.setVisibility(View.VISIBLE);
+                wifiStatus.setVisibility(View.GONE);
+                isWifi = false;
+            }
         } else {
             enableWifi(view);
         }
@@ -232,9 +237,9 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
     }
 
     public void openHotspot(View view) {
-        if (mHotspotStartedExternally) {
+
             startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-        }
+
     }
 
     private void enableHostspot(View view) {
@@ -242,7 +247,7 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
         hotspotPbr.setVisibility(View.GONE);
         hotspotStatus.setVisibility(View.VISIBLE);
         isHotspot = true;
-        isAllEnabled = isBluetooth && isWifi && isGps && isHotspot;
+        isAllEnabled = isBluetooth && isWifi && isGps;
         enableButton();
     }
 
@@ -350,11 +355,11 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
                 updateHotspotState();
             else if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
                 if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false)) {
-                    mHotspotStartedExternally = true;
+                    mHotspotStartedExternally = false;
                     isHotspot = true;
                 } else if (getConnectionUtils().getHotspotUtils().isEnabled()
                         && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
-                    mHotspotStartedExternally = false;
+                    mHotspotStartedExternally = true;
                     isHotspot = false;
                 }
             }

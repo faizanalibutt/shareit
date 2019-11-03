@@ -112,7 +112,7 @@
     <string name="butn_create">Create</string>
     <string name="mesg_folderCreateError">Folder could not be created</string>
     <string name="text_qrCodeHotspotDisabledHelp">Set up a hotspot so that others can connect to you</string>
-    <string name="text_hotspotStartedExternallyNotice">The hotspot was started externally. To use QR code, you should start it here. </string>
+    <string name="text_hotspotStartedExternallyNotice">The hotspot was started externally. Turn off Hotspot </string>
     <string name="butn_stopHotspot">Stop hotspot</string>
 
     <!-- SHARE TEXT -->
