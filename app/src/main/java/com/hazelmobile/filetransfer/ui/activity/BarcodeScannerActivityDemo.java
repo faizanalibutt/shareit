@@ -10,7 +10,7 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo;
+import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 
 public class BarcodeScannerActivityDemo extends Activity {
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
@@ -26,7 +26,7 @@ public class BarcodeScannerActivityDemo extends Activity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        BarcodeConnectFragmentDemo fragment = (BarcodeConnectFragmentDemo) getSupportFragmentManager().findFragmentById(R.id.barcodeScannerFragment);
+        SenderFragmentImpl fragment = (SenderFragmentImpl) getSupportFragmentManager().findFragmentById(R.id.barcodeScannerFragment);
 
         if (fragment != null)
             fragment.setDeviceSelectedListener(new NetworkDeviceSelectedListener() {

@@ -7,12 +7,19 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.activity.SenderActivity">
 
-    <FrameLayout
+    <!--<FrameLayout
         android:id="@+id/activity_connection_establishing_content_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
+
+    <fragment
+        android:id="@+id/senderFragment"
+        android:name="com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="scannerFragment" />
 
     <!--android:layout_above="@id/app_bar"
         android:layout_below="@id/activity_connection_establishing_progress_bar"-->

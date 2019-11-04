@@ -415,7 +415,7 @@ public class ViewTransferActivity
 
     public void startDeviceAddingActivity() {
         startActivityForResult(new Intent(this, AddDevicesToTransferActivity.class)
-                .putExtra(ShareActivity.EXTRA_GROUP_ID, mGroup.groupId), REQUEST_ADD_DEVICES);
+                .putExtra(AddDevicesToTransferActivity.EXTRA_GROUP_ID, mGroup.groupId), REQUEST_ADD_DEVICES);
     }
 
     @Override

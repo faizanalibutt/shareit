@@ -43,6 +43,11 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
     private static final int LOCATION_PERMISSION_RESULT = 0;
     public static final int LOCATION_SERVICE_RESULT = 1;
     public static final String EXTRA_CLOSE_PERMISSION_SCREEN = "permissions";
+    public static final String EXTRA_DEVICE_ID = "extraDeviceId";
+    public static final String EXTRA_REQUEST_TYPE = "extraRequestType";
+    public static final String EXTRA_ACTIVITY_SUBTITLE = "extraActivitySubtitle";
+    public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
+
     private ImageView bluetoothStatus, wifiStatus, gpsStatus, hotspotStatus;
     private AppCompatButton gpsButton, nextScreen, bluetoothButton, wifiButton, hotspotButton;
     private ProgressBar bluetoothPbr, wifiPbr, gpsPbr, hotspotPbr;
@@ -256,12 +261,12 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
             } else if (requestCode == REQUEST_CODE_CHOOSE_DEVICE
                     && data != null) {
 
-                if (data.hasExtra(ReceiverActivity.EXTRA_DEVICE_ID) && data.hasExtra(ReceiverActivity.EXTRA_CONNECTION_ADAPTER)) {
-                    String deviceId = data.getStringExtra(ReceiverActivity.EXTRA_DEVICE_ID);
-                    String connectionAdapter = data.getStringExtra(ReceiverActivity.EXTRA_CONNECTION_ADAPTER);
+                if (data.hasExtra(EXTRA_DEVICE_ID) && data.hasExtra(EXTRA_CONNECTION_ADAPTER)) {
+                    String deviceId = data.getStringExtra(EXTRA_DEVICE_ID);
+                    String connectionAdapter = data.getStringExtra(EXTRA_CONNECTION_ADAPTER);
                     setResult(RESULT_OK, new Intent()
-                            .putExtra(ReceiverActivity.EXTRA_DEVICE_ID, deviceId)
-                            .putExtra(ReceiverActivity.EXTRA_CONNECTION_ADAPTER, connectionAdapter)
+                            .putExtra(EXTRA_DEVICE_ID, deviceId)
+                            .putExtra(EXTRA_CONNECTION_ADAPTER, connectionAdapter)
                     );
                     finish();
                 } else if (data.hasExtra(EXTRA_CLOSE_PERMISSION_SCREEN)) {
@@ -371,11 +376,12 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
 
     public void btnOnClick(View view) {
         if (isReceiver) {
-            startActivityForResult(new Intent(PreparationsActivity.this, ReceiverActivity.class)
+            startActivity(new Intent(PreparationsActivity.this, ReceiverActivity.class)
                     .putExtra(Keyword.EXTRA_RECEIVE, true)
-                    .putExtra(ReceiverActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
-                    .putExtra(ReceiverActivity.EXTRA_REQUEST_TYPE,
-                            ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()), REQUEST_CODE_CHOOSE_DEVICE);
+                    .putExtra(EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
+                    .putExtra(EXTRA_REQUEST_TYPE,
+                            ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
+            finish();
         } else if (isSender) {
             startActivityForResult(new Intent(PreparationsActivity.this, SenderActivity.class)
                     .putExtra(Keyword.EXTRA_SEND, true)
