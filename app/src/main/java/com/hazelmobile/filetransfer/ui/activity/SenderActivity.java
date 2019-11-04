@@ -17,6 +17,7 @@ import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
+import com.hazelmobile.filetransfer.task.OrganizeShareRunningTask;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
@@ -39,8 +40,11 @@ public class SenderActivity
     public static final String EXTRA_ACTIVITY_SUBTITLE = "extraActivitySubtitle";
     public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
     public static final int REQUEST_CHOOSE_DEVICE = 100;
-    private BluetoothAdapter bluetoothAdapter;
+
     private RequestType mRequestType = RequestType.RETURN_RESULT;
+
+    // merging activities to one
+    private OrganizeShareRunningTask mTask;
 
     private final NetworkDeviceSelectedListener mDeviceSelectionListener = new NetworkDeviceSelectedListener() {
         @Override
