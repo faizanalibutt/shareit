@@ -195,10 +195,7 @@ public class HotspotManagerFragment
     @Override
     public void onPause() {
         super.onPause();
-        if (getContext() != null) {
-            getContext().unregisterReceiver(mStatusReceiver);
-            getContext().unregisterReceiver(mMessageReceiver);
-        }
+        if (getContext() != null) getContext().unregisterReceiver(mStatusReceiver);
     }
 
     private ConnectionUtils getConnectionUtils() {
