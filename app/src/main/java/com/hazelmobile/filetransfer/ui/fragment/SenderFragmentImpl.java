@@ -80,7 +80,7 @@ import java.util.UUID;
  */
 
 
-public class BarcodeConnectFragmentDemo
+public class SenderFragmentImpl
         extends com.genonbeta.android.framework.app.Fragment
         implements TitleSupport, UITask, IconSupport, SenderActivity.DeviceSelectionSupport {
 
@@ -604,7 +604,7 @@ public class BarcodeConnectFragmentDemo
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.demo_layout_barcode_connect, container, false);
+        View view = inflater.inflate(R.layout.fragment_impl_sender, container, false);
 
         mConductContainer = view.findViewById(R.id.layout_barcode_connect_conduct_container);
         mTextModeIndicator = view.findViewById(R.id.layout_barcode_connect_mode_text_indicator);
@@ -737,7 +737,7 @@ public class BarcodeConnectFragmentDemo
     }
 
     private void makeAcquaintance(Object object, int accessPin) {
-        mConnectionUtils.makeAcquaintance(getActivity(), BarcodeConnectFragmentDemo.this, object, accessPin, mRegisteredListener);
+        mConnectionUtils.makeAcquaintance(getActivity(), SenderFragmentImpl.this, object, accessPin, mRegisteredListener);
     }
 
     public void setDeviceSelectedListener(NetworkDeviceSelectedListener listener) {

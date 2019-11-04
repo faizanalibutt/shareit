@@ -25,7 +25,7 @@ import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo;
+import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
@@ -37,9 +37,7 @@ public class ReceiverActivity extends Activity
 
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
     public static final String EXTRA_REQUEST_TYPE = "extraRequestType";
-    public static final String EXTRA_ACTIVITY_SUBTITLE = "extraActivitySubtitle";
     public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
-    public static final int REQUEST_CHOOSE_DEVICE = 100;
 
     private RequestType mRequestType = RequestType.RETURN_RESULT;
     private final IntentFilter mFilter = new IntentFilter();
@@ -118,25 +116,6 @@ public class ReceiverActivity extends Activity
         super.onBackPressed();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CHOOSE_DEVICE)
-            if (resultCode == RESULT_OK && data != null) {
-                try {
-                    NetworkDevice device = new NetworkDevice(data.getStringExtra(BarcodeScannerActivityDemo.EXTRA_DEVICE_ID));
-                    AppUtils.getDatabase(ReceiverActivity.this).reconstruct(device);
-                    NetworkDevice.Connection connection = new NetworkDevice.Connection(device.deviceId, data.getStringExtra(BarcodeScannerActivityDemo.EXTRA_CONNECTION_ADAPTER));
-                    AppUtils.getDatabase(ReceiverActivity.this).reconstruct(connection);
-
-                    mDeviceSelectionListener.onNetworkDeviceSelected(device, connection);
-                } catch (Exception e) {
-                    // do nothing
-                }
-            }
-    }
-
 
     @Override
     public Snackbar createSnackbar(int resId, Object... objects) {
@@ -172,7 +151,7 @@ public class ReceiverActivity extends Activity
                         && intent.hasExtra(CommunicationService.EXTRA_GROUP_ID)) {
                     ViewTransferActivity.startInstance(ReceiverActivity.this,
                             intent.getLongExtra(CommunicationService.EXTRA_GROUP_ID, -1));
-                    BarcodeConnectFragmentDemo.showMessage("yes I'm here");
+                    SenderFragmentImpl.showMessage("yes I'm here");
                     finish();
                 }
             }
@@ -195,12 +174,12 @@ public class ReceiverActivity extends Activity
                 UITask uiTask = new UITask() {
                     @Override
                     public void updateTaskStarted(Interrupter interrupter) {
-                        Log.d(BarcodeConnectFragmentDemo.TAG, "sending file started");
+                        Log.d(SenderFragmentImpl.TAG, "sending file started");
                     }
 
                     @Override
                     public void updateTaskStopped() {
-                        Log.d(BarcodeConnectFragmentDemo.TAG, "sending file stopped due to some reason");
+                        Log.d(SenderFragmentImpl.TAG, "sending file stopped due to some reason");
                     }
                 };
 

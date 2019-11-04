@@ -55,9 +55,9 @@ import java.util.Set;
 import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_HOTSPOT_STATUS;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_DISABLING;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_ENABLED;
-import static com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo.APP_NAME;
-import static com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo.MY_UUID;
-import static com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo.STATE_MESSAGE_RECEIVED;
+import static com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl.APP_NAME;
+import static com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl.MY_UUID;
+import static com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl.STATE_MESSAGE_RECEIVED;
 
 
 /**
@@ -195,7 +195,10 @@ public class HotspotManagerFragment
     @Override
     public void onPause() {
         super.onPause();
-        if (getContext() != null) getContext().unregisterReceiver(mStatusReceiver);
+        if (getContext() != null) {
+            getContext().unregisterReceiver(mStatusReceiver);
+            getContext().unregisterReceiver(mMessageReceiver);
+        }
     }
 
     private ConnectionUtils getConnectionUtils() {
@@ -462,7 +465,7 @@ public class HotspotManagerFragment
             while (true) {
                 try {
                     bytes = inputStream.read(buffer);
-                    new BarcodeConnectFragmentDemo().mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
+                    new SenderFragmentImpl().mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
                 } catch (IOException e) {
                     e.printStackTrace();
                     showMessage("SendReceive: " + e);

@@ -1,6 +1,5 @@
 package com.hazelmobile.filetransfer.ui.activity;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,30 +15,25 @@ import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
-import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo;
-import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
+import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
 import static com.hazelmobile.filetransfer.ui.activity.PreparationsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
 
-//import com.hazelmobile.filetransfer.ui.fragment.BarcodeConnectFragmentDemo;
 
-
-public class SenderActivity
-        extends Activity
-        implements SnackbarSupport {
+public class SenderActivity extends Activity implements SnackbarSupport {
 
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
     public static final String EXTRA_REQUEST_TYPE = "extraRequestType";
     public static final String EXTRA_ACTIVITY_SUBTITLE = "extraActivitySubtitle";
     public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
+
     public static final int REQUEST_CHOOSE_DEVICE = 100;
-    private BluetoothAdapter bluetoothAdapter;
+
     private RequestType mRequestType = RequestType.RETURN_RESULT;
 
     private final NetworkDeviceSelectedListener mDeviceSelectionListener = new NetworkDeviceSelectedListener() {
@@ -58,12 +52,12 @@ public class SenderActivity
                 UITask uiTask = new UITask() {
                     @Override
                     public void updateTaskStarted(Interrupter interrupter) {
-                        Log.d(BarcodeConnectFragmentDemo.TAG, "sending file started");
+                        Log.d(SenderFragmentImpl.TAG, "sending file started");
                     }
 
                     @Override
                     public void updateTaskStopped() {
-                        Log.d(BarcodeConnectFragmentDemo.TAG, "sending file stopped due to some reason");
+                        Log.d(SenderFragmentImpl.TAG, "sending file stopped due to some reason");
                     }
                 };
 
@@ -91,15 +85,18 @@ public class SenderActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setResult(RESULT_CANCELED);
-        setContentView(R.layout.demo_activity_connection_manager);
+        setContentView(R.layout.activity_sender);
 
-        if (getIntent() != null) {
-            if (getIntent().hasExtra(Keyword.EXTRA_RECEIVE) && getIntent().getBooleanExtra(Keyword.EXTRA_RECEIVE, false)) {
-                getSupportFragmentManager().beginTransaction().add(R.id.activity_connection_establishing_content_view, new HotspotManagerFragment()).commit();
+        /*if (getIntent() != null) {
+            if (getIntent().hasExtra(Keyword.EXTRA_RECEIVE) &&
+                    getIntent().getBooleanExtra(Keyword.EXTRA_RECEIVE, false)) {
+                getSupportFragmentManager().beginTransaction().add
+                        (R.id.activity_connection_establishing_content_view, new HotspotManagerFragment()).commit();
             } else {
-                startCodeScanner();
+
             }
-        }
+        }*/
+        startCodeScannerFragment();
 
     }
 
@@ -110,9 +107,9 @@ public class SenderActivity
         if (requestCode == REQUEST_CHOOSE_DEVICE)
             if (resultCode == RESULT_OK && data != null) {
                 try {
-                    NetworkDevice device = new NetworkDevice(data.getStringExtra(BarcodeScannerActivityDemo.EXTRA_DEVICE_ID));
+                    NetworkDevice device = new NetworkDevice(data.getStringExtra(EXTRA_DEVICE_ID));
                     AppUtils.getDatabase(SenderActivity.this).reconstruct(device);
-                    NetworkDevice.Connection connection = new NetworkDevice.Connection(device.deviceId, data.getStringExtra(BarcodeScannerActivityDemo.EXTRA_CONNECTION_ADAPTER));
+                    NetworkDevice.Connection connection = new NetworkDevice.Connection(device.deviceId, data.getStringExtra(EXTRA_CONNECTION_ADAPTER));
                     AppUtils.getDatabase(SenderActivity.this).reconstruct(connection);
 
                     mDeviceSelectionListener.onNetworkDeviceSelected(device, connection);
@@ -142,9 +139,42 @@ public class SenderActivity
         super.onBackPressed();
     }
 
-    private void startCodeScanner() {
-        startActivityForResult(new Intent(SenderActivity.this, BarcodeScannerActivityDemo.class),
-                REQUEST_CHOOSE_DEVICE);
+    private void startCodeScannerFragment() {
+        /*startActivityForResult(new Intent(SenderActivity.this, BarcodeScannerActivityDemo.class),
+                REQUEST_CHOOSE_DEVICE);*/
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        SenderFragmentImpl fragment = (SenderFragmentImpl) getSupportFragmentManager().findFragmentById(R.id.senderFragment);
+
+        if (fragment != null)
+            fragment.setDeviceSelectedListener(new NetworkDeviceSelectedListener() {
+                @Override
+                public boolean onNetworkDeviceSelected(NetworkDevice networkDevice, NetworkDevice.Connection connection) {
+
+                    try {
+
+                        AppUtils.getDatabase(SenderActivity.this).reconstruct(networkDevice);
+                        AppUtils.getDatabase(SenderActivity.this).reconstruct(connection);
+                        mDeviceSelectionListener.onNetworkDeviceSelected(networkDevice, connection);
+
+                    } catch (Exception e) {
+                        // do nothing
+                    }
+
+                    setResult(RESULT_OK, new Intent()
+                            .putExtra(EXTRA_DEVICE_ID, networkDevice.deviceId)
+                            .putExtra(EXTRA_CONNECTION_ADAPTER, connection.adapterName));
+                    finish();
+
+                    return true;
+                }
+
+                @Override
+                public boolean isListenerEffective() {
+                    return true;
+                }
+            });
     }
 
     public enum RequestType {
