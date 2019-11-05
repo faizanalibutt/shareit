@@ -596,4 +596,7 @@
     <string name="text_receivePreparations">Receive Preparations</string>
     <string name="text_sendPreparations">Send Preparations</string>
 
+    <!-- MERGING TEXT -->
+    <string name="msg_merg_send">\"%s\"</string>
+
 </resources>
