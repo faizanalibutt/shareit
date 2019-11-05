@@ -82,6 +82,22 @@
         <activity
             android:name=".ui.activity.ShareActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
+            <!--<intent-filter>
+                &lt;!&ndash;<action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />&ndash;&gt;
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <action android:name="faizi.intent.action.HAZEL_SEND" />
+                <action android:name="faizi.intent.action.HAZEL_SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>-->
+        </activity>
+
+        <activity
+            android:name=".ui.activity.AddDevicesToTransferActivity"
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
             <intent-filter>
                 <!--<action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />-->
                 <action android:name="android.intent.action.SEND" />
@@ -94,10 +110,6 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".ui.activity.AddDevicesToTransferActivity"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
 
         <activity android:name=".ui.activity.BarcodeScannerActivityDemo"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar"/>

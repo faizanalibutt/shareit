@@ -18,7 +18,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrganizeShareRunningTask extends WorkerService.RunningTask<ShareActivity> {
+public class OrganizeShareRunningTask extends WorkerService.RunningTask<AddDevicesToTransferActivity> {
     private List<Uri> mFileUris;
     private List<CharSequence> mFileNames;
 
@@ -119,10 +119,10 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<ShareAct
             AppUtils.getDatabase(getService()).insert(groupInstance);
 
             ViewTransferActivity.startInstance(getService(), groupInstance.groupId);
-            AddDevicesToTransferActivity.startInstance(getService(), groupInstance.groupId);
+            //AddDevicesToTransferActivity.startInstance(getService(), groupInstance.groupId);
         }
 
-        if (getAnchorListener() != null)
-            getAnchorListener().finish();
+        /*if (getAnchorListener() != null)
+            getAnchorListener().finish();*/
     }
 }

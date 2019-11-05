@@ -1,14 +1,11 @@
 package com.hazelmobile.filetransfer.ui.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -24,7 +21,6 @@ import com.hazelmobile.filetransfer.util.FileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ShareActivity extends Activity
@@ -43,9 +39,9 @@ public class ShareActivity extends Activity
     private TextView mProgressTextLeft;
     private TextView mProgressTextRight;
     private TextView mTextMain;
-    private List<Uri> mFileUris;
+/*    private List<Uri> mFileUris;
     private List<CharSequence> mFileNames;
-    private OrganizeShareRunningTask mTask;
+    private OrganizeShareRunningTask mTask;*/
 
     public static void createFolderStructure(DocumentFile file, String folderName,
                                              List<SelectableStream> pendingObjects,
@@ -88,17 +84,17 @@ public class ShareActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
 
-        String action = getIntent() != null ? getIntent().getAction() : null;
+        /*String action = getIntent() != null ? getIntent().getAction() : null;
 
         if (ACTION_SEND.equals(action)
                 || ACTION_SEND_MULTIPLE.equals(action)
                 || Intent.ACTION_SEND.equals(action)
                 || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
             if (getIntent().hasExtra(Intent.EXTRA_TEXT)) {
-                /*startActivity(new Intent(ShareActivity.this, TextEditorActivity.class)
+                *//*startActivity(new Intent(ShareActivity.this, TextEditorActivity.class)
                         .setAction(TextEditorActivity.ACTION_EDIT_TEXT)
                         .putExtra(TextEditorActivity.EXTRA_TEXT_INDEX, getIntent().getStringExtra(Intent.EXTRA_TEXT)));
-                finish();*/
+                finish();*//*
             } else {
                 ArrayList<Uri> fileUris = new ArrayList<>();
                 ArrayList<CharSequence> fileNames = null;
@@ -147,7 +143,7 @@ public class ShareActivity extends Activity
         } else {
             Toast.makeText(this, R.string.mesg_formatNotSupported, Toast.LENGTH_SHORT).show();
             finish();
-        }
+        }*/
     }
 
     @Override
@@ -159,7 +155,7 @@ public class ShareActivity extends Activity
     protected void onPreviousRunningTask(@Nullable WorkerService.RunningTask task) {
         super.onPreviousRunningTask(task);
 
-        if (task instanceof OrganizeShareRunningTask) {
+        /*if (task instanceof OrganizeShareRunningTask) {
             mTask = ((OrganizeShareRunningTask) task);
             mTask.setAnchorListener(this);
         } else {
@@ -171,7 +167,7 @@ public class ShareActivity extends Activity
                     .run(this);
 
             attachRunningTask(mTask);
-        }
+        }*/
     }
 
     public Snackbar createSnackbar(int resId, Object... objects) {
