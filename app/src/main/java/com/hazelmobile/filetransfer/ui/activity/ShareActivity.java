@@ -50,14 +50,14 @@ public class ShareActivity extends Activity
 
         if (files != null) {
 
-            if (task.getAnchorListener() != null)
+            /*if (task.getAnchorListener() != null)
                 task.getAnchorListener().getProgressBar()
-                        .setMax(task.getAnchorListener().getProgressBar().getMax() + files.length);
+                        .setMax(task.getAnchorListener().getProgressBar().getMax() + files.length);*/
 
             for (DocumentFile thisFile : files) {
-                if (task.getAnchorListener() != null)
+                /*if (task.getAnchorListener() != null)
                     task.getAnchorListener().getProgressBar()
-                            .setProgress(task.getAnchorListener().getProgressBar().getProgress() + 1);
+                            .setProgress(task.getAnchorListener().getProgressBar().getProgress() + 1);*/
 
                 if (task.getInterrupter().interrupted())
                     break;

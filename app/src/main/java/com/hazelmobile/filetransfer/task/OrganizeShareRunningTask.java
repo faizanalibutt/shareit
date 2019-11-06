@@ -12,7 +12,6 @@ import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.activity.PreparationsActivity;
 import com.hazelmobile.filetransfer.ui.activity.ShareActivity;
-import com.hazelmobile.filetransfer.ui.activity.ViewTransferActivity;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
         final WorkerService.RunningTask thisTask = this;
 
         if (getAnchorListener() != null) {
-            getAnchorListener().getProgressBar().setMax(mFileUris.size());
+            //getAnchorListener().getProgressBar().setMax(mFileUris.size());
             getAnchorListener().updateText(thisTask, getService().getString(R.string.mesg_organizingFiles));
         }
 
@@ -47,10 +46,10 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
             publishStatusText(getService().getString(R.string.text_transferStatusFiles,
                     position, mFileUris.size()));
 
-            if (getAnchorListener() != null) {
+            /*if (getAnchorListener() != null) {
                 getAnchorListener().updateProgress(getAnchorListener().getProgressBar().getMax(),
                         getAnchorListener().getProgressBar().getProgress() + 1);
-            }
+            }*/
 
             Uri fileUri = mFileUris.get(position);
             String fileName = mFileNames != null ? String.valueOf(mFileNames.get(position)) : null;
@@ -119,7 +118,7 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
             AppUtils.getDatabase(getService()).insert(groupInstance);
 
             // it will be changed and move to its own activity.
-            ViewTransferActivity.startInstance(getService(), groupInstance.groupId);
+            //ViewTransferActivity.startInstance(getService(), groupInstance.groupId);
 
             /* IMPLEMENT PREFERENCES HERE */
             AppUtils.getDefaultPreferences(getService()).edit().putLong

@@ -12,6 +12,7 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.pictures.EditableListAdapterImpl;
 import com.hazelmobile.filetransfer.pictures.EditableListFragment;
 import com.hazelmobile.filetransfer.pictures.EditableListFragmentImpl;
+import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.pictures.Shareable;
 import com.hazelmobile.filetransfer.ui.activity.ShareActivity;
 import com.hazelmobile.filetransfer.ui.fragment.ShareableListFragment;
@@ -48,12 +49,12 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
         List<T> selectedItemList = new ArrayList<>(getFragment().getSelectionConnection().getSelectedItemList());
 
         if (selectedItemList.size() > 0
-                && true/*(id == R.id.action_mode_share_trebleshot || id == R.id.action_mode_share_all_apps)*/) {
+                /* && (id == R.id.action_mode_share_trebleshot || id == R.id.action_mode_share_all_apps)*/) {
             Intent shareIntent = new Intent()
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    .setAction((false)
+                    .setAction((selectedItemList.size() > 1 ? ShareActivity.ACTION_SEND_MULTIPLE : ShareActivity.ACTION_SEND)/*(false)
                             ? (selectedItemList.size() > 1 ? Intent.ACTION_SEND_MULTIPLE : Intent.ACTION_SEND)
-                            : (selectedItemList.size() > 1 ? ShareActivity.ACTION_SEND_MULTIPLE : ShareActivity.ACTION_SEND));
+                            : (selectedItemList.size() > 1 ? ShareActivity.ACTION_SEND_MULTIPLE : ShareActivity.ACTION_SEND)*/);
 
             if (selectedItemList.size() > 1) {
                 ShareableListFragment.MIMEGrouper mimeGrouper = new ShareableListFragment.MIMEGrouper();
@@ -70,19 +71,21 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
 
                 shareIntent.setType(mimeGrouper.toString())
                         .putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList)
-                        .putCharSequenceArrayListExtra(ShareActivity.EXTRA_FILENAME_LIST, nameList);
+                        .putCharSequenceArrayListExtra(ShareActivity.EXTRA_FILENAME_LIST, nameList)
+                        .putExtra(Keyword.EXTRA_SEND, true);
             } else if (selectedItemList.size() == 1) {
                 T sharedItem = selectedItemList.get(0);
 
                 shareIntent.setType(sharedItem.mimeType)
                         .putExtra(Intent.EXTRA_STREAM, sharedItem.uri)
-                        .putExtra(ShareActivity.EXTRA_FILENAME_LIST, sharedItem.fileName);
+                        .putExtra(ShareActivity.EXTRA_FILENAME_LIST, sharedItem.fileName)
+                        .putExtra(Keyword.EXTRA_SEND, true);
             }
 
             try {
-                getFragment().getContext().startActivity((false)/*item.getItemId() == R.id.action_mode_share_all_apps*/
+                getFragment().getContext().startActivity(shareIntent/*(false)*//*item.getItemId() == R.id.action_mode_share_all_apps*//*
                         ? Intent.createChooser(shareIntent, getFragment().getContext().getString(R.string.text_fileShareAppChoose))
-                        : shareIntent);
+                        : shareIntent*/);
             } catch (Throwable e) {
                 e.printStackTrace();
                 Toast.makeText(getFragment().getActivity(), R.string.mesg_somethingWentWrong, Toast.LENGTH_SHORT).show();

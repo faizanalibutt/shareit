@@ -92,14 +92,13 @@ public class PreparationsActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setAction();
-
         mIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         mIntentFilter.addAction(ACTION_HOTSPOT_STATUS);
         mIntentFilter.addAction(NetworkStatusReceiver.WIFI_AP_STATE_CHANGED);
 
         init();
+        setAction();
 
         // bluetooth check
         if (ConnectionUtils.getInstance(this).getBluetoothAdapter().isEnabled()) {
@@ -118,6 +117,19 @@ public class PreparationsActivity extends Activity
     }
 
     private void setAction() {
+
+        if (getIntent() != null) {
+            isReceiver = getIntent().hasExtra(Keyword.EXTRA_RECEIVE)
+                    && getIntent().getBooleanExtra(Keyword.EXTRA_RECEIVE, false);
+            isSender = getIntent().hasExtra(Keyword.EXTRA_SEND)
+                    && getIntent().getBooleanExtra(Keyword.EXTRA_SEND, false);
+
+            if (isReceiver)
+                Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.text_receivePreparations);
+            if (isSender)
+                Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.text_sendPreparations);
+
+        }
         String action = getIntent() != null ? getIntent().getAction() : null;
 
         if (ACTION_SEND.equals(action)
@@ -171,27 +183,15 @@ public class PreparationsActivity extends Activity
                 checkForTasks();
             }
 
-        } else {
+        } /*else {
             Toast.makeText(this, R.string.mesg_formatNotSupported, Toast.LENGTH_SHORT).show();
             finish();
-        }
+        }*/
     }
 
     private void init() {
         setContentView(R.layout.activity_preparations);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        if (getIntent() != null) {
-            isReceiver = getIntent().hasExtra(Keyword.EXTRA_RECEIVE)
-                    && getIntent().getBooleanExtra(Keyword.EXTRA_RECEIVE, false);
-            isSender = getIntent().hasExtra(Keyword.EXTRA_SEND)
-                    && getIntent().getBooleanExtra(Keyword.EXTRA_SEND, false);
-
-            if (isReceiver)
-                getSupportActionBar().setTitle(R.string.text_receivePreparations);
-            if (isSender)
-                getSupportActionBar().setTitle(R.string.text_sendPreparations);
-
-        }
 
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
         bluetoothButton = findViewById(R.id.bluetoothClick);
@@ -296,9 +296,7 @@ public class PreparationsActivity extends Activity
     }
 
     public void openHotspot(View view) {
-
-            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-
+        startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
     }
 
     private void enableHostspot(View view) {
@@ -447,14 +445,15 @@ public class PreparationsActivity extends Activity
     }
 
     public void btnOnClick(View view) {
-        if (getDefaultPreferences().getLong("add_devices_to_transfer", -1) == -1) {
+        if (isReceiver) {
             startActivity(new Intent(PreparationsActivity.this, ReceiverActivity.class)
                     .putExtra(Keyword.EXTRA_RECEIVE, true)
                     .putExtra(EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
                     .putExtra(EXTRA_REQUEST_TYPE,
                             ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
             finish();
-        } else {
+        } else if(isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1)  {
+            ViewTransferActivity.startInstance(this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
             startActivityForResult(new Intent(PreparationsActivity.this, SenderActivity.class)
                     .putExtra(Keyword.EXTRA_SEND, true)
                     .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
@@ -462,14 +461,6 @@ public class PreparationsActivity extends Activity
                             SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()), REQUEST_CODE_CHOOSE_DEVICE);
         }
     }
-
-    /*private static class MyHandler extends Handler {
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-        }
-    }*/
 
     /* SHARE ACTIVITY CODE WILL BE ON THIS CLASS FOR SURE */
 
@@ -486,9 +477,9 @@ public class PreparationsActivity extends Activity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //mTextMain.setText(text);
 
                 createSnackbar(R.string.msg_merg_send, text).show();
+
             }
         });
     }
@@ -498,9 +489,9 @@ public class PreparationsActivity extends Activity
 
     }
 
-    public ProgressBar getProgressBar() {
+    /*public ProgressBar getProgressBar() {
         return null;
-    }
+    }*/
 
     public void updateProgress(final int total, final int current) {
         if (isFinishing())
