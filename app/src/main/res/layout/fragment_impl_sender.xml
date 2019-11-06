@@ -29,9 +29,9 @@
         android:id="@+id/status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:layout_gravity="center"
         android:text="waiting for devices to connect...."
         android:textColor="@color/black_surface"
         android:visibility="visible" />
@@ -47,12 +47,12 @@
 
     <ImageView
         android:id="@+id/actions_transfer_receiver_retry_receiving"
-        android:layout_marginTop="8dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:padding="8dp"
-        android:background="?rippleBackground"
         android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:background="?rippleBackground"
+        android:padding="8dp"
         android:visibility="gone"
         app:srcCompat="@drawable/ic_autorenew_white_24dp_static" />
 
@@ -71,9 +71,9 @@
         android:id="@+id/bstatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:layout_gravity="center"
         android:text="Devcies having Android Version Above Oreo 8.0"
         android:textColor="@color/black_surface"
         android:visibility="visible" />
@@ -85,8 +85,8 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginTop="8dp"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:divider="@null"
         android:layout_weight="4"
+        android:divider="@null"
         android:visibility="visible" />
 
     <RelativeLayout
@@ -160,4 +160,27 @@
             android:text="@string/butn_enable" />
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/standardBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="5dp"
+        android:visibility="visible"
+        app:behavior_expandedOffset="0"
+        app:behavior_fitToContents="false"
+        app:behavior_halfExpandedRatio="0.4"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="85dp"
+        app:behavior_skipCollapsed="false"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/image_illustration_large" />
+
+    </FrameLayout>
+
 </LinearLayout>

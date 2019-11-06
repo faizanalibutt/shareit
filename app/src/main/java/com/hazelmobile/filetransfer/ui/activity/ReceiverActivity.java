@@ -25,12 +25,10 @@ import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
+import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
-
-import static com.hazelmobile.filetransfer.ui.activity.PreparationsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
 
 public class ReceiverActivity extends Activity
         implements SnackbarSupport {
@@ -44,6 +42,8 @@ public class ReceiverActivity extends Activity
 
     private ImageView user_image;
     private TextView textView;
+    private boolean mHotspotClosed = false;
+    private UIConnectionUtils mConnectionUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +89,7 @@ public class ReceiverActivity extends Activity
         int id = item.getItemId();
 
         if (id == android.R.id.home)
-            onBackPressed();
+            finish();
         else
             return super.onOptionsItemSelected(item);
 
@@ -110,12 +110,29 @@ public class ReceiverActivity extends Activity
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK, new Intent()
-                .putExtra(EXTRA_CLOSE_PERMISSION_SCREEN, true));
         finish();
         super.onBackPressed();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!mHotspotClosed)
+            if (UIConnectionUtils.isOreoAbove())
+                AppUtils.startForegroundService(this, new Intent(this, CommunicationService.class)
+                        .setAction(CommunicationService.ACTION_TOGGLE_HOTSPOT));
+            else
+                getUIConnectionUtils().getConnectionUtils().getHotspotUtils().disable();
+
+    }
+
+    public UIConnectionUtils getUIConnectionUtils() {
+        if (mConnectionUtils == null) {
+            mConnectionUtils = new UIConnectionUtils(ConnectionUtils.getInstance(this), this);
+        }
+
+        return mConnectionUtils;
+    }
 
     @Override
     public Snackbar createSnackbar(int resId, Object... objects) {
@@ -149,9 +166,10 @@ public class ReceiverActivity extends Activity
             } else if (mRequestType.equals(RequestType.MAKE_ACQUAINTANCE)) {
                 if (CommunicationService.ACTION_INCOMING_TRANSFER_READY.equals(intent.getAction())
                         && intent.hasExtra(CommunicationService.EXTRA_GROUP_ID)) {
+                    mHotspotClosed = true;
                     ViewTransferActivity.startInstance(ReceiverActivity.this,
                             intent.getLongExtra(CommunicationService.EXTRA_GROUP_ID, -1));
-                    SenderFragmentImpl.showMessage("yes I'm here");
+                    SenderFragmentImpl.showMessage("EstablishConnection(): Going to Transfer Activity Finally");
                     finish();
                 }
             }

@@ -310,6 +310,7 @@ public class HotspotManagerFragment
 
     private JSONObject hotspotInformation;
 
+
     private class ServerClass extends Thread {
         private BluetoothServerSocket serverSocket;
 

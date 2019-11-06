@@ -2,7 +2,6 @@ package com.hazelmobile.filetransfer.task;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
@@ -31,8 +30,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.app.Activity.RESULT_OK;
 
 public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivity> {
     private TransferGroup mGroup;
@@ -186,10 +183,9 @@ public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivi
                                     AppUtils.getDatabase(context).insert(pendingRegistry, progressUpdater);
 
                                 if (getAnchorListener() != null) {
-                                    getAnchorListener().setResult(RESULT_OK, new Intent()
+                                    /*getAnchorListener().setResult(RESULT_OK, new Intent()
                                             .putExtra(SenderActivity.EXTRA_DEVICE_ID, assignee.deviceId)
-                                            .putExtra(SenderActivity.EXTRA_GROUP_ID, assignee.groupId));
-
+                                            .putExtra(SenderActivity.EXTRA_GROUP_ID, assignee.groupId));*/
                                     getAnchorListener().finish();
                                 }
                             } else if (getAnchorListener() != null) {

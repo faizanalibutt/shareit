@@ -328,7 +328,7 @@ public class PreparationsActivity extends Activity
                     /*"Please enable location service to proceed and select option # 1"*/
                     createSnackbar(R.string.mesg_locationDisabledSelfHotspot).show();
                 }
-            } else if (requestCode == REQUEST_CODE_CHOOSE_DEVICE
+            } /*else if (requestCode == REQUEST_CODE_CHOOSE_DEVICE
                     && data != null) {
 
                 if (data.hasExtra(EXTRA_DEVICE_ID) && data.hasExtra(EXTRA_CONNECTION_ADAPTER)) {
@@ -345,7 +345,7 @@ public class PreparationsActivity extends Activity
                         finish();
                     }
                 }
-            }
+            }*/
         }
     }
 
@@ -452,13 +452,14 @@ public class PreparationsActivity extends Activity
                     .putExtra(EXTRA_REQUEST_TYPE,
                             ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
             finish();
-        } else if(isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1)  {
+        } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1) {
             ViewTransferActivity.startInstance(this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
-            startActivityForResult(new Intent(PreparationsActivity.this, SenderActivity.class)
+            startActivity(new Intent(PreparationsActivity.this, SenderActivity.class)
                     .putExtra(Keyword.EXTRA_SEND, true)
                     .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
                     .putExtra(SenderActivity.EXTRA_REQUEST_TYPE,
-                            SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()), REQUEST_CODE_CHOOSE_DEVICE);
+                            SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
+            finish();
         }
     }
 

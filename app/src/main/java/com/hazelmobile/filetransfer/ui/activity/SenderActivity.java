@@ -4,8 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -16,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.library.RippleBackground;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
@@ -38,18 +42,30 @@ public class SenderActivity extends Activity
     public static final String EXTRA_REQUEST_TYPE = "extraRequestType";
     public static final String EXTRA_ACTIVITY_SUBTITLE = "extraActivitySubtitle";
     public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
-
     public static final int REQUEST_CHOOSE_DEVICE = 100;
 
     private RequestType mRequestType = RequestType.RETURN_RESULT;
+    private ImageView user_image;
+    private TextView textView;
 
     private final NetworkDeviceSelectedListener mDeviceSelectionListener = new NetworkDeviceSelectedListener() {
         @Override
         public boolean onNetworkDeviceSelected(NetworkDevice networkDevice, NetworkDevice.Connection connection) {
             if (mRequestType.equals(RequestType.RETURN_RESULT)) {
-                setResult(RESULT_OK, new Intent()
+                /*setResult(RESULT_OK, new Intent()
                         .putExtra(EXTRA_DEVICE_ID, networkDevice.deviceId)
-                        .putExtra(EXTRA_CONNECTION_ADAPTER, connection.adapterName));
+                        .putExtra(EXTRA_CONNECTION_ADAPTER, connection.adapterName));*/
+
+                try {
+                    /*networkDevice = new NetworkDevice(networkDevice.deviceId);
+                    connection = new NetworkDevice.Connection(networkDevice.deviceId,  connection.adapterName);*/
+                    getDatabase().reconstruct(networkDevice);
+                    getDatabase().reconstruct(connection);
+                    doCommunicate(networkDevice, connection);
+                } catch (Exception e) {
+                    Toast.makeText(SenderActivity.this,
+                            R.string.mesg_somethingWentWrong, Toast.LENGTH_SHORT).show();
+                }
 
                 finish();
             } else {
@@ -95,6 +111,12 @@ public class SenderActivity extends Activity
         if (!checkGroupIntegrity())
             return;
         setContentView(R.layout.activity_sender);
+        final RippleBackground pulse = findViewById(R.id.content);
+        pulse.startRippleAnimation();
+
+        user_image = findViewById(R.id.userProfileImage);
+        textView = findViewById(R.id.text1);
+        setProfilePicture();
         startCodeScannerFragment();
     }
 
@@ -159,10 +181,10 @@ public class SenderActivity extends Activity
                         // do nothing
                     }
 
-                    setResult(RESULT_OK, new Intent()
+                    /*setResult(RESULT_OK, new Intent()
                             .putExtra(EXTRA_DEVICE_ID, networkDevice.deviceId)
                             .putExtra(EXTRA_CONNECTION_ADAPTER, connection.adapterName));
-                    finish();
+                    finish();*/
 
                     return true;
                 }
@@ -296,6 +318,20 @@ public class SenderActivity extends Activity
 
         mProgressBar.setProgress(current);
         mProgressBar.setMax(total);*/
+    }
+
+    private void setProfilePicture() {
+        NetworkDevice localDevice = AppUtils.getLocalDevice(SenderActivity.this);
+        textView.setText(localDevice.nickname);
+        loadProfilePictureInto(localDevice.nickname, user_image);
+        int color = AppUtils.getDefaultPreferences(SenderActivity.this).getInt("device_name_color", -1);
+
+        if (user_image.getDrawable() instanceof ShapeDrawable && color != -1) {
+            ShapeDrawable shapeDrawable = (ShapeDrawable) user_image.getDrawable();
+            shapeDrawable.getPaint().setColor(color);
+        } else {
+            user_image.setBackgroundResource(R.drawable.background_user_icon_default);
+        }
     }
 
 }
