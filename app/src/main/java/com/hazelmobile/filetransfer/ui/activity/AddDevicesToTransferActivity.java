@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,15 +29,7 @@ import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.task.AddDeviceRunningTask;
-import com.hazelmobile.filetransfer.task.OrganizeShareRunningTask;
 import com.hazelmobile.filetransfer.ui.fragment.TransferAssigneeListFragment;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.hazelmobile.filetransfer.ui.activity.ShareActivity.ACTION_SEND;
-import static com.hazelmobile.filetransfer.ui.activity.ShareActivity.ACTION_SEND_MULTIPLE;
-import static com.hazelmobile.filetransfer.ui.activity.ShareActivity.EXTRA_FILENAME_LIST;
 
 public class AddDevicesToTransferActivity extends Activity
         implements SnackbarSupport, WorkerService.OnAttachListener {
@@ -52,8 +43,7 @@ public class AddDevicesToTransferActivity extends Activity
 
     private TransferGroup mGroup = null;
 
-    private OrganizeShareRunningTask mTask;
-    private AddDeviceRunningTask mAddTask;
+    private AddDeviceRunningTask mTask;
 
 
     private FloatingActionButton mActionButton;
@@ -102,64 +92,6 @@ public class AddDevicesToTransferActivity extends Activity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_devices_to_transfer);
-
-        String action = getIntent() != null ? getIntent().getAction() : null;
-
-        if (ACTION_SEND.equals(action)
-                || ACTION_SEND_MULTIPLE.equals(action)
-                || Intent.ACTION_SEND.equals(action)
-                || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-
-            ArrayList<Uri> fileUris = new ArrayList<>();
-            ArrayList<CharSequence> fileNames = null;
-
-            if (ACTION_SEND_MULTIPLE.equals(action)
-                    || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-                List<Uri> pendingFileUris = getIntent().getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-                fileNames = getIntent().hasExtra(EXTRA_FILENAME_LIST) ? getIntent().getCharSequenceArrayListExtra(EXTRA_FILENAME_LIST) : null;
-
-                fileUris.addAll(pendingFileUris);
-            } else {
-                fileUris.add((Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM));
-
-                if (getIntent().hasExtra(EXTRA_FILENAME_LIST)) {
-                    fileNames = new ArrayList<>();
-                    String fileName = getIntent().getStringExtra(EXTRA_FILENAME_LIST);
-
-                    fileNames.add(fileName);
-                }
-            }
-
-            if (fileUris.size() == 0) {
-                Toast.makeText(this, R.string.text_listEmpty, Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-
-                /*mProgressBar = findViewById(R.id.progressBar);
-                mProgressTextLeft = findViewById(R.id.text1);
-                mProgressTextRight = findViewById(R.id.text2);
-                mTextMain = findViewById(R.id.textMain);
-                mCancelButton = findViewById(R.id.cancelButton);
-
-                mCancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mTask != null)
-                            mTask.getInterrupter().interrupt(true);
-                    }
-                });*/
-
-
-                mFileUris = fileUris;
-                mFileNames = fileNames;
-
-                checkForTasks();
-            }
-
-        } else {
-            Toast.makeText(this, R.string.mesg_formatNotSupported, Toast.LENGTH_SHORT).show();
-            finish();
-        }
 
         new Thread() {
             @Override
@@ -276,20 +208,8 @@ public class AddDevicesToTransferActivity extends Activity
         super.onPreviousRunningTask(task);
 
         if (task instanceof AddDeviceRunningTask) {
-            mAddTask = ((AddDeviceRunningTask) task);
-            mAddTask.setAnchorListener(this);
-        } else if (task instanceof OrganizeShareRunningTask) {
-            mTask = ((OrganizeShareRunningTask) task);
-            mTask.setAnchorListener(this);
-        } else {
-            mTask = new OrganizeShareRunningTask(mFileUris, mFileNames);
-
-            mTask.setTitle(getString(R.string.mesg_organizingFiles))
-                    .setAnchorListener(this)
-                    .setContentIntent(this, getIntent())
-                    .run(this);
-
-            attachRunningTask(mTask);
+            mTask = ((AddDeviceRunningTask) task);
+            //mTask.setAnchorListener(this);
         }
     }
 
@@ -332,11 +252,6 @@ public class AddDevicesToTransferActivity extends Activity
         unregisterReceiver(mReceiver);
     }
 
-    @Override
-    public void onAttachedToTask(WorkerService.RunningTask task) {
-        //takeOnProcessMode();
-    }
-
     public boolean checkGroupIntegrity() {
         try {
             if (getIntent() == null || !getIntent().hasExtra(EXTRA_GROUP_ID))
@@ -367,7 +282,7 @@ public class AddDevicesToTransferActivity extends Activity
         AddDeviceRunningTask task = new AddDeviceRunningTask(mGroup, device, connection);
 
         task.setTitle(getString(R.string.mesg_communicating))
-                .setAnchorListener(AddDevicesToTransferActivity.this)
+                //.setAnchorListener(AddDevicesToTransferActivity.this)
                 .setContentIntent(this, getIntent())
                 .run(this);
 
@@ -431,29 +346,8 @@ public class AddDevicesToTransferActivity extends Activity
         mProgressBar.setMax(total);
     }
 
-    /*SHARE ACTIVITY IS GOING TO MERGED IN ADD_DEVICES_ACTIVITY*/
-
-    private List<Uri> mFileUris;
-    private List<CharSequence> mFileNames;
-
-    public ProgressBar getProgressBar() {
-        return mProgressBar;
+    @Override
+    public void onAttachedToTask(WorkerService.RunningTask task) {
+        takeOnProcessMode();
     }
-
-    public void updateText(WorkerService.RunningTask runningTask, final String text) {
-        if (isFinishing())
-            return;
-
-        runningTask.publishStatusText(text);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //mTextMain.setText(text);
-
-                createSnackbar(R.string.msg_merg_send, text).show();
-            }
-        });
-    }
-
 }

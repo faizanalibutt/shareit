@@ -10,7 +10,7 @@ import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.service.WorkerService;
-import com.hazelmobile.filetransfer.ui.activity.AddDevicesToTransferActivity;
+import com.hazelmobile.filetransfer.ui.activity.PreparationsActivity;
 import com.hazelmobile.filetransfer.ui.activity.ShareActivity;
 import com.hazelmobile.filetransfer.ui.activity.ViewTransferActivity;
 
@@ -18,7 +18,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrganizeShareRunningTask extends WorkerService.RunningTask<AddDevicesToTransferActivity> {
+public class OrganizeShareRunningTask extends WorkerService.RunningTask<PreparationsActivity> {
     private List<Uri> mFileUris;
     private List<CharSequence> mFileNames;
 
@@ -118,7 +118,13 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<AddDevic
         } else {
             AppUtils.getDatabase(getService()).insert(groupInstance);
 
+            // it will be changed and move to its own activity.
             ViewTransferActivity.startInstance(getService(), groupInstance.groupId);
+
+            /* IMPLEMENT PREFERENCES HERE */
+            AppUtils.getDefaultPreferences(getService()).edit().putLong
+                    ("add_devices_to_transfer", groupInstance.groupId).apply();
+
             //AddDevicesToTransferActivity.startInstance(getService(), groupInstance.groupId);
         }
 

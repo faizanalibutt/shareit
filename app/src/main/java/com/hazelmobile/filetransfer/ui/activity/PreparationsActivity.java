@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,16 +31,24 @@ import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.receiver.NetworkStatusReceiver;
 import com.hazelmobile.filetransfer.service.CommunicationService;
+import com.hazelmobile.filetransfer.service.WorkerService;
+import com.hazelmobile.filetransfer.task.OrganizeShareRunningTask;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_HOTSPOT_STATUS;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_DISABLING;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_ENABLED;
+import static com.hazelmobile.filetransfer.ui.activity.ShareActivity.ACTION_SEND;
+import static com.hazelmobile.filetransfer.ui.activity.ShareActivity.ACTION_SEND_MULTIPLE;
+import static com.hazelmobile.filetransfer.ui.activity.ShareActivity.EXTRA_FILENAME_LIST;
 
-public class PreparationsActivity extends Activity implements SnackbarSupport {
+public class PreparationsActivity extends Activity
+        implements SnackbarSupport, WorkerService.OnAttachListener {
 
     private static final int LOCATION_PERMISSION_RESULT = 0;
     public static final int LOCATION_SERVICE_RESULT = 1;
@@ -82,6 +92,8 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setAction();
+
         mIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         mIntentFilter.addAction(ACTION_HOTSPOT_STATUS);
@@ -103,6 +115,66 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
         }
         // hotspot check
         updateHotspotState();
+    }
+
+    private void setAction() {
+        String action = getIntent() != null ? getIntent().getAction() : null;
+
+        if (ACTION_SEND.equals(action)
+                || ACTION_SEND_MULTIPLE.equals(action)
+                || Intent.ACTION_SEND.equals(action)
+                || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+
+            ArrayList<Uri> fileUris = new ArrayList<>();
+            ArrayList<CharSequence> fileNames = null;
+
+            if (ACTION_SEND_MULTIPLE.equals(action)
+                    || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+                List<Uri> pendingFileUris = getIntent().getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                fileNames = getIntent().hasExtra(EXTRA_FILENAME_LIST) ? getIntent().getCharSequenceArrayListExtra(EXTRA_FILENAME_LIST) : null;
+
+                fileUris.addAll(pendingFileUris);
+            } else {
+                fileUris.add((Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM));
+
+                if (getIntent().hasExtra(EXTRA_FILENAME_LIST)) {
+                    fileNames = new ArrayList<>();
+                    String fileName = getIntent().getStringExtra(EXTRA_FILENAME_LIST);
+
+                    fileNames.add(fileName);
+                }
+            }
+
+            if (fileUris.size() == 0) {
+                Toast.makeText(this, R.string.text_listEmpty, Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+
+                /*mProgressBar = findViewById(R.id.progressBar);
+                mProgressTextLeft = findViewById(R.id.text1);
+                mProgressTextRight = findViewById(R.id.text2);
+                mTextMain = findViewById(R.id.textMain);
+                mCancelButton = findViewById(R.id.cancelButton);
+
+                mCancelButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mTask != null)
+                            mTask.getInterrupter().interrupt(true);
+                    }
+                });*/
+
+
+                mFileUris = fileUris;
+                mFileNames = fileNames;
+
+                checkForTasks();
+            }
+
+        } else {
+            Toast.makeText(this, R.string.mesg_formatNotSupported, Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void init() {
@@ -375,14 +447,14 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
     }
 
     public void btnOnClick(View view) {
-        if (isReceiver) {
+        if (getDefaultPreferences().getLong("add_devices_to_transfer", -1) == -1) {
             startActivity(new Intent(PreparationsActivity.this, ReceiverActivity.class)
                     .putExtra(Keyword.EXTRA_RECEIVE, true)
                     .putExtra(EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
                     .putExtra(EXTRA_REQUEST_TYPE,
                             ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
             finish();
-        } else if (isSender) {
+        } else {
             startActivityForResult(new Intent(PreparationsActivity.this, SenderActivity.class)
                     .putExtra(Keyword.EXTRA_SEND, true)
                     .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
@@ -398,4 +470,72 @@ public class PreparationsActivity extends Activity implements SnackbarSupport {
             super.handleMessage(msg);
         }
     }*/
+
+    /* SHARE ACTIVITY CODE WILL BE ON THIS CLASS FOR SURE */
+
+    private List<Uri> mFileUris;
+    private List<CharSequence> mFileNames;
+    private OrganizeShareRunningTask mTask;
+
+    public void updateText(WorkerService.RunningTask runningTask, final String text) {
+        if (isFinishing())
+            return;
+
+        runningTask.publishStatusText(text);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //mTextMain.setText(text);
+
+                createSnackbar(R.string.msg_merg_send, text).show();
+            }
+        });
+    }
+
+    @Override
+    public void onAttachedToTask(WorkerService.RunningTask task) {
+
+    }
+
+    public ProgressBar getProgressBar() {
+        return null;
+    }
+
+    public void updateProgress(final int total, final int current) {
+        if (isFinishing())
+            return;
+
+        String FUCKED_SITUATION = "DON'T GO THERE OTHERWISE YOU KNOW WHAT WILL HAPPEN";
+
+        /*runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgressTextLeft.setText(String.valueOf(current));
+                mProgressTextRight.setText(String.valueOf(total));
+            }
+        });
+
+        mProgressBar.setProgress(current);
+        mProgressBar.setMax(total);*/
+    }
+
+    @Override
+    protected void onPreviousRunningTask(@Nullable WorkerService.RunningTask task) {
+        super.onPreviousRunningTask(task);
+
+        if (task instanceof OrganizeShareRunningTask) {
+            mTask = ((OrganizeShareRunningTask) task);
+            mTask.setAnchorListener(this);
+        } else {
+            mTask = new OrganizeShareRunningTask(mFileUris, mFileNames);
+
+            mTask.setTitle(getString(R.string.mesg_organizingFiles))
+                    .setAnchorListener(this)
+                    .setContentIntent(this, getIntent())
+                    .run(this);
+
+            attachRunningTask(mTask);
+        }
+    }
 }

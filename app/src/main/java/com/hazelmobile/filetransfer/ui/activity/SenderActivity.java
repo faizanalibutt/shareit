@@ -1,9 +1,12 @@
 package com.hazelmobile.filetransfer.ui.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -14,8 +17,10 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
-import com.hazelmobile.filetransfer.pictures.Keyword;
+import com.hazelmobile.filetransfer.service.WorkerService;
+import com.hazelmobile.filetransfer.task.AddDeviceRunningTask;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
@@ -26,7 +31,8 @@ import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 import static com.hazelmobile.filetransfer.ui.activity.PreparationsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
 
 
-public class SenderActivity extends Activity implements SnackbarSupport {
+public class SenderActivity extends Activity
+        implements SnackbarSupport, WorkerService.OnAttachListener {
 
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
     public static final String EXTRA_REQUEST_TYPE = "extraRequestType";
@@ -53,12 +59,12 @@ public class SenderActivity extends Activity implements SnackbarSupport {
                 UITask uiTask = new UITask() {
                     @Override
                     public void updateTaskStarted(Interrupter interrupter) {
-                        Log.d(SenderFragmentImpl.TAG, "sending file started");
+                        createSnackbar(R.string.text_sending).show();
                     }
 
                     @Override
                     public void updateTaskStopped() {
-                        Log.d(SenderFragmentImpl.TAG, "sending file stopped due to some reason");
+                        createSnackbar(R.string.mesg_fileSendError).show();
                     }
                 };
 
@@ -86,19 +92,10 @@ public class SenderActivity extends Activity implements SnackbarSupport {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setResult(RESULT_CANCELED);
+        if (!checkGroupIntegrity())
+            return;
         setContentView(R.layout.activity_sender);
-
-        /*if (getIntent() != null) {
-            if (getIntent().hasExtra(Keyword.EXTRA_RECEIVE) &&
-                    getIntent().getBooleanExtra(Keyword.EXTRA_RECEIVE, false)) {
-                getSupportFragmentManager().beginTransaction().add
-                        (R.id.activity_connection_establishing_content_view, new HotspotManagerFragment()).commit();
-            } else {
-
-            }
-        }*/
         startCodeScannerFragment();
-
     }
 
     @Override
@@ -141,8 +138,7 @@ public class SenderActivity extends Activity implements SnackbarSupport {
     }
 
     private void startCodeScannerFragment() {
-        /*startActivityForResult(new Intent(SenderActivity.this, BarcodeScannerActivityDemo.class),
-                REQUEST_CHOOSE_DEVICE);*/
+
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -178,6 +174,11 @@ public class SenderActivity extends Activity implements SnackbarSupport {
             });
     }
 
+    @Override
+    public void onAttachedToTask(WorkerService.RunningTask task) {
+
+    }
+
     public enum RequestType {
         RETURN_RESULT,
         MAKE_ACQUAINTANCE
@@ -190,6 +191,111 @@ public class SenderActivity extends Activity implements SnackbarSupport {
 
     public interface DeviceSelectionSupport {
         void setDeviceSelectedListener(NetworkDeviceSelectedListener listener);
+    }
+
+    /**
+     * MERGING ADD DEVICES TO SENDER
+     */
+
+    private TransferGroup mGroup = null;
+    private AddDeviceRunningTask mTask;
+    public static final String EXTRA_GROUP_ID = "extraGroupId";
+    private IntentFilter mFilter = new IntentFilter(AccessDatabase.ACTION_DATABASE_CHANGE);
+
+    public void doCommunicate(final NetworkDevice device, final NetworkDevice.Connection connection) {
+        AddDeviceRunningTask task = new AddDeviceRunningTask(mGroup, device, connection);
+
+        task.setTitle(getString(R.string.mesg_communicating))
+                .setAnchorListener(this)
+                .setContentIntent(this, getIntent())
+                .run(this);
+
+        attachRunningTask(task);
+    }
+
+    @Override
+    protected void onPreviousRunningTask(@Nullable WorkerService.RunningTask task) {
+        super.onPreviousRunningTask(task);
+
+        if (task instanceof AddDeviceRunningTask) {
+            mTask = ((AddDeviceRunningTask) task);
+            mTask.setAnchorListener(this);
+        }
+    }
+
+    public boolean checkGroupIntegrity() {
+        try {
+
+            if (getDefaultPreferences().getLong("add_devices_to_transfer", -1) == -1)
+                throw new Exception(getString(R.string.text_empty));
+
+            mGroup = new TransferGroup(getDefaultPreferences().getLong("add_devices_to_transfer", -1));
+
+            try {
+                getDatabase().reconstruct(mGroup);
+            } catch (Exception e) {
+                throw new Exception(getString(R.string.mesg_notValidTransfer));
+            }
+
+            return true;
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        return false;
+    }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (AccessDatabase.ACTION_DATABASE_CHANGE.equals(intent.getAction()))
+                if (intent.hasExtra(AccessDatabase.EXTRA_TABLE_NAME)
+                        && AccessDatabase.TABLE_TRANSFERGROUP.equals(intent.getStringExtra(AccessDatabase.EXTRA_TABLE_NAME)))
+                    if (!checkGroupIntegrity())
+                        finish();
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkForTasks();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mReceiver, mFilter);
+        if (!checkGroupIntegrity())
+            finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public Intent getIntent() {
+        return super.getIntent();
+    }
+
+    public void updateProgress(final int total, final int current) {
+        /*if (isFinishing())
+            return;
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgressTextLeft.setText(String.valueOf(current));
+                mProgressTextRight.setText(String.valueOf(total));
+            }
+        });
+
+        mProgressBar.setProgress(current);
+        mProgressBar.setMax(total);*/
     }
 
 }

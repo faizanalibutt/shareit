@@ -73,7 +73,19 @@
 
         <activity
             android:name=".ui.activity.PreparationsActivity"
-            android:theme="@style/Theme.Hazel.White" />
+            android:theme="@style/Theme.Hazel.White">
+            <intent-filter>
+                <!--<action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />-->
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <action android:name="faizi.intent.action.HAZEL_SEND" />
+                <action android:name="faizi.intent.action.HAZEL_SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="*/*" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".ui.activity.SenderActivity"
@@ -98,8 +110,8 @@
         <activity
             android:name=".ui.activity.AddDevicesToTransferActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
-            <intent-filter>
-                <!--<action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />-->
+            <!--<intent-filter>
+                &lt;!&ndash;<action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />&ndash;&gt;
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
                 <action android:name="faizi.intent.action.HAZEL_SEND" />
@@ -108,7 +120,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="*/*" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
 
         <activity android:name=".ui.activity.BarcodeScannerActivityDemo"

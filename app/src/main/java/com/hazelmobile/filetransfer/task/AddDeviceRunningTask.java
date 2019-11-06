@@ -21,6 +21,7 @@ import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.activity.AddDevicesToTransferActivity;
+import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
 
@@ -33,7 +34,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class AddDeviceRunningTask extends WorkerService.RunningTask<AddDevicesToTransferActivity> {
+public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivity> {
     private TransferGroup mGroup;
     private NetworkDevice mDevice;
     private NetworkDevice.Connection mConnection;
@@ -186,8 +187,8 @@ public class AddDeviceRunningTask extends WorkerService.RunningTask<AddDevicesTo
 
                                 if (getAnchorListener() != null) {
                                     getAnchorListener().setResult(RESULT_OK, new Intent()
-                                            .putExtra(AddDevicesToTransferActivity.EXTRA_DEVICE_ID, assignee.deviceId)
-                                            .putExtra(AddDevicesToTransferActivity.EXTRA_GROUP_ID, assignee.groupId));
+                                            .putExtra(SenderActivity.EXTRA_DEVICE_ID, assignee.deviceId)
+                                            .putExtra(SenderActivity.EXTRA_GROUP_ID, assignee.groupId));
 
                                     getAnchorListener().finish();
                                 }
@@ -218,7 +219,7 @@ public class AddDeviceRunningTask extends WorkerService.RunningTask<AddDevicesTo
                                 getAnchorListener().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        getAnchorListener().resetStatusViews();
+                                        //getAnchorListener().resetStatusViews();
                                     }
                                 });
                         }
