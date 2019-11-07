@@ -161,7 +161,7 @@
 
     </LinearLayout>
 
-    <!--<FrameLayout
+    <FrameLayout
         android:id="@+id/standardBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -181,6 +181,6 @@
             android:layout_gravity="center"
             app:srcCompat="@drawable/image_illustration_large" />
 
-    </FrameLayout>-->
+    </FrameLayout>
 
 </LinearLayout>

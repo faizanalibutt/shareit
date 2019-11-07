@@ -80,7 +80,7 @@ import java.util.UUID;
  */
 
 
-public class SenderFragmentImpl
+public class SenderFragmentImplDemo
         extends com.genonbeta.android.framework.app.Fragment
         implements TitleSupport, UITask, IconSupport, SenderActivity.DeviceSelectionSupport {
 
@@ -95,6 +95,8 @@ public class SenderFragmentImpl
     static final String APP_NAME = "BTChat";
     //private ImageView retryButton;
     static final UUID MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
+
+    List<Object> mMergedList = new ArrayList<>();
 
     //private DecoratedBarcodeView mBarcodeView;
     private UIConnectionUtils mConnectionUtils;
@@ -121,6 +123,7 @@ public class SenderFragmentImpl
     private List<ScanResult> mScanResultList;
     private List<ScanResult> mPreviousList;
     private WifiScanResultAdapter wifiScanResultAdapter;
+    
 
     // #bReceiver
     private final BroadcastReceiver bReceiver = new BroadcastReceiver() {
@@ -160,7 +163,6 @@ public class SenderFragmentImpl
                                 return;
                             }
                         }
-                        //retryButton.setVisibility(View.GONE);
                         mScanBResultList.add(new Bluetooth(device, device.getName()
                                 + "\n" + device.getAddress()
                         ));
@@ -224,29 +226,9 @@ public class SenderFragmentImpl
                                 lv_result.setAdapter(wifiScanResultAdapter);
                             }
                         }
-                    } else {
-                        showMessage("SendReceive: Above API Level 23 ( BELOW ) Wifi Scan results are " + wifiManager.getScanResults());
-                        if (mScanResultList.size() > 0) {
-                            mPreviousList = mScanResultList;
-                            mScanResultList.clear();
-                        }
-                        mScanResultList = wifiManager.getScanResults();
-                        mScanResultList = ListUtils.filterWithNoPassword(mScanResultList);
-                        if (mScanResultList.size() == 0) {
-                            mScanResultList = mPreviousList;
-                        }
-                        showMessage("mScanResultList: Open Wifi Network" + ListUtils.filterWithNoPassword(mScanResultList));
-                        showMessage("mScanResultList: " + mScanResultList);
-                        //removeOtherWifis(mScanResultList);
-                        //showMessage("mScanResultList: After Updating data" + mScanResultList);
-                        if (wifiScanResultAdapter != null) {
-                            wifiScanResultAdapter = null;
-                            wifiScanResultAdapter = new WifiScanResultAdapter(getContext(), mScanResultList);
-                            lv_result.setAdapter(wifiScanResultAdapter);
-                        }
                     }
                     break;
-                /*case WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE:
+                case WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE:
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
                             && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -267,7 +249,7 @@ public class SenderFragmentImpl
                             lv_result.setAdapter(wifiScanResultAdapter);
                         }
                     }
-                    break;*/
+                    break;
             }
 
         }
@@ -612,10 +594,11 @@ public class SenderFragmentImpl
         buletoothIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         buletoothIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
 
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {}*/
         wifiIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        wifiIntentFilter.addAction(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE);
-        wifiIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            wifiIntentFilter.addAction(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE);
+            wifiIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        }
 
         setHasOptionsMenu(true);
     }
@@ -623,7 +606,7 @@ public class SenderFragmentImpl
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_impl_sender, container, false);
+        View view = inflater.inflate(R.layout.fragment_impl_sender_demo, container, false);
 
         mConductContainer = view.findViewById(R.id.layout_barcode_connect_conduct_container);
         mTextModeIndicator = view.findViewById(R.id.layout_barcode_connect_mode_text_indicator);
@@ -756,7 +739,7 @@ public class SenderFragmentImpl
     }
 
     private void makeAcquaintance(Object object, int accessPin) {
-        mConnectionUtils.makeAcquaintance(getActivity(), SenderFragmentImpl.this, object, accessPin, mRegisteredListener);
+        mConnectionUtils.makeAcquaintance(getActivity(), SenderFragmentImplDemo.this, object, accessPin, mRegisteredListener);
     }
 
     public void setDeviceSelectedListener(NetworkDeviceSelectedListener listener) {
@@ -788,8 +771,7 @@ public class SenderFragmentImpl
         } : null);
     }
 
-    private void updateState() {
-    }/*{
+    private void updateState() {}/*{
         if (!isAdded())
             return;
 

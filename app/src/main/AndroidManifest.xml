@@ -32,17 +32,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hazel"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-
+        <activity android:name=".ui.activity.DialogSheetActivity"></activity>
         <activity
             android:name=".ui.activity.WelcomeActivity"
             android:theme="@style/Theme.Hazel.NoActionBar"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
-
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".ui.activity.ReceiverActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
@@ -53,29 +50,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.activity.SideMenu"
             android:theme="@style/Theme.Hazel.White" />
-
         <activity
             android:name=".ui.activity.SideMenu"
             android:theme="@style/Theme.Hazel.Base.NoActionBar" />
-
         <activity
             android:name=".ui.activity.ContentSharingActivity"
             android:label="@string/title_activity_content_sharing"
             android:launchMode="singleTask"
             android:parentActivityName=".ui.activity.MainActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
         <activity
             android:name=".ui.activity.PreparationsActivity"
             android:theme="@style/Theme.Hazel.White">
             <intent-filter>
-                <!--<action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />-->
+
+                <!-- <action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" /> -->
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
                 <action android:name="faizi.intent.action.HAZEL_SEND" />
@@ -86,15 +80,15 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.SenderActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
         <activity
             android:name=".ui.activity.ShareActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 &lt;!&ndash;<action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />&ndash;&gt;
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -104,13 +98,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="*/*" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
-
         <activity
             android:name=".ui.activity.AddDevicesToTransferActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 &lt;!&ndash;<action android:name="genonbeta.intent.action.TREBLESHOT_SEND_TEXT" />&ndash;&gt;
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -120,12 +116,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="*/*" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
-
-        <activity android:name=".ui.activity.BarcodeScannerActivityDemo"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar"/>
-
+        <activity
+            android:name=".ui.activity.BarcodeScannerActivityDemo"
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
         <activity
             android:name=".ui.activity.ViewTransferActivity"
             android:label="@string/text_transactionViewer"
@@ -150,13 +146,15 @@
             android:name=".ui.activity.FilePickerActivity"
             android:label="@string/text_fileExplorer" />
 
+        <activity android:name=".ui.activity.SenderActivityDemo"
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar"/>
+
         <!-- SERVICES WILL BE HERE -->
         <service
             android:name=".service.CommunicationService"
             android:enabled="true"
             android:label="@string/text_communicationService"
             android:process=":transfer" />
-
         <service
             android:name=".service.WorkerService"
             android:label="@string/text_workerService" />
