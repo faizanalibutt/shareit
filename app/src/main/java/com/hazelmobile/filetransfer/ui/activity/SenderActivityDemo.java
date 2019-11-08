@@ -19,7 +19,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.library.RippleBackground;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
@@ -28,7 +27,7 @@ import com.hazelmobile.filetransfer.task.AddDeviceRunningTaskDemo;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
+import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImplDemo;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
@@ -111,12 +110,12 @@ public class SenderActivityDemo extends Activity
         if (!checkGroupIntegrity())
             return;
         setContentView(R.layout.activity_sender_demo);
-        final RippleBackground pulse = findViewById(R.id.content);
+       /* final RippleBackground pulse = findViewById(R.id.content);
         pulse.startRippleAnimation();
 
         user_image = findViewById(R.id.userProfileImage);
         textView = findViewById(R.id.text1);
-        setProfilePicture();
+        setProfilePicture();*/
         startCodeScannerFragment();
     }
 
@@ -164,7 +163,7 @@ public class SenderActivityDemo extends Activity
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SenderFragmentImpl fragment = (SenderFragmentImpl) getSupportFragmentManager().findFragmentById(R.id.senderFragment);
+        SenderFragmentImplDemo fragment = (SenderFragmentImplDemo) getSupportFragmentManager().findFragmentById(R.id.senderFragment);
 
         if (fragment != null)
             fragment.setDeviceSelectedListener(new NetworkDeviceSelectedListener() {

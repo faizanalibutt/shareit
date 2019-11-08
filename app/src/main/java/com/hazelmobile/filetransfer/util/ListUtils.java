@@ -11,7 +11,8 @@ import java.util.List;
  */
 public class ListUtils {
     public static final String NO_PASSWORD = "[ESS]";
-    public static final String NO_PASSWORD_WPS = "[WPS][ESS]";
+    public static final String NO_PASSWORD_ESS_WPS = "[ESS][WPS]";
+    public static final String NO_PASSWORD_WPS_ESS = "[WPS][ESS]";
 
     /**
      * 过滤有密码的Wifi扫描结果集合
@@ -26,7 +27,10 @@ public class ListUtils {
 
         List<ScanResult> resultList = new ArrayList<>();
         for (ScanResult scanResult : scanResultList) {
-            if (scanResult.capabilities != null && scanResult.capabilities.equals(NO_PASSWORD) || scanResult.capabilities != null && scanResult.capabilities.equals(NO_PASSWORD_WPS)) {
+            if ((scanResult.capabilities != null && scanResult.capabilities.equals(NO_PASSWORD))
+                    || (scanResult.capabilities != null && scanResult.capabilities.equals(NO_PASSWORD_ESS_WPS))
+                    || (scanResult.capabilities != null && scanResult.capabilities.equals(NO_PASSWORD_WPS_ESS))
+            ) {
                 resultList.add(scanResult);
             }
         }

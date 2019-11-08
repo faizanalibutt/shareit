@@ -16,7 +16,7 @@
 
     <fragment
         android:id="@+id/senderFragment"
-        android:name="com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl"
+        android:name="com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImplDemo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:tag="scannerFragment" />
@@ -28,7 +28,7 @@
         style="@style/DividerStyle"
         android:layout_gravity="bottom" />
 
-    <com.hazelmobile.filetransfer.library.RippleBackground
+    <!--<com.hazelmobile.filetransfer.library.RippleBackground
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -101,6 +101,6 @@
             android:gravity="center"
                 android:text="Ask your friend to open the app and tap\nRECEIVE" />
 
-    </com.hazelmobile.filetransfer.library.RippleBackground>
+    </com.hazelmobile.filetransfer.library.RippleBackground>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

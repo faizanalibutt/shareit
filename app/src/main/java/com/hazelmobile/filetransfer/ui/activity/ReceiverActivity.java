@@ -57,6 +57,10 @@ public class ReceiverActivity extends Activity
                 // do nothing
             }
 
+        if (!UIConnectionUtils.isOreoAbove()) {
+            getUIConnectionUtils().getConnectionUtils().getBluetoothAdapter().disable();
+        }
+
         getSupportFragmentManager().beginTransaction().add
                 (R.id.activity_connection_establishing_content_view, new HotspotManagerFragment()).commit();
 
@@ -65,6 +69,61 @@ public class ReceiverActivity extends Activity
 
         initViews();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mReceiver, mFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!mHotspotClosed)
+            if (UIConnectionUtils.isOreoAbove())
+                AppUtils.startForegroundService(this, new Intent(this, CommunicationService.class)
+                        .setAction(CommunicationService.ACTION_TOGGLE_HOTSPOT));
+            else
+                getUIConnectionUtils().getConnectionUtils().getHotspotUtils().disable();
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home)
+            finish();
+        else
+            return super.onOptionsItemSelected(item);
+
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
+    public Snackbar createSnackbar(int resId, Object... objects) {
+        return null;
+    }
+
+    public UIConnectionUtils getUIConnectionUtils() {
+        if (mConnectionUtils == null) {
+            mConnectionUtils = new UIConnectionUtils(ConnectionUtils.getInstance(this), this);
+        }
+
+        return mConnectionUtils;
     }
 
     private void initViews() {
@@ -84,64 +143,18 @@ public class ReceiverActivity extends Activity
         setProfilePicture();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    private void setProfilePicture() {
+        NetworkDevice localDevice = AppUtils.getLocalDevice(ReceiverActivity.this);
+        textView.setText(localDevice.nickname);
+        loadProfilePictureInto(localDevice.nickname, user_image);
+        int color = AppUtils.getDefaultPreferences(ReceiverActivity.this).getInt("device_name_color", -1);
 
-        if (id == android.R.id.home)
-            finish();
-        else
-            return super.onOptionsItemSelected(item);
-
-        return true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(mReceiver, mFilter);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(mReceiver);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (!mHotspotClosed)
-            if (UIConnectionUtils.isOreoAbove())
-                AppUtils.startForegroundService(this, new Intent(this, CommunicationService.class)
-                        .setAction(CommunicationService.ACTION_TOGGLE_HOTSPOT));
-            else
-                getUIConnectionUtils().getConnectionUtils().getHotspotUtils().disable();
-
-    }
-
-    public UIConnectionUtils getUIConnectionUtils() {
-        if (mConnectionUtils == null) {
-            mConnectionUtils = new UIConnectionUtils(ConnectionUtils.getInstance(this), this);
+        if (user_image.getDrawable() instanceof ShapeDrawable && color != -1) {
+            ShapeDrawable shapeDrawable = (ShapeDrawable) user_image.getDrawable();
+            shapeDrawable.getPaint().setColor(color);
+        } else {
+            user_image.setBackgroundResource(R.drawable.background_user_icon_default);
         }
-
-        return mConnectionUtils;
-    }
-
-    @Override
-    public Snackbar createSnackbar(int resId, Object... objects) {
-        return null;
-    }
-
-    public enum RequestType {
-        RETURN_RESULT,
-        MAKE_ACQUAINTANCE
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -221,22 +234,9 @@ public class ReceiverActivity extends Activity
         }
     };
 
-    private void setProfilePicture() {
-        NetworkDevice localDevice = AppUtils.getLocalDevice(ReceiverActivity.this);
-        textView.setText(localDevice.nickname);
-        loadProfilePictureInto(localDevice.nickname, user_image);
-        int color = AppUtils.getDefaultPreferences(ReceiverActivity.this).getInt("device_name_color", -1);
-
-        if (user_image.getDrawable() instanceof ShapeDrawable && color != -1) {
-            ShapeDrawable shapeDrawable = (ShapeDrawable) user_image.getDrawable();
-            shapeDrawable.getPaint().setColor(color);
-        } else {
-            user_image.setBackgroundResource(R.drawable.background_user_icon_default);
-        }
+    public enum RequestType {
+        RETURN_RESULT,
+        MAKE_ACQUAINTANCE
     }
-
-   /* public interface DeviceSelectionSupport {
-        void setDeviceSelectedListener(NetworkDeviceSelectedListener listener);
-    }*/
 
 }
