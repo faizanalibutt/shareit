@@ -24,6 +24,7 @@ public class Bluetooth {
     private String data;
 
     public Bluetooth(BluetoothDevice bluetoothDevice, String data) {
+        super();
         this.data = data;
         this.device = bluetoothDevice;
     }

@@ -50,6 +50,7 @@ import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
+import com.hazelmobile.filetransfer.ui.adapter.SenderListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.IconSupport;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
@@ -111,14 +112,11 @@ public class SenderFragmentImplDemo
     private boolean mPermissionRequestedCamera = false;
     private boolean mPermissionRequestedLocation = false;
     private boolean mShowAsText = false;
-    private ListView lv_result, lvb_result;
+    private ListView lv_send, lvb_result;
     private SendReceive sendReceive;
-    private List<Bluetooth> mScanBResultList;
     private ClientClass clientClass;
-    private List<ScanResult> mScanResultList;
-    private List<ScanResult> mPreviousList;
-
-    List<Object> mGenericList;
+    private List<Object> mGenericList;
+    private SenderListAdapter senderListAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -158,12 +156,9 @@ public class SenderFragmentImplDemo
         mConductImage = view.findViewById(R.id.layout_barcode_connect_conduct_image);
         mTaskContainer = view.findViewById(R.id.container_task);
         mTaskInterruptButton = view.findViewById(R.id.task_interrupter_button);
-        lv_result = view.findViewById(R.id.lv_result);
+        lv_send = view.findViewById(R.id.lv_result);
         lvb_result = view.findViewById(R.id.lvb_result);
         status = view.findViewById(R.id.status);
-        mScanBResultList = new ArrayList<>();
-        mScanResultList = new ArrayList<>();
-        mPreviousList = new ArrayList<>();
         mGenericList = new ArrayList<>();
         return view;
     }
@@ -223,14 +218,8 @@ public class SenderFragmentImplDemo
                 clientClass.interrupt();
                 clientClass = null;
             }
-            if (mScanBResultList != null && mScanBResultList.size() > 0) {
-                mScanBResultList.clear();
-            }
-            if (mScanResultList != null && mScanResultList.size() > 0) {
-                mScanResultList.clear();
-            }
-            if (mPreviousList != null && mPreviousList.size() > 0) {
-                mPreviousList.clear();
+            if (mGenericList != null && mGenericList.size() > 0) {
+                mGenericList.clear();
             }
             ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
             if (connectionUtils.getBluetoothAdapter().isDiscovering())
@@ -441,19 +430,16 @@ public class SenderFragmentImplDemo
 
         // google restricts startscan() call to every 2 minute for api 28 and above.
         if (getContext() != null) {
-
             // FOR DEVICES HAVING OREO BELOW
             WifiManager wifiManager = ConnectionUtils.getInstance(getContext()).getWifiManager();
             if (wifiManager.isWifiEnabled()) {
                 boolean success = wifiManager.startScan();
                 if (success) {
                     showMessage("SendReceive: Wifi Scan results are " + wifiManager.getScanResults());
-                    mScanResultList = wifiManager.getScanResults();
-                    mScanResultList = ListUtils.filterWithNoPassword(mScanResultList);
-                    showMessage("mScanResultList: Open Wifi Network " + ListUtils.filterWithNoPassword(mScanResultList));
-                    //showMessage("mScanResultList: " + mScanResultList);
-                    mGenericList.addAll(mScanResultList);
-                    //showMessage("SendReceiver: GENERIC List Results are " + mGenericList);
+                    mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
+                    showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
+                    senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
+                    lv_send.setAdapter(senderListAdapter);
                 }
             } else {
                 ConnectionUtils.getInstance(getContext()).openWifi();
@@ -461,8 +447,6 @@ public class SenderFragmentImplDemo
 
             // FOR DEVICES HAVING OREO ABOVE
             ConnectionUtils.getInstance(getContext()).openBluetooth();
-            //showMessage("Bonded Devices are " + ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().getBondedDevices());
-
         }
     }
 
@@ -494,7 +478,6 @@ public class SenderFragmentImplDemo
     }
 
     private void updateUI() {
-        //showMessage("View Created For Barcode Fragment");
         getOrUpdateWifiScanResult();
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 12000);
     }
@@ -617,15 +600,19 @@ public class SenderFragmentImplDemo
 
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     //showMessage("Others device name is " + device.getName() + " " + device.getAddress());
-                    if (device.getName() != null && (device.getName().startsWith("TS") || device.getName().startsWith("AndroidShare"))) {
+                    if (device.getName() != null &&
+                            (device.getName().startsWith("TS") ||
+                                    device.getName().startsWith("AndroidShare"))) {
 
                         showMessage("Tshot device name is " + device.getName());
-                        for (Bluetooth device1 : mScanBResultList) {
-                            if (device1.getDevice().getAddress() != null && device.getAddress().equals(device1.getDevice().getAddress())) {
+                        for (Object device1 : mGenericList) {
+                            if (device1 instanceof Bluetooth &&
+                                    ((Bluetooth) device1).getDevice().getAddress() != null &&
+                                    device.getAddress().equals(((Bluetooth) device1).getDevice().getAddress())) {
                                 return;
                             }
                         }
-                        mScanBResultList.add(new Bluetooth(device, device.getName()
+                        mGenericList.add(new Bluetooth(device, device.getName()
                                 + "\n" + device.getAddress()
                         ));
                     }
@@ -669,6 +656,7 @@ public class SenderFragmentImplDemo
             String action = intent.getAction();
             WifiManager wifiManager = ConnectionUtils.getInstance(getContext()).getWifiManager();
             assert action != null;
+            Set<Object> mFilteredGenericList;
             switch (action) {
                 case WifiManager.WIFI_STATE_CHANGED_ACTION:
 
@@ -684,35 +672,54 @@ public class SenderFragmentImplDemo
                         boolean success = intent.getBooleanExtra(
                                 WifiManager.EXTRA_RESULTS_UPDATED, false);
                         if (success) {
+                            
+                            if (mGenericList.size() > 0) {
+
+                                for (Object object : mGenericList) {
+                                    if (object instanceof ScanResult) {
+                                        mGenericList.remove(object);
+                                    }
+                                }
+
+                            }
 
                             showMessage("SendReceive: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
-                            if (mScanResultList.size() > 0) {
-                                mPreviousList = mScanResultList;
-                                mScanResultList.clear();
+
+                            mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
+
+                            showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
+
+                            if (senderListAdapter != null) {
+                                senderListAdapter = null;
+                                senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
+                                lv_send.setAdapter(senderListAdapter);
                             }
-                            mScanResultList = wifiManager.getScanResults();
-                            mGenericList.addAll(mScanResultList);
-                            //showMessage("SendReceiver: GENERIC List Results are " + mGenericList);
-                            mScanResultList = ListUtils.filterWithNoPassword(mScanResultList);
-                            if (mScanResultList.size() == 0) {
-                                mScanResultList = mPreviousList;
-                            }
-                            showMessage("mScanResultList: Open Wifi Network" + ListUtils.filterWithNoPassword(mScanResultList));
-                            //showMessage("mScanResultList: " + mScanResultList);
+
                         }
                     } else {
-                        showMessage("SendReceive: Below API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
-                        if (mScanResultList.size() > 0) {
-                            mPreviousList = mScanResultList;
-                            mScanResultList.clear();
+
+                        if (mGenericList.size() > 0) {
+
+                            for (Object object : mGenericList) {
+                                if (object instanceof ScanResult) {
+                                    mGenericList.remove(object);
+                                }
+                            }
+
                         }
-                        mScanResultList = wifiManager.getScanResults();
-                        mScanResultList = ListUtils.filterWithNoPassword(mScanResultList);
-                        if (mScanResultList.size() == 0) {
-                            mScanResultList = mPreviousList;
+
+                        showMessage("SendReceive: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
+
+                        mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
+
+                        showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
+
+                        if (senderListAdapter != null) {
+                            senderListAdapter = null;
+                            senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
+                            lv_send.setAdapter(senderListAdapter);
                         }
-                        showMessage("mScanResultList: Open Wifi Network" + ListUtils.filterWithNoPassword(mScanResultList));
-                        //showMessage("mScanResultList: " + mScanResultList);
+
                     }
                     break;
             }
