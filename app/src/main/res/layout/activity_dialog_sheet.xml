@@ -6,25 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.DialogSheetActivity">
 
-    <TextView
-        android:id="@+id/sheetText"
+    <fragment
+        android:id="@+id/sheetFragment"
+        android:name="com.hazelmobile.filetransfer.ui.fragment.BottomSheetFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Container TEXT"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <include layout="@layout/bottom_sheet_layout" />
-
-    <!--
-    android:paddingTop="5dp"
-        app:behavior_expandedOffset="0"
-        app:behavior_fitToContents="false"
-        app:behavior_halfExpandedRatio="0.4"
-        app:behavior_hideable="false"
-        app:behavior_peekHeight="85dp"
-        app:behavior_skipCollapsed="false"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-    -->
+        android:layout_height="match_parent"
+        android:tag="scannerFragment" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

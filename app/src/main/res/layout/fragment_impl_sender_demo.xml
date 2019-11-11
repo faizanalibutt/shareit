@@ -1,11 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
+    <com.hazelmobile.filetransfer.library.RippleBackground
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rb_color="#9EB6E6"
+        app:rb_duration="1500"
+        app:rb_radius="@dimen/dp_48"
+        app:rb_rippleAmount="3"
+        app:rb_scale="3">
+
+        <ImageView
+            android:id="@+id/v2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/v3"
+            android:layout_toEndOf="@+id/v3"
+            android:src="@drawable/ic_bluetooth_black_24dp" />
+
+        <LinearLayout
+            android:id="@+id/v3"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:background="@drawable/background_user_icon_extended"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/userProfileImage"
+                style="@style/TextAppearance.Primary.Enlarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/background_user_icon_default"
+                android:gravity="center"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/v3i"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:background="@drawable/background_user_icon_extended"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/userProfileImageRetry"
+                style="@style/TextAppearance.Primary.Enlarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_retry_white_24dp"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/userProfileImage1"
+            style="@style/TextAppearance.Primary.Enlarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/text1"
+            style="@style/TextAppearance.Primary.Big"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/v3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_small_size"
+            android:text="Ali"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/v4"
+            style="@style/TextAppearance.Primary.Normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_absolute_size"
+            android:gravity="center"
+            android:text="Ask your friend to open the app and tap\nRECEIVE" />
+
+    </com.hazelmobile.filetransfer.library.RippleBackground>
+
+    <include layout="@layout/bottom_sheet_layout" />
+
+    <!--<ImageView
         android:id="@+id/receiver_back"
         android:layout_width="@dimen/dp_20"
         android:layout_height="@dimen/dp_20"
@@ -17,13 +114,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back_24dp" />
 
-    <!--<com.journeyapps.barcodescanner.DecoratedBarcodeView
+    &lt;!&ndash;<com.journeyapps.barcodescanner.DecoratedBarcodeView
         android:id="@+id/layout_barcode_connect_barcode_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
         app:zxing_preview_scaling_strategy="centerCrop"
-        app:zxing_scanner_layout="@layout/external_layout_barcode_scanner" />-->
+        app:zxing_scanner_layout="@layout/external_layout_barcode_scanner" />&ndash;&gt;
 
     <TextView
         android:id="@+id/status"
@@ -57,7 +154,7 @@
         app:srcCompat="@drawable/ic_autorenew_white_24dp_static" />
 
     <ListView
-        android:id="@+id/lv_result"
+        android:id="@+id/lv_send"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -67,7 +164,7 @@
         android:divider="@null"
         android:visibility="visible" />
 
-    <!--<TextView
+    &lt;!&ndash;<TextView
         android:id="@+id/bstatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -87,7 +184,7 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_weight="4"
         android:divider="@null"
-        android:visibility="visible" />-->
+        android:visibility="visible" />&ndash;&gt;
 
     <RelativeLayout
         android:id="@+id/container_task"
@@ -161,7 +258,7 @@
 
     </LinearLayout>
 
-    <!--<FrameLayout
+    &lt;!&ndash;<FrameLayout
         android:id="@+id/standardBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -181,6 +278,6 @@
             android:layout_gravity="center"
             app:srcCompat="@drawable/image_illustration_large" />
 
-    </FrameLayout>-->
+    </FrameLayout>&ndash;&gt;-->
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

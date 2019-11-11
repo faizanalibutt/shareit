@@ -1,24 +1,19 @@
 package com.hazelmobile.filetransfer.ui.activity
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.hazelmobile.filetransfer.R
-import kotlinx.android.synthetic.main.activity_dialog_sheet.*
-import kotlinx.android.synthetic.main.bottom_sheet_layout.*
 
 
 class DialogSheetActivity : AppCompatActivity() {
 
-    private lateinit var standardBottomSheetBehavior: BottomSheetBehavior<View>
+    //private lateinit var standardottomSheetBehavior: BottomSheetBehavior<View>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dialog_sheet)
 
-        standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
+        /*standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet)
 
         val bottomSheetCallbackList = object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -69,7 +64,9 @@ class DialogSheetActivity : AppCompatActivity() {
                 standardBottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 sheetText.text = "Expand sheet"
             }
-        }
+            *//*val bottomSheetFragment = BottomSheetFragment()
+            bottomSheetFragment.show(supportFragmentManager, bottomSheetFragment.tag)*//*
+        }*/
 
     }
 

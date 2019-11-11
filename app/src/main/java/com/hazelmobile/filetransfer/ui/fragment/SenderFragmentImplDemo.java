@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ShapeDrawable;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.ScanResult;
@@ -30,8 +31,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,14 +44,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.genonbeta.android.framework.util.Interrupter;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.library.RippleBackground;
 import com.hazelmobile.filetransfer.model.Bluetooth;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
+import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
+import com.hazelmobile.filetransfer.ui.activity.SenderActivityDemo;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.ui.adapter.SenderListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.IconSupport;
@@ -58,6 +65,7 @@ import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.ListUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,16 +75,15 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 /*
- *
  * created by: veli
  * modified by: faizi
  * date: 12/04/18 17:21
  */
-
 
 public class SenderFragmentImplDemo
         extends com.genonbeta.android.framework.app.Fragment
@@ -94,8 +101,6 @@ public class SenderFragmentImplDemo
     //private ImageView retryButton;
     static final UUID MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
 
-    List<Object> mMergedList = new ArrayList<>();
-
     //private DecoratedBarcodeView mBarcodeView;
     private UIConnectionUtils mConnectionUtils;
     private ViewGroup mConductContainer;
@@ -112,11 +117,16 @@ public class SenderFragmentImplDemo
     private boolean mPermissionRequestedCamera = false;
     private boolean mPermissionRequestedLocation = false;
     private boolean mShowAsText = false;
-    private ListView lv_send, lvb_result;
+
+    private ListView lv_send;
+    private ImageView user_image;
+    private TextView textView;
     private SendReceive sendReceive;
+    private BottomSheetBehavior standardBottomSheetBehavior;
     private ClientClass clientClass;
     private List<Object> mGenericList;
     private SenderListAdapter senderListAdapter;
+    private TextView sheetText;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -148,24 +158,82 @@ public class SenderFragmentImplDemo
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_impl_sender_demo, container, false);
 
-        mConductContainer = view.findViewById(R.id.layout_barcode_connect_conduct_container);
-        mTextModeIndicator = view.findViewById(R.id.layout_barcode_connect_mode_text_indicator);
-        mConductButton = view.findViewById(R.id.layout_barcode_connect_conduct_button);
+        //mConductContainer = view.findViewById(R.id.layout_barcode_connect_conduct_container);
+        //mTextModeIndicator = view.findViewById(R.id.layout_barcode_connect_mode_text_indicator);
+        //mConductButton = view.findViewById(R.id.layout_barcode_connect_conduct_button);
         //mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
-        mConductText = view.findViewById(R.id.layout_barcode_connect_conduct_text);
-        mConductImage = view.findViewById(R.id.layout_barcode_connect_conduct_image);
-        mTaskContainer = view.findViewById(R.id.container_task);
-        mTaskInterruptButton = view.findViewById(R.id.task_interrupter_button);
-        lv_send = view.findViewById(R.id.lv_result);
-        lvb_result = view.findViewById(R.id.lvb_result);
+        //mConductText = view.findViewById(R.id.layout_barcode_connect_conduct_text);
+        //mConductImage = view.findViewById(R.id.layout_barcode_connect_conduct_image);
+        //mTaskContainer = view.findViewById(R.id.container_task);
+        //mTaskInterruptButton = view.findViewById(R.id.task_interrupter_button);
+        //lvb_result = view.findViewById(R.id.lvb_result);
+
+        lv_send = view.findViewById(R.id.lv_send);
         status = view.findViewById(R.id.status);
         mGenericList = new ArrayList<>();
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final RippleBackground pulse = view.findViewById(R.id.content);
+        pulse.startRippleAnimation();
+
+        user_image = view.findViewById(R.id.userProfileImage);
+        textView = view.findViewById(R.id.text1);
+        setProfilePicture();
+
+        LinearLayout standardBottomSheet = view.findViewById(R.id.standardBottomSheet);
+        standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet);
+
+        sheetText = view.findViewById(R.id.sheetText);
+
+        /*sheetText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                    standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    sheetText.setText("Close sheet");
+                } else {
+                    standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+                    sheetText.setText("Expand sheet");
+                }
+            }
+        });*/
+
+        BottomSheetBehavior.BottomSheetCallback bottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        sheetText.setText("State Hidden");
+                        break;
+                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
+                        sheetText.setText("State Half Expanded");
+                        break;
+                    default:
+                        break;
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        };
+
+        standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
+
         updateUI();
     }
 
@@ -297,6 +365,7 @@ public class SenderFragmentImplDemo
         return 0/*R.drawable.ic_qrcode_white_24dp*/;
     }
 
+    @NotNull
     @Override
     public CharSequence getTitle(Context context) {
         return context.getString(R.string.text_scanQrCode);
@@ -316,8 +385,12 @@ public class SenderFragmentImplDemo
     // #bReceiver
     private void cancelDiscovery() {
         if (getContext() != null) {
-            getContext().unregisterReceiver(wReceiver);
-            getContext().registerReceiver(wReceiver, wifiIntentFilter);
+            try {
+                getContext().unregisterReceiver(wReceiver);
+                getContext().registerReceiver(wReceiver, wifiIntentFilter);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -441,6 +514,21 @@ public class SenderFragmentImplDemo
                     senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
                     lv_send.setAdapter(senderListAdapter);
                 }
+                lv_send.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        Object object = mGenericList.get(position);
+
+                        if (object instanceof ScanResult)
+                            connectToHotspot(((ScanResult) object));
+                        else if (object instanceof Bluetooth) {
+                            clientClass = new ClientClass(((Bluetooth) object).getDevice());
+                            clientClass.start();
+                        }
+
+                    }
+                });
             } else {
                 ConnectionUtils.getInstance(getContext()).openWifi();
             }
@@ -450,8 +538,44 @@ public class SenderFragmentImplDemo
         }
     }
 
+    private void getWifiScanResults(WifiManager wifiManager) {
+
+        if (mGenericList.size() > 0) {
+
+            try {
+                for (Object object : mGenericList) {
+                    if (object instanceof ScanResult) {
+                        mGenericList.remove(object);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        showMessage("SendReceive: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
+
+        mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
+
+        showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
+
+        if (senderListAdapter != null) {
+            senderListAdapter = null;
+            senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
+            lv_send.setAdapter(senderListAdapter);
+        }
+
+        if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED &&
+                senderListAdapter != null &&
+                mGenericList.size() > 0) {
+            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+        }
+    }
+
     private void makeAcquaintance(Object object, int accessPin) {
-        mConnectionUtils.makeAcquaintance(getActivity(), SenderFragmentImplDemo.this, object, accessPin, mRegisteredListener);
+        mConnectionUtils.makeAcquaintance(Objects.requireNonNull
+                (getActivity()), SenderFragmentImplDemo.this, object, accessPin, mRegisteredListener);
     }
 
     private void removeHanlderMessages() {
@@ -471,6 +595,20 @@ public class SenderFragmentImplDemo
 
     public void setDeviceSelectedListener(NetworkDeviceSelectedListener listener) {
         mDeviceSelectedListener = listener;
+    }
+
+    private void setProfilePicture() {
+        NetworkDevice localDevice = AppUtils.getLocalDevice(getActivity());
+        textView.setText(localDevice.nickname);
+        ((SenderActivityDemo) Objects.requireNonNull(getActivity())).loadProfilePictureInto(localDevice.nickname, user_image);
+        int color = AppUtils.getDefaultPreferences(getActivity()).getInt("device_name_color", -1);
+
+        if (user_image.getDrawable() instanceof ShapeDrawable && color != -1) {
+            ShapeDrawable shapeDrawable = (ShapeDrawable) user_image.getDrawable();
+            shapeDrawable.getPaint().setColor(color);
+        } else {
+            user_image.setBackgroundResource(R.drawable.background_user_icon_default);
+        }
     }
 
     public static void showMessage(String message) {
@@ -497,14 +635,14 @@ public class SenderFragmentImplDemo
             updateState();
         }*/
 
-        mTaskContainer.setVisibility(!isConnecting ? View.VISIBLE : View.GONE);
+        //mTaskContainer.setVisibility(!isConnecting ? View.VISIBLE : View.GONE);
 
-        mTaskInterruptButton.setOnClickListener(isConnecting ? new View.OnClickListener() {
+        /*mTaskInterruptButton.setOnClickListener(isConnecting ? new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 interrupter.interrupt();
             }
-        } : null);
+        } : null);*/
     }
 
     private void updateState() {
@@ -609,12 +747,24 @@ public class SenderFragmentImplDemo
                             if (device1 instanceof Bluetooth &&
                                     ((Bluetooth) device1).getDevice().getAddress() != null &&
                                     device.getAddress().equals(((Bluetooth) device1).getDevice().getAddress())) {
+                                if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED) {
+                                    standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+                                }
                                 return;
                             }
                         }
                         mGenericList.add(new Bluetooth(device, device.getName()
                                 + "\n" + device.getAddress()
                         ));
+                        if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED) {
+                            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+                        }
+                        if (senderListAdapter != null)
+                            senderListAdapter.notifyDataSetChanged();
+                        else {
+                            senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
+                            lv_send.setAdapter(senderListAdapter);
+                        }
                     }
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
@@ -649,21 +799,18 @@ public class SenderFragmentImplDemo
     };
 
     // #wReceiver
-
     private final BroadcastReceiver wReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             WifiManager wifiManager = ConnectionUtils.getInstance(getContext()).getWifiManager();
             assert action != null;
-            Set<Object> mFilteredGenericList;
             switch (action) {
                 case WifiManager.WIFI_STATE_CHANGED_ACTION:
 
                     int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
-                    if (state == WifiManager.WIFI_STATE_ENABLED) {
+                    if (state == WifiManager.WIFI_STATE_ENABLED)
                         wifiManager.startScan();
-                    }
                     break;
 
                 case WifiManager.SCAN_RESULTS_AVAILABLE_ACTION:
@@ -671,56 +818,10 @@ public class SenderFragmentImplDemo
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         boolean success = intent.getBooleanExtra(
                                 WifiManager.EXTRA_RESULTS_UPDATED, false);
-                        if (success) {
-                            
-                            if (mGenericList.size() > 0) {
-
-                                for (Object object : mGenericList) {
-                                    if (object instanceof ScanResult) {
-                                        mGenericList.remove(object);
-                                    }
-                                }
-
-                            }
-
-                            showMessage("SendReceive: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
-
-                            mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
-
-                            showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
-
-                            if (senderListAdapter != null) {
-                                senderListAdapter = null;
-                                senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
-                                lv_send.setAdapter(senderListAdapter);
-                            }
-
-                        }
-                    } else {
-
-                        if (mGenericList.size() > 0) {
-
-                            for (Object object : mGenericList) {
-                                if (object instanceof ScanResult) {
-                                    mGenericList.remove(object);
-                                }
-                            }
-
-                        }
-
-                        showMessage("SendReceive: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
-
-                        mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
-
-                        showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
-
-                        if (senderListAdapter != null) {
-                            senderListAdapter = null;
-                            senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
-                            lv_send.setAdapter(senderListAdapter);
-                        }
-
-                    }
+                        if (success)
+                            getWifiScanResults(wifiManager);
+                    } else
+                        getWifiScanResults(wifiManager);
                     break;
             }
 
@@ -757,21 +858,21 @@ public class SenderFragmentImplDemo
 
             switch (msg.what) {
                 case STATE_LISTENING:
-                    status.setText("Listening");
+                    sheetText.setText("Listening");
                     break;
                 case STATE_CONNECTING:
-                    status.setText("Connecting");
+                    sheetText.setText("Connecting");
                     break;
                 case STATE_CONNECTED:
-                    status.setText("Connected");
+                    sheetText.setText("Connected");
                     break;
                 case STATE_CONNECTION_FAILED:
-                    status.setText("Connection Failed");
+                    sheetText.setText("Connection Failed");
                     break;
                 case STATE_MESSAGE_RECEIVED:
                     byte[] readBuff = (byte[]) msg.obj;
                     String tempMsg = new String(readBuff, 0, msg.arg1);
-                    status.setText(tempMsg);
+                    sheetText.setText(tempMsg);
                     try {
                         JSONObject hotspotInformation = new JSONObject(tempMsg);
                         connectToHotspot(hotspotInformation);
@@ -864,15 +965,6 @@ public class SenderFragmentImplDemo
                 e.printStackTrace();
             }
         }
-    }
-
-    abstract private class Connectable {
-
-        public boolean connect() {
-            System.out.println("Connected");
-            return true;
-        }
-
     }
 
 }

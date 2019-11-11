@@ -101,9 +101,13 @@ public class PreparationsActivity extends Activity
         setAction();
 
         // bluetooth check
-        if (ConnectionUtils.getInstance(this).getBluetoothAdapter().isEnabled()) {
-            enableBluetooth(bluetoothButton);
-        }
+        if (isReceiver && !UIConnectionUtils.isOreoAbove()) {
+            isBluetooth = true;
+            bluetoothButton.setEnabled(false);
+            getConnectionUtils().getBluetoothAdapter().disable();
+        } else
+            if (getConnectionUtils().getBluetoothAdapter().enable())
+                enableBluetooth(bluetoothButton);
         // wifi check
         if (ConnectionUtils.getInstance(this).getWifiManager().isWifiEnabled()) {
             enableWifi(wifiButton);
