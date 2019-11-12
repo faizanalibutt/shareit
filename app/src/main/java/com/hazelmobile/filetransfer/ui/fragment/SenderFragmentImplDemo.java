@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.drawable.ShapeDrawable;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -119,7 +120,7 @@ public class SenderFragmentImplDemo
     private boolean mShowAsText = false;
 
     private ListView lv_send;
-    private ImageView user_image;
+    private ImageView user_image, user_retry;
     private TextView textView;
     private SendReceive sendReceive;
     private BottomSheetBehavior standardBottomSheetBehavior;
@@ -127,6 +128,8 @@ public class SenderFragmentImplDemo
     private List<Object> mGenericList;
     private SenderListAdapter senderListAdapter;
     private TextView sheetText;
+    private RippleBackground pulse;
+    private int btm_margin = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -178,10 +181,11 @@ public class SenderFragmentImplDemo
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final RippleBackground pulse = view.findViewById(R.id.content);
+        pulse = view.findViewById(R.id.content);
         pulse.startRippleAnimation();
 
         user_image = view.findViewById(R.id.userProfileImage);
+        user_retry = view.findViewById(R.id.userProfileImageRetry);
         textView = view.findViewById(R.id.text1);
         setProfilePicture();
 
@@ -189,6 +193,9 @@ public class SenderFragmentImplDemo
         standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet);
 
         sheetText = view.findViewById(R.id.sheetText);
+
+        ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) pulse.getLayoutParams();
+        btm_margin = lp.bottomMargin;
 
         /*sheetText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,28 +220,73 @@ public class SenderFragmentImplDemo
                     case BottomSheetBehavior.STATE_HALF_EXPANDED:
                         sheetText.setText("State Half Expanded");
                         break;
-                    default:
-                        break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
+                        sheetText.setText("State Collapsed");
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
+                        sheetText.setText("State Dragging");
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
+                        sheetText.setText("State Expanded");
                         break;
                     case BottomSheetBehavior.STATE_SETTLING:
+                        sheetText.setText("State Settling");
+                        break;
+                    default:
+                        sheetText.setText("State Default");
                         break;
                 }
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                float h = bottomSheet.getHeight();
+                float off = h * slideOffset;
+                int finalVal = (int) (off * 0.85F);
+                Log.e(
+                        getClass().toString(), "$slideOffset $off $finalVal $h ${standardBottomSheetBehavior.peekHeight}"
+                );
+                /*  map_container.updateLayoutParams {
+                      height = h - finalVal - standardBottomSheetBehavior.peekHeight
+                  }
+  */
+                //accelerometer_view.alpha = 1 - slideOffset;
+//                map_container.translationY =-off
+                setMargins(pulse, 0, 0, 0, finalVal + pxToDp(standardBottomSheetBehavior.getPeekHeight() + btm_margin));
 
+
+                // map_container.setPadding(0,0,0, pxToDp(off.toInt()))
+
+/*                when (standardBottomSheetBehavior.state) {
+                    BottomSheetBehavior.STATE_EXPANDED -> "STATE_EXPANDED" + bottomSheet.layoutParams.height
+                    BottomSheetBehavior.STATE_COLLAPSED -> "STATE_COLLAPSED" + bottomSheet.layoutParams.height
+                    BottomSheetBehavior.STATE_DRAGGING -> "STATE_DRAGGING" + bottomSheet.layoutParams.height
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> "STATE_HALF_EXPANDED" + bottomSheet.layoutParams.height
+                    BottomSheetBehavior.STATE_HIDDEN -> "STATE_HIDDEN" + bottomSheet.layoutParams.height
+                    BottomSheetBehavior.STATE_SETTLING -> "STATE_SETTLING" + bottomSheet.layoutParams.height}*/
+
+                /*val fraction = (slideOffset + 1f) / 2f
+                val color = ArgbEvaluatorCompat.getInstance().evaluate(fraction, startColor, endColor);
+                slideView.setBackgroundColor(color)*/
             }
         };
 
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
+        //standardBottomSheetBehavior.setSaveFlags(BottomSheetBehavior.SAVE_ALL);
 
         updateUI();
+    }
+
+    private void setMargins(View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams){
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
+    }
+
+    private int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
     @Override
@@ -511,7 +563,7 @@ public class SenderFragmentImplDemo
                     showMessage("SendReceive: Wifi Scan results are " + wifiManager.getScanResults());
                     mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
                     showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
-                    senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
+                    senderListAdapter = new SenderListAdapter(getContext(), mGenericList, ((SenderActivityDemo) getActivity()));
                     lv_send.setAdapter(senderListAdapter);
                 }
                 lv_send.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -562,14 +614,17 @@ public class SenderFragmentImplDemo
 
         if (senderListAdapter != null) {
             senderListAdapter = null;
-            senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
+            senderListAdapter = new SenderListAdapter(getContext(), mGenericList,
+                    ((SenderActivityDemo) Objects.requireNonNull(getActivity())));
             lv_send.setAdapter(senderListAdapter);
         }
 
         if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED &&
                 senderListAdapter != null &&
                 mGenericList.size() > 0) {
+            //user_retry.setVisibility(View.VISIBLE);
             standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+            standardBottomSheetBehavior.setHideable(false);
         }
     }
 
@@ -762,7 +817,8 @@ public class SenderFragmentImplDemo
                         if (senderListAdapter != null)
                             senderListAdapter.notifyDataSetChanged();
                         else {
-                            senderListAdapter = new SenderListAdapter(getContext(), mGenericList);
+                            senderListAdapter = new SenderListAdapter(getContext(), mGenericList,
+                                    ((SenderActivityDemo) Objects.requireNonNull(getActivity())));
                             lv_send.setAdapter(senderListAdapter);
                         }
                     }
@@ -892,7 +948,7 @@ public class SenderFragmentImplDemo
             device = device1;
 
             try {
-                socket = device.createRfcommSocketToServiceRecord(MY_UUID);
+                socket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
             } catch (IOException e) {
                 e.printStackTrace();
             }

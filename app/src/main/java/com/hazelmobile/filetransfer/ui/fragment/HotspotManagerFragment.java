@@ -555,7 +555,7 @@ public class HotspotManagerFragment
 
         ServerClass(JSONObject hotspotInformations) {
             try {
-                serverSocket = ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().listenUsingRfcommWithServiceRecord(APP_NAME, MY_UUID);
+                serverSocket = ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().listenUsingInsecureRfcommWithServiceRecord(APP_NAME, MY_UUID);
                 hotspotInformation = hotspotInformations;
             } catch (IOException e) {
                 e.printStackTrace();

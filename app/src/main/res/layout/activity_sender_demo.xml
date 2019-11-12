@@ -8,6 +8,7 @@
     tools:context=".ui.activity.SenderActivityDemo">
 
     <fragment
+        android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/senderFragment"
         android:name="com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImplDemo"
         android:layout_width="match_parent"
