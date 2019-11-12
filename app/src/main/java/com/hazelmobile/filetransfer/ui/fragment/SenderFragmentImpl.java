@@ -224,9 +224,29 @@ public class SenderFragmentImpl
                                 lv_result.setAdapter(wifiScanResultAdapter);
                             }
                         }
+                    } else {
+                        showMessage("SendReceive: Above API Level 23 ( BELOW ) Wifi Scan results are " + wifiManager.getScanResults());
+                        if (mScanResultList.size() > 0) {
+                            mPreviousList = mScanResultList;
+                            mScanResultList.clear();
+                        }
+                        mScanResultList = wifiManager.getScanResults();
+                        mScanResultList = ListUtils.filterWithNoPassword(mScanResultList);
+                        if (mScanResultList.size() == 0) {
+                            mScanResultList = mPreviousList;
+                        }
+                        showMessage("mScanResultList: Open Wifi Network" + ListUtils.filterWithNoPassword(mScanResultList));
+                        showMessage("mScanResultList: " + mScanResultList);
+                        //removeOtherWifis(mScanResultList);
+                        //showMessage("mScanResultList: After Updating data" + mScanResultList);
+                        if (wifiScanResultAdapter != null) {
+                            wifiScanResultAdapter = null;
+                            wifiScanResultAdapter = new WifiScanResultAdapter(getContext(), mScanResultList);
+                            lv_result.setAdapter(wifiScanResultAdapter);
+                        }
                     }
                     break;
-                case WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE:
+                /*case WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE:
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2
                             && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -247,7 +267,7 @@ public class SenderFragmentImpl
                             lv_result.setAdapter(wifiScanResultAdapter);
                         }
                     }
-                    break;
+                    break;*/
             }
 
         }
@@ -592,11 +612,10 @@ public class SenderFragmentImpl
         buletoothIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         buletoothIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
 
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {}*/
         wifiIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            wifiIntentFilter.addAction(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE);
-            wifiIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-        }
+        wifiIntentFilter.addAction(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE);
+        wifiIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 
         setHasOptionsMenu(true);
     }
@@ -769,7 +788,8 @@ public class SenderFragmentImpl
         } : null);
     }
 
-    private void updateState() {}/*{
+    private void updateState() {
+    }/*{
         if (!isAdded())
             return;
 

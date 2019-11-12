@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,18 +23,18 @@ import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.service.WorkerService;
-import com.hazelmobile.filetransfer.task.AddDeviceRunningTask;
+import com.hazelmobile.filetransfer.task.AddDeviceRunningTaskDemo;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
+import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImplDemo;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
 import static com.hazelmobile.filetransfer.ui.activity.PreparationsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
 
 
-public class SenderActivity extends Activity
+public class SenderActivityDemo extends Activity
         implements SnackbarSupport, WorkerService.OnAttachListener {
 
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
@@ -46,62 +46,10 @@ public class SenderActivity extends Activity
     private RequestType mRequestType = RequestType.RETURN_RESULT;
     private ImageView user_image;
     private TextView textView;
-
-    private final NetworkDeviceSelectedListener mDeviceSelectionListener = new NetworkDeviceSelectedListener() {
-        @Override
-        public boolean onNetworkDeviceSelected(NetworkDevice networkDevice, NetworkDevice.Connection connection) {
-            if (mRequestType.equals(RequestType.RETURN_RESULT)) {
-                /*setResult(RESULT_OK, new Intent()
-                        .putExtra(EXTRA_DEVICE_ID, networkDevice.deviceId)
-                        .putExtra(EXTRA_CONNECTION_ADAPTER, connection.adapterName));*/
-
-                try {
-                    /*networkDevice = new NetworkDevice(networkDevice.deviceId);
-                    connection = new NetworkDevice.Connection(networkDevice.deviceId,  connection.adapterName);*/
-                    getDatabase().reconstruct(networkDevice);
-                    getDatabase().reconstruct(connection);
-                    doCommunicate(networkDevice, connection);
-                } catch (Exception e) {
-                    Toast.makeText(SenderActivity.this,
-                            R.string.mesg_somethingWentWrong, Toast.LENGTH_SHORT).show();
-                }
-
-                finish();
-            } else {
-                ConnectionUtils connectionUtils = ConnectionUtils.getInstance(SenderActivity.this);
-                UIConnectionUtils uiConnectionUtils = new UIConnectionUtils(connectionUtils, SenderActivity.this);
-
-                UITask uiTask = new UITask() {
-                    @Override
-                    public void updateTaskStarted(Interrupter interrupter) {
-                        createSnackbar(R.string.text_sending).show();
-                    }
-
-                    @Override
-                    public void updateTaskStopped() {
-                        createSnackbar(R.string.mesg_fileSendError).show();
-                    }
-                };
-
-                NetworkDeviceLoader.OnDeviceRegisteredListener registeredListener = new NetworkDeviceLoader.OnDeviceRegisteredListener() {
-                    @Override
-                    public void onDeviceRegistered(AccessDatabase database, final NetworkDevice device, final NetworkDevice.Connection connection) {
-                        createSnackbar(R.string.mesg_completing).show();
-                    }
-                };
-
-                uiConnectionUtils.makeAcquaintance(SenderActivity.this, uiTask,
-                        connection.ipAddress, -1, registeredListener);
-            }
-
-            return true;
-        }
-
-        @Override
-        public boolean isListenerEffective() {
-            return true;
-        }
-    };
+    private TransferGroup mGroup = null;
+    private AddDeviceRunningTaskDemo mTask;
+    public static final String EXTRA_GROUP_ID = "extraGroupId";
+    private IntentFilter mFilter = new IntentFilter(AccessDatabase.ACTION_DATABASE_CHANGE);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,14 +57,46 @@ public class SenderActivity extends Activity
         setResult(RESULT_CANCELED);
         if (!checkGroupIntegrity())
             return;
-        setContentView(R.layout.activity_sender);
-        /*final RippleBackground pulse = findViewById(R.id.content);
-        pulse.startRippleAnimation();*/
-
-        /*user_image = findViewById(R.id.userProfileImage);
-        textView = findViewById(R.id.text1);
-        setProfilePicture();*/
+        setContentView(R.layout.activity_sender_demo);
+//        final RippleBackground pulse = findViewById(R.id.content);
+//        pulse.startRippleAnimation();
+//
+//        user_image = findViewById(R.id.userProfileImage);
+//        textView = findViewById(R.id.text1);
+//        setProfilePicture();
         startCodeScannerFragment();
+        final ImageView back = findViewById(R.id.sender_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkForTasks();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mReceiver, mFilter);
+        if (!checkGroupIntegrity())
+            finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public Intent getIntent() {
+        return super.getIntent();
     }
 
     @Override
@@ -127,9 +107,9 @@ public class SenderActivity extends Activity
             if (resultCode == RESULT_OK && data != null) {
                 try {
                     NetworkDevice device = new NetworkDevice(data.getStringExtra(EXTRA_DEVICE_ID));
-                    AppUtils.getDatabase(SenderActivity.this).reconstruct(device);
+                    AppUtils.getDatabase(SenderActivityDemo.this).reconstruct(device);
                     NetworkDevice.Connection connection = new NetworkDevice.Connection(device.deviceId, data.getStringExtra(EXTRA_CONNECTION_ADAPTER));
-                    AppUtils.getDatabase(SenderActivity.this).reconstruct(connection);
+                    AppUtils.getDatabase(SenderActivityDemo.this).reconstruct(connection);
 
                     mDeviceSelectionListener.onNetworkDeviceSelected(device, connection);
                 } catch (Exception e) {
@@ -158,12 +138,32 @@ public class SenderActivity extends Activity
         super.onBackPressed();
     }
 
+    @Override
+    public void onAttachedToTask(WorkerService.RunningTask task) {
+
+    }
+
+    @Override
+    protected void onPreviousRunningTask(@Nullable WorkerService.RunningTask task) {
+        super.onPreviousRunningTask(task);
+
+        if (task instanceof AddDeviceRunningTaskDemo) {
+            mTask = ((AddDeviceRunningTaskDemo) task);
+            mTask.setAnchorListener(this);
+        }
+    }
+
+    @Override
+    public Snackbar createSnackbar(int resId, Object... objects) {
+        return Snackbar.make(findViewById(R.id.activity_connection_establishing_content_view), getString(resId, objects), Snackbar.LENGTH_LONG);
+    }
+
     private void startCodeScannerFragment() {
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SenderFragmentImpl fragment = (SenderFragmentImpl) getSupportFragmentManager().findFragmentById(R.id.senderFragment);
+        SenderFragmentImplDemo fragment = (SenderFragmentImplDemo) getSupportFragmentManager().findFragmentById(R.id.senderFragment);
 
         if (fragment != null)
             fragment.setDeviceSelectedListener(new NetworkDeviceSelectedListener() {
@@ -172,8 +172,8 @@ public class SenderActivity extends Activity
 
                     try {
 
-                        AppUtils.getDatabase(SenderActivity.this).reconstruct(networkDevice);
-                        AppUtils.getDatabase(SenderActivity.this).reconstruct(connection);
+                        AppUtils.getDatabase(SenderActivityDemo.this).reconstruct(networkDevice);
+                        AppUtils.getDatabase(SenderActivityDemo.this).reconstruct(connection);
                         mDeviceSelectionListener.onNetworkDeviceSelected(networkDevice, connection);
 
                     } catch (Exception e) {
@@ -195,36 +195,8 @@ public class SenderActivity extends Activity
             });
     }
 
-    @Override
-    public void onAttachedToTask(WorkerService.RunningTask task) {
-
-    }
-
-    public enum RequestType {
-        RETURN_RESULT,
-        MAKE_ACQUAINTANCE
-    }
-
-    @Override
-    public Snackbar createSnackbar(int resId, Object... objects) {
-        return Snackbar.make(findViewById(R.id.activity_connection_establishing_content_view), getString(resId, objects), Snackbar.LENGTH_LONG);
-    }
-
-    public interface DeviceSelectionSupport {
-        void setDeviceSelectedListener(NetworkDeviceSelectedListener listener);
-    }
-
-    /**
-     * MERGING ADD DEVICES TO SENDER
-     */
-
-    private TransferGroup mGroup = null;
-    private AddDeviceRunningTask mTask;
-    public static final String EXTRA_GROUP_ID = "extraGroupId";
-    private IntentFilter mFilter = new IntentFilter(AccessDatabase.ACTION_DATABASE_CHANGE);
-
     public void doCommunicate(final NetworkDevice device, final NetworkDevice.Connection connection) {
-        AddDeviceRunningTask task = new AddDeviceRunningTask(mGroup, device, connection);
+        AddDeviceRunningTaskDemo task = new AddDeviceRunningTaskDemo(mGroup, device, connection);
 
         task.setTitle(getString(R.string.mesg_communicating))
                 .setAnchorListener(this)
@@ -232,16 +204,6 @@ public class SenderActivity extends Activity
                 .run(this);
 
         attachRunningTask(task);
-    }
-
-    @Override
-    protected void onPreviousRunningTask(@Nullable WorkerService.RunningTask task) {
-        super.onPreviousRunningTask(task);
-
-        if (task instanceof AddDeviceRunningTask) {
-            mTask = ((AddDeviceRunningTask) task);
-            mTask.setAnchorListener(this);
-        }
     }
 
     public boolean checkGroupIntegrity() {
@@ -267,6 +229,10 @@ public class SenderActivity extends Activity
         return false;
     }
 
+    public interface DeviceSelectionSupport {
+        void setDeviceSelectedListener(NetworkDeviceSelectedListener listener);
+    }
+
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -278,30 +244,56 @@ public class SenderActivity extends Activity
         }
     };
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        checkForTasks();
-    }
+    private final NetworkDeviceSelectedListener mDeviceSelectionListener = new NetworkDeviceSelectedListener() {
+        @Override
+        public boolean onNetworkDeviceSelected(NetworkDevice networkDevice, NetworkDevice.Connection connection) {
+            if (mRequestType.equals(RequestType.RETURN_RESULT)) {
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(mReceiver, mFilter);
-        if (!checkGroupIntegrity())
-            finish();
-    }
+                try {
+                    getDatabase().reconstruct(networkDevice);
+                    getDatabase().reconstruct(connection);
+                    doCommunicate(networkDevice, connection);
+                } catch (Exception e) {
+                    Toast.makeText(SenderActivityDemo.this,
+                            R.string.mesg_somethingWentWrong, Toast.LENGTH_SHORT).show();
+                }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(mReceiver);
-    }
+                finish();
+            } else {
+                ConnectionUtils connectionUtils = ConnectionUtils.getInstance(SenderActivityDemo.this);
+                UIConnectionUtils uiConnectionUtils = new UIConnectionUtils(connectionUtils, SenderActivityDemo.this);
 
-    @Override
-    public Intent getIntent() {
-        return super.getIntent();
-    }
+                UITask uiTask = new UITask() {
+                    @Override
+                    public void updateTaskStarted(Interrupter interrupter) {
+                        createSnackbar(R.string.text_sending).show();
+                    }
+
+                    @Override
+                    public void updateTaskStopped() {
+                        createSnackbar(R.string.mesg_fileSendError).show();
+                    }
+                };
+
+                NetworkDeviceLoader.OnDeviceRegisteredListener registeredListener = new NetworkDeviceLoader.OnDeviceRegisteredListener() {
+                    @Override
+                    public void onDeviceRegistered(AccessDatabase database, final NetworkDevice device, final NetworkDevice.Connection connection) {
+                        createSnackbar(R.string.mesg_completing).show();
+                    }
+                };
+
+                uiConnectionUtils.makeAcquaintance(SenderActivityDemo.this, uiTask,
+                        connection.ipAddress, -1, registeredListener);
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean isListenerEffective() {
+            return true;
+        }
+    };
 
     public void updateProgress(final int total, final int current) {
         /*if (isFinishing())
@@ -319,18 +311,10 @@ public class SenderActivity extends Activity
         mProgressBar.setMax(total);*/
     }
 
-    private void setProfilePicture() {
-        NetworkDevice localDevice = AppUtils.getLocalDevice(SenderActivity.this);
-        textView.setText(localDevice.nickname);
-        loadProfilePictureInto(localDevice.nickname, user_image);
-        int color = AppUtils.getDefaultPreferences(SenderActivity.this).getInt("device_name_color", -1);
+    public enum RequestType {
+        RETURN_RESULT,
+        MAKE_ACQUAINTANCE;
 
-        if (user_image.getDrawable() instanceof ShapeDrawable && color != -1) {
-            ShapeDrawable shapeDrawable = (ShapeDrawable) user_image.getDrawable();
-            shapeDrawable.getPaint().setColor(color);
-        } else {
-            user_image.setBackgroundResource(R.drawable.background_user_icon_default);
-        }
     }
 
 }

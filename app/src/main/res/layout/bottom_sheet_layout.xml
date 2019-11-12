@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/standardBottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="0dp"
+    app:behavior_halfExpandedRatio="0.4"
+    app:behavior_fitToContents="true"
+    app:behavior_skipCollapsed="false"
+    app:behavior_expandedOffset="0"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <!--
+    android:paddingTop="5dp"
+        app:behavior_expandedOffset="0"
+        app:behavior_fitToContents="false"
+        app:behavior_halfExpandedRatio="0.4"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="85dp"
+        app:behavior_skipCollapsed="false"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    -->
+
+    <TextView
+        android:id="@+id/sheetText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="PEOPLE NEARBY" />
+
+    <ListView
+        android:id="@+id/lv_send"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:divider="@null"
+        android:visibility="visible" />
+
+</LinearLayout>

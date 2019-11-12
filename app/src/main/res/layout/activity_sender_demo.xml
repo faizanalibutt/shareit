@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.activity.SenderActivityDemo">
+
+    <fragment
+        android:layout_marginTop="?attr/actionBarSize"
+        android:id="@+id/senderFragment"
+        android:name="com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImplDemo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="scannerFragment" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_small_size"
+        android:layout_marginTop="@dimen/margin_small_size">
+
+        <ImageView
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_centerInParent="true"
+            android:background="@drawable/round_selector"
+            android:contentDescription="@string/text_home"
+            app:srcCompat="@drawable/ic_back_24dp" />
+
+        <ImageView
+            android:id="@+id/sender_back"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_centerInParent="true"
+            android:background="@drawable/round_selector"
+            android:contentDescription="@string/text_home" />
+
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

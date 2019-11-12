@@ -101,9 +101,13 @@ public class PreparationsActivity extends Activity
         setAction();
 
         // bluetooth check
-        if (ConnectionUtils.getInstance(this).getBluetoothAdapter().isEnabled()) {
-            enableBluetooth(bluetoothButton);
-        }
+        if (isReceiver && !UIConnectionUtils.isOreoAbove()) {
+            isBluetooth = true;
+            bluetoothButton.setEnabled(false);
+            getConnectionUtils().getBluetoothAdapter().disable();
+        } else
+            if (getConnectionUtils().getBluetoothAdapter().enable())
+                enableBluetooth(bluetoothButton);
         // wifi check
         if (ConnectionUtils.getInstance(this).getWifiManager().isWifiEnabled()) {
             enableWifi(wifiButton);
@@ -454,7 +458,7 @@ public class PreparationsActivity extends Activity
             finish();
         } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1) {
             ViewTransferActivity.startInstance(this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
-            startActivity(new Intent(PreparationsActivity.this, SenderActivity.class)
+            startActivity(new Intent(PreparationsActivity.this, /*SenderActivity*/SenderActivityDemo.class)
                     .putExtra(Keyword.EXTRA_SEND, true)
                     .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
                     .putExtra(SenderActivity.EXTRA_REQUEST_TYPE,
