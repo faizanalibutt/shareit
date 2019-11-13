@@ -47,7 +47,9 @@ import androidx.appcompat.app.AlertDialog;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.dialog.SenderWaitingDialog;
 import com.hazelmobile.filetransfer.library.RippleBackground;
 import com.hazelmobile.filetransfer.model.Bluetooth;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
@@ -278,8 +280,8 @@ public class SenderFragmentImplDemo
     }
 
     private void setMargins(View view, int left, int top, int right, int bottom) {
-        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams){
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
             p.setMargins(left, top, right, bottom);
             view.requestLayout();
         }
@@ -433,8 +435,6 @@ public class SenderFragmentImplDemo
         updateState(false, null);
     }
 
-
-    // #bReceiver
     private void cancelDiscovery() {
         if (getContext() != null) {
             try {
@@ -572,6 +572,8 @@ public class SenderFragmentImplDemo
 
                         Object object = mGenericList.get(position);
 
+                        new SenderWaitingDialog((Activity) Objects.requireNonNull(getActivity()), object).show();
+
                         if (object instanceof ScanResult)
                             connectToHotspot(((ScanResult) object));
                         else if (object instanceof Bluetooth) {
@@ -624,7 +626,6 @@ public class SenderFragmentImplDemo
                 mGenericList.size() > 0) {
             //user_retry.setVisibility(View.VISIBLE);
             standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
-            standardBottomSheetBehavior.setHideable(false);
         }
     }
 
@@ -774,6 +775,7 @@ public class SenderFragmentImplDemo
         return (Math.random() * ((max - min) + 1)) + min;
     }
 
+    // #bReceiver
     private final BroadcastReceiver bReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();

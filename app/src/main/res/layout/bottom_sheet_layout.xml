@@ -9,7 +9,7 @@
     app:behavior_hideable="false"
     app:behavior_peekHeight="0dp"
     app:behavior_halfExpandedRatio="0.4"
-    app:behavior_fitToContents="true"
+    app:behavior_fitToContents="false"
     app:behavior_skipCollapsed="false"
     app:behavior_expandedOffset="0"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">

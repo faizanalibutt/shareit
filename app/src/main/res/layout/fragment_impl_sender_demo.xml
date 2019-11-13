@@ -9,13 +9,13 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:rb_color="#9EB6E6"
         app:rb_duration="1500"
-        android:layout_marginBottom="?attr/actionBarSize"
         app:rb_radius="@dimen/dp_48"
         app:rb_rippleAmount="3"
         app:rb_scale="3">
@@ -32,9 +32,9 @@
             android:id="@+id/v3"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:gravity="center"
+            android:layout_centerInParent="true"
             android:background="@drawable/background_user_icon_extended"
-            android:layout_centerInParent="true">
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/userProfileImage"
@@ -52,9 +52,9 @@
             android:id="@+id/v3i"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:gravity="center"
-            android:background="@drawable/background_user_icon_extended"
             android:layout_centerInParent="true"
+            android:background="@drawable/background_user_icon_extended"
+            android:gravity="center"
             android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -63,8 +63,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_retry_white_24dp"
-                android:gravity="center" />
+                android:gravity="center"
+                app:srcCompat="@drawable/ic_retry_white_24dp" />
 
         </LinearLayout>
 
@@ -90,195 +90,19 @@
 
         <TextView
             android:id="@+id/v4"
-            style="@style/TextAppearance.Primary.Normal"
+            style="@style/TextAppearance.Primary.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text1"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/margin_absolute_size"
             android:gravity="center"
-            android:text="Ask your friend to open the app and tap\nRECEIVE" />
+            android:text="Ask your friend to open the app and tap RECEIVE" />
 
     </com.hazelmobile.filetransfer.library.RippleBackground>
 
+    <!--<include layout="@layout/layout_connection_info" />-->
+
     <include layout="@layout/bottom_sheet_layout" />
-
-    <!--<ImageView
-        android:id="@+id/receiver_back"
-        android:layout_width="@dimen/dp_20"
-        android:layout_height="@dimen/dp_20"
-        android:layout_marginStart="@dimen/margin_small_size"
-        android:layout_marginTop="@dimen/margin_small_size"
-        android:background="@drawable/round_selector"
-        android:contentDescription="@string/text_home"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_back_24dp" />
-
-    &lt;!&ndash;<com.journeyapps.barcodescanner.DecoratedBarcodeView
-        android:id="@+id/layout_barcode_connect_barcode_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:zxing_preview_scaling_strategy="centerCrop"
-        app:zxing_scanner_layout="@layout/external_layout_barcode_scanner" />&ndash;&gt;
-
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="waiting for devices to connect...."
-        android:textColor="@color/black_surface"
-        android:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/layout_barcode_connect_mode_text_indicator"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:background="?rippleBackground"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_short_text_white_24dp" />
-
-    <ImageView
-        android:id="@+id/actions_transfer_receiver_retry_receiving"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:background="?rippleBackground"
-        android:padding="8dp"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_autorenew_white_24dp_static" />
-
-    <ListView
-        android:id="@+id/lv_send"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_weight="4"
-        android:divider="@null"
-        android:visibility="visible" />
-
-    &lt;!&ndash;<TextView
-        android:id="@+id/bstatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="Devcies having Android Version Above Oreo 8.0"
-        android:textColor="@color/black_surface"
-        android:visibility="visible" />
-
-    <ListView
-        android:id="@+id/lvb_result"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_weight="4"
-        android:divider="@null"
-        android:visibility="visible" />&ndash;&gt;
-
-    <RelativeLayout
-        android:id="@+id/container_task"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?android:windowBackground"
-        android:visibility="gone">
-
-        <ProgressBar
-            android:id="@+id/task_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
-
-        <TextView
-            android:id="@+id/task_help_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/task_progress_bar"
-            android:layout_marginTop="15dp"
-            android:gravity="center_horizontal"
-            android:text="@string/mesg_completing"
-            android:textColor="?colorSecondary" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/task_interrupter_button"
-            style="?borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/task_help_text"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
-            android:text="@string/butn_cancel" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_barcode_connect_conduct_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/layout_barcode_connect_conduct_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/app_name"
-            app:tint="?colorPassive" />
-
-        <TextView
-            android:id="@+id/layout_barcode_connect_conduct_text"
-            style="@style/TextAppearance.Primary.Normal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:padding="15dp"
-            android:text="@string/text_scanQRCodeHelp" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/layout_barcode_connect_conduct_button"
-            style="?borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/butn_enable" />
-
-    </LinearLayout>
-
-    &lt;!&ndash;<FrameLayout
-        android:id="@+id/standardBottomSheet"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="5dp"
-        android:visibility="visible"
-        app:behavior_expandedOffset="0"
-        app:behavior_fitToContents="false"
-        app:behavior_halfExpandedRatio="0.4"
-        app:behavior_hideable="false"
-        app:behavior_peekHeight="85dp"
-        app:behavior_skipCollapsed="false"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_gravity="center"
-            app:srcCompat="@drawable/image_illustration_large" />
-
-    </FrameLayout>&ndash;&gt;-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
