@@ -58,7 +58,7 @@ import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
-import com.hazelmobile.filetransfer.ui.activity.SenderActivityDemo;
+import com.hazelmobile.filetransfer.ui.activity.DemoSenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.ui.adapter.SenderListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.IconSupport;
@@ -88,7 +88,7 @@ import java.util.UUID;
  * date: 12/04/18 17:21
  */
 
-public class SenderFragmentImplDemo
+public class DemoSenderFragmentImpl
         extends com.genonbeta.android.framework.app.Fragment
         implements TitleSupport, UITask, IconSupport, SenderActivity.DeviceSelectionSupport {
 
@@ -161,7 +161,7 @@ public class SenderFragmentImplDemo
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_impl_sender_demo, container, false);
+        View view = inflater.inflate(R.layout.demo_fragment_impl_sender, container, false);
 
         //mConductContainer = view.findViewById(R.id.layout_barcode_connect_conduct_container);
         //mTextModeIndicator = view.findViewById(R.id.layout_barcode_connect_mode_text_indicator);
@@ -563,7 +563,7 @@ public class SenderFragmentImplDemo
                     showMessage("SendReceive: Wifi Scan results are " + wifiManager.getScanResults());
                     mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
                     showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
-                    senderListAdapter = new SenderListAdapter(getContext(), mGenericList, ((SenderActivityDemo) getActivity()));
+                    senderListAdapter = new SenderListAdapter(getContext(), mGenericList, ((DemoSenderActivity) getActivity()));
                     lv_send.setAdapter(senderListAdapter);
                 }
                 lv_send.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -617,7 +617,7 @@ public class SenderFragmentImplDemo
         if (senderListAdapter != null) {
             senderListAdapter = null;
             senderListAdapter = new SenderListAdapter(getContext(), mGenericList,
-                    ((SenderActivityDemo) Objects.requireNonNull(getActivity())));
+                    ((DemoSenderActivity) Objects.requireNonNull(getActivity())));
             lv_send.setAdapter(senderListAdapter);
         }
 
@@ -631,7 +631,7 @@ public class SenderFragmentImplDemo
 
     private void makeAcquaintance(Object object, int accessPin) {
         mConnectionUtils.makeAcquaintance(Objects.requireNonNull
-                (getActivity()), SenderFragmentImplDemo.this, object, accessPin, mRegisteredListener);
+                (getActivity()), DemoSenderFragmentImpl.this, object, accessPin, mRegisteredListener);
     }
 
     private void removeHanlderMessages() {
@@ -656,7 +656,7 @@ public class SenderFragmentImplDemo
     private void setProfilePicture() {
         NetworkDevice localDevice = AppUtils.getLocalDevice(getActivity());
         textView.setText(localDevice.nickname);
-        ((SenderActivityDemo) Objects.requireNonNull(getActivity())).loadProfilePictureInto(localDevice.nickname, user_image);
+        ((DemoSenderActivity) Objects.requireNonNull(getActivity())).loadProfilePictureInto(localDevice.nickname, user_image);
         int color = AppUtils.getDefaultPreferences(getActivity()).getInt("device_name_color", -1);
 
         if (user_image.getDrawable() instanceof ShapeDrawable && color != -1) {
@@ -820,7 +820,7 @@ public class SenderFragmentImplDemo
                             senderListAdapter.notifyDataSetChanged();
                         else {
                             senderListAdapter = new SenderListAdapter(getContext(), mGenericList,
-                                    ((SenderActivityDemo) Objects.requireNonNull(getActivity())));
+                                    ((DemoSenderActivity) Objects.requireNonNull(getActivity())));
                             lv_send.setAdapter(senderListAdapter);
                         }
                     }

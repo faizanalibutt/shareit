@@ -154,7 +154,7 @@ public class ViewTransferActivity
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cross_blue_24dp);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 

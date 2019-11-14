@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.activity.SenderActivityDemo">
+    tools:context=".ui.activity.DemoSenderActivity">
 
     <fragment
         android:layout_marginTop="?attr/actionBarSize"
         android:id="@+id/senderFragment"
-        android:name="com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImplDemo"
+        android:name="com.hazelmobile.filetransfer.ui.fragment.DemoSenderFragmentImpl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:tag="scannerFragment" />

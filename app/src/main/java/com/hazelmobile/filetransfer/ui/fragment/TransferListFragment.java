@@ -75,7 +75,7 @@ public class TransferListFragment
         setFilteringSupported(true);
         setDefaultOrderingCriteria(TransferListAdapter.MODE_SORT_ORDER_ASCENDING);
         setDefaultSortingCriteria(TransferListAdapter.MODE_SORT_BY_NAME);
-        setDefaultGroupingCriteria(TransferListAdapter.MODE_GROUP_BY_DEFAULT);
+        setDefaultGroupingCriteria(TransferListAdapter.MODE_GROUP_BY_NOTHING);
         setDefaultSelectionCallback(new SelectionCallback(this));
     }
 

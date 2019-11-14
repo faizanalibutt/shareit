@@ -12,7 +12,7 @@ import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
 import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 
-public class BarcodeScannerActivityDemo extends Activity {
+public class DemoBarcodeScannerActivity extends Activity {
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
     public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
 

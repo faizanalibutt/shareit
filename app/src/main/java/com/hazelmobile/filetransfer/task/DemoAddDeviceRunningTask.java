@@ -20,7 +20,7 @@ import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.activity.AddDevicesToTransferActivity;
-import com.hazelmobile.filetransfer.ui.activity.SenderActivityDemo;
+import com.hazelmobile.filetransfer.ui.activity.DemoSenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
 
@@ -31,12 +31,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddDeviceRunningTaskDemo extends WorkerService.RunningTask<SenderActivityDemo> {
+public class DemoAddDeviceRunningTask extends WorkerService.RunningTask<DemoSenderActivity> {
     private TransferGroup mGroup;
     private NetworkDevice mDevice;
     private NetworkDevice.Connection mConnection;
 
-    public AddDeviceRunningTaskDemo(TransferGroup group, NetworkDevice device,
+    public DemoAddDeviceRunningTask(TransferGroup group, NetworkDevice device,
                                     NetworkDevice.Connection connection) {
         mGroup = group;
         mDevice = device;

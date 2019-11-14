@@ -23,18 +23,18 @@ import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.service.WorkerService;
-import com.hazelmobile.filetransfer.task.AddDeviceRunningTaskDemo;
+import com.hazelmobile.filetransfer.task.DemoAddDeviceRunningTask;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImplDemo;
+import com.hazelmobile.filetransfer.ui.fragment.DemoSenderFragmentImpl;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
 import static com.hazelmobile.filetransfer.ui.activity.PreparationsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
 
 
-public class SenderActivityDemo extends Activity
+public class DemoSenderActivity extends Activity
         implements SnackbarSupport, WorkerService.OnAttachListener {
 
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
@@ -47,7 +47,7 @@ public class SenderActivityDemo extends Activity
     private ImageView user_image;
     private TextView textView;
     private TransferGroup mGroup = null;
-    private AddDeviceRunningTaskDemo mTask;
+    private DemoAddDeviceRunningTask mTask;
     public static final String EXTRA_GROUP_ID = "extraGroupId";
     private IntentFilter mFilter = new IntentFilter(AccessDatabase.ACTION_DATABASE_CHANGE);
 
@@ -57,7 +57,7 @@ public class SenderActivityDemo extends Activity
         setResult(RESULT_CANCELED);
         if (!checkGroupIntegrity())
             return;
-        setContentView(R.layout.activity_sender_demo);
+        setContentView(R.layout.demo_activity_sender);
 //        final RippleBackground pulse = findViewById(R.id.content);
 //        pulse.startRippleAnimation();
 //
@@ -107,9 +107,9 @@ public class SenderActivityDemo extends Activity
             if (resultCode == RESULT_OK && data != null) {
                 try {
                     NetworkDevice device = new NetworkDevice(data.getStringExtra(EXTRA_DEVICE_ID));
-                    AppUtils.getDatabase(SenderActivityDemo.this).reconstruct(device);
+                    AppUtils.getDatabase(DemoSenderActivity.this).reconstruct(device);
                     NetworkDevice.Connection connection = new NetworkDevice.Connection(device.deviceId, data.getStringExtra(EXTRA_CONNECTION_ADAPTER));
-                    AppUtils.getDatabase(SenderActivityDemo.this).reconstruct(connection);
+                    AppUtils.getDatabase(DemoSenderActivity.this).reconstruct(connection);
 
                     mDeviceSelectionListener.onNetworkDeviceSelected(device, connection);
                 } catch (Exception e) {
@@ -147,8 +147,8 @@ public class SenderActivityDemo extends Activity
     protected void onPreviousRunningTask(@Nullable WorkerService.RunningTask task) {
         super.onPreviousRunningTask(task);
 
-        if (task instanceof AddDeviceRunningTaskDemo) {
-            mTask = ((AddDeviceRunningTaskDemo) task);
+        if (task instanceof DemoAddDeviceRunningTask) {
+            mTask = ((DemoAddDeviceRunningTask) task);
             mTask.setAnchorListener(this);
         }
     }
@@ -163,7 +163,7 @@ public class SenderActivityDemo extends Activity
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SenderFragmentImplDemo fragment = (SenderFragmentImplDemo) getSupportFragmentManager().findFragmentById(R.id.senderFragment);
+        DemoSenderFragmentImpl fragment = (DemoSenderFragmentImpl) getSupportFragmentManager().findFragmentById(R.id.senderFragment);
 
         if (fragment != null)
             fragment.setDeviceSelectedListener(new NetworkDeviceSelectedListener() {
@@ -172,8 +172,8 @@ public class SenderActivityDemo extends Activity
 
                     try {
 
-                        AppUtils.getDatabase(SenderActivityDemo.this).reconstruct(networkDevice);
-                        AppUtils.getDatabase(SenderActivityDemo.this).reconstruct(connection);
+                        AppUtils.getDatabase(DemoSenderActivity.this).reconstruct(networkDevice);
+                        AppUtils.getDatabase(DemoSenderActivity.this).reconstruct(connection);
                         mDeviceSelectionListener.onNetworkDeviceSelected(networkDevice, connection);
 
                     } catch (Exception e) {
@@ -196,7 +196,7 @@ public class SenderActivityDemo extends Activity
     }
 
     public void doCommunicate(final NetworkDevice device, final NetworkDevice.Connection connection) {
-        AddDeviceRunningTaskDemo task = new AddDeviceRunningTaskDemo(mGroup, device, connection);
+        DemoAddDeviceRunningTask task = new DemoAddDeviceRunningTask(mGroup, device, connection);
 
         task.setTitle(getString(R.string.mesg_communicating))
                 .setAnchorListener(this)
@@ -254,14 +254,14 @@ public class SenderActivityDemo extends Activity
                     getDatabase().reconstruct(connection);
                     doCommunicate(networkDevice, connection);
                 } catch (Exception e) {
-                    Toast.makeText(SenderActivityDemo.this,
+                    Toast.makeText(DemoSenderActivity.this,
                             R.string.mesg_somethingWentWrong, Toast.LENGTH_SHORT).show();
                 }
 
                 finish();
             } else {
-                ConnectionUtils connectionUtils = ConnectionUtils.getInstance(SenderActivityDemo.this);
-                UIConnectionUtils uiConnectionUtils = new UIConnectionUtils(connectionUtils, SenderActivityDemo.this);
+                ConnectionUtils connectionUtils = ConnectionUtils.getInstance(DemoSenderActivity.this);
+                UIConnectionUtils uiConnectionUtils = new UIConnectionUtils(connectionUtils, DemoSenderActivity.this);
 
                 UITask uiTask = new UITask() {
                     @Override
@@ -282,7 +282,7 @@ public class SenderActivityDemo extends Activity
                     }
                 };
 
-                uiConnectionUtils.makeAcquaintance(SenderActivityDemo.this, uiTask,
+                uiConnectionUtils.makeAcquaintance(DemoSenderActivity.this, uiTask,
                         connection.ipAddress, -1, registeredListener);
             }
 
