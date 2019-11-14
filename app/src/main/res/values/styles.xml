@@ -35,7 +35,7 @@
     <!-- generalization end -->
 
     <style name="Widget.Hazel.DialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog">
-        <item name="android:windowBackground">?backgroundDialog</item>
+        <!--<item name="android:windowBackground">?backgroundDialog</item>-->
         <item name="buttonBarButtonStyle">@style/Widget.Hazel.ButtonStyle.Dialog</item>
     </style>
 
@@ -61,7 +61,7 @@
     <style name="Widget.Hazel.ButtonStyle.Dialog" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="cornerRadius">8dp</item>
         <item name="rippleColor">@color/text_button_ripple_color</item>
-        <item name="android:textColor">@color/text_button_text_color_selector</item>
+        <item name="android:textColor">@color/text_button_text_color_selector_blue</item>
     </style>
 
     <style name="Widget.Hazel.ButtonStyle" parent="Widget.MaterialComponents.Button">

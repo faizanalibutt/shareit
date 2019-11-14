@@ -300,7 +300,7 @@ public class PreparationsActivity extends Activity
     }
 
     public void openHotspot(View view) {
-        startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+        AppUtils.launchHotspotSettings(this);
     }
 
     private void enableHostspot(View view) {

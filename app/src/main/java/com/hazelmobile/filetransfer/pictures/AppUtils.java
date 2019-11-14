@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,7 @@ import android.util.TypedValue;
 import androidx.annotation.AnyRes;
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -59,6 +61,8 @@ public class AppUtils {
     private static SuperPreferences mDefaultPreferences;
     private static SuperPreferences mDefaultLocalPreferences;
     private static SuperPreferences mViewingPreferences;
+    private static final String SETTINGS_PACKAGE = "com.android.settings";
+    private static final String HOTSPOT_SETTINGS_CLASS = "com.android.settings.TetherSettings"/*"com.android.settings.Settings$TetherWifiSettingsActivity"*/;
 
     public static void applyAdapterName(NetworkDevice.Connection connection) {
         if (connection.ipAddress == null) {
@@ -132,6 +136,15 @@ public class AppUtils {
                 return false;
 
         return true;
+    }
+
+    public static void launchHotspotSettings(AppCompatActivity activity) {
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        ComponentName componentName = new ComponentName(SETTINGS_PACKAGE, HOTSPOT_SETTINGS_CLASS);
+        intent.setComponent(componentName);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
     }
 
     public static DocumentFile createLog(Context context) {

@@ -598,6 +598,6 @@
 
     <!-- MERGING TEXT -->
     <string name="msg_merg_send">\"%s\"</string>
-    <string name="layout_dialog_receiver_title">Connecting to %s…</string>
+    <string name="layout_dialog_receiver_title" tools:ignore="TypographyEllipsis">Connecting to %s...</string>
 
 </resources>
