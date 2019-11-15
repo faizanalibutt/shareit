@@ -149,7 +149,7 @@ public class UIConnectionUtils {
                             @Override
                             public void run() {
                                 if (!activity.isFinishing()) {
-                                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
+                                    /*AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                                             .setMessage(R.string.mesg_connectionFailure)
                                             .setNegativeButton(R.string.butn_close, null)
                                             .setPositiveButton(R.string.butn_retry, retryButtonListener);
@@ -157,7 +157,7 @@ public class UIConnectionUtils {
                                     if (object instanceof NetworkDevice)
                                         dialogBuilder.setTitle(((NetworkDevice) object).nickname);
 
-                                    dialogBuilder.show();
+                                    dialogBuilder.show();*/
                                 }
                             }
                         });

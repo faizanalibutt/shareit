@@ -2,7 +2,6 @@ package com.hazelmobile.filetransfer.ui.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -30,10 +28,10 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.dialog.TransferInfoDialog;
-import com.hazelmobile.filetransfer.object.TransferGroup;
-import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.ShowingAssignee;
+import com.hazelmobile.filetransfer.object.TransferGroup;
+import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.pictures.PowerfulActionModeSupport;
@@ -78,7 +76,7 @@ public class ViewTransferActivity
     private MenuItem mWebShareShortcut;
     private MenuItem mToggleBrowserShare;
     private CrunchLatestDataTask mDataCruncher;
-    private TextView dataTransferTime;
+    //private TextView dataTransferTime;
     private TextView dataTransferSpeed;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -154,7 +152,7 @@ public class ViewTransferActivity
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_cross_blue_24dp);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_24dp);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
@@ -257,7 +255,7 @@ public class ViewTransferActivity
             });
         }
 
-        dataTransferTime = findViewById(R.id.dataTransferTime);
+        //dataTransferTime = findViewById(R.id.dataTransferTime);
         dataTransferSpeed = findViewById(R.id.dataTransferSpeed);
         registerReceiver(mMessageReceiver, new IntentFilter("SenderProgress"));
     }
@@ -267,7 +265,7 @@ public class ViewTransferActivity
         public void onReceive(Context context, Intent intent) {
             String duration = intent.getStringExtra(Keyword.DATA_TRANSFER_TIME);
             String speed = intent.getStringExtra(Keyword.DATA_TRANSFER_SPEED);
-            dataTransferTime.setText(duration);
+            //dataTransferTime.setText(duration);
             dataTransferSpeed.setText(speed);
         }
     };
@@ -301,7 +299,7 @@ public class ViewTransferActivity
         unregisterReceiver(mMessageReceiver);
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.actions_transfer, menu);
@@ -365,9 +363,9 @@ public class ViewTransferActivity
             createSnackbar(R.string.mesg_retryReceivingNotice)
                     .show();
         } else if (id == R.id.actions_transfer_receiver_show_files) {
-            /*startActivity(new Intent(this, FileExplorerActivity.class)
+            *//*startActivity(new Intent(this, FileExplorerActivity.class)
                     .putExtra(FileExplorerActivity.EXTRA_FILE_PATH,
-                            FileUtils.getSavePath(this, mGroup).getUri()));*/
+                            FileUtils.getSavePath(this, mGroup).getUri()));*//*
         } else if (id == R.id.actions_transfer_sender_add_device) {
             startDeviceAddingActivity();
         } else if (id == R.id.actions_transfer_test_connection) {
@@ -375,25 +373,25 @@ public class ViewTransferActivity
                     mGroup.groupId);
 
             if (assignee.size() == 1) {
-                /*new EstablishConnectionDialog(ViewTransferActivity.this,
-                        assignee.get(0).device, null).show();*/
+                *//*new EstablishConnectionDialog(ViewTransferActivity.this,
+                        assignee.get(0).device, null).show();*//*
             //else if (assignee.size() > 1) {
-                /*new SelectAssigneeDialog(this, assignee, new DialogInterface
+                *//*new SelectAssigneeDialog(this, assignee, new DialogInterface
                         .OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         new EstablishConnectionDialog(ViewTransferActivity.this,
                                 assignee.get(which).device, null).show();
                     }
-                }).show();*/
+                }).show();*//*
             }
         } else if (item.getItemId() == R.id.actions_transfer_toggle_browser_share) {
             mGroup.isServedOnWeb = !mGroup.isServedOnWeb;
             getDatabase().update(mGroup);
             showMenus();
 
-            /*if (mGroup.isServedOnWeb)
-                AppUtils.startWebShareActivity(this, true);*/
+            *//*if (mGroup.isServedOnWeb)
+                AppUtils.startWebShareActivity(this, true);*//*
         } else if (item.getGroupId() == R.id.actions_abs_view_transfer_activity_settings) {
             mDeviceId = item.getOrder() < mTransactionIndex.assignees.size()
                     ? mTransactionIndex.assignees.get(item.getOrder()).deviceId
@@ -406,12 +404,12 @@ public class ViewTransferActivity
             if (fragment != null && fragment.setDeviceId(mDeviceId))
                 fragment.refreshList();
         } else if (item.getItemId() == R.id.actions_transfer_web_share_shortcut) {
-            /*AppUtils.startWebShareActivity(this, false);*/
+            *//*AppUtils.startWebShareActivity(this, false);*//*
         } else
             return super.onOptionsItemSelected(item);
 
         return true;
-    }
+    }*/
 
     public void startDeviceAddingActivity() {
         startActivityForResult(new Intent(this, AddDevicesToTransferActivity.class)
@@ -601,9 +599,9 @@ public class ViewTransferActivity
                 @Override
                 public void onPostExecute() {
                     showMenus();
-                    findViewById(R.id.activity_transaction_no_devices_warning)
+                    /*findViewById(R.id.activity_transaction_no_devices_warning)
                             .setVisibility(mTransactionIndex.assignees.size() > 0
-                                    ? View.GONE : View.VISIBLE);
+                                    ? View.GONE : View.VISIBLE);*/
 
                     if (mTransactionIndex.assignees.size() == 0)
                         if (mTransferObject != null) {
