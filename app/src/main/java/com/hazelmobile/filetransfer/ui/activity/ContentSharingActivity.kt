@@ -215,9 +215,8 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
     }
 
     fun btnOnClick(view: View) {
-
-        mSelectionCallback.onActionMenuItemSelected(this, mMode, null)
-
+        /*mSelectionCallback.onActionMenuItemSelected(this, mMode, null)*/
+        mSelectionCallback.sendFiles()
     }
 
 }

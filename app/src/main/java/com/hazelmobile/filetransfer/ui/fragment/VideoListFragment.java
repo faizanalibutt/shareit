@@ -31,15 +31,21 @@ public class VideoListFragment
         implements TitleSupport {
 
     private TextView videoSize;
+    private CheckBox selectAll;
+
+    public CheckBox getChckBox() {
+        return selectAll;
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         videoSize = view.findViewById(R.id.myVideosText);
-        setEmptyImage(0);
-        setEmptyText("");
 
-        final CheckBox selectAll = view.findViewById(R.id.selectAll);
+        setEmptyImage(R.drawable.ic_video_library_white_24dp);
+        setEmptyText(getString(R.string.text_listEmptyVideo));
+
+        selectAll = view.findViewById(R.id.selectAll);
         selectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

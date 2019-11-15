@@ -44,12 +44,12 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
 
     @Override
     public boolean onActionMenuItemSelected(Context context, PowerfulActionMode actionMode, MenuItem item) {
-        //int id = item.getItemId();
+        int id = item.getItemId();
 
         List<T> selectedItemList = new ArrayList<>(getFragment().getSelectionConnection().getSelectedItemList());
 
         if (selectedItemList.size() > 0
-                /* && (id == R.id.action_mode_share_trebleshot || id == R.id.action_mode_share_all_apps)*/) {
+                 && (id == R.id.action_mode_share_trebleshot || id == R.id.action_mode_share_all_apps)) {
             Intent shareIntent = new Intent()
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     .setAction((selectedItemList.size() > 1 ? ShareActivity.ACTION_SEND_MULTIPLE : ShareActivity.ACTION_SEND)/*(false)
@@ -93,7 +93,55 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
                 return false;
             }
         } else
-            return false/*super.onActionMenuItemSelected(context, actionMode, item)*/;
+            return super.onActionMenuItemSelected(context, actionMode, item);
+
+        return true;
+    }
+
+    public boolean sendFiles() {
+        List<T> selectedItemList = new ArrayList<>(getFragment().getSelectionConnection().getSelectedItemList());
+
+        if (selectedItemList.size() > 0) {
+            Intent shareIntent = new Intent()
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    .setAction((selectedItemList.size() > 1 ? ShareActivity.ACTION_SEND_MULTIPLE : ShareActivity.ACTION_SEND));
+
+            if (selectedItemList.size() > 1) {
+                ShareableListFragment.MIMEGrouper mimeGrouper = new ShareableListFragment.MIMEGrouper();
+                ArrayList<Uri> uriList = new ArrayList<>();
+                ArrayList<CharSequence> nameList = new ArrayList<>();
+
+                for (T sharedItem : selectedItemList) {
+                    uriList.add(sharedItem.uri);
+                    nameList.add(sharedItem.fileName);
+
+                    if (!mimeGrouper.isLocked())
+                        mimeGrouper.process(sharedItem.mimeType);
+                }
+
+                shareIntent.setType(mimeGrouper.toString())
+                        .putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList)
+                        .putCharSequenceArrayListExtra(ShareActivity.EXTRA_FILENAME_LIST, nameList)
+                        .putExtra(Keyword.EXTRA_SEND, true);
+            } else if (selectedItemList.size() == 1) {
+                T sharedItem = selectedItemList.get(0);
+
+                shareIntent.setType(sharedItem.mimeType)
+                        .putExtra(Intent.EXTRA_STREAM, sharedItem.uri)
+                        .putExtra(ShareActivity.EXTRA_FILENAME_LIST, sharedItem.fileName)
+                        .putExtra(Keyword.EXTRA_SEND, true);
+            }
+
+            try {
+                getFragment().getContext().startActivity(shareIntent);
+            } catch (Throwable e) {
+                e.printStackTrace();
+                Toast.makeText(getFragment().getActivity(), R.string.mesg_somethingWentWrong, Toast.LENGTH_SHORT).show();
+
+                return false;
+            }
+        } else
+            return false;
 
 
         return true;

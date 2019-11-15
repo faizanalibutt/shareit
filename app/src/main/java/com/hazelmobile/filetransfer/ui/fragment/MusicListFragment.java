@@ -17,6 +17,8 @@ import com.hazelmobile.filetransfer.pictures.EditableListFragment;
 import com.hazelmobile.filetransfer.ui.adapter.MusicListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 
+import org.jetbrains.annotations.NotNull;
+
 public class MusicListFragment
         extends EditableListFragment<MusicListAdapter.SongHolder, EditableListAdapter.EditableViewHolder, MusicListAdapter>
         implements TitleSupport {
@@ -29,8 +31,8 @@ public class MusicListFragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        setEmptyImage(0);
-        setEmptyText("");
+        setEmptyImage(R.drawable.ic_library_music_white_24dp);
+        setEmptyText(getString(R.string.text_listEmptyMusic));
     }
 
     @Override
@@ -92,6 +94,7 @@ public class MusicListFragment
         }
     }
 
+    @NotNull
     @Override
     public CharSequence getTitle(Context context) {
         return context.getString(R.string.text_music);

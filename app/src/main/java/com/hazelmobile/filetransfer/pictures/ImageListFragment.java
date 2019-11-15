@@ -14,7 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.SelectionCallbackGlobal;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ImageListFragment
         extends GalleryGroupEditableListFragment<ImageListAdapter.ImageHolder, GroupEditableListAdapter.GroupViewHolder, ImageListAdapter>
@@ -67,13 +70,22 @@ public class ImageListFragment
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    performLayoutClickOpen(clazz);
+                                    if (getSelectionConnection() != null) {
+                                        getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                        SelectionCallbackGlobal.setColor(true);
+                                    } else{
+                                        performLayoutClick(clazz);
+                                        SelectionCallbackGlobal.setColor(false);
+                                    }
+
                                 }
                             });
+
                     visitView.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
-                            return performLayoutLongClick(clazz);
+                            performLayoutClickOpen(clazz);
+                            return true;
                         }
                     });
 
@@ -82,8 +94,11 @@ public class ImageListFragment
                             .setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (getSelectionConnection() != null)
+                                    if (getSelectionConnection() != null) {
                                         getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                        SelectionCallbackGlobal.setColor(true);
+                                    } else
+                                        SelectionCallbackGlobal.setColor(false);
                                 }
                             });
                 }
@@ -101,11 +116,16 @@ public class ImageListFragment
 
     @Override
     public boolean onDefaultClickAction(GroupEditableListAdapter.GroupViewHolder holder) {
-        return getSelectionConnection() != null
-                ? getSelectionConnection().setSelected(holder)
-                : performLayoutClickOpen(holder);
+        if (getSelectionConnection() != null) {
+            SelectionCallbackGlobal.setColor(true);
+            return getSelectionConnection().setSelected(holder);
+        } else {
+            SelectionCallbackGlobal.setColor(false);
+            return performLayoutClickOpen(holder);
+        }
     }
 
+    @NotNull
     @Override
     public CharSequence getTitle(Context context) {
         return context.getString(R.string.text_photo);
