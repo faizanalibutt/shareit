@@ -101,6 +101,11 @@
         <item name="cardCornerRadius">8dp</item>
     </style>
 
+    <style name="Widget.Hazel.CardView.Transfer" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">2dp</item>
+        <item name="cardCornerRadius">8dp</item>
+    </style>
+
     <style name="Widget.Hazel.ProgressBar.Horizontal.Oval" parent="Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:progressDrawable">?roundProgressBar</item>
         <item name="android:background">?roundProgressBarShape</item>
@@ -108,6 +113,11 @@
 
     <style name="Widget.Hazel.ProgressBar.Horizontal.Oval.Bald">
         <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="Widget.Hazel.ProgressBar.Linear" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">?linearProgressBar</item>
+        <item name="android:background">?linearProgressBarShape</item>
     </style>
 
     <style name="Widget.Hazel.TabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
@@ -222,6 +232,15 @@
         <item name="android:paddingEnd">@dimen/padding_list_content_parent_layout</item>
         <item name="android:paddingTop">@dimen/padding_list_content_parent_layout</item>
         <item name="android:paddingBottom">@dimen/padding_list_content_parent_layout</item>
+    </style>
+
+    <style name="ListContentLayoutStyleOutside">
+        <item name="android:layout_marginLeft">@dimen/margin_small_size</item>
+        <item name="android:layout_marginStart">@dimen/margin_small_size</item>
+        <item name="android:layout_marginRight">@dimen/margin_small_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_small_size</item>
+        <item name="android:layout_marginTop">@dimen/margin_smallest_size</item>
+        <item name="android:layout_marginBottom">@dimen/margin_smallest_size</item>
     </style>
 
     <style name="ListContentLayoutStyle.WithOverflowButton">

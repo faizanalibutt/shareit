@@ -404,7 +404,7 @@ public class TransferListAdapter
         if (viewType == VIEW_TYPE_REPRESENTATIVE)
             return new GroupViewHolder(getInflater().inflate(R.layout.layout_list_title, parent, false), R.id.layout_list_title_text);
 
-        return new GroupEditableListAdapter.GroupViewHolder(getInflater().inflate(R.layout.list_transfer, parent, false));
+        return new GroupEditableListAdapter.GroupViewHolder(getInflater().inflate(R.layout.list_transfer_ext, parent, false));
     }
 
     @Override
@@ -437,7 +437,7 @@ public class TransferListAdapter
                     appliedColor = mColorPending;
 
                 titleText.setText(object.friendlyName);
-                firstText.setText(object.getFirstText(this));
+                firstText.setText(getContext().getString(R.string.transfer_file_size, object.getFirstText(this)));
                 secondText.setText(object.getSecondText(this));
                 thirdText.setText(object.getThirdText(this));
 
@@ -447,7 +447,7 @@ public class TransferListAdapter
                 progressBar.setProgress(percentage <= 0 ? 1 : percentage);
 
                 thirdText.setTextColor(appliedColor);
-                ImageViewCompat.setImageTintList(image, ColorStateList.valueOf(appliedColor));
+                //ImageViewCompat.setImageTintList(image, ColorStateList.valueOf(appliedColor));
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getProgressDrawable());
@@ -455,7 +455,7 @@ public class TransferListAdapter
                     DrawableCompat.setTint(wrapDrawable, appliedColor);
                     progressBar.setProgressDrawable(DrawableCompat.unwrap(wrapDrawable));
                 } else
-                    progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
+                {}//progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
 
                 boolean supportThumbnail = object.loadThumbnail(thumbnail);
 

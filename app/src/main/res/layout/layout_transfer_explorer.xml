@@ -22,6 +22,7 @@
         android:layout_alignParentTop="true">
 
         <FrameLayout
+            android:layout_marginTop="@dimen/margin_smallest_size"
             android:id="@+id/layout_transfer_explorer_fragment_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

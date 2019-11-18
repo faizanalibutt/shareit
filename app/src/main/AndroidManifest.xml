@@ -101,9 +101,10 @@
             android:name=".ui.activity.AddDevicesToTransferActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
 
+        <!--@string/text_transactionViewer-->
         <activity
             android:name=".ui.activity.ViewTransferActivity"
-            android:label="@string/text_transactionViewer"
+            android:label="File Transfer"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

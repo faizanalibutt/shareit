@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -77,7 +76,7 @@ public class ViewTransferActivity
     private MenuItem mToggleBrowserShare;
     private CrunchLatestDataTask mDataCruncher;
     //private TextView dataTransferTime;
-    private TextView dataTransferSpeed;
+    //private TextView dataTransferSpeed;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -256,7 +255,7 @@ public class ViewTransferActivity
         }
 
         //dataTransferTime = findViewById(R.id.dataTransferTime);
-        dataTransferSpeed = findViewById(R.id.dataTransferSpeed);
+        //dataTransferSpeed = findViewById(R.id.dataTransferSpeed);
         registerReceiver(mMessageReceiver, new IntentFilter("SenderProgress"));
     }
 
@@ -266,7 +265,7 @@ public class ViewTransferActivity
             String duration = intent.getStringExtra(Keyword.DATA_TRANSFER_TIME);
             String speed = intent.getStringExtra(Keyword.DATA_TRANSFER_SPEED);
             //dataTransferTime.setText(duration);
-            dataTransferSpeed.setText(speed);
+            //dataTransferSpeed.setText(speed);
         }
     };
 
