@@ -75,7 +75,7 @@ public class ImageListAdapter
             return new GroupViewHolder(getInflater().inflate(R.layout.layout_list_title, parent, false), R.id.layout_list_title_text);
 
         return new GroupViewHolder(getInflater().inflate(isGridLayoutRequested()
-                ? R.layout.list_image_grid
+                ? R.layout.list_image_grid_ext
                 : R.layout.list_image, parent, false));
     }
 

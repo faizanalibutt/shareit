@@ -57,11 +57,13 @@
     <FrameLayout
         android:id="@+id/selectorContainer"
         style="@style/ListContentIconStyleExtended"
+        android:layout_marginEnd="@dimen/margin_absolute_size"
+        android:layout_marginTop="@dimen/margin_absolute_size"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true">
+        android:layout_alignParentEnd="true">
 
-        <include layout="@layout/generic_view_selection_rounded" />
+        <include
+            layout="@layout/generic_view_selection_rounded" />
 
     </FrameLayout>
 

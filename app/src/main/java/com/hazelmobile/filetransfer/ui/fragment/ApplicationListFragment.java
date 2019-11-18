@@ -36,6 +36,11 @@ public class ApplicationListFragment
         implements TitleSupport {
 
     private TextView appsSize;
+    private CheckBox selectAll;
+
+    public CheckBox getChckBox() {
+        return selectAll;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -56,7 +61,7 @@ public class ApplicationListFragment
         setEmptyImage(R.drawable.ic_android_head_white_24dp);
         setEmptyText(getString(R.string.text_listEmptyApp));
         appsSize = view.findViewById(R.id.myAppsText);
-        final CheckBox selectAll = view.findViewById(R.id.selectAll);
+        selectAll = view.findViewById(R.id.selectAll);
 
         selectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

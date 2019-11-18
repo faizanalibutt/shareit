@@ -1,6 +1,7 @@
 package com.hazelmobile.filetransfer.pictures;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.net.Uri;
@@ -25,16 +26,20 @@ import com.genonbeta.android.framework.widget.recyclerview.FastScroller;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.dialog.SelectionEditorDialog;
 import com.hazelmobile.filetransfer.pictures.recyclerview.PaddingItemDecoration;
 import com.hazelmobile.filetransfer.pictures.recyclerview.SwipeTouchSelectionListener;
+import com.hazelmobile.filetransfer.ui.fragment.ApplicationListFragment;
+import com.hazelmobile.filetransfer.ui.fragment.VideoListFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * created by: Veli
  * date: 21.11.2017 10:12
-*/
+ */
 
 abstract public class EditableListFragment<T extends Editable, V extends EditableListAdapter.EditableViewHolder, E extends EditableListAdapter<T, V>>
         extends DynamicRecyclerViewFragment<T, V, E>
@@ -773,7 +778,7 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
 
         @Override
         public boolean onCreateActionMenu(Context context, PowerfulActionMode actionMode, Menu menu) {
-            //actionMode.getMenuInflater().inflate(R.menu.action_mode_abs_editable, menu);
+            actionMode.getMenuInflater().inflate(R.menu.action_mode_abs_editable, menu);
             return false;
         }
 
@@ -789,13 +794,27 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
 
         @Override
         public boolean onActionMenuItemSelected(final Context context, PowerfulActionMode actionMode, MenuItem item) {
-            /*int id = item.getItemId();
+            int id = item.getItemId();
 
-            if (id == R.id.action_mode_abs_editable_select_all)
+            if (id == R.id.action_mode_abs_editable_select_all) {
                 setSelection(true);
-            else if (id == R.id.action_mode_abs_editable_select_none)
+                if (mFragment instanceof ApplicationListFragment) {
+                    if (((ApplicationListFragment) mFragment).getChckBox() != null)
+                        ((ApplicationListFragment) mFragment).getChckBox().setChecked(true);
+                } else if (mFragment instanceof VideoListFragment) {
+                    if (((VideoListFragment) mFragment).getChckBox() != null)
+                        ((VideoListFragment) mFragment).getChckBox().setChecked(true);
+                }
+            } else if (id == R.id.action_mode_abs_editable_select_none) {
                 setSelection(false);
-            else if (id == R.id.action_mode_abs_editable_preview_selections)
+                if (mFragment instanceof ApplicationListFragment) {
+                    if (((ApplicationListFragment) mFragment).getChckBox() != null)
+                        ((ApplicationListFragment) mFragment).getChckBox().setChecked(false);
+                } else if (mFragment instanceof VideoListFragment) {
+                    if (((VideoListFragment) mFragment).getChckBox() != null)
+                        ((VideoListFragment) mFragment).getChckBox().setChecked(false);
+                }
+            } else if (id == R.id.action_mode_abs_editable_preview_selections)
                 new SelectionEditorDialog<>(mFragment.getActivity(), mFragment.getSelectionConnection().getSelectedItemList())
                         .setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -811,7 +830,7 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
                             }
 
                         })
-                        .show();*/
+                        .show();
 
             return false;
         }
