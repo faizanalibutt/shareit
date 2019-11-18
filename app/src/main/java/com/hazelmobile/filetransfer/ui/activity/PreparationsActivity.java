@@ -458,11 +458,11 @@ public class PreparationsActivity extends Activity
             finish();
         } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1) {
             ViewTransferActivity.startInstance(this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
-            /*startActivity(new Intent(PreparationsActivity.this, *//*SenderActivity*//*DemoSenderActivity.class)
-                    .putExtra(Keyword.EXTRA_SEND, true)
-                    .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
-                    .putExtra(SenderActivity.EXTRA_REQUEST_TYPE,
-                            SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()));*/
+//            startActivity(new Intent(PreparationsActivity.this, /*SenderActivity*/DemoSenderActivity.class)
+//                    .putExtra(Keyword.EXTRA_SEND, true)
+//                    .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
+//                    .putExtra(SenderActivity.EXTRA_REQUEST_TYPE,
+//                            SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
             finish();
         }
     }
