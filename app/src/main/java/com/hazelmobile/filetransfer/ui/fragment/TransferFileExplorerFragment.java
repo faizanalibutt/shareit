@@ -29,7 +29,7 @@ public class TransferFileExplorerFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDividerView(R.id.layout_transfer_explorer_separator);
+        //setDividerView(R.id.layout_transfer_explorer_separator);
     }
 
     @Override

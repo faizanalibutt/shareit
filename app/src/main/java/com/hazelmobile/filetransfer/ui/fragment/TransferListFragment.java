@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.framework.io.DocumentFile;
@@ -353,6 +354,15 @@ public class TransferListFragment
                 }
             }
         }
+    }
+
+    @Override
+    protected RecyclerView onListView(View mainContainer, ViewGroup listViewContainer) {
+
+        View adaptedView = getLayoutInflater().inflate(R.layout.fragment_transfer_list, null, false);
+        ((ViewGroup) mainContainer).addView(adaptedView);
+
+        return super.onListView(mainContainer, (ViewGroup) adaptedView.findViewById(R.id.transferListContainer));
     }
 
     public TransferGroup getTransferGroup() {
