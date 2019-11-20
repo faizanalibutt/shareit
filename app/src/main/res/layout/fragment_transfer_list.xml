@@ -12,43 +12,74 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_smaller_size"
+        android:layout_marginBottom="@dimen/margin_smallest_size"
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="@dimen/margin_smallest_size"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_20"
-        app:layout_constraintBottom_toTopOf="@+id/dataTransferSpeed"
+        android:max="100"
+        android:progress="0"
+        app:layout_constraintBottom_toTopOf="@+id/dataTransferStatus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/dataTransferSpeed"
+        android:id="@+id/dataTransferStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small_size"
+        android:layout_marginBottom="@dimen/margin_small_size"
         android:gravity="center"
         android:text="Total Size"
-        android:layout_marginBottom="@dimen/margin_small_size"
         android:textColor="@color/black_dominant"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="HardcodedText" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/dataTransferTime"
+    <TextView
+        android:id="@+id/totalTransferTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_small_size"
+        android:layout_marginStart="@dimen/margin_absolute_size"
         android:layout_marginBottom="@dimen/margin_small_size"
+        android:gravity="center"
+        android:text="0.0 sec"
+        android:textColor="@color/black_dominant"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dataTransferStatus"
+        tools:ignore="HardcodedText" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cancelTransfer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_20"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@drawable/ic_cross_blue_24dp" />
+
+    <Button
+        android:id="@+id/callHome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_smaller_size"
+        android:layout_marginEnd="@dimen/margin_smaller_size"
+        android:layout_marginBottom="@dimen/margin_smaller_size"
+        android:text="Go to Home"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

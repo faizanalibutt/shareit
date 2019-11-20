@@ -105,6 +105,7 @@
         <activity
             android:name=".ui.activity.ViewTransferActivity"
             android:label="File Transfer"
+            android:parentActivityName=".ui.activity.PreparationsActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

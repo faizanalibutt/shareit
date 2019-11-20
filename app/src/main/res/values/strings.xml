@@ -94,6 +94,7 @@
     <string name="text_music">Music</string>
     <string name="text_fileRoot">File root</string>
     <string name="text_receivedFiles">Received files</string>
+    <string name="text_sentFiles">Files Sent</string>
     <string name="text_storage">Storage</string>
     <string name="text_storage_devices">STORAGE DEVICES</string>
     <string name="text_internalStorage">Internal storage</string>
@@ -495,6 +496,7 @@
     <string name="text_killServiceAfterLeaving">Leaving the app stops the service</string>
 
     <string name="text_transferStatusFiles">%1d of %2d</string>
+    <string name="text_transferStatusBytes">%1s / %2s</string>
     <string name="text_donate">Help development</string>
     <string name="mesg_donationSuccessful">Thank you!</string>
 
@@ -601,5 +603,6 @@
     <string name="layout_dialog_receiver_title" tools:ignore="TypographyEllipsis">Connecting to %s...</string>
     <string name="total_transfer_time">%s / %s (%s)</string>
     <string name="transfer_file_size">(%s)</string>
+    <string name="transfer_time">(%s)</string>
 
 </resources>

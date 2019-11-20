@@ -60,6 +60,7 @@ public class Keyword {
             FLAG_TRANSFER_QR_CONNECTION = "flagTransferQRConnection",
             DATA_TRANSFER_TIME = "dataTransferTime",
             DATA_TRANSFER_SPEED = "dataTransferSpeed",
+            DATA_TRANSFER_COMPLETED = "dataTransferComplete",
             EXTRA_SEND = "send",
             EXTRA_RECEIVE = "receive";
 

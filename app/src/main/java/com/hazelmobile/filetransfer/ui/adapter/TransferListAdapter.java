@@ -29,10 +29,12 @@ import com.genonbeta.android.framework.util.listing.ComparableMerger;
 import com.genonbeta.android.framework.util.listing.Merger;
 import com.hazelmobile.filetransfer.GlideApp;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.SelectionCallbackGlobal;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.model.CrackTransfer;
+import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferObject;
-import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.GroupEditableListAdapter;
 import com.hazelmobile.filetransfer.pictures.TextUtils;
@@ -83,6 +85,8 @@ public class TransferListAdapter
     protected void onLoad(GroupLister<AbstractGenericItem> lister) {
         final boolean loadThumbnails = AppUtils.getDefaultPreferences(getContext())
                 .getBoolean("load_thumbnails", true);
+
+        final CrackTransfer crackTransfer = new CrackTransfer();
 
         try {
             AppUtils.getDatabase(getContext()).reconstruct(mGroup);
@@ -172,7 +176,6 @@ public class TransferListAdapter
                                 documentFile = FileUtils.fromUri(getContext(), Uri.parse(object.file));
                             else if (TransferObject.Flag.DONE.equals(object.flag))
                                 documentFile = FileUtils.getIncomingPseudoFile(getContext(), object, mGroup, false);
-
                             if (documentFile != null && documentFile.exists()) {
                                 object.setFile(documentFile);
                                 object.setSupportThumbnail(true);
@@ -243,17 +246,19 @@ public class TransferListAdapter
                         storageItem.bytesFree = -1;
                     }
 
-                    lister.offerObliged(this, storageItem);
+                    //lister.offerObliged(this, storageItem);
                 } catch (Exception e) {
 
                 }
             }
 
+        // #Home
+
         DetailsTransferFolder statusItem = new DetailsTransferFolder(mGroup.groupId, currentPath == null
                 ? (filterDevice == null ? getContext().getString(R.string.text_home) : filterDevice.nickname)
                 : currentPath.contains(File.separator) ? currentPath.substring(currentPath.lastIndexOf(File.separator) + 1) : currentPath, currentPath);
 
-        lister.offerObliged(this, statusItem);
+        //lister.offerObliged(this, statusItem);
 
         for (TransferFolder folder : folders.values()) {
             statusItem.filesTotal += folder.filesTotal;
@@ -261,8 +266,9 @@ public class TransferListAdapter
             statusItem.bytesTotal += folder.bytesTotal;
             statusItem.bytesReceived += folder.bytesReceived;
 
-            if (folder.hasIssues())
+            if (folder.hasIssues()) {
                 statusItem.setHasIssues(true);
+            }
 
             lister.offerObliged(this, folder);
         }
@@ -282,6 +288,11 @@ public class TransferListAdapter
 
             lister.offerObliged(this, file);
         }
+
+        /* CRACK THE CODE HERE AND ADD LIVE DATA TO OBSERVE */
+        crackTransfer.totalBytes = statusItem.getSecondText(this);
+        crackTransfer.totalProgress = (int) (statusItem.getPercent() * 100);
+        SelectionCallbackGlobal.setCrackTransfer(crackTransfer);
 
         if (storageItem != null)
             storageItem.bytesRequired = statusItem.bytesTotal - statusItem.bytesReceived;
@@ -454,8 +465,8 @@ public class TransferListAdapter
 
                     DrawableCompat.setTint(wrapDrawable, appliedColor);
                     progressBar.setProgressDrawable(DrawableCompat.unwrap(wrapDrawable));
-                } else
-                {}//progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
+                } else {
+                }//progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
 
                 boolean supportThumbnail = object.loadThumbnail(thumbnail);
 
@@ -718,7 +729,9 @@ public class TransferListAdapter
         @Override
         public String getSecondText(TransferListAdapter adapter) {
             return adapter.getContext()
-                    .getString(R.string.text_transferStatusFiles, filesReceived, filesTotal);
+                    .getString(R.string.text_transferStatusBytes,
+                            FileUtils.sizeExpression(bytesReceived, false),
+                            FileUtils.sizeExpression(bytesTotal, false));
         }
 
         @Override

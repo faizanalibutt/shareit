@@ -439,7 +439,9 @@ public class DemoSenderFragmentImpl
         if (getContext() != null) {
             try {
                 getContext().unregisterReceiver(wReceiver);
+                getContext().unregisterReceiver(bReceiver);
                 getContext().registerReceiver(wReceiver, wifiIntentFilter);
+                getContext().registerReceiver(bReceiver, buletoothIntentFilter);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
@@ -560,7 +562,7 @@ public class DemoSenderFragmentImpl
             if (wifiManager.isWifiEnabled()) {
                 boolean success = wifiManager.startScan();
                 if (success) {
-                    showMessage("SendReceive: Wifi Scan results are " + wifiManager.getScanResults());
+                    //showMessage("SendReceive: Wifi Scan results are " + wifiManager.getScanResults());
                     mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
                     showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
                     senderListAdapter = new SenderListAdapter(getContext(), mGenericList, ((DemoSenderActivity) getActivity()));
@@ -608,7 +610,7 @@ public class DemoSenderFragmentImpl
 
         }
 
-        showMessage("SendReceive: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
+        //showMessage("SendReceive: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
 
         mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
 

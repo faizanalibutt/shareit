@@ -73,6 +73,7 @@ public class HotspotManagerFragment
     private IntentFilter mIntentFilter = new IntentFilter();
     private StatusReceiver mStatusReceiver = new StatusReceiver();
     private UIConnectionUtils mConnectionUtils;
+    String hotspotName;
 
     //private boolean openWifiOnce = false;
     private MenuItem mHelpMenuItem;
@@ -108,8 +109,8 @@ public class HotspotManagerFragment
         //progressBar.setMax(100);
         //progressBar.setProgress/*coming from service wait for that code*/(0);
 
-        dataTransferTime = view.findViewById(R.id.dataTransferTime);
-        dataTransferSpeed = view.findViewById(R.id.dataTransferSpeed);
+        dataTransferTime = view.findViewById(R.id.cancelTransfer);
+        dataTransferSpeed = view.findViewById(R.id.dataTransferStatus);
 
         return view;
     }
@@ -404,7 +405,7 @@ public class HotspotManagerFragment
         showMenu();
 
         if (!isEnabled) {
-            ExtensionsUtils.getLogInfo("hotspot disabled");
+            ExtensionsUtils.getLogInfo("TRANSFER_TAG", "hotspot disabled");
             updateViewsWithBlank();
         } else if (getConnectionUtils().getHotspotUtils() instanceof HotspotUtils.HackAPI
                 && wifiConfiguration != null) {
@@ -413,7 +414,7 @@ public class HotspotManagerFragment
             AppUtils.startForegroundService(getActivity(),
                     new Intent(getActivity(), CommunicationService.class)
                             .setAction(CommunicationService.ACTION_REQUEST_HOTSPOT_STATUS));
-            ExtensionsUtils.getLogInfo("hotspot status sending");
+            ExtensionsUtils.getLogInfo("TRANSFER_TAG", "hotspot status sending");
         }
     }
 

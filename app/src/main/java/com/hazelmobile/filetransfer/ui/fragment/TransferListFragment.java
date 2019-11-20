@@ -11,25 +11,35 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.framework.io.DocumentFile;
+import com.genonbeta.android.framework.util.Interrupter;
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.SelectionCallbackGlobal;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.dialog.TransferInfoDialog;
+import com.hazelmobile.filetransfer.model.CrackTransfer;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.EditableListFragment;
 import com.hazelmobile.filetransfer.pictures.GroupEditableListAdapter;
 import com.hazelmobile.filetransfer.pictures.GroupEditableListFragment;
+import com.hazelmobile.filetransfer.pictures.Keyword;
+import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.activity.FilePickerActivity;
 import com.hazelmobile.filetransfer.ui.adapter.TransferGroupListAdapter;
@@ -43,6 +53,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class TransferListFragment
         extends GroupEditableListFragment<TransferListAdapter.AbstractGenericItem, GroupEditableListAdapter.GroupViewHolder, TransferListAdapter>
@@ -57,6 +68,7 @@ public class TransferListFragment
 
     private TransferGroup mHeldGroup;
     private String mLastKnownPath;
+    private IntentFilter intentFilter;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -66,8 +78,39 @@ public class TransferListFragment
                     || AccessDatabase.TABLE_TRANSFERGROUP.equals(intent.getStringExtra(AccessDatabase.EXTRA_TABLE_NAME))
             ))
                 refreshList();
+            else if (CommunicationService.ACTION_SENDER_PROGRESS.equals(intent.getAction())) {
+
+                transferTime.setText(intent.hasExtra(Keyword.DATA_TRANSFER_TIME)
+                        ? getString(R.string.transfer_time, intent.getStringExtra(Keyword.DATA_TRANSFER_TIME)) : "(0 sec)");
+
+                if (intent.hasExtra(Keyword.DATA_TRANSFER_COMPLETED) &&
+                        intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false))
+                {
+                    callHome.setVisibility(View.VISIBLE);
+                    hideTransferProgress(View.GONE);
+                }
+
+            } else if (CommunicationService.ACTION_RECEIVER_PROGRESS.equals(intent.getAction())) {
+
+                transferTime.setText(intent.hasExtra(Keyword.DATA_TRANSFER_TIME)
+                        ? getString(R.string.transfer_time, intent.getStringExtra(Keyword.DATA_TRANSFER_TIME)) : "0 sec");
+
+                if (intent.hasExtra(Keyword.DATA_TRANSFER_COMPLETED) &&
+                        intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false))
+                {
+                    callHome.setVisibility(View.VISIBLE);
+                    hideTransferProgress(View.GONE);
+                }
+            }
         }
     };
+
+    private void hideTransferProgress(int visibility) {
+        crackProgress.setVisibility(visibility);
+        cancelTransfer.setVisibility(visibility);
+        totalTransfer.setVisibility(visibility);
+        transferTime.setVisibility(visibility);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,12 +135,18 @@ public class TransferListFragment
             goPath(args.getLong(ARG_GROUP_ID), args.getString(ARG_PATH),
                     args.getString(ARG_DEVICE_ID));
         }
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(AccessDatabase.ACTION_DATABASE_CHANGE);
+        intentFilter.addAction(CommunicationService.ACTION_RECEIVER_PROGRESS);
+        intentFilter.addAction(CommunicationService.ACTION_SENDER_PROGRESS);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().registerReceiver(mReceiver, new IntentFilter(AccessDatabase.ACTION_DATABASE_CHANGE));
+        getActivity().registerReceiver(mReceiver, intentFilter);
     }
 
     @Override
@@ -160,6 +209,16 @@ public class TransferListFragment
 
         return false;
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String duration = intent.getStringExtra(Keyword.DATA_TRANSFER_TIME);
+            String speed = intent.getStringExtra(Keyword.DATA_TRANSFER_SPEED);
+            //dataTransferTime.setText(duration);
+            //dataTransferSpeed.setText(speed);
+        }
+    };
 
     @Override
     protected void onListRefreshed() {
@@ -359,10 +418,53 @@ public class TransferListFragment
     @Override
     protected RecyclerView onListView(View mainContainer, ViewGroup listViewContainer) {
 
-        View adaptedView = getLayoutInflater().inflate(R.layout.fragment_transfer_list, null, false);
+        final View adaptedView = getLayoutInflater().inflate(R.layout.fragment_transfer_list, null, false);
         ((ViewGroup) mainContainer).addView(adaptedView);
 
+        crackProgress = adaptedView.findViewById(R.id.progressBar);
+        cancelTransfer = adaptedView.findViewById(R.id.cancelTransfer);
+        transferTime = adaptedView.findViewById(R.id.totalTransferTime);
+        totalTransfer = adaptedView.findViewById(R.id.dataTransferStatus);
+        callHome = adaptedView.findViewById(R.id.callHome);
+
+        crackProgress.setMax(100);
+        cancelTransfer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Interrupter interrupter = new Interrupter();
+                interrupter.interrupt(true);
+            }
+        });
+
+        callHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Objects.requireNonNull(getActivity()).finish();
+            }
+        });
+
+        final Observer<CrackTransfer> selectObserver = new Observer<CrackTransfer>() {
+            @Override
+            public void onChanged(@Nullable final CrackTransfer crack) {
+                updateStaticTransfer(crack);
+            }
+        };
+        SelectionCallbackGlobal.getCrackTransfer().observe(TransferListFragment.this, selectObserver);
+
         return super.onListView(mainContainer, (ViewGroup) adaptedView.findViewById(R.id.transferListContainer));
+    }
+
+    private ProgressBar crackProgress;
+    private ImageView cancelTransfer;
+    private TextView transferTime;
+    private TextView totalTransfer;
+    private Button callHome;
+
+    private void updateStaticTransfer(CrackTransfer crack) {
+        if (crack != null) {
+            totalTransfer.setText(crack.totalBytes);
+            crackProgress.setProgress(crack.totalProgress);
+        }
     }
 
     public TransferGroup getTransferGroup() {

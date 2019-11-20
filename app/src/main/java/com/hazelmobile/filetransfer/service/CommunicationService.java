@@ -120,6 +120,8 @@ public class CommunicationService extends Service {
     public static final String EXTRA_TASK_LIST_RUNNING = "extraTaskListRunning";
     public static final String EXTRA_DEVICE_LIST_RUNNING = "extraDeviceListRunning";
     public static final String EXTRA_TOGGLE_WEBSHARE_START_ALWAYS = "extraToggleWebShareStartAlways";
+    public static final String ACTION_RECEIVER_PROGRESS = "ReceiverProgress";
+    public static final String ACTION_SENDER_PROGRESS = "SenderProgress";
 
     public static final int TASK_STATUS_ONGOING = 0;
     public static final int TASK_STATUS_STOPPED = 1;
@@ -564,7 +566,7 @@ public class CommunicationService extends Service {
     }
 
     public void sendHotspotStatusDisabling() {
-        ExtensionsUtils.getLogInfo("hotspot disabling");
+        ExtensionsUtils.getLogInfo("TRANSFER_TAG", "hotspot disabling");
         sendBroadcast(new Intent(ACTION_HOTSPOT_STATUS)
                 .putExtra(EXTRA_HOTSPOT_ENABLED, false)
                 .putExtra(EXTRA_HOTSPOT_DISABLING, true));
@@ -576,7 +578,7 @@ public class CommunicationService extends Service {
                 .putExtra(EXTRA_HOTSPOT_DISABLING, false);
 
         if (wifiConfiguration != null) {
-            ExtensionsUtils.getLogInfo("hotspot wifi configured");
+            ExtensionsUtils.getLogInfo("TRANSFER_TAG", "hotspot wifi configured");
             statusIntent.putExtra(EXTRA_HOTSPOT_NAME, wifiConfiguration.SSID)
                     .putExtra(EXTRA_HOTSPOT_PASSWORD, wifiConfiguration.preSharedKey)
                     .putExtra(EXTRA_HOTSPOT_KEY_MGMT, NetworkUtils.getAllowedKeyManagement(wifiConfiguration));
@@ -600,7 +602,7 @@ public class CommunicationService extends Service {
             Log.d(TAG, "setupHotspot(): Start with TrustZone");
         }
 
-        if (isEnabled){
+        if (isEnabled) {
             getHotspotUtils().enableConfigured(AppUtils.getHotspotName(this), null);
         } else {
             getHotspotUtils().disable();
@@ -885,6 +887,8 @@ public class CommunicationService extends Service {
                                                         .putExtra(EXTRA_GROUP_ID, groupId)
                                                         .putExtra(EXTRA_DEVICE_ID, finalDevice.deviceId));
 
+                                                // #receive notification goes from here MAY_BE
+
                                                 if (isSeamlessAvailable)
                                                     try {
                                                         startFileReceiving(group.groupId, finalDevice.deviceId);
@@ -1081,9 +1085,16 @@ public class CommunicationService extends Service {
                         try {
                             if (request.has(Keyword.RESULT) && !request.getBoolean(Keyword.RESULT)) {
                                 // the assignee for this transfer has received the files. We can remove it
-                                if (request.has(Keyword.TRANSFER_JOB_DONE) && request.getBoolean(Keyword.TRANSFER_JOB_DONE))
+                                if (request.has(Keyword.TRANSFER_JOB_DONE) && request.getBoolean(Keyword.TRANSFER_JOB_DONE)) {
                                     Log.d(TAG, "SeamlessServer.onConnected(): Receiver notified us that it has received all the pending transfers: " + processHolder.deviceId);
-                                else
+                                    try {
+                                        Intent intent = new Intent(ACTION_SENDER_PROGRESS);
+                                        intent.putExtra(Keyword.DATA_TRANSFER_COMPLETED, true);
+                                        sendBroadcast(intent);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                } else
                                     processHolder.builder.getTransferProgress().interrupt();
 
                                 return;
@@ -1450,11 +1461,15 @@ public class CommunicationService extends Service {
                             // If retry requested, don't show a notification because this method will loop
                             if (isJobDone) {
                                 getNotificationHelper().notifyFileReceived(processHolder, mTransfer.getDevice(), savePath);
-                                sendBroadcasts(processHolder.builder.getTransferProgress(), "ReceiverProgress");
                                 Log.d(TAG, "SeamlessClientHandler.onConnect(): Notify user");
+
+                                sendBroadcastCustom(processHolder.builder.getTransferProgress(), ACTION_RECEIVER_PROGRESS, true);
+
                             } else {
                                 getNotificationHelper().notifyReceiveError(processHolder);
                                 Log.d(TAG, "SeamlessClientHandler.onConnect(): Some files was not received");
+
+                                sendBroadcastCustom(processHolder.builder.getTransferProgress(), ACTION_RECEIVER_PROGRESS, false);
                             }
                         } else {
                             // If there was an error it should be handled by showing another error notification
@@ -1498,13 +1513,13 @@ public class CommunicationService extends Service {
         }
     }
 
-    private void sendBroadcasts(CoolTransfer.TransferProgress<ProcessHolder> transferProgress, String receiver) {
+    private void sendBroadcastCustom(CoolTransfer.TransferProgress<ProcessHolder> transferProgress, String transferAction, boolean dataTransferStatus) {
         try {
-            Log.d(TAG, "Totla time is:" + TimeUtils.INSTANCE.getDuration(transferProgress.getTimeRemaining()) + "" +
-                    FileUtils.sizeExpression(transferProgress.getTransferredByte(), false));
-            Intent intent = new Intent(receiver);
+            Intent intent = new Intent(transferAction);
+
             intent.putExtra(Keyword.DATA_TRANSFER_TIME, TimeUtils.INSTANCE.getFriendlyElapsedTime(CommunicationService.this, transferProgress.getTimeElapsed()));
-            intent.putExtra(Keyword.DATA_TRANSFER_SPEED, FileUtils.sizeExpression(transferProgress.getTransferredByte(), false));
+            intent.putExtra(Keyword.DATA_TRANSFER_COMPLETED, dataTransferStatus);
+
             sendBroadcast(intent);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1537,11 +1552,16 @@ public class CommunicationService extends Service {
 
             // finally my code in your service veli
             try {
-                Log.d(TAG, "Totla time is:" + TimeUtils.INSTANCE.getDuration(handler.getTransferProgress().getTimeRemaining()));
-                Intent intent = new Intent("ReceiverProgress");
-                intent.putExtra(Keyword.DATA_TRANSFER_TIME, TimeUtils.INSTANCE.getDuration(handler.getTransferProgress().getTimeRemaining()));
-                intent.putExtra(Keyword.DATA_TRANSFER_SPEED, FileUtils.sizeExpression(handler.getTransferProgress().getTransferredByte(), false));
-                sendBroadcast(intent);
+
+                /*Intent intent = new Intent(ACTION_RECEIVER_PROGRESS);
+
+                intent.putExtra(Keyword.DATA_TRANSFER_TIME, TimeUtils.INSTANCE.getFriendlyElapsedTime
+                        (CommunicationService.this, handler.getTransferProgress().getTimeElapsed()));
+
+                sendBroadcast(intent);*/
+
+                sendBroadcastCustom(handler.getTransferProgress(), ACTION_RECEIVER_PROGRESS, false);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1654,15 +1674,16 @@ public class CommunicationService extends Service {
         @Override
         public void onNotify(TransferHandler<ProcessHolder> handler, int percentage) {
 
-            // finally my code in your service veli
-            try {
+            // finally faizi code in your service veli
+            /*try {
                 Intent intent = new Intent("SenderProgress");
                 intent.putExtra(Keyword.DATA_TRANSFER_TIME, TimeUtils.INSTANCE.getDuration(handler.getTransferProgress().getTimeRemaining()));
-                intent.putExtra(Keyword.DATA_TRANSFER_SPEED, FileUtils.sizeExpression(handler.getTransferProgress().getTransferredByte(), false));
                 sendBroadcast(intent);
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
+
+            sendBroadcastCustom(handler.getTransferProgress(), ACTION_SENDER_PROGRESS, false/**/);
 
             handler.getExtra().notification.setContentText(getString(R.string.text_remainingTime, TimeUtils.INSTANCE.getDuration(handler.getTransferProgress().getTimeRemaining())));
             Log.d(TAG, "Send: Percentage is: " + percentage);
@@ -1680,12 +1701,32 @@ public class CommunicationService extends Service {
                     ? TransferObject.Flag.DONE
                     : TransferObject.Flag.INTERRUPTED;
             try {
-                Log.d(TAG, "Totla time is:" + TimeUtils.INSTANCE.getDuration(handler.getTransferProgress().getTimeRemaining()) + " " +
-                        FileUtils.sizeExpression(handler.getTransferProgress().getTransferredByte(), false));
-                Intent intent = new Intent("SenderProgress");
-                intent.putExtra(Keyword.DATA_TRANSFER_TIME, TimeUtils.INSTANCE.getFriendlyElapsedTime(CommunicationService.this, handler.getTransferProgress().getTimeElapsed()));
-                intent.putExtra(Keyword.DATA_TRANSFER_SPEED, FileUtils.sizeExpression(handler.getTransferProgress().getTransferredByte(), false));
-                sendBroadcast(intent);
+
+                /*if (TransferObject.Flag.DONE.equals(handler.getExtra().transferObject.flag)) {
+
+                    Intent intent = new Intent("SenderProgress");
+
+                    intent.putExtra(Keyword.DATA_TRANSFER_TIME, TimeUtils.INSTANCE.getFriendlyElapsedTime
+                            (CommunicationService.this, handler.getTransferProgress().getTimeElapsed()));
+                    intent.putExtra(Keyword.DATA_TRANSFER_COMPLETED, true);
+
+                    sendBroadcast(intent);
+                } else if (TransferObject.Flag.INTERRUPTED.equals(handler.getExtra().transferObject.flag)) {
+
+                    Intent intent = new Intent("SenderProgress");
+
+                    intent.putExtra(Keyword.DATA_TRANSFER_TIME, TimeUtils.INSTANCE.getFriendlyElapsedTime
+                            (CommunicationService.this, handler.getTransferProgress().getTimeElapsed()));
+                    intent.putExtra(Keyword.DATA_TRANSFER_COMPLETED, false);
+
+                    sendBroadcast(intent);
+                }*/
+
+                /*if (TransferObject.Flag.DONE.equals(handler.getExtra().transferObject.flag))
+                    sendBroadcastCustom(handler.getTransferProgress(), ACTION_SENDER_PROGRESS, true);
+                else if (TransferObject.Flag.INTERRUPTED.equals(handler.getExtra().transferObject.flag))
+                    sendBroadcastCustom(handler.getTransferProgress(), ACTION_SENDER_PROGRESS, false);*/
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
