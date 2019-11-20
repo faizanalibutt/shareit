@@ -1,7 +1,6 @@
 package com.hazelmobile.filetransfer.ui.adapter;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
@@ -14,13 +13,12 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.widget.ImageViewCompat;
 
 import com.genonbeta.android.database.SQLQuery;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.ShowingAssignee;
+import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.GroupEditableListAdapter;
 import com.hazelmobile.filetransfer.util.FileUtils;
@@ -115,9 +113,9 @@ public class TransferGroupListAdapter
     @Override
     public GroupEditableListAdapter.GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_REPRESENTATIVE)
-            return new GroupViewHolder(getInflater().inflate(R.layout.layout_list_title_no_padding, parent, false), R.id.layout_list_title_text);
+            return new GroupViewHolder(getInflater().inflate(R.layout.layout_list_title_no_padding_ext, parent, false), R.id.layout_list_title_text);
 
-        return new GroupEditableListAdapter.GroupViewHolder(getInflater().inflate(R.layout.list_transfer_group, parent, false));
+        return new GroupEditableListAdapter.GroupViewHolder(getInflater().inflate(R.layout.list_transfer_group_ext, parent, false));
     }
 
     @Override
@@ -164,20 +162,20 @@ public class TransferGroupListAdapter
                 statusLayoutWeb.setVisibility(object.index.outgoingCount > 0 && object.isServedOnWeb
                         ? View.VISIBLE : View.GONE);
                 text1.setText(object.assignees);
-                text2.setText(FileUtils.sizeExpression(object.totalBytes, false));
+                text2.setText(getContext().getString(R.string.transfer_file_size, FileUtils.sizeExpression(object.totalBytes, false)));
                 text3.setText(mPercentFormat.format(object.totalPercent));
                 text4.setText(getContext().getString(R.string.text_transferStatusFiles, object.totalCountCompleted, object.totalCount));
                 progressBar.setMax(100);
                 progressBar.setProgress(percentage <= 0 ? 1 : percentage);
-                ImageViewCompat.setImageTintList(image, ColorStateList.valueOf(appliedColor));
+                //ImageViewCompat.setImageTintList(image, ColorStateList.valueOf(appliedColor));
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getProgressDrawable());
 
                     DrawableCompat.setTint(wrapDrawable, appliedColor);
                     progressBar.setProgressDrawable(DrawableCompat.unwrap(wrapDrawable));
-                } else
-                    progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
+                } /*else*/
+                    //progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
             }
         } catch (Exception e) {
         }

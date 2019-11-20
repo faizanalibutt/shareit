@@ -32,18 +32,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hazel"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-
+        <activity
+            android:parentActivityName=".ui.activity.SideMenu"
+            android:name=".ui.activity.HistoryActivity"
+            android:label="@string/text_history"
+            android:theme="@style/Theme.Hazel.White" />
         <activity android:name=".ui.activity.DialogSheetActivity" />
-
         <activity
             android:name=".ui.activity.WelcomeActivity"
             android:theme="@style/Theme.Hazel.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name=".ui.activity.ReceiverActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
@@ -54,24 +55,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.activity.SideMenu"
             android:theme="@style/Theme.Hazel.White" />
-
         <activity
             android:name=".ui.activity.SideMenu"
             android:theme="@style/Theme.Hazel.Base.NoActionBar" />
-
         <activity
             android:name=".ui.activity.ContentSharingActivity"
             android:label="@string/title_activity_content_sharing"
             android:launchMode="singleTask"
             android:parentActivityName=".ui.activity.MainActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
         <activity
             android:name=".ui.activity.PreparationsActivity"
             android:theme="@style/Theme.Hazel.White">
@@ -88,20 +85,15 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.SenderActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
         <activity
             android:name=".ui.activity.ShareActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
         <activity
             android:name=".ui.activity.AddDevicesToTransferActivity"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
-        <!--@string/text_transactionViewer-->
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" /> <!-- @string/text_transactionViewer -->
         <activity
             android:name=".ui.activity.ViewTransferActivity"
             android:label="File Transfer"
@@ -122,20 +114,15 @@
                 <data android:pathPattern=".*\\..*\\.tshare" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.FilePickerActivity"
             android:label="@string/text_fileExplorer" />
-
         <activity
             android:name=".ui.activity.DemoSenderActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
         <activity
             android:name=".ui.activity.DemoBarcodeScannerActivity"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
-        <!-- SERVICES WILL BE HERE -->
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" /> <!-- SERVICES WILL BE HERE -->
         <service
             android:name=".service.CommunicationService"
             android:enabled="true"
@@ -144,7 +131,6 @@
         <service
             android:name=".service.WorkerService"
             android:label="@string/text_workerService" />
-
     </application>
 
 </manifest>

@@ -35,7 +35,7 @@ class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.menu_histroy -> createSnackbar(R.string.menu_generic_text)?.show()
+            R.id.menu_histroy -> startActivity(Intent(this@SideMenu, HistoryActivity::class.java))
             R.id.menu_help -> createSnackbar(R.string.menu_generic_text)?.show()
             R.id.menu_settings -> startActivity(Intent(this@SideMenu, SettingsActivity::class.java))
             R.id.menu_feedback -> createSnackbar(R.string.menu_generic_text)?.show()
