@@ -46,6 +46,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.hazelmobile.filetransfer.BluetoothConnector;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
@@ -57,8 +58,8 @@ import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
-import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.activity.DemoSenderActivity;
+import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.ui.adapter.SenderListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.IconSupport;
@@ -67,6 +68,7 @@ import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.ListUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
+import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -102,7 +104,7 @@ public class DemoSenderFragmentImpl
     static final int STATE_MESSAGE_RECEIVED = 5;
     static final String APP_NAME = "BTChat";
     //private ImageView retryButton;
-    static final UUID MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
+    public static final UUID MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803405c9a66");
 
     //private DecoratedBarcodeView mBarcodeView;
     private UIConnectionUtils mConnectionUtils;
@@ -945,27 +947,31 @@ public class DemoSenderFragmentImpl
     };
 
     public class ClientClass extends Thread {
-        private BluetoothDevice device;
-        private BluetoothSocket socket;
+
+        private BluetoothConnector.BluetoothSocketWrapper socket;
+        private BluetoothConnector bluetoothConnector;
 
         ClientClass(BluetoothDevice device1) {
-            device = device1;
-
-            try {
-                socket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            //socket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
+            bluetoothConnector = new BluetoothConnector(device1, false,
+                    ConnectionUtils.getInstance(getContext()).getBluetoothAdapter(), null);
         }
 
         public void run() {
+
             try {
-                socket.connect();
+
+                socket  = bluetoothConnector.connect();
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: socket coming from Bluetooth_Connector" + "\n");
                 Message message = Message.obtain();
                 message.what = STATE_CONNECTED;
-                mHandler.sendMessage(message);
+                if (mHandler != null) {
+                    mHandler.sendMessage(message);
+                }
 
-                sendReceive = new SendReceive(socket);
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: client connected and sent message" + "\n");
+
+                sendReceive = new SendReceive(socket.getUnderlyingSocket());
                 sendReceive.start();
 
             } catch (IOException e) {
@@ -976,7 +982,9 @@ public class DemoSenderFragmentImpl
                     mHandler.sendMessage(message);
                 }
             }
-            showMessage("Client: I'm still on.");
+
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: I'm still on...loop has been broken " + "\n");
+
         }
     }
 
@@ -1003,6 +1011,7 @@ public class DemoSenderFragmentImpl
         }
 
         public void run() {
+            
             byte[] buffer = new byte[1024];
             int bytes;
 
@@ -1010,12 +1019,15 @@ public class DemoSenderFragmentImpl
                 try {
                     bytes = inputStream.read(buffer);
                     mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
+                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: receiving bytes from server " + "\n");
                 } catch (IOException e) {
                     e.printStackTrace();
+                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: bytes receiving and error occurs " + e.getMessage() + "\n");
                     break;
                 }
             }
-            showMessage("SendReceive: I'm still on.");
+
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: SendReceive: I'm still on. Loop has been broken " + "\n");
         }
 
         public void write(byte[] bytes) {
