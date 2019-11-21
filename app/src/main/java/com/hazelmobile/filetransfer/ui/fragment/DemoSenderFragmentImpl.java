@@ -1011,7 +1011,6 @@ public class DemoSenderFragmentImpl
         }
 
         public void run() {
-            
             byte[] buffer = new byte[1024];
             int bytes;
 
@@ -1026,7 +1025,6 @@ public class DemoSenderFragmentImpl
                     break;
                 }
             }
-
             ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: SendReceive: I'm still on. Loop has been broken " + "\n");
         }
 
