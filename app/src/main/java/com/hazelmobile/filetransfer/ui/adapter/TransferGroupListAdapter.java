@@ -89,7 +89,10 @@ public class TransferGroupListAdapter
             group.totalPercent = group.totalBytesCompleted == 0 || group.totalBytes == 0
                     ? 0.0 : Long.valueOf(group.totalBytesCompleted).doubleValue() / Long.valueOf(group.totalBytes).doubleValue();
 
-            lister.offerObliged(this, group);
+            if (!group.assignees.equals(getContext().getString(R.string.text_emptySymbol))
+                    && !(group.totalPercent < 1.00)) {
+                lister.offerObliged(this, group);
+            }
         }
     }
 
@@ -154,16 +157,19 @@ public class TransferGroupListAdapter
                                 ? R.drawable.ic_compare_arrows_white_24dp
                                 : R.drawable.ic_error_outline_white_24dp);
                     else
+                    {
                         image.setImageResource(object.index.outgoingCount > 0
                                 ? R.drawable.ic_arrow_up_white_24dp
                                 : R.drawable.ic_arrow_down_white_24dp);
+                        text3.setText(object.index.outgoingCount > 0 ? "Sending" : "Receiving");
+                    }
                 }
 
                 statusLayoutWeb.setVisibility(object.index.outgoingCount > 0 && object.isServedOnWeb
                         ? View.VISIBLE : View.GONE);
                 text1.setText(object.assignees);
                 text2.setText(getContext().getString(R.string.transfer_file_size, FileUtils.sizeExpression(object.totalBytes, false)));
-                text3.setText(mPercentFormat.format(object.totalPercent));
+                //text3.setText(mPercentFormat.format(object.totalPercent));
                 text4.setText(getContext().getString(R.string.text_transferStatusFiles, object.totalCountCompleted, object.totalCount));
                 progressBar.setMax(100);
                 progressBar.setProgress(percentage <= 0 ? 1 : percentage);
@@ -175,7 +181,7 @@ public class TransferGroupListAdapter
                     DrawableCompat.setTint(wrapDrawable, appliedColor);
                     progressBar.setProgressDrawable(DrawableCompat.unwrap(wrapDrawable));
                 } /*else*/
-                    //progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
+                //progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
             }
         } catch (Exception e) {
         }
