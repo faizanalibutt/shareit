@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.hazelmobile.filetransfer.files.AppConfig;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
+import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
 import java.util.List;
 
@@ -143,6 +144,8 @@ public class ConnectionUtils {
             }
 
             if (connectionCallback.onTimePassed(1000, passedTime) || interrupter.interrupted()) {
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "establishHotspotConnection(): Timed out or onTimePassed returned true. Exiting...");
                 Log.d(TAG, "establishHotspotConnection(): Timed out or onTimePassed returned true. Exiting...");
                 break;
             }

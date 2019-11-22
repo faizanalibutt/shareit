@@ -369,6 +369,9 @@ public class HotspotManagerFragment
                             .apply();
                     if (serverClass != null && UIConnectionUtils.isOreoAbove()) {
                         showMessage("HotspotInformation is: " + codeIndex);
+                        ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                "ServerSocket: When Hotspot enabled and HotspotInformation is " +
+                                codeIndex);
                         serverClass.setHotspotInformation(codeIndex);
                     }
 

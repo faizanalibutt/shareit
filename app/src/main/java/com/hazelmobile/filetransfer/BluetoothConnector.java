@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import com.hazelmobile.filetransfer.ui.fragment.DemoSenderFragmentImpl;
+import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,11 +63,11 @@ public class BluetoothConnector {
                     success = true;
                     break;  
                 } catch (FallbackException e1) {
-                    Log.w("BT", "Could not initialize FallbackBluetoothSocket classes.", e);
+                    Log.w(ExtensionsUtils.getBLUETOOTH_TAG(), "Could not initialize FallbackBluetoothSocket classes.", e);
                 } catch (InterruptedException e1) {
-                    Log.w("BT", e1.getMessage(), e1);
+                    Log.w(ExtensionsUtils.getBLUETOOTH_TAG(), e1.getMessage(), e1);
                 } catch (IOException e1) {
-                    Log.w("BT", "Fallback failed. Cancelling.", e1);
+                    Log.w(ExtensionsUtils.getBLUETOOTH_TAG(), "Fallback failed. Cancelling.", e1);
                 }
             }
         }

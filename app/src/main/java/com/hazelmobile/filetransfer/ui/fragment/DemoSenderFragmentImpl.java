@@ -962,28 +962,35 @@ public class DemoSenderFragmentImpl
             try {
 
                 socket  = bluetoothConnector.connect();
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: socket coming from Bluetooth_Connector" + "\n");
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: socket coming from Bluetooth_Connector" + "\n");
                 Message message = Message.obtain();
                 message.what = STATE_CONNECTED;
                 if (mHandler != null) {
                     mHandler.sendMessage(message);
                 }
 
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: client connected and sent message" + "\n");
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: client connected and sent message" + "\n");
 
                 sendReceive = new SendReceive(socket.getUnderlyingSocket());
                 sendReceive.start();
 
             } catch (IOException e) {
                 e.printStackTrace();
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: client fed up with exception "+ e.getMessage() + "\n");
                 Message message = Message.obtain();
                 message.what = STATE_CONNECTION_FAILED;
                 if (mHandler != null) {
                     mHandler.sendMessage(message);
                 }
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: client sending message connection failed" + e.getMessage() + "\n");
             }
 
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: I'm still on...loop has been broken " + "\n");
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: I'm still on...loop has been broken " + "\n");
 
         }
     }
@@ -1003,6 +1010,8 @@ public class DemoSenderFragmentImpl
                 tempIn = bluetoothSocket.getInputStream();
                 tempOut = bluetoothSocket.getOutputStream();
             } catch (IOException e) {
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: SendReceive constructor fed up " +e.getMessage()+ "\n");
                 e.printStackTrace();
             }
 
@@ -1018,14 +1027,18 @@ public class DemoSenderFragmentImpl
                 try {
                     bytes = inputStream.read(buffer);
                     mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
-                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: receiving bytes from server " + "\n");
+                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                            "ClientSocket: RECEIVING BYTES FROM SERVER" + "\n");
                 } catch (IOException e) {
                     e.printStackTrace();
-                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: bytes receiving and error occurs " + e.getMessage() + "\n");
+                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                            "ClientSocket: bytes receiving and error occurs " + e.getMessage() + "\n");
                     break;
+
                 }
             }
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(), "ClientSocket: SendReceive: I'm still on. Loop has been broken " + "\n");
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: SendReceive: I'm still on. Loop has been broken " + "\n");
         }
 
         public void write(byte[] bytes) {
