@@ -122,7 +122,7 @@ public class UIConnectionUtils {
                                 new ConnectionUtils.ConnectionCallback() {
                                     @Override
                                     public boolean onTimePassed(int delimiter, long timePassed) {
-                                        return timePassed >= 20000;
+                                        return timePassed >= 30000;
                                     }
                                 });
                     } else if (object instanceof String)
