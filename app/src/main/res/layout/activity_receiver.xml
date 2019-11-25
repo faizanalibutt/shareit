@@ -97,7 +97,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/v4"
+            android:id="@+id/receiver_status"
             style="@style/TextAppearance.Primary.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -105,7 +105,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/margin_absolute_size"
             android:gravity="center"
-            android:text="Ask your friend to open the app and tap\nSEND" />
+            android:text="@string/text_receive_status" />
 
     </com.hazelmobile.filetransfer.library.RippleBackground>
 

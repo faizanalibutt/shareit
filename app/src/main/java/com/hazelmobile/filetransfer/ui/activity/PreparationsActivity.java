@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
@@ -105,9 +106,8 @@ public class PreparationsActivity extends Activity
             isBluetooth = true;
             bluetoothButton.setEnabled(false);
             getConnectionUtils().getBluetoothAdapter().disable();
-        } else
-            if (getConnectionUtils().getBluetoothAdapter().enable())
-                enableBluetooth(bluetoothButton);
+        } else if (getConnectionUtils().getBluetoothAdapter().enable())
+            enableBluetooth(bluetoothButton);
         // wifi check
         if (ConnectionUtils.getInstance(this).getWifiManager().isWifiEnabled()) {
             enableWifi(wifiButton);
@@ -236,6 +236,15 @@ public class PreparationsActivity extends Activity
         enableButton();
     }
 
+    private void disableBluetooth(View view) {
+        view.setVisibility(View.VISIBLE);
+        bluetoothStatus.setVisibility(View.GONE);
+        bluetoothPbr.setVisibility(View.GONE);
+        isBluetooth = false;
+        isAllEnabled = false;
+        enableButton();
+    }
+
     public void openWifi(View view) {
         ConnectionUtils.getInstance(this).openWifi();
         if (!ConnectionUtils.getInstance(this).getWifiManager().isWifiEnabled()) {
@@ -258,6 +267,15 @@ public class PreparationsActivity extends Activity
         wifiPbr.setVisibility(View.GONE);
         wifiStatus.setVisibility(View.VISIBLE);
         isAllEnabled = isBluetooth && isGps && isHotspot;
+        enableButton();
+    }
+
+    private void disableWifi(View view) {
+        isWifi = false;
+        view.setVisibility(View.VISIBLE);
+        wifiPbr.setVisibility(View.GONE);
+        wifiStatus.setVisibility(View.GONE);
+        isAllEnabled = false;
         enableButton();
     }
 
@@ -299,6 +317,15 @@ public class PreparationsActivity extends Activity
         enableButton();
     }
 
+    private void disableGPS(View view) {
+        view.setVisibility(View.VISIBLE);
+        gpsPbr.setVisibility(View.GONE);
+        gpsStatus.setVisibility(View.GONE);
+        isGps = false;
+        isAllEnabled = false;
+        enableButton();
+    }
+
     public void openHotspot(View view) {
         AppUtils.launchHotspotSettings(this);
     }
@@ -312,9 +339,38 @@ public class PreparationsActivity extends Activity
         enableButton();
     }
 
+    private void disableHostspot(View view) {
+        view.setVisibility(View.VISIBLE);
+        hotspotPbr.setVisibility(View.GONE);
+        hotspotStatus.setVisibility(View.GONE);
+        isHotspot = false;
+        isAllEnabled = false;
+        enableButton();
+    }
+
     private void enableButton() {
         if (isAllEnabled) {
             nextScreen.setEnabled(true);
+            nextScreen.setBackgroundResource(R.drawable.background_content_share_button_select);
+            ViewCompat.setBackgroundTintList(
+                    nextScreen,
+                    ContextCompat.getColorStateList(
+                            this,
+                            R.color.text_button_text_color_selector_blue
+                    )
+            );
+            nextScreen.setTextColor(ContextCompat.getColor(this, R.color.white));
+        } else {
+            nextScreen.setEnabled(false);
+            nextScreen.setBackgroundResource(R.drawable.background_content_share_button);
+            ViewCompat.setBackgroundTintList(
+                    nextScreen,
+                    ContextCompat.getColorStateList(
+                            this,
+                            R.color.text_button_text_color_selector
+                    )
+            );
+            nextScreen.setTextColor(ContextCompat.getColor(this, R.color.text_button_text_color_selector));
         }
     }
 
@@ -359,10 +415,7 @@ public class PreparationsActivity extends Activity
         if (requestCode == LOCATION_PERMISSION_RESULT) {
             if (!getConnectionUtils().hasLocationPermission(this)) {
                 // Permission is not granted
-                gpsButton.setVisibility(View.VISIBLE);
-                gpsStatus.setVisibility(View.GONE);
-                gpsPbr.setVisibility(View.GONE);
-                isGps = false;
+                disableGPS(gpsButton);
                 createSnackbar(R.string.mesg_locationDisabledSelfHotspot).show();
             } else {
                 if (ConnectionUtils.getInstance(PreparationsActivity.this).isLocationServiceEnabled()) {
@@ -376,6 +429,7 @@ public class PreparationsActivity extends Activity
                 enableGPS(gpsButton);
             } else {
                 createSnackbar(R.string.mesg_locationDisabledSelfHotspot).show();
+                disableGPS(gpsButton);
             }
         }
     }
@@ -403,6 +457,9 @@ public class PreparationsActivity extends Activity
                         /*case BluetoothAdapter.STATE_TURNING_ON:*/
                         enableBluetooth(bluetoothButton);
                         break;
+                    case BluetoothAdapter.STATE_OFF:
+                        disableBluetooth(bluetoothButton);
+                        break;
                 }
             } else if (WifiManager.WIFI_STATE_CHANGED_ACTION.equalsIgnoreCase(action)) {
                 int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
@@ -410,6 +467,9 @@ public class PreparationsActivity extends Activity
                     case WifiManager.WIFI_STATE_ENABLED:
                         /*case WifiManager.WIFI_STATE_ENABLING:*/
                         enableWifi(wifiButton);
+                        break;
+                    case WifiManager.WIFI_STATE_DISABLED:
+                        disableWifi(wifiButton);
                         break;
                 }
             } else if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction()))
@@ -420,6 +480,7 @@ public class PreparationsActivity extends Activity
                 } else if (getConnectionUtils().getHotspotUtils().isEnabled()
                         && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
                     isHotspot = false;
+                    disableHostspot(hotspotButton);
                 }
             }
         }

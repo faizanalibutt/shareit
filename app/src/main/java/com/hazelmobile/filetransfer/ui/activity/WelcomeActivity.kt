@@ -49,6 +49,7 @@ class WelcomeActivity : Activity() {
                         )
                     )
                     button.setBackgroundResource(R.drawable.background_content_share_button)
+                    image.setImageResource(R.drawable.ic_tick_grey_24dp)
                     ViewCompat.setBackgroundTintList(
                         button,
                         ContextCompat.getColorStateList(
@@ -83,6 +84,7 @@ class WelcomeActivity : Activity() {
                         )
                     )
                     button.setBackgroundResource(R.drawable.background_content_share_button_select)
+                    image.setImageResource(R.drawable.ic_tick_white_24dp)
                     ViewCompat.setBackgroundTintList(
                         button,
                         ContextCompat.getColorStateList(

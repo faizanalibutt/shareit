@@ -41,10 +41,14 @@
         <activity
             android:name=".ui.activity.WelcomeActivity"
             android:theme="@style/Theme.Hazel.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize">
+
+        </activity>
         <activity
             android:name=".ui.activity.ReceiverActivity"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
+
+        <!-- MAIN ACTIVITY HERE -->
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
@@ -55,6 +59,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- MAIN ACTIVITY ENDS HERE -->
+
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -68,7 +74,9 @@
             android:label="@string/title_activity_content_sharing"
             android:launchMode="singleTask"
             android:parentActivityName=".ui.activity.MainActivity"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
+
+        </activity>
         <activity
             android:name=".ui.activity.PreparationsActivity"
             android:theme="@style/Theme.Hazel.White">

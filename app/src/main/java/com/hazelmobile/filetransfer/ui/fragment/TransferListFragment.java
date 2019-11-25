@@ -42,6 +42,7 @@ import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.activity.FilePickerActivity;
+import com.hazelmobile.filetransfer.ui.activity.MainActivity;
 import com.hazelmobile.filetransfer.ui.adapter.TransferGroupListAdapter;
 import com.hazelmobile.filetransfer.ui.adapter.TransferListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
@@ -84,8 +85,7 @@ public class TransferListFragment
                         ? getString(R.string.transfer_time, intent.getStringExtra(Keyword.DATA_TRANSFER_TIME)) : "(0 sec)");
 
                 if (intent.hasExtra(Keyword.DATA_TRANSFER_COMPLETED) &&
-                        intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false))
-                {
+                        intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false)) {
                     callHome.setVisibility(View.VISIBLE);
                     hideTransferProgress(View.GONE);
                 }
@@ -96,8 +96,7 @@ public class TransferListFragment
                         ? getString(R.string.transfer_time, intent.getStringExtra(Keyword.DATA_TRANSFER_TIME)) : "0 sec");
 
                 if (intent.hasExtra(Keyword.DATA_TRANSFER_COMPLETED) &&
-                        intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false))
-                {
+                        intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false)) {
                     callHome.setVisibility(View.VISIBLE);
                     hideTransferProgress(View.GONE);
                 }
@@ -439,6 +438,8 @@ public class TransferListFragment
         callHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(Objects.requireNonNull(getActivity()), MainActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                 Objects.requireNonNull(getActivity()).finish();
             }
         });

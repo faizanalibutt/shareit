@@ -43,19 +43,24 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
         }
 
         mMode = activity_content_sharing_action_mode
-        mMode.setOnSelectionTaskListener { started, _ -> toolbar.visibility = if (!started) View.VISIBLE else View.GONE }
+        mMode.setOnSelectionTaskListener { started, _ ->
+            toolbar.visibility = if (!started) View.VISIBLE else View.GONE
+        }
 
         mSelectionCallback = SharingActionModeCallback(null)
-        val selectorConnection: PowerfulActionMode.SelectorConnection<Shareable> = PowerfulActionMode.SelectorConnection(mMode, mSelectionCallback)
+        val selectorConnection: PowerfulActionMode.SelectorConnection<Shareable> =
+            PowerfulActionMode.SelectorConnection(mMode, mSelectionCallback)
 
         val pagerAdapter = object :
             SmartFragmentPagerAdapter(this@ContentSharingActivity, supportFragmentManager) {
             override fun onItemInstantiated(item: Companion.StableItem) {
 
-                val fragmentImpl: EditableListFragmentImpl<Editable> = item.getInitiatedItem() as EditableListFragmentImpl<Editable>
+                val fragmentImpl: EditableListFragmentImpl<Editable> =
+                    item.getInitiatedItem() as EditableListFragmentImpl<Editable>
 
                 fragmentImpl.setSelectorConnection(selectorConnection as PowerfulActionMode.SelectorConnection<Editable>)
-                fragmentImpl.selectionCallback = mSelectionCallback as EditableListFragment.SelectionCallback<Editable>
+                fragmentImpl.selectionCallback =
+                    mSelectionCallback as EditableListFragment.SelectionCallback<Editable>
 
                 if (content_sharing_viewPager.currentItem == item.getCurrentPosition())
                     attachListeners(fragmentImpl)
@@ -118,12 +123,16 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 content_sharing_viewPager.currentItem = tab.position
 
-                val fragment: EditableListFragmentImpl<Editable> = pagerAdapter.getItem(tab.position) as EditableListFragmentImpl<Editable>
+                val fragment: EditableListFragmentImpl<Editable> =
+                    pagerAdapter.getItem(tab.position) as EditableListFragmentImpl<Editable>
 
                 attachListeners(fragment)
 
                 if (fragment.adapterImpl != null)
-                    Handler(Looper.getMainLooper()).postDelayed({ fragment.adapterImpl.notifyAllSelectionChanges() }, 200)
+                    Handler(Looper.getMainLooper()).postDelayed(
+                        { fragment.adapterImpl.notifyAllSelectionChanges() },
+                        200
+                    )
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {
@@ -146,7 +155,8 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
         val tabLayout = activity_content_sharing_tab_layout
         val whiteColor = ContextCompat.getColor(this@ContentSharingActivity, R.color.white)
         val colorPrimary = ContextCompat.getColor(this@ContentSharingActivity, R.color.colorPrimary)
-        val colorBlack = ContextCompat.getColor(this@ContentSharingActivity, R.color.black_transparent)
+        val colorBlack =
+            ContextCompat.getColor(this@ContentSharingActivity, R.color.black_transparent)
 
         if (select) {
 
@@ -154,7 +164,10 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
             sendButton.setBackgroundResource(R.drawable.background_content_share_button_select)
             ViewCompat.setBackgroundTintList(
                 sendButton,
-                ContextCompat.getColorStateList(this@ContentSharingActivity, R.color.text_button_text_color_selector_blue)
+                ContextCompat.getColorStateList(
+                    this@ContentSharingActivity,
+                    R.color.text_button_text_color_selector_blue
+                )
             )
 
             tabLayout.setBackgroundResource(R.color.colorPrimary)
@@ -166,15 +179,24 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
 
             mMode.setBackgroundColor(colorPrimary)
             mMode.setTitleTextColor(whiteColor)
-            mMode.overflowIcon = resources.getDrawable(R.drawable.ic_action_over_flow_icon_white_24dp)
+            mMode.overflowIcon =
+                resources.getDrawable(R.drawable.ic_action_over_flow_icon_white_24dp)
 
         } else {
 
-            sendButton.setTextColor(ContextCompat.getColor(this@ContentSharingActivity, R.color.text_color_gray))
+            sendButton.setTextColor(
+                ContextCompat.getColor(
+                    this@ContentSharingActivity,
+                    R.color.text_color_gray
+                )
+            )
             sendButton.setBackgroundResource(R.drawable.background_content_share_button)
             ViewCompat.setBackgroundTintList(
                 sendButton,
-                ContextCompat.getColorStateList(this@ContentSharingActivity, R.color.text_button_text_color_selector)
+                ContextCompat.getColorStateList(
+                    this@ContentSharingActivity,
+                    R.color.text_button_text_color_selector
+                )
             )
 
             tabLayout.setBackgroundResource(R.color.white)
@@ -183,6 +205,10 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
                 colorPrimary
             )
             tabLayout.setSelectedTabIndicatorColor(colorPrimary)
+            if (mMode.hasActive(mSelectionCallback)) {
+                mMode.finish(mSelectionCallback)
+                SelectionCallbackGlobal.setColor(false)
+            }
 
             /*mMode.setBackgroundColor(whiteColor)
             mMode.setTitleTextColor(colorBlack)

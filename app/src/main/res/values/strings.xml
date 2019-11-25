@@ -604,5 +604,7 @@
     <string name="total_transfer_time">%s / %s (%s)</string>
     <string name="transfer_file_size">(%s)</string>
     <string name="transfer_time">(%s)</string>
+    <string name="text_send_status">Ask your friend to open the app and tap RECEIVE</string>
+    <string name="text_receive_status">Ask your friend to open the app and tap SEND</string>
 
 </resources>

@@ -123,7 +123,7 @@ public class DemoSenderFragmentImpl
 
     private ListView lv_send;
     private ImageView user_image, user_retry;
-    private TextView textView;
+    private TextView textView, sender_status;
     private SendReceive sendReceive;
     private BottomSheetBehavior standardBottomSheetBehavior;
     private ClientClass clientClass;
@@ -189,6 +189,7 @@ public class DemoSenderFragmentImpl
         user_image = view.findViewById(R.id.userProfileImage);
         user_retry = view.findViewById(R.id.userProfileImageRetry);
         textView = view.findViewById(R.id.text1);
+        sender_status = view.findViewById(R.id.sender_status);
         setProfilePicture();
 
         LinearLayout standardBottomSheet = view.findViewById(R.id.standardBottomSheet);
@@ -788,10 +789,11 @@ public class DemoSenderFragmentImpl
 
                     final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
                     if (state == BluetoothAdapter.STATE_ON) {
-                        //showMessage("ACTION_STATE_CHANGED: STATE_ON");
                         ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().startDiscovery();
-                        //showMessage("Bluetooth Discovery Started.....");
+                        sender_status.setText(R.string.text_send_status);
                     }
+                    if (state == BluetoothAdapter.STATE_OFF)
+                        sender_status.setText("Bluetooth is disabled, Kindly open it to start the Process");
                     break;
                 case BluetoothDevice.ACTION_FOUND:
 
@@ -869,8 +871,12 @@ public class DemoSenderFragmentImpl
                 case WifiManager.WIFI_STATE_CHANGED_ACTION:
 
                     int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
-                    if (state == WifiManager.WIFI_STATE_ENABLED)
+                    if (state == WifiManager.WIFI_STATE_ENABLED){
                         wifiManager.startScan();
+                        sender_status.setText(R.string.text_send_status);
+                    }
+                    if (state == WifiManager.WIFI_STATE_DISABLED)
+                        sender_status.setText("Wifi is disabled, Kindly open it to start the Process");
                     break;
 
                 case WifiManager.SCAN_RESULTS_AVAILABLE_ACTION:
@@ -895,6 +901,14 @@ public class DemoSenderFragmentImpl
                     || ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())
                     || LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction()))
                 updateState();
+
+            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
+                if (!mConnectionUtils.getConnectionUtils().isLocationServiceEnabled()) {
+                    sender_status.setText("Location is disabled, Kindly open it to start the Process");
+                } else {
+                    sender_status.setText(R.string.text_send_status);
+                }
+            }
         }
     };
 

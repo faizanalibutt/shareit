@@ -110,10 +110,8 @@ public class ApplicationListFragment
                             @Override
                             public void onClick(View v) {
                                 if (getSelectionConnection() != null) {
-                                    getSelectionConnection().setSelected(clazz.getAdapterPosition());
                                     SelectionCallbackGlobal.setColor(true);
-                                } else {
-                                    SelectionCallbackGlobal.setColor(false);
+                                    getSelectionConnection().setSelected(clazz.getAdapterPosition());
                                 }
                             }
                         });

@@ -1,10 +1,14 @@
 package com.hazelmobile.filetransfer.ui.activity;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.ShapeDrawable;
+import android.location.LocationManager;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,6 +25,7 @@ import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.library.RippleBackground;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.receiver.NetworkStatusReceiver;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
@@ -29,6 +34,10 @@ import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
 import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
+
+import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_HOTSPOT_STATUS;
+import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_DISABLING;
+import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_ENABLED;
 
 public class ReceiverActivity extends Activity
         implements SnackbarSupport {
@@ -41,7 +50,7 @@ public class ReceiverActivity extends Activity
     private final IntentFilter mFilter = new IntentFilter();
 
     private ImageView user_image;
-    private TextView textView;
+    private TextView textView, receiver_status;
     private boolean mHotspotClosed = false;
     private UIConnectionUtils mConnectionUtils;
 
@@ -66,9 +75,18 @@ public class ReceiverActivity extends Activity
 
         mFilter.addAction(CommunicationService.ACTION_DEVICE_ACQUAINTANCE);
         mFilter.addAction(CommunicationService.ACTION_INCOMING_TRANSFER_READY);
+        mFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        mFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        mFilter.addAction(ACTION_HOTSPOT_STATUS);
+        mFilter.addAction(NetworkStatusReceiver.WIFI_AP_STATE_CHANGED);
+        mFilter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
 
         initViews();
 
+    }
+
+    private ConnectionUtils getConnectionUtils() {
+        return getUIConnectionUtils().getConnectionUtils();
     }
 
     @Override
@@ -139,6 +157,7 @@ public class ReceiverActivity extends Activity
 
         user_image = findViewById(R.id.userProfileImage);
         textView = findViewById(R.id.text1);
+        receiver_status = findViewById(R.id.receiver_status);
 
         setProfilePicture();
     }
@@ -157,10 +176,57 @@ public class ReceiverActivity extends Activity
         }
     }
 
+    private void updateHotspotState() {
+        boolean isEnabled = getUIConnectionUtils().getConnectionUtils().getHotspotUtils().isEnabled();
+
+        if (!isEnabled) {
+            /*enableHostspot(hotspotButton);*/
+            receiver_status.setText(R.string.text_receive_status);
+        } else if (Build.VERSION.SDK_INT >= 26) {
+            AppUtils.startForegroundService(this,
+                    new Intent(this, CommunicationService.class)
+                            .setAction(CommunicationService.ACTION_REQUEST_HOTSPOT_STATUS));
+        }
+    }
+
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (mRequestType.equals(RequestType.RETURN_RESULT)) {
+            String action = intent.getAction();
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equalsIgnoreCase(action)) {
+                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
+                switch (state) {
+                    case BluetoothAdapter.STATE_ON:
+                        /*case BluetoothAdapter.STATE_TURNING_ON:*/
+                        receiver_status.setText(R.string.text_receive_status);
+                        break;
+                    case BluetoothAdapter.STATE_OFF:
+                        if (UIConnectionUtils.isOreoAbove())
+                            receiver_status.setText("Bluetooth is disabled, Kindly open it to start the Process");
+                        break;
+                }
+            } else if (WifiManager.WIFI_STATE_CHANGED_ACTION.equalsIgnoreCase(action)) {
+                int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
+                switch (state) {
+                    case WifiManager.WIFI_STATE_ENABLED:
+                        /*case WifiManager.WIFI_STATE_ENABLING:*/
+                        receiver_status.setText(R.string.text_receive_status);
+                        break;
+                    case WifiManager.WIFI_STATE_DISABLED:
+                        receiver_status.setText("Wifi is disabled, Kindly open it to start the Process");
+                        break;
+                }
+            } else if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction()))
+                updateHotspotState();
+            else if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
+                if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false)) {
+                    /*isHotspot = true;*/
+                    receiver_status.setText(R.string.text_receive_status);
+                } else if (getConnectionUtils().getHotspotUtils().isEnabled()
+                        && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
+                    receiver_status.setText("Hotspot is disabled, Kindly open it to start the Process");
+                }
+            } else if (mRequestType.equals(RequestType.RETURN_RESULT)) {
                 if (CommunicationService.ACTION_DEVICE_ACQUAINTANCE.equals(intent.getAction())
                         && intent.hasExtra(CommunicationService.EXTRA_DEVICE_ID)
                         && intent.hasExtra(CommunicationService.EXTRA_CONNECTION_ADAPTER_NAME)) {
@@ -184,6 +250,12 @@ public class ReceiverActivity extends Activity
                             intent.getLongExtra(CommunicationService.EXTRA_GROUP_ID, -1));
                     SenderFragmentImpl.showMessage("EstablishConnection(): Going to Transfer Activity Finally");
                     finish();
+                }
+            } else if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
+                if (!getUIConnectionUtils().getConnectionUtils().isLocationServiceEnabled()) {
+                    receiver_status.setText("Location is disabled, Kindly open it to start the Process");
+                } else {
+                    receiver_status.setText(R.string.text_receive_status);
                 }
             }
         }
