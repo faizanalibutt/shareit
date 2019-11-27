@@ -199,6 +199,9 @@ public class HotspotManagerFragment
                         }
                     }
                 }
+                connectionUtils.getBluetoothAdapter().setName(AppUtils.getLocalDeviceName(getContext()));
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ServerSocket: onDestroy(): " + connectionUtils.getBluetoothAdapter().getName());
                 connectionUtils.getBluetoothAdapter().disable();
             }
 
@@ -374,9 +377,9 @@ public class HotspotManagerFragment
                             .putInt(Keyword.NETWORK_PIN, networkPin)
                             .apply();
                     if (serverClass != null && UIConnectionUtils.isOreoAbove()) {
-                        showMessage("HotspotInformation is: " + codeIndex);
+                        showMessage("When Hotspot Enabled AND HotspotInformation is: " + codeIndex);
                         ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
-                                "ServerSocket: When Hotspot enabled and HotspotInformation is " +
+                                "ServerSocket: When Hotspot Enabled AND HotspotInformation is " +
                                         codeIndex);
                         serverClass.setHotspotInformation(codeIndex);
 
@@ -542,8 +545,7 @@ public class HotspotManagerFragment
                 }
 
                 ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ServerSocket: HOTSPOT_INFORMATION is " + "\n" + getHotspotInformation());
-                showMessage("HotspotInformation is: " + getHotspotInformation());
+                        "ServerSocket: When Server Thread Enabled AND HOTSPOT_INFORMATION is " + "\n" + getHotspotInformation());
                 if (socket != null && getHotspotInformation() != null) {
 
                     manageServerSocket(socket);

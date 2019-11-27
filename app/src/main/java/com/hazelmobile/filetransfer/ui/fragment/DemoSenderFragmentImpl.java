@@ -574,7 +574,9 @@ public class DemoSenderFragmentImpl
                         if (object instanceof ScanResult)
                             connectToHotspot(((ScanResult) object));
                         else if (object instanceof Bluetooth) {
-                            ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
+                            if (ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().isDiscovering()) {
+                                ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
+                            }
                             mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
                             cancelDiscovery();
                             clientClass = new ClientClass(((Bluetooth) object).getDevice());
@@ -796,7 +798,7 @@ public class DemoSenderFragmentImpl
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     //showMessage("Others device name is " + device.getName() + " " + device.getAddress());
                     if (device.getName() != null &&
-                            (device.getName().startsWith("TS") ||
+                            (/*device.getName().startsWith("TS") ||*/
                                     device.getName().startsWith("AndroidShare"))) {
 
                         showMessage("Tshot device name is " + device.getName());
@@ -956,7 +958,7 @@ public class DemoSenderFragmentImpl
 
             try {
 
-                socket  = bluetoothConnector.connect();
+                socket = bluetoothConnector.connect();
 
                 ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: socket coming from Bluetooth_Connector" + "\n");
@@ -977,7 +979,7 @@ public class DemoSenderFragmentImpl
                 }
 
                 ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ClientSocket: client fed up with exception "+ e.getMessage() + "\n");
+                        "ClientSocket: client fed up with exception " + e.getMessage() + "\n");
 
                 Message message = Message.obtain();
                 message.what = STATE_CONNECTION_FAILED;
@@ -1022,7 +1024,7 @@ public class DemoSenderFragmentImpl
                 tempIn = bluetoothSocket.getInputStream();
             } catch (IOException e) {
                 ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ClientSocket: SendReceive: constructor fed up " +e.getMessage()+ "\n");
+                        "ClientSocket: SendReceive: constructor fed up " + e.getMessage() + "\n");
                 e.printStackTrace();
             }
 

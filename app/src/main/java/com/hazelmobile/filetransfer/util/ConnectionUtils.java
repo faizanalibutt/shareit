@@ -135,12 +135,16 @@ public class ConnectionUtils {
                     if (NetworkUtils.ping(testedRemoteAddress)) {
                         Log.d(TAG, "establishHotspotConnection(): AP has been reached. Returning OK state.");
                         remoteAddress = testedRemoteAddress;
+                        //com.hazelmobile.filetransfer.Callback.setDialogInfo("Connected");
                         break;
                     } else {
                         Log.d(TAG, "establishHotspotConnection(): Connection check ping failed");
                     }
                 } else
+                {
                     Log.d(TAG, "establishHotspotConnection(): No DHCP provided. Looping...");
+                    //com.hazelmobile.filetransfer.Callback.setDialogInfo("No DHCP provided.");
+                }
             }
 
             if (connectionCallback.onTimePassed(1000, passedTime) || interrupter.interrupted()) {

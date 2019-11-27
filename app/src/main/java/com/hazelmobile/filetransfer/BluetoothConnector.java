@@ -183,25 +183,42 @@ public class BluetoothConnector {
         }
 
         @Override
-        public InputStream getInputStream() throws IOException {
-            return fallbackSocket.getInputStream();
+        public InputStream getInputStream() {
+            try {
+                return fallbackSocket.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
         @Override
-        public OutputStream getOutputStream() throws IOException {
-            return fallbackSocket.getOutputStream();
+        public OutputStream getOutputStream() {
+            try {
+                return fallbackSocket.getOutputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        public void connect() {
+            try {
+                fallbackSocket.connect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
 
         @Override
-        public void connect() throws IOException {
-            fallbackSocket.connect();
-        }
-
-
-        @Override
-        public void close() throws IOException {
-            fallbackSocket.close();
+        public void close() {
+            try {
+                fallbackSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }

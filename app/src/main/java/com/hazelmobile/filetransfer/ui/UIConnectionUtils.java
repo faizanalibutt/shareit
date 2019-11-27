@@ -164,6 +164,8 @@ public class UIConnectionUtils {
                                 }
                             }
                         });
+                    else
+                        Callback.setDialogInfo("Connected, Preparing to Send Files...");
                 } catch (Exception e) {
 
                 } finally {
