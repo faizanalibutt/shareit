@@ -379,12 +379,13 @@ public class HotspotManagerFragment
                                 "ServerSocket: When Hotspot enabled and HotspotInformation is " +
                                         codeIndex);
                         serverClass.setHotspotInformation(codeIndex);
+
+                        if (codeIndex.has(Keyword.NETWORK_NAME) && UIConnectionUtils.isOreoAbove()) {
+                            ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().setName(codeIndex.getString(Keyword.NETWORK_NAME));
+                            showMessage("Bluetooth Name is: " + codeIndex.getString(Keyword.NETWORK_NAME));
+                        }
                     }
 
-                    if (codeIndex.has(Keyword.NETWORK_NAME) && UIConnectionUtils.isOreoAbove()) {
-                        ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().setName(codeIndex.getString(Keyword.NETWORK_NAME));
-                        showMessage("Bluetooth Name is: " + codeIndex.getString(Keyword.NETWORK_NAME));
-                    }
                 }
 
 

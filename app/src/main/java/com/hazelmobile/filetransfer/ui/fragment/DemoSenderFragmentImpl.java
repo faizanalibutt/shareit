@@ -416,7 +416,7 @@ public class DemoSenderFragmentImpl
         updateState(false, null);
     }
 
-    private void cancelDiscovery() {
+    private void retryDiscovery() {
         if (getContext() != null) {
             try {
                 getContext().unregisterReceiver(wReceiver);
@@ -429,10 +429,10 @@ public class DemoSenderFragmentImpl
         }
     }
 
-    private void cancelBluetoothDiscovery() {
+    private void cancelDiscovery() {
         if (getContext() != null) {
             try {
-                //getContext().unregisterReceiver(wReceiver);
+                getContext().unregisterReceiver(wReceiver);
                 getContext().unregisterReceiver(bReceiver);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
@@ -576,7 +576,7 @@ public class DemoSenderFragmentImpl
                         else if (object instanceof Bluetooth) {
                             ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
                             mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
-                            cancelBluetoothDiscovery();
+                            cancelDiscovery();
                             clientClass = new ClientClass(((Bluetooth) object).getDevice());
                             clientClass.start();
                         }
@@ -910,7 +910,7 @@ public class DemoSenderFragmentImpl
         public void handleMessage(Message msg) {
 
             if (msg.what == MSG_TO_SHOW_SCAN_RESULT) {
-                cancelDiscovery();
+                retryDiscovery();
                 mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 30000);
             }
 

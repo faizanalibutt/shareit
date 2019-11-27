@@ -87,7 +87,7 @@ public class TransferListFragment
                         intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false))
                 {
                     callHome.setVisibility(View.VISIBLE);
-                    hideTransferProgress(View.GONE);
+                    hideTransferProgress(View.INVISIBLE);
                 }
 
             } else if (CommunicationService.ACTION_RECEIVER_PROGRESS.equals(intent.getAction())) {
@@ -99,7 +99,7 @@ public class TransferListFragment
                         intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false))
                 {
                     callHome.setVisibility(View.VISIBLE);
-                    hideTransferProgress(View.GONE);
+                    hideTransferProgress(View.INVISIBLE);
                 }
             }
         }
