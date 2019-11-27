@@ -130,7 +130,7 @@ public class DemoSenderFragmentImpl
     private ClientClass clientClass;
     private List<Object> mGenericList;
     private SenderListAdapter senderListAdapter;
-    private TextView sheetText;
+
     private RippleBackground pulse;
     private int btm_margin = 0;
 
@@ -195,8 +195,6 @@ public class DemoSenderFragmentImpl
         LinearLayout standardBottomSheet = view.findViewById(R.id.standardBottomSheet);
         standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet);
 
-        sheetText = view.findViewById(R.id.sheetText);
-
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) pulse.getLayoutParams();
         btm_margin = lp.bottomMargin;
 
@@ -216,29 +214,7 @@ public class DemoSenderFragmentImpl
         BottomSheetBehavior.BottomSheetCallback bottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        sheetText.setText("State Hidden");
-                        break;
-                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
-                        sheetText.setText("State Half Expanded");
-                        break;
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        sheetText.setText("State Collapsed");
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        sheetText.setText("State Dragging");
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        sheetText.setText("State Expanded");
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        sheetText.setText("State Settling");
-                        break;
-                    default:
-                        sheetText.setText("State Default");
-                        break;
-                }
+
             }
 
             @Override
@@ -456,7 +432,7 @@ public class DemoSenderFragmentImpl
     private void cancelBluetoothDiscovery() {
         if (getContext() != null) {
             try {
-                getContext().unregisterReceiver(wReceiver);
+                //getContext().unregisterReceiver(wReceiver);
                 getContext().unregisterReceiver(bReceiver);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
@@ -581,7 +557,8 @@ public class DemoSenderFragmentImpl
                     //showMessage("SendReceive: Wifi Scan results are " + wifiManager.getScanResults());
                     mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
                     //showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
-                    senderListAdapter = new SenderListAdapter(getContext(), mGenericList, ((DemoSenderActivity) getActivity()));
+                    senderListAdapter = new SenderListAdapter(getContext(), mGenericList,
+                            ((DemoSenderActivity) Objects.requireNonNull(getActivity())));
                     lv_send.setAdapter(senderListAdapter);
                 }
                 lv_send.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -590,11 +567,16 @@ public class DemoSenderFragmentImpl
 
                         Object object = mGenericList.get(position);
 
-                        new SenderWaitingDialog((Activity) Objects.requireNonNull(getActivity()), object).show();
+                        if (Objects.requireNonNull(getActivity()).isFinishing())
+                            new SenderWaitingDialog((Activity) Objects.requireNonNull(getActivity()),
+                                    object).show();
 
                         if (object instanceof ScanResult)
                             connectToHotspot(((ScanResult) object));
                         else if (object instanceof Bluetooth) {
+                            ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
+                            mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
+                            cancelBluetoothDiscovery();
                             clientClass = new ClientClass(((Bluetooth) object).getDevice());
                             clientClass.start();
                         }
@@ -934,21 +916,21 @@ public class DemoSenderFragmentImpl
 
             switch (msg.what) {
                 case STATE_LISTENING:
-                    sheetText.setText("Listening");
+                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Listening");
                     break;
                 case STATE_CONNECTING:
-                    sheetText.setText("Connecting");
+                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Connecting");
                     break;
                 case STATE_CONNECTED:
-                    sheetText.setText("Connected");
+                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Connected");
                     break;
                 case STATE_CONNECTION_FAILED:
-                    sheetText.setText("Connection Failed");
+                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Connection Failed");
                     break;
                 case STATE_MESSAGE_RECEIVED:
                     byte[] readBuff = (byte[]) msg.obj;
                     String tempMsg = new String(readBuff, 0, msg.arg1);
-                    sheetText.setText(tempMsg);
+                    com.hazelmobile.filetransfer.Callback.setDialogInfo(tempMsg);
                     try {
                         JSONObject hotspotInformation = new JSONObject(tempMsg);
                         connectToHotspot(hotspotInformation);
@@ -966,9 +948,6 @@ public class DemoSenderFragmentImpl
         private BluetoothConnector bluetoothConnector;
 
         ClientClass(BluetoothDevice device1) {
-            ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
-            mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
-            cancelBluetoothDiscovery();
             bluetoothConnector = new BluetoothConnector(device1, false,
                     ConnectionUtils.getInstance(getContext()).getBluetoothAdapter(), null);
         }

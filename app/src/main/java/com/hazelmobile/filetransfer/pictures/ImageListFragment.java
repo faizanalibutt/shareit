@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.SelectionCallbackGlobal;
+import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 
 import org.jetbrains.annotations.NotNull;
@@ -72,10 +72,10 @@ public class ImageListFragment
                                 public void onClick(View v) {
                                     if (getSelectionConnection() != null) {
                                         getSelectionConnection().setSelected(clazz.getAdapterPosition());
-                                        SelectionCallbackGlobal.setColor(true);
+                                        Callback.setColor(true);
                                     } else{
                                         performLayoutClick(clazz);
-                                        SelectionCallbackGlobal.setColor(false);
+                                        Callback.setColor(false);
                                     }
 
                                 }
@@ -96,9 +96,9 @@ public class ImageListFragment
                                 public void onClick(View v) {
                                     if (getSelectionConnection() != null) {
                                         getSelectionConnection().setSelected(clazz.getAdapterPosition());
-                                        SelectionCallbackGlobal.setColor(true);
+                                        Callback.setColor(true);
                                     } else
-                                        SelectionCallbackGlobal.setColor(false);
+                                        Callback.setColor(false);
                                 }
                             });
                 }
@@ -117,10 +117,10 @@ public class ImageListFragment
     @Override
     public boolean onDefaultClickAction(GroupEditableListAdapter.GroupViewHolder holder) {
         if (getSelectionConnection() != null) {
-            SelectionCallbackGlobal.setColor(true);
+            Callback.setColor(true);
             return getSelectionConnection().setSelected(holder);
         } else {
-            SelectionCallbackGlobal.setColor(false);
+            Callback.setColor(false);
             return performLayoutClickOpen(holder);
         }
     }

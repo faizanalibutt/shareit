@@ -513,14 +513,14 @@ public class HotspotManagerFragment
         ServerClass(JSONObject hotspotInformations) {
             try {
 
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ServerSocket: its enabled " + serverSocket + "\n");
-
                 hotspotInformation = hotspotInformations;
 
                 serverSocket = ConnectionUtils.getInstance(getContext())
                         .getBluetoothAdapter()
                         .listenUsingInsecureRfcommWithServiceRecord(APP_NAME, MY_UUID);
+
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ServerSocket: its enabled " + serverSocket + "\n");
 
             } catch (IOException e) {
                 ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),

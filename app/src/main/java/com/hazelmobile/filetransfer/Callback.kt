@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hazelmobile.filetransfer.model.CrackTransfer
 
-object SelectionCallbackGlobal {
+object Callback {
 
-    @JvmStatic
-    private val mutableLiveData = MutableLiveData<Boolean>()
-    @JvmStatic
+    @JvmField
+    val mutableLiveData = MutableLiveData<Boolean>()
+    @JvmField
     val transferMutableLiveData = MutableLiveData<CrackTransfer>()
+    @JvmField
+    val updateDialogMutable = MutableLiveData<Any>()
+
 
     @JvmStatic
     fun getColor(): LiveData<Boolean> {
@@ -29,6 +32,16 @@ object SelectionCallbackGlobal {
     @JvmStatic
     fun setCrackTransfer(crack: CrackTransfer) {
         transferMutableLiveData.postValue(crack)
+    }
+
+    @JvmStatic
+    fun getDialogInfo(): LiveData<Any> {
+        return updateDialogMutable
+    }
+
+    @JvmStatic
+    fun setDialogInfo(mObject: Any) {
+        updateDialogMutable.value = mObject
     }
 
 }
