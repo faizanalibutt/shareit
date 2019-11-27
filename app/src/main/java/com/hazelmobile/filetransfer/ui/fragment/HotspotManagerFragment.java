@@ -203,8 +203,8 @@ public class HotspotManagerFragment
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            showMessage("onDestroy(): " + e);
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ServerSocket: onDestroy(): " + e.getMessage());
         }
     }
 

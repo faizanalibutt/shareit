@@ -345,8 +345,8 @@ public class DemoSenderFragmentImpl
 
             connectionUtils.getBluetoothAdapter().disable();
         } catch (Exception e) {
-            e.printStackTrace();
-            showMessage("onDestroy(): " + e);
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: onDestroy(): " + e.getMessage());
         }
     }
 
@@ -567,7 +567,7 @@ public class DemoSenderFragmentImpl
 
                         Object object = mGenericList.get(position);
 
-                        if (Objects.requireNonNull(getActivity()).isFinishing())
+                        if (!Objects.requireNonNull(getActivity()).isFinishing())
                             new SenderWaitingDialog((Activity) Objects.requireNonNull(getActivity()),
                                     object).show();
 

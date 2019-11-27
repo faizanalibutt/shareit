@@ -11,6 +11,7 @@
         style="@style/TextAppearance.Secondary.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_marginTop="@dimen/margin_smaller_size"
         android:layout_marginEnd="@dimen/margin_small_size"
         android:layout_marginStart="@dimen/margin_small_size"
