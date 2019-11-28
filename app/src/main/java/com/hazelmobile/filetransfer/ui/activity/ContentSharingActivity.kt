@@ -207,7 +207,7 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
             tabLayout.setSelectedTabIndicatorColor(colorPrimary)
             if (mMode.hasActive(mSelectionCallback)) {
                 mMode.finish(mSelectionCallback)
-                SelectionCallbackGlobal.setColor(false)
+                Callback.setColor(false)
             }
 
             /*mMode.setBackgroundColor(whiteColor)
