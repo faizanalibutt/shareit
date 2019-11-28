@@ -430,4 +430,8 @@ public class UIConnectionUtils {
     public static boolean isOreoAbove() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
     }
+
+    public static boolean isOSAbove(int value) {
+        return Build.VERSION.SDK_INT >= value;
+    }
 }

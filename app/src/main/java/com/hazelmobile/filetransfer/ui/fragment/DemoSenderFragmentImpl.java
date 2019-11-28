@@ -47,6 +47,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.hazelmobile.filetransfer.BluetoothConnector;
+import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
@@ -257,6 +258,8 @@ public class DemoSenderFragmentImpl
         updateUI();
     }
 
+    private SenderWaitingDialog senderWaitingDialog;
+
     private void setMargins(View view, int left, int top, int right, int bottom) {
         if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -308,6 +311,8 @@ public class DemoSenderFragmentImpl
     public void onDestroy() {
         super.onDestroy();
         try {
+
+            closeDialog();
 
             removeHanlderMessages();
 
@@ -447,6 +452,13 @@ public class DemoSenderFragmentImpl
         }
     }
 
+    private void closeDialog() {
+        if (senderWaitingDialog != null && senderWaitingDialog.isShowing()) {
+            senderWaitingDialog.dismiss();
+            senderWaitingDialog = null;
+        }
+    }
+
     private void connectToHotspot(ScanResult scanResult) {
         try {
             NetworkDeviceListAdapter.HotspotNetwork hotspotNetwork = new NetworkDeviceListAdapter.HotspotNetwork();
@@ -574,9 +586,7 @@ public class DemoSenderFragmentImpl
 
                         Object object = mGenericList.get(position);
 
-                        if (!Objects.requireNonNull(getActivity()).isFinishing())
-                            new SenderWaitingDialog((Activity) Objects.requireNonNull(getActivity()),
-                                    object).show();
+                        openDialog(object);
 
                         if (object instanceof ScanResult)
                             connectToHotspot(((ScanResult) object));
@@ -641,6 +651,18 @@ public class DemoSenderFragmentImpl
     private void makeAcquaintance(Object object, int accessPin) {
         mConnectionUtils.makeAcquaintance(Objects.requireNonNull
                 (getActivity()), DemoSenderFragmentImpl.this, object, accessPin, mRegisteredListener);
+    }
+
+    private void openDialog(Object object) {
+        if (!Objects.requireNonNull(getActivity()).isFinishing()) {
+            senderWaitingDialog = new SenderWaitingDialog
+                    ((Activity) Objects.requireNonNull(getActivity()), object);
+            Callback.setDialogInfo(Objects.requireNonNull(getContext())
+                    .getString(R.string.mesg_waiting));
+            senderWaitingDialog.show();
+
+            senderWaitingDialog.setCanceledOnTouchOutside(false);
+        }
     }
 
     private void removeHanlderMessages() {
@@ -879,7 +901,7 @@ public class DemoSenderFragmentImpl
                 case WifiManager.WIFI_STATE_CHANGED_ACTION:
 
                     int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
-                    if (state == WifiManager.WIFI_STATE_ENABLED){
+                    if (state == WifiManager.WIFI_STATE_ENABLED) {
                         wifiManager.startScan();
                         sender_status.setText(R.string.text_send_status);
                     }

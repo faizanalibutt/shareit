@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 
 import com.genonbeta.android.framework.util.Interrupter;
 import com.hazelmobile.filetransfer.files.AppConfig;
+import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
@@ -132,7 +133,8 @@ public class ConnectionUtils {
 
                     Log.d(TAG, "establishHotspotConnection(): There is DHCP info provided waiting to reach the address " + testedRemoteAddress);
 
-                    if (NetworkUtils.ping(testedRemoteAddress)) {
+                    if (UIConnectionUtils.isOSAbove(Build.VERSION_CODES.P)
+                            ? NetworkUtils.ping(testedRemoteAddress, pingTimeout) : NetworkUtils.ping(testedRemoteAddress)) {
                         Log.d(TAG, "establishHotspotConnection(): AP has been reached. Returning OK state.");
                         remoteAddress = testedRemoteAddress;
                         //com.hazelmobile.filetransfer.Callback.setDialogInfo("Connected");

@@ -15,11 +15,11 @@ class SenderWaitingDialog(val activity: Activity, var anyObject: Any) :
     AlertDialog(activity) {
 
     init {
+
         kotlin.runCatching {
             val mRootView =
                 LayoutInflater.from(activity).inflate(R.layout.layout_dialog_connection_info, null)
             setView(mRootView)
-            mRootView.dialog_sender_title.text = activity.getString(R.string.mesg_waiting)
             anyObject = when (anyObject) {
                 is ScanResult -> (anyObject as ScanResult).SSID
                 is Bluetooth -> (anyObject as Bluetooth).device.name
