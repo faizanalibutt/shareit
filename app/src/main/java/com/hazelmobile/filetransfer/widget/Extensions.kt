@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 
+val BLUETOOTH_TAG = "BLUETOOTH_TAG"
+
 fun getLogInfo(TAG: String, logInfo: String?) {
     Log.d(TAG, logInfo)//ExtensionsUtils.getLogInfo(" ");
 }

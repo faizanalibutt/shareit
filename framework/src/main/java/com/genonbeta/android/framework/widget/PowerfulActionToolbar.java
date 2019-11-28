@@ -108,13 +108,20 @@ abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject e
                     mEngine.finish(callback);
                     // make LiveData and call it when click on it.
                     try {
-                        Method setColor = Class.forName("com.hazelmobile.filetransfer.SelectionCallbackGlobal")
+                        Method setColor = Class.forName("com.hazelmobile.filetransfer.Callback")
                                 .getDeclaredMethod("setColor", boolean.class);
                         boolean select = (boolean) setColor.invoke(null, false);
                     } catch (Exception e) {
                     }
                 }
             });
+        }
+
+        try {
+            Method setColor = Class.forName("com.hazelmobile.filetransfer.Callback")
+                    .getDeclaredMethod("setColor", boolean.class);
+            boolean select = (boolean) setColor.invoke(null, true);
+        } catch (Exception e) {
         }
 
         boolean result = callback instanceof ToolbarCallback

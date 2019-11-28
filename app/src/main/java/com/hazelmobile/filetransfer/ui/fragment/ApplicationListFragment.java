@@ -18,7 +18,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.SelectionCallbackGlobal;
+import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.EditableListAdapter;
 import com.hazelmobile.filetransfer.pictures.EditableListFragment;
@@ -68,7 +68,7 @@ public class ApplicationListFragment
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 new SelectionCallback<>(isChecked, ApplicationListFragment.this);
                 if (isChecked) {
-                    SelectionCallbackGlobal.setColor(true);
+                    Callback.setColor(true);
                 }
             }
         });
@@ -82,7 +82,7 @@ public class ApplicationListFragment
                 }
             }
         };
-        SelectionCallbackGlobal.getColor().observe(ApplicationListFragment.this, selectObserver);
+        Callback.getColor().observe(ApplicationListFragment.this, selectObserver);
     }
 
     @Override
@@ -110,8 +110,10 @@ public class ApplicationListFragment
                             @Override
                             public void onClick(View v) {
                                 if (getSelectionConnection() != null) {
-                                    SelectionCallbackGlobal.setColor(true);
                                     getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                    Callback.setColor(true);
+                                } else {
+                                    Callback.setColor(false);
                                 }
                             }
                         });
@@ -130,10 +132,10 @@ public class ApplicationListFragment
     @Override
     public boolean onDefaultClickAction(EditableListAdapter.EditableViewHolder holder) {
         if (getSelectionConnection() != null) {
-            SelectionCallbackGlobal.setColor(true);
+            Callback.setColor(true);
             return getSelectionConnection().setSelected(holder);
         } else {
-            SelectionCallbackGlobal.setColor(false);
+            Callback.setColor(false);
             return performLayoutClickOpen(holder);
         }
     }
@@ -216,6 +218,6 @@ public class ApplicationListFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        SelectionCallbackGlobal.setColor(false);
+        Callback.setColor(false);
     }
 }

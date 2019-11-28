@@ -1,25 +1,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_file"
     style="@style/ListContentLayoutStyle.Narrow.WithOverflowButton"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/layout_file">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/menu"
         style="@style/OverflowButton"
         android:layout_alignParentEnd="true"
-        android:visibility="invisible"
         android:layout_gravity="center_vertical"
-        android:contentDescription="@string/app_name" />
+        android:contentDescription="@string/app_name"
+        android:visibility="invisible" />
 
     <include
         layout="@layout/generic_view_selection_rounded_file"
         android:layout_width="@dimen/dp_20"
-        android:layout_marginStart="@dimen/dp_10"
         android:layout_height="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/margin_smallest_size"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true" />
 
     <FrameLayout
         android:id="@+id/layout_image"

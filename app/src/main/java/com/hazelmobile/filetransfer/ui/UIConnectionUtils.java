@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.genonbeta.CoolSocket.CoolSocket;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
+import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
@@ -158,9 +159,13 @@ public class UIConnectionUtils {
                                         dialogBuilder.setTitle(((NetworkDevice) object).nickname);
 
                                     dialogBuilder.show();*/
+
+                                    Callback.setDialogInfo("Connection Failed, Please try again");
                                 }
                             }
                         });
+                    else
+                        Callback.setDialogInfo("Connected, Preparing to Send Files...");
                 } catch (Exception e) {
 
                 } finally {

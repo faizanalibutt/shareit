@@ -29,7 +29,7 @@ import com.genonbeta.android.framework.util.listing.ComparableMerger;
 import com.genonbeta.android.framework.util.listing.Merger;
 import com.hazelmobile.filetransfer.GlideApp;
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.SelectionCallbackGlobal;
+import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.model.CrackTransfer;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
@@ -292,7 +292,7 @@ public class TransferListAdapter
         /* CRACK THE CODE HERE AND ADD LIVE DATA TO OBSERVE */
         crackTransfer.totalBytes = statusItem.getSecondText(this);
         crackTransfer.totalProgress = (int) (statusItem.getPercent() * 100);
-        SelectionCallbackGlobal.setCrackTransfer(crackTransfer);
+        Callback.setCrackTransfer(crackTransfer);
 
         if (storageItem != null)
             storageItem.bytesRequired = statusItem.bytesTotal - statusItem.bytesReceived;

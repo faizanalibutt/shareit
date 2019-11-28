@@ -23,7 +23,7 @@ import com.genonbeta.android.framework.io.LocalDocumentFile;
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.SelectionCallbackGlobal;
+import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.dialog.FileRenameDialog;
 import com.hazelmobile.filetransfer.object.FileShortcutObject;
 import com.hazelmobile.filetransfer.files.SharingActionModeCallback;
@@ -257,12 +257,9 @@ public class FileListFragment
                     clazz.getView().findViewById(R.id.selector).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (getSelectionConnection() != null) {
-                                getSelectionConnection().setSelected(clazz.getAdapterPosition());
-                                SelectionCallbackGlobal.setColor(true);
-                            } else {
-                                SelectionCallbackGlobal.setColor(false);
-                            }
+                            if (getSelectionConnection() != null)
+                                if (getSelectionConnection().setSelected(clazz.getAdapterPosition()))
+                                    Callback.setColor(true);
                         }
                     });
 
@@ -371,13 +368,13 @@ public class FileListFragment
     public boolean onDefaultClickAction(GroupEditableListAdapter.GroupViewHolder holder) {
         // todo See this for your own good selection call back its just like application list fragment #18
         /*if (getSelectionConnection() != null) {
-            SelectionCallbackGlobal.setColor(true);
+            Callback.setColor(true);
             return getSelectionConnection().setSelected(holder);
         } else {
-            SelectionCallbackGlobal.setColor(false);
+            Callback.setColor(false);
             return performLayoutClickOpen(holder);
         }*/
-        performLayoutClickOpen(holder);
+        performLayoutClick(holder);
         return true;
     }
 

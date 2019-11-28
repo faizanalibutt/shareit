@@ -27,7 +27,7 @@ import com.genonbeta.android.framework.io.DocumentFile;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.SelectionCallbackGlobal;
+import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.dialog.TransferInfoDialog;
@@ -87,7 +87,7 @@ public class TransferListFragment
                 if (intent.hasExtra(Keyword.DATA_TRANSFER_COMPLETED) &&
                         intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false)) {
                     callHome.setVisibility(View.VISIBLE);
-                    hideTransferProgress(View.GONE);
+                    hideTransferProgress(View.INVISIBLE);
                 }
 
             } else if (CommunicationService.ACTION_RECEIVER_PROGRESS.equals(intent.getAction())) {
@@ -98,7 +98,7 @@ public class TransferListFragment
                 if (intent.hasExtra(Keyword.DATA_TRANSFER_COMPLETED) &&
                         intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false)) {
                     callHome.setVisibility(View.VISIBLE);
-                    hideTransferProgress(View.GONE);
+                    hideTransferProgress(View.INVISIBLE);
                 }
             }
         }
@@ -450,7 +450,7 @@ public class TransferListFragment
                 updateStaticTransfer(crack);
             }
         };
-        SelectionCallbackGlobal.getCrackTransfer().observe(TransferListFragment.this, selectObserver);
+        Callback.getCrackTransfer().observe(TransferListFragment.this, selectObserver);
 
         return super.onListView(mainContainer, (ViewGroup) adaptedView.findViewById(R.id.transferListContainer));
     }

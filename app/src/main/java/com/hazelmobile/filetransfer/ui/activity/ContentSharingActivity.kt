@@ -9,8 +9,8 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
+import com.hazelmobile.filetransfer.Callback
 import com.hazelmobile.filetransfer.R
-import com.hazelmobile.filetransfer.SelectionCallbackGlobal
 import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.files.SharingActionModeCallback
 import com.hazelmobile.filetransfer.pictures.*
@@ -145,7 +145,7 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
         })
 
         val selectObserver = Observer<Boolean> { select -> selectionCallback(select) }
-        SelectionCallbackGlobal.getColor().observe(this, selectObserver)
+        Callback.getColor().observe(this, selectObserver)
 
     }
 
@@ -222,7 +222,7 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
         if (mBackPressedListener == null || !mBackPressedListener!!.onBackPressed()) {
             if (mMode.hasActive(mSelectionCallback)) {
                 mMode.finish(mSelectionCallback)
-                SelectionCallbackGlobal.setColor(false)
+                Callback.setColor(false)
             } else
                 super.onBackPressed()
         }

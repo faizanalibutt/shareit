@@ -46,6 +46,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.hazelmobile.filetransfer.BluetoothConnector;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
@@ -57,8 +58,8 @@ import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
-import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.activity.DemoSenderActivity;
+import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.ui.adapter.SenderListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.IconSupport;
@@ -67,6 +68,7 @@ import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.ListUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
+import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -74,7 +76,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,9 +101,9 @@ public class DemoSenderFragmentImpl
     private static final int STATE_CONNECTED = 3;
     private static final int STATE_CONNECTION_FAILED = 4;
     static final int STATE_MESSAGE_RECEIVED = 5;
-    static final String APP_NAME = "BTChat";
+    static final String APP_NAME = "HazelBTChat";
     //private ImageView retryButton;
-    static final UUID MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803450c9a66");
+    public static final UUID MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803405c9a66");
 
     //private DecoratedBarcodeView mBarcodeView;
     private UIConnectionUtils mConnectionUtils;
@@ -129,7 +130,7 @@ public class DemoSenderFragmentImpl
     private ClientClass clientClass;
     private List<Object> mGenericList;
     private SenderListAdapter senderListAdapter;
-    private TextView sheetText;
+
     private RippleBackground pulse;
     private int btm_margin = 0;
 
@@ -195,8 +196,6 @@ public class DemoSenderFragmentImpl
         LinearLayout standardBottomSheet = view.findViewById(R.id.standardBottomSheet);
         standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet);
 
-        sheetText = view.findViewById(R.id.sheetText);
-
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) pulse.getLayoutParams();
         btm_margin = lp.bottomMargin;
 
@@ -216,29 +215,7 @@ public class DemoSenderFragmentImpl
         BottomSheetBehavior.BottomSheetCallback bottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        sheetText.setText("State Hidden");
-                        break;
-                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
-                        sheetText.setText("State Half Expanded");
-                        break;
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                        sheetText.setText("State Collapsed");
-                        break;
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                        sheetText.setText("State Dragging");
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        sheetText.setText("State Expanded");
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                        sheetText.setText("State Settling");
-                        break;
-                    default:
-                        sheetText.setText("State Default");
-                        break;
-                }
+
             }
 
             @Override
@@ -312,13 +289,17 @@ public class DemoSenderFragmentImpl
     @Override
     public void onPause() {
         super.onPause();
-        if (getContext() != null) {
-            getContext().unregisterReceiver(mReceiver);
-            getContext().unregisterReceiver(bReceiver);
-            getContext().unregisterReceiver(wReceiver);
-            if (ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().isDiscovering()) {
-                ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
+        try {
+            if (getContext() != null) {
+                getContext().unregisterReceiver(mReceiver);
+                getContext().unregisterReceiver(bReceiver);
+                getContext().unregisterReceiver(wReceiver);
+                if (ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().isDiscovering()) {
+                    ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
+                }
             }
+        } catch (Exception exp) {
+            exp.printStackTrace();
         }
         //mBarcodeView.pauseAndWait();
     }
@@ -365,8 +346,8 @@ public class DemoSenderFragmentImpl
 
             connectionUtils.getBluetoothAdapter().disable();
         } catch (Exception e) {
-            e.printStackTrace();
-            showMessage("onDestroy(): " + e);
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: onDestroy(): " + e.getMessage());
         }
     }
 
@@ -436,13 +417,30 @@ public class DemoSenderFragmentImpl
         updateState(false, null);
     }
 
+    private void retryDiscovery() {
+        if (getContext() != null) {
+            try {
+                getContext().unregisterReceiver(wReceiver);
+                getContext().unregisterReceiver(bReceiver);
+            } catch (IllegalArgumentException e) {
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: Unregistering WIFI ADN BLUETOOTH \n" + e.getMessage());
+            }
+            try {
+                getContext().registerReceiver(wReceiver, wifiIntentFilter);
+                getContext().registerReceiver(bReceiver, buletoothIntentFilter);
+            } catch (Exception e) {
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: Registering WIFI ADN BLUETOOTH \n" + e.getMessage());
+            }
+        }
+    }
+
     private void cancelDiscovery() {
         if (getContext() != null) {
             try {
                 getContext().unregisterReceiver(wReceiver);
                 getContext().unregisterReceiver(bReceiver);
-                getContext().registerReceiver(wReceiver, wifiIntentFilter);
-                getContext().registerReceiver(bReceiver, buletoothIntentFilter);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
@@ -565,8 +563,9 @@ public class DemoSenderFragmentImpl
                 if (success) {
                     //showMessage("SendReceive: Wifi Scan results are " + wifiManager.getScanResults());
                     mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
-                    showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
-                    senderListAdapter = new SenderListAdapter(getContext(), mGenericList, ((DemoSenderActivity) getActivity()));
+                    //showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
+                    senderListAdapter = new SenderListAdapter(getContext(), mGenericList,
+                            ((DemoSenderActivity) Objects.requireNonNull(getActivity())));
                     lv_send.setAdapter(senderListAdapter);
                 }
                 lv_send.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -575,11 +574,18 @@ public class DemoSenderFragmentImpl
 
                         Object object = mGenericList.get(position);
 
-                        new SenderWaitingDialog((Activity) Objects.requireNonNull(getActivity()), object).show();
+                        if (!Objects.requireNonNull(getActivity()).isFinishing())
+                            new SenderWaitingDialog((Activity) Objects.requireNonNull(getActivity()),
+                                    object).show();
 
                         if (object instanceof ScanResult)
                             connectToHotspot(((ScanResult) object));
                         else if (object instanceof Bluetooth) {
+                            if (ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().isDiscovering()) {
+                                ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
+                            }
+                            mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
+                            cancelDiscovery();
                             clientClass = new ClientClass(((Bluetooth) object).getDevice());
                             clientClass.start();
                         }
@@ -615,7 +621,7 @@ public class DemoSenderFragmentImpl
 
         mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
 
-        showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
+        //showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
 
         if (senderListAdapter != null) {
             senderListAdapter = null;
@@ -800,10 +806,12 @@ public class DemoSenderFragmentImpl
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     //showMessage("Others device name is " + device.getName() + " " + device.getAddress());
                     if (device.getName() != null &&
-                            (device.getName().startsWith("TS") ||
+                            (/*device.getName().startsWith("TS") ||*/
                                     device.getName().startsWith("AndroidShare"))) {
 
                         showMessage("Tshot device name is " + device.getName());
+                        ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                "Tshot device name is " + device.getName());
                         for (Object device1 : mGenericList) {
                             if (device1 instanceof Bluetooth &&
                                     ((Bluetooth) device1).getDevice().getAddress() != null &&
@@ -926,27 +934,27 @@ public class DemoSenderFragmentImpl
         public void handleMessage(Message msg) {
 
             if (msg.what == MSG_TO_SHOW_SCAN_RESULT) {
-                cancelDiscovery();
-                mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 30000);
+                retryDiscovery();
+                mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 15000);
             }
 
             switch (msg.what) {
                 case STATE_LISTENING:
-                    sheetText.setText("Listening");
+                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Listening");
                     break;
                 case STATE_CONNECTING:
-                    sheetText.setText("Connecting");
+                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Connecting");
                     break;
                 case STATE_CONNECTED:
-                    sheetText.setText("Connected");
+                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Connected");
                     break;
                 case STATE_CONNECTION_FAILED:
-                    sheetText.setText("Connection Failed");
+                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Connection Failed");
                     break;
                 case STATE_MESSAGE_RECEIVED:
                     byte[] readBuff = (byte[]) msg.obj;
                     String tempMsg = new String(readBuff, 0, msg.arg1);
-                    sheetText.setText(tempMsg);
+                    com.hazelmobile.filetransfer.Callback.setDialogInfo(tempMsg);
                     try {
                         JSONObject hotspotInformation = new JSONObject(tempMsg);
                         connectToHotspot(hotspotInformation);
@@ -959,61 +967,90 @@ public class DemoSenderFragmentImpl
     };
 
     public class ClientClass extends Thread {
-        private BluetoothDevice device;
-        private BluetoothSocket socket;
+
+        private BluetoothConnector.BluetoothSocketWrapper socket;
+        private BluetoothConnector bluetoothConnector;
 
         ClientClass(BluetoothDevice device1) {
-            device = device1;
-
-            try {
-                socket = device.createInsecureRfcommSocketToServiceRecord(MY_UUID);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            bluetoothConnector = new BluetoothConnector(device1, false,
+                    ConnectionUtils.getInstance(getContext()).getBluetoothAdapter(), null);
         }
 
         public void run() {
+
             try {
-                socket.connect();
+
+                socket = bluetoothConnector.connect();
+
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: socket coming from Bluetooth_Connector" + "\n");
+
                 Message message = Message.obtain();
                 message.what = STATE_CONNECTED;
-                mHandler.sendMessage(message);
-
-                sendReceive = new SendReceive(socket);
-                sendReceive.start();
+                if (mHandler != null) {
+                    mHandler.sendMessage(message);
+                }
 
             } catch (IOException e) {
-                e.printStackTrace();
+
+                try {
+                    socket.close();
+                } catch (IOException ex) {
+                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                            "Could not close the client socket \n" + ex.getMessage());
+                }
+
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: client fed up with exception " + e.getMessage() + "\n");
+
                 Message message = Message.obtain();
                 message.what = STATE_CONNECTION_FAILED;
                 if (mHandler != null) {
                     mHandler.sendMessage(message);
                 }
+
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: client sending message connection failed \n " + e.getMessage() + "\n");
+
             }
-            showMessage("Client: I'm still on.");
+
+            manageMyConnectedSocket(socket);
+
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: I'm still on...send has been called " + "\n");
+
         }
+
+        private void manageMyConnectedSocket(BluetoothConnector.BluetoothSocketWrapper socket) {
+
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: client connected and sent message " + "\n");
+
+            sendReceive = new SendReceive(socket.getUnderlyingSocket());
+            sendReceive.start();
+        }
+
     }
 
     private class SendReceive extends Thread {
+
         private BluetoothSocket bluetoothSocket = null;
         private final InputStream inputStream;
-        private final OutputStream outputStream;
 
         SendReceive(BluetoothSocket socket) {
 
             InputStream tempIn = null;
-            OutputStream tempOut = null;
 
             try {
                 bluetoothSocket = socket;
                 tempIn = bluetoothSocket.getInputStream();
-                tempOut = bluetoothSocket.getOutputStream();
             } catch (IOException e) {
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: SendReceive: constructor fed up " + e.getMessage() + "\n");
                 e.printStackTrace();
             }
 
             inputStream = tempIn;
-            outputStream = tempOut;
         }
 
         public void run() {
@@ -1024,21 +1061,28 @@ public class DemoSenderFragmentImpl
                 try {
                     bytes = inputStream.read(buffer);
                     mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
+                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                            "ClientSocket: SendReceive: RECEIVING BYTES FROM SERVER" + "\n");
                 } catch (IOException e) {
                     e.printStackTrace();
+                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                            "ClientSocket: SendReceive: bytes receiving and error occurs " + e.getMessage() + "\n");
                     break;
+                } finally {
+                    try {
+                        inputStream.close();
+                        bluetoothSocket.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                "ClientSocket: SendReceive: Could not close the connect socket " + ex.getMessage() + "\n");
+                    }
                 }
             }
-            showMessage("SendReceive: I'm still on.");
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: SendReceive: I'm still on. Loop has been broken " + "\n");
         }
 
-        public void write(byte[] bytes) {
-            try {
-                outputStream.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }
