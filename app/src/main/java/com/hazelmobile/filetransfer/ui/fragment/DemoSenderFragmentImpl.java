@@ -421,10 +421,16 @@ public class DemoSenderFragmentImpl
             try {
                 getContext().unregisterReceiver(wReceiver);
                 getContext().unregisterReceiver(bReceiver);
+            } catch (IllegalArgumentException e) {
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: Unregistering WIFI ADN BLUETOOTH \n" + e.getMessage());
+            }
+            try {
                 getContext().registerReceiver(wReceiver, wifiIntentFilter);
                 getContext().registerReceiver(bReceiver, buletoothIntentFilter);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ClientSocket: Registering WIFI ADN BLUETOOTH \n" + e.getMessage());
             }
         }
     }
@@ -802,6 +808,8 @@ public class DemoSenderFragmentImpl
                                     device.getName().startsWith("AndroidShare"))) {
 
                         showMessage("Tshot device name is " + device.getName());
+                        ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                "Tshot device name is " + device.getName());
                         for (Object device1 : mGenericList) {
                             if (device1 instanceof Bluetooth &&
                                     ((Bluetooth) device1).getDevice().getAddress() != null &&
@@ -913,7 +921,7 @@ public class DemoSenderFragmentImpl
 
             if (msg.what == MSG_TO_SHOW_SCAN_RESULT) {
                 retryDiscovery();
-                mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 30000);
+                mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 15000);
             }
 
             switch (msg.what) {

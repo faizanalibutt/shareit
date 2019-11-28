@@ -257,12 +257,9 @@ public class FileListFragment
                     clazz.getView().findViewById(R.id.selector).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (getSelectionConnection() != null) {
-                                getSelectionConnection().setSelected(clazz.getAdapterPosition());
-                                Callback.setColor(true);
-                            } else {
-                                Callback.setColor(false);
-                            }
+                            if (getSelectionConnection() != null)
+                                if (getSelectionConnection().setSelected(clazz.getAdapterPosition()))
+                                    Callback.setColor(true);
                         }
                     });
 
@@ -377,7 +374,7 @@ public class FileListFragment
             Callback.setColor(false);
             return performLayoutClickOpen(holder);
         }*/
-        performLayoutClickOpen(holder);
+        performLayoutClick(holder);
         return true;
     }
 
