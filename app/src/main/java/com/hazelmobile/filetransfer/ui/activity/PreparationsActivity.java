@@ -367,10 +367,10 @@ public class PreparationsActivity extends Activity
                     nextScreen,
                     ContextCompat.getColorStateList(
                             this,
-                            R.color.text_button_text_color_selector
+                            R.color.color_content_share_button
                     )
             );
-            nextScreen.setTextColor(ContextCompat.getColor(this, R.color.text_button_text_color_selector));
+            nextScreen.setTextColor(ContextCompat.getColor(this, R.color.black_transparent));
         }
     }
 
@@ -455,10 +455,12 @@ public class PreparationsActivity extends Activity
                 switch (state) {
                     case BluetoothAdapter.STATE_ON:
                         /*case BluetoothAdapter.STATE_TURNING_ON:*/
-                        enableBluetooth(bluetoothButton);
+                        if (isReceiver && UIConnectionUtils.isOreoAbove())
+                            enableBluetooth(bluetoothButton);
                         break;
                     case BluetoothAdapter.STATE_OFF:
-                        disableBluetooth(bluetoothButton);
+                        if (isReceiver && UIConnectionUtils.isOreoAbove())
+                            disableBluetooth(bluetoothButton);
                         break;
                 }
             } else if (WifiManager.WIFI_STATE_CHANGED_ACTION.equalsIgnoreCase(action)) {

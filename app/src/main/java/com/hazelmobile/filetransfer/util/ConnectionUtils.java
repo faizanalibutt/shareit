@@ -432,6 +432,8 @@ public class ConnectionUtils {
                     return getWifiManager().reconnect();
                 }
             } catch (Exception exp) {
+                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "connecting to HOTSPOT_NETWORK and got fed up with exception \n" + exp.getMessage());
                 disableCurrentNetwork();
                 return false;
             }
