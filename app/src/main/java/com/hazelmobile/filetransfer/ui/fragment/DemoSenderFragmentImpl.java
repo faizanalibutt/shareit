@@ -102,7 +102,7 @@ public class DemoSenderFragmentImpl
     private static final int STATE_CONNECTED = 3;
     private static final int STATE_CONNECTION_FAILED = 4;
     static final int STATE_MESSAGE_RECEIVED = 5;
-    static final String APP_NAME = "HazelBTChat";
+    static final String APP_NAME = "com.hazelmobile.filetransfer";
     //private ImageView retryButton;
     public static final UUID MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803405c9a66");
 
@@ -837,7 +837,8 @@ public class DemoSenderFragmentImpl
                         for (Object device1 : mGenericList) {
                             if (device1 instanceof Bluetooth &&
                                     ((Bluetooth) device1).getDevice().getAddress() != null &&
-                                    device.getAddress().equals(((Bluetooth) device1).getDevice().getAddress())) {
+                                    device.getAddress().equals(((Bluetooth) device1).getDevice().getAddress()) &&
+                                    device.getName().equals(((Bluetooth) device1).getDevice().getName())) {
                                 if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED) {
                                     standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
                                 }

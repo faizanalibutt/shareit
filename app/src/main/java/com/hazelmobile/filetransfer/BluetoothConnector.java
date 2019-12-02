@@ -173,7 +173,7 @@ public class BluetoothConnector {
               Class<?> clazz = tmp.getRemoteDevice().getClass();
               Class<?>[] paramTypes = new Class<?>[] {Integer.TYPE};
               Method m = clazz.getMethod("createRfcommSocket", paramTypes);
-              Object[] params = new Object[] {Integer.valueOf(1)};
+              Object[] params = new Object[] {Integer.valueOf(2)};
               fallbackSocket = (BluetoothSocket) m.invoke(tmp.getRemoteDevice(), params);
             }
             catch (Exception e)

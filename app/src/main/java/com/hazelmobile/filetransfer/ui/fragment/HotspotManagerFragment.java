@@ -546,16 +546,20 @@ public class HotspotManagerFragment
                     socket = serverSocket.accept();
                 } catch (Exception e) {
                     ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
-                            "ServerSocket: socket not accepting new port for connection \n" + e.getMessage() + "\n");
+                            "ServerSocket: Socket's accept() method failed \n" + e.getMessage() + "\n");
+                    try {
+                        serverSocket.close();
+                    } catch (IOException ex) {
+                        ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                "ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n");
+                    }
                     break;
                 }
 
                 ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: When Server Thread Enabled AND HOTSPOT_INFORMATION is " + "\n" + getHotspotInformation());
                 if (socket != null && getHotspotInformation() != null) {
-
                     manageServerSocket(socket);
-
                     break;
                 }
             }
