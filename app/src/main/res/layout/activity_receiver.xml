@@ -107,6 +107,16 @@
             android:gravity="center"
             android:text="@string/text_receive_status" />
 
+        <TextView
+            android:id="@+id/receiver_status_name"
+            style="@style/TextAppearance.Primary.Normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/receiver_status"
+            android:layout_marginTop="@dimen/margin_absolute_size"
+            android:gravity="center" />
+
     </com.hazelmobile.filetransfer.library.RippleBackground>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

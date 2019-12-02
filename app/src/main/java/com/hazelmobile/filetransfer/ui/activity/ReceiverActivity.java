@@ -16,9 +16,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.snackbar.Snackbar;
+import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
@@ -53,6 +57,7 @@ public class ReceiverActivity extends Activity
     private TextView textView, receiver_status;
     private boolean mHotspotClosed = false;
     private UIConnectionUtils mConnectionUtils;
+    private TextView hotspot_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,12 +159,22 @@ public class ReceiverActivity extends Activity
         });
         final RippleBackground pulse = findViewById(R.id.content);
         pulse.startRippleAnimation();
+        hotspot_name = findViewById(R.id.receiver_status_name);
+        hotspot_name.setText(HotspotManagerFragment.HOTSPOT_NAME);
 
         user_image = findViewById(R.id.userProfileImage);
         textView = findViewById(R.id.text1);
         receiver_status = findViewById(R.id.receiver_status);
 
         setProfilePicture();
+
+        final Observer<String> selectObserver = new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable final String hotspot_nam) {
+                hotspot_name.setText(hotspot_nam);
+            }
+        };
+        Callback.getHotspotName().observe(this, selectObserver);
     }
 
     private void setProfilePicture() {

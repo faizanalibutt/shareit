@@ -29,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
+import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
@@ -87,6 +88,7 @@ public class HotspotManagerFragment
     private SendReceive sendReceive;
     private JSONObject hotspotInformation;
     private MyHandler mHandle = new MyHandler();
+    public static String HOTSPOT_NAME = "";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,6 +122,8 @@ public class HotspotManagerFragment
 
         /*if (getActivity() != null) getActivity().registerReceiver(
                 mMessageReceiver, new IntentFilter("ReceiverProgress"));*/
+
+        Callback.setHotspotName("");
 
         if (UIConnectionUtils.isOreoAbove()) {
             getorUpdateBluetoothDiscoverable();
@@ -155,6 +159,7 @@ public class HotspotManagerFragment
                 getContext().stopService(intent);
                 getContext().unregisterReceiver(mMessageReceiver);
             }*/
+                Callback.setHotspotName("");
                 ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
                 if (connectionUtils.getBluetoothAdapter().isDiscovering())
                     connectionUtils.getBluetoothAdapter().cancelDiscovery();
@@ -199,7 +204,7 @@ public class HotspotManagerFragment
                         }
                     }
                 }
-                connectionUtils.getBluetoothAdapter().setName(AppUtils.getLocalDeviceName(getContext()));
+                connectionUtils.getBluetoothAdapter().setName(AppUtils.getForceLocalDeviceName(getContext()));
                 ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: onDestroy(): " + connectionUtils.getBluetoothAdapter().getName());
                 connectionUtils.getBluetoothAdapter().disable();
@@ -377,7 +382,6 @@ public class HotspotManagerFragment
                             .putInt(Keyword.NETWORK_PIN, networkPin)
                             .apply();
                     if (serverClass != null && UIConnectionUtils.isOreoAbove()) {
-                        showMessage("When Hotspot Enabled AND HotspotInformation is: " + codeIndex);
                         ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                                 "ServerSocket: When Hotspot Enabled AND HotspotInformation is " +
                                         codeIndex);
@@ -385,7 +389,9 @@ public class HotspotManagerFragment
 
                         if (codeIndex.has(Keyword.NETWORK_NAME) && UIConnectionUtils.isOreoAbove()) {
                             ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().setName(codeIndex.getString(Keyword.NETWORK_NAME));
-                            showMessage("Bluetooth Name is: " + codeIndex.getString(Keyword.NETWORK_NAME));
+                            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                    "Bluetooth Name is: " + codeIndex.getString(Keyword.NETWORK_NAME));
+                            Callback.setHotspotName(codeIndex.getString(Keyword.NETWORK_NAME));
                         }
                     }
 

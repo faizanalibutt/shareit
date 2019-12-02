@@ -40,7 +40,7 @@ public class BluetoothConnector {
         this.uuidCandidates = uuidCandidates;
 
         if (this.uuidCandidates == null || this.uuidCandidates.isEmpty()) {
-            this.uuidCandidates = new ArrayList<UUID>();
+            this.uuidCandidates = new ArrayList<>();
             this.uuidCandidates.add(DemoSenderFragmentImpl.MY_UUID);
         }
     }
@@ -58,7 +58,7 @@ public class BluetoothConnector {
                 //try the fallback
                 try {
                     bluetoothSocket = new FallbackBluetoothSocket(bluetoothSocket.getUnderlyingSocket());
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                     bluetoothSocket.connect();
                     success = true;
                     break;  
@@ -98,7 +98,7 @@ public class BluetoothConnector {
         return true;
     }
 
-    public static interface BluetoothSocketWrapper {
+    public interface BluetoothSocketWrapper {
 
         InputStream getInputStream() throws IOException;
 
@@ -178,6 +178,7 @@ public class BluetoothConnector {
             }
             catch (Exception e)
             {
+                Log.w(ExtensionsUtils.getBLUETOOTH_TAG(), "Bluetooth Connect: " + e.getMessage());
                 throw new FallbackException(e);
             }
         }
@@ -207,7 +208,7 @@ public class BluetoothConnector {
             try {
                 fallbackSocket.connect();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.w(ExtensionsUtils.getBLUETOOTH_TAG(), "Bluetooth Connect: " + e.getMessage());
             }
         }
 
@@ -217,7 +218,7 @@ public class BluetoothConnector {
             try {
                 fallbackSocket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.w(ExtensionsUtils.getBLUETOOTH_TAG(), "Bluetooth Connect: " + e.getMessage());
             }
         }
 

@@ -12,6 +12,8 @@ object Callback {
     val transferMutableLiveData = MutableLiveData<CrackTransfer>()
     @JvmField
     val updateDialogMutable = MutableLiveData<Any>()
+    @JvmField
+    val showHotspot = MutableLiveData<String>()
 
 
     @JvmStatic
@@ -42,6 +44,16 @@ object Callback {
     @JvmStatic
     fun setDialogInfo(mObject: Any) {
         updateDialogMutable.value = mObject
+    }
+
+    @JvmStatic
+    fun getHotspotName(): LiveData<String> {
+        return showHotspot
+    }
+
+    @JvmStatic
+    fun setHotspotName(mObject: String) {
+        showHotspot.value = mObject
     }
 
 }

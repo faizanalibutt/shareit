@@ -283,6 +283,10 @@ public class AppUtils {
                 : deviceName;
     }
 
+    public static String getForceLocalDeviceName(Context context) {
+        return Build.MODEL.toUpperCase();
+    }
+
     public static NetworkDevice getLocalDevice(Context context) {
         NetworkDevice device = new NetworkDevice(getDeviceSerial(context));
 

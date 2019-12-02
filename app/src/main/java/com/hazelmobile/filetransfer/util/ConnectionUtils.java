@@ -417,18 +417,23 @@ public class ConnectionUtils {
 
             try {
                 int netId = getWifiManager().addNetwork(config);
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     List<WifiConfiguration> list = getWifiManager().getConfiguredNetworks();
                     for (WifiConfiguration hotspotWifi : list) {
                         if (hotspotWifi.SSID != null && hotspotWifi.SSID.equalsIgnoreCase(config.SSID)) {
                             getWifiManager().disconnect();
                             getWifiManager().enableNetwork(hotspotWifi.networkId, true);
+                            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                    "WIFI_CONNECTED \n");
                             return getWifiManager().reconnect();
                         }
                     }
                 } else {
                     getWifiManager().disconnect();
                     getWifiManager().enableNetwork(netId, true);
+                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                            "WIFI_CONNECTED \n");
                     return getWifiManager().reconnect();
                 }
             } catch (Exception exp) {
@@ -439,7 +444,9 @@ public class ConnectionUtils {
             }
 
         }
+
         disableCurrentNetwork();
+
         return false;
     }
 
