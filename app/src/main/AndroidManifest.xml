@@ -33,25 +33,29 @@
         android:theme="@style/Theme.Hazel"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:parentActivityName=".ui.activity.SideMenu"
             android:name=".ui.activity.HistoryActivity"
             android:label="@string/text_history"
+            android:parentActivityName=".ui.activity.SideMenu"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.White" />
         <activity android:name=".ui.activity.DialogSheetActivity" />
         <activity
             android:name=".ui.activity.WelcomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar"
             android:windowSoftInputMode="adjustResize">
 
         </activity>
         <activity
             android:name=".ui.activity.ReceiverActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
 
         <!-- MAIN ACTIVITY HERE -->
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.Base.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,20 +69,24 @@
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.activity.SideMenu"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.White" />
         <activity
             android:name=".ui.activity.SideMenu"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.Base.NoActionBar" />
         <activity
             android:name=".ui.activity.ContentSharingActivity"
             android:label="@string/title_activity_content_sharing"
             android:launchMode="singleTask"
             android:parentActivityName=".ui.activity.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
 
         </activity>
         <activity
             android:name=".ui.activity.PreparationsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.White">
             <intent-filter>
 
@@ -95,17 +103,21 @@
         </activity>
         <activity
             android:name=".ui.activity.SenderActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
         <activity
             android:name=".ui.activity.ShareActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
         <activity
             android:name=".ui.activity.AddDevicesToTransferActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" /> <!-- @string/text_transactionViewer -->
         <activity
             android:name=".ui.activity.ViewTransferActivity"
             android:label="File Transfer"
             android:parentActivityName=".ui.activity.PreparationsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -124,12 +136,15 @@
         </activity>
         <activity
             android:name=".ui.activity.FilePickerActivity"
-            android:label="@string/text_fileExplorer" />
+            android:label="@string/text_fileExplorer"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.DemoSenderActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
         <activity
             android:name=".ui.activity.DemoBarcodeScannerActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" /> <!-- SERVICES WILL BE HERE -->
         <service
             android:name=".service.CommunicationService"

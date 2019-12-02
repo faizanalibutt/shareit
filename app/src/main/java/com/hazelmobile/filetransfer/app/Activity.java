@@ -360,7 +360,7 @@ public abstract class Activity extends AppCompatActivity {
                     .circleCrop()
                     .into(imageView);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             imageView.setImageDrawable(AppUtils.getDefaultIconBuilder(this).buildRound(deviceName));
         }
     }
