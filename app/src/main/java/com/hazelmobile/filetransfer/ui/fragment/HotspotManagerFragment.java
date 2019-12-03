@@ -29,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
@@ -49,6 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.Objects;
 import java.util.Set;
 
 import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_HOTSPOT_STATUS;
@@ -214,6 +216,12 @@ public class HotspotManagerFragment
             ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ServerSocket: onDestroy(): " + e.getMessage());
         }
+    }
+
+    @Override
+    public Snackbar createSnackbar(int resId, Object... objects) {
+        return Snackbar.make(Objects.requireNonNull(getActivity())
+                .findViewById(R.id.layout_hotspot_status_container), getString(resId, objects), Snackbar.LENGTH_LONG);
     }
 
     @Override
@@ -547,11 +555,16 @@ public class HotspotManagerFragment
                 } catch (Exception e) {
                     ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ServerSocket: Socket's accept() method failed \n" + e.getMessage() + "\n");
+                    createSnackbar(R.string.msg_merg_send,
+                            " ServerSocket: Socket's accept() method failed \n" + e.getMessage()).show();
+
                     try {
                         serverSocket.close();
                     } catch (IOException ex) {
                         ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                                 "ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n");
+                        createSnackbar(R.string.app_name,
+                                " ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n").show();
                     }
                     break;
                 }
