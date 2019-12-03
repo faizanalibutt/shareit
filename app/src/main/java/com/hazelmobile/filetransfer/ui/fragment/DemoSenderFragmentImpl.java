@@ -43,9 +43,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.zxing.ResultPoint;
 import com.hazelmobile.filetransfer.BluetoothConnector;
 import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.R;
@@ -70,6 +73,9 @@ import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.ListUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -83,6 +89,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+
+import static com.hazelmobile.filetransfer.ui.activity.PreparationsActivity.REQUEST_PERMISSION_CAMERA;
 
 /*
  * created by: veli
@@ -106,7 +114,7 @@ public class DemoSenderFragmentImpl
     //private ImageView retryButton;
     public static final UUID MY_UUID = UUID.fromString("8ce255c0-223a-11e0-ac64-0803405c9a66");
 
-    //private DecoratedBarcodeView mBarcodeView;
+    private DecoratedBarcodeView mBarcodeView;
     private UIConnectionUtils mConnectionUtils;
     private ViewGroup mConductContainer;
     private TextView mConductText, status;
@@ -131,6 +139,7 @@ public class DemoSenderFragmentImpl
     private ClientClass clientClass;
     private List<Object> mGenericList;
     private SenderListAdapter senderListAdapter;
+    private boolean isSocketClosed = false;
 
     private RippleBackground pulse;
     private int btm_margin = 0;
@@ -168,7 +177,7 @@ public class DemoSenderFragmentImpl
         //mConductContainer = view.findViewById(R.id.layout_barcode_connect_conduct_container);
         //mTextModeIndicator = view.findViewById(R.id.layout_barcode_connect_mode_text_indicator);
         //mConductButton = view.findViewById(R.id.layout_barcode_connect_conduct_button);
-        //mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
+        mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
         //mConductText = view.findViewById(R.id.layout_barcode_connect_conduct_text);
         //mConductImage = view.findViewById(R.id.layout_barcode_connect_conduct_image);
         //mTaskContainer = view.findViewById(R.id.container_task);
@@ -200,19 +209,6 @@ public class DemoSenderFragmentImpl
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) pulse.getLayoutParams();
         btm_margin = lp.bottomMargin;
 
-        /*sheetText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                    standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                    sheetText.setText("Close sheet");
-                } else {
-                    standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
-                    sheetText.setText("Expand sheet");
-                }
-            }
-        });*/
-
         BottomSheetBehavior.BottomSheetCallback bottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -224,36 +220,11 @@ public class DemoSenderFragmentImpl
                 float h = bottomSheet.getHeight();
                 float off = h * slideOffset;
                 int finalVal = (int) (off * 0.85F);
-                Log.e(
-                        getClass().toString(), "$slideOffset $off $finalVal $h ${standardBottomSheetBehavior.peekHeight}"
-                );
-                /*  map_container.updateLayoutParams {
-                      height = h - finalVal - standardBottomSheetBehavior.peekHeight
-                  }
-  */
-                //accelerometer_view.alpha = 1 - slideOffset;
-//                map_container.translationY =-off
                 setMargins(pulse, 0, 0, 0, finalVal + pxToDp(standardBottomSheetBehavior.getPeekHeight() + btm_margin));
-
-
-                // map_container.setPadding(0,0,0, pxToDp(off.toInt()))
-
-/*                when (standardBottomSheetBehavior.state) {
-                    BottomSheetBehavior.STATE_EXPANDED -> "STATE_EXPANDED" + bottomSheet.layoutParams.height
-                    BottomSheetBehavior.STATE_COLLAPSED -> "STATE_COLLAPSED" + bottomSheet.layoutParams.height
-                    BottomSheetBehavior.STATE_DRAGGING -> "STATE_DRAGGING" + bottomSheet.layoutParams.height
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> "STATE_HALF_EXPANDED" + bottomSheet.layoutParams.height
-                    BottomSheetBehavior.STATE_HIDDEN -> "STATE_HIDDEN" + bottomSheet.layoutParams.height
-                    BottomSheetBehavior.STATE_SETTLING -> "STATE_SETTLING" + bottomSheet.layoutParams.height}*/
-
-                /*val fraction = (slideOffset + 1f) / 2f
-                val color = ArgbEvaluatorCompat.getInstance().evaluate(fraction, startColor, endColor);
-                slideView.setBackgroundColor(color)*/
             }
         };
 
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
-        //standardBottomSheetBehavior.setSaveFlags(BottomSheetBehavior.SAVE_ALL);
 
         updateUI();
     }
@@ -284,7 +255,7 @@ public class DemoSenderFragmentImpl
                 ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().startDiscovery();
             }
         }
-        //updateState();
+        updateState();
         //if (mPreviousScanResult != null)
         //    handleBarcode(mPreviousScanResult);
     }
@@ -304,7 +275,7 @@ public class DemoSenderFragmentImpl
         } catch (Exception exp) {
             exp.printStackTrace();
         }
-        //mBarcodeView.pauseAndWait();
+        mBarcodeView.pauseAndWait();
     }
 
     @Override
@@ -414,12 +385,12 @@ public class DemoSenderFragmentImpl
 
     @Override
     public void updateTaskStarted(Interrupter interrupter) {
-        updateState(true, interrupter);
+        if (isSocketClosed) updateState(true, interrupter);
     }
 
     @Override
     public void updateTaskStopped() {
-        updateState(false, null);
+        if (isSocketClosed) updateState(false, null);
     }
 
     private void retryDiscovery() {
@@ -478,7 +449,7 @@ public class DemoSenderFragmentImpl
         final DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                updateState();
+                //updateState();
             }
         };
 
@@ -703,12 +674,30 @@ public class DemoSenderFragmentImpl
     }
 
     private void updateUI() {
+        mBarcodeView.decodeContinuous(new BarcodeCallback()
+        {
+            @Override
+            public void barcodeResult(BarcodeResult result)
+            {
+                try {
+                    connectToHotspot(new JSONObject(result.getResult().getText()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void possibleResultPoints(List<ResultPoint> resultPoints)
+            {
+
+            }
+        });
         getOrUpdateWifiScanResult();
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 12000);
     }
 
     private void updateState(boolean isConnecting, final Interrupter interrupter) {
-        /*if (!isAdded()) {
+        if (!isAdded()) {
             mBarcodeView.pauseAndWait();
             return;
         }
@@ -720,7 +709,7 @@ public class DemoSenderFragmentImpl
         } else {
             mBarcodeView.resume();
             updateState();
-        }*/
+        }
 
         //mTaskContainer.setVisibility(!isConnecting ? View.VISIBLE : View.GONE);
 
@@ -733,74 +722,36 @@ public class DemoSenderFragmentImpl
     }
 
     private void updateState() {
-    }/*{
+
         if (!isAdded())
             return;
 
-        final boolean wifiEnabled = mConnectionUtils.getConnectionUtils().getWifiManager().isWifiEnabled();
         assert getContext() != null;
         final boolean hasCameraPermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
-        final boolean hasLocationPermission = Build.VERSION.SDK_INT < 26 // With Android Oreo, to gather Wi-Fi information, minimal access to location is needed
-                || mConnectionUtils.getConnectionUtils().canAccessLocation();
-        final boolean state = (wifiEnabled || mShowAsText) && hasCameraPermission && hasLocationPermission;
 
-        if (!state) {
-            //mBarcodeView.pauseAndWait();
-
-            if (!hasCameraPermission) {
-                //mConductImage.setImageResource(R.drawable.ic_camera_white_144dp);
-                mConductText.setText(R.string.text_cameraPermissionRequired);
-                mConductButton.setText(R.string.butn_ask);
-
-                mConductButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (getActivity() != null)
-                            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
-                    }
-                });
-
-                if (!mPermissionRequestedCamera && getActivity() != null)
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
-
-                mPermissionRequestedCamera = true;
-            } else if (!hasLocationPermission) {
-                //mConductImage.setImageResource(R.drawable.ic_perm_device_information_white_144dp);
-                mConductText.setText(R.string.mesg_locationPermissionRequiredAny);
-                mConductButton.setText(R.string.butn_enable);
-
-                mConductButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mConnectionUtils.validateLocationPermission(getActivity(), REQUEST_PERMISSION_LOCATION, mPermissionWatcher);
-                    }
-                });
-
-                if (!mPermissionRequestedLocation && getActivity() != null)
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_CAMERA);
-
-                mPermissionRequestedLocation = true;
-            } else {
-                ///mConductImage.setImageResource(R.drawable.ic_signal_wifi_off_white_144dp);
-                mConductText.setText(R.string.text_scanQRWifiRequired);
-                mConductButton.setText(R.string.butn_enable);
-
-                mConductButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mConnectionUtils.turnOnWiFi(getActivity(), REQUEST_TURN_WIFI_ON, mPermissionWatcher);
-                    }
-                });
-            }
+        if (!hasCameraPermission) {
+            mBarcodeView.pauseAndWait();
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                    new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
         } else {
-            //mBarcodeView.resume();
-            mConductText.setText(R.string.text_scanQRCodeHelp);
+            if (isSocketClosed) {
+                if (pulse.isRippleAnimationRunning())
+                    pulse.stopRippleAnimation();
+                if (senderWaitingDialog.isShowing())
+                    senderWaitingDialog.dismiss();
+                mBarcodeView.resume();
+                mConductText.setText(R.string.text_scanQRCodeHelp);
+            }
         }
-
-        setConductItemsShowing(!state);
-        //mBarcodeView.setVisibility(state ? View.VISIBLE : View.GONE);
-    }*/
+        if (isSocketClosed) {
+            if (pulse.isRippleAnimationRunning())
+                pulse.stopRippleAnimation();
+            if (senderWaitingDialog.isShowing())
+                senderWaitingDialog.dismiss();
+            mBarcodeView.setVisibility(hasCameraPermission ? View.VISIBLE : View.GONE);
+        }
+    }
 
     public static double getRandomDoubleBetweenRange(double min, double max) {
         return (Math.random() * ((max - min) + 1)) + min;
@@ -828,7 +779,7 @@ public class DemoSenderFragmentImpl
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     //showMessage("Others device name is " + device.getName() + " " + device.getAddress());
                     if (device.getName() != null &&
-                            (/*device.getName().startsWith("TS") ||*/
+                            (device.getName().startsWith("TS") ||
                                     device.getName().startsWith("AndroidShare"))) {
 
                         showMessage("Tshot device name is " + device.getName());
@@ -881,7 +832,7 @@ public class DemoSenderFragmentImpl
             if (isResumed()) // isResumed
                 updateState();
             else {
-                //mBarcodeView.pauseAndWait();
+                mBarcodeView.pauseAndWait();
             }
 
             // We don't want to keep this when the result is ok
@@ -928,10 +879,10 @@ public class DemoSenderFragmentImpl
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())
+            /*if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())
                     || ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())
                     || LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction()))
-                updateState();
+                updateState();*/
 
             if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
                 if (!mConnectionUtils.getConnectionUtils().isLocationServiceEnabled()) {

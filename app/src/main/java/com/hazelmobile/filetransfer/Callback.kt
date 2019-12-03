@@ -14,6 +14,8 @@ object Callback {
     val updateDialogMutable = MutableLiveData<Any>()
     @JvmField
     val showHotspot = MutableLiveData<String>()
+    @JvmField
+    val showQr = MutableLiveData<Boolean>()
 
 
     @JvmStatic
@@ -54,6 +56,16 @@ object Callback {
     @JvmStatic
     fun setHotspotName(mObject: String) {
         showHotspot.value = mObject
+    }
+
+    @JvmStatic
+    fun setQrCode(showing: Boolean) {
+        showQr.postValue(showing)
+    }
+
+    @JvmStatic
+    fun getQrCode(): LiveData<Boolean> {
+        return showQr
     }
 
 }

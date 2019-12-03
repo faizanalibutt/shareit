@@ -160,7 +160,6 @@ public class ReceiverActivity extends Activity
         final RippleBackground pulse = findViewById(R.id.content);
         pulse.startRippleAnimation();
         hotspot_name = findViewById(R.id.receiver_status_name);
-        hotspot_name.setText(HotspotManagerFragment.HOTSPOT_NAME);
 
         user_image = findViewById(R.id.userProfileImage);
         textView = findViewById(R.id.text1);
@@ -168,13 +167,28 @@ public class ReceiverActivity extends Activity
 
         setProfilePicture();
 
-        final Observer<String> selectObserver = new Observer<String>() {
+        final Observer<String> hotspotNameChanger = new Observer<String>() {
             @Override
             public void onChanged(@Nullable final String hotspot_nam) {
                 hotspot_name.setText(hotspot_nam);
             }
         };
-        Callback.getHotspotName().observe(this, selectObserver);
+        Callback.getHotspotName().observe(this, hotspotNameChanger);
+
+        final Observer<Boolean> showQrObserver = new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable final Boolean qr_status) {
+                if (qr_status != null && qr_status) {
+                    pulse.setVisibility(View.GONE);
+                    user_image.setVisibility(View.GONE);
+                    textView.setVisibility(View.GONE);
+                    hotspot_name.setVisibility(View.GONE);
+                    receiver_status.setVisibility(View.GONE);
+
+                }
+            }
+        };
+        Callback.getQrCode().observe(this, showQrObserver);
     }
 
     private void setProfilePicture() {

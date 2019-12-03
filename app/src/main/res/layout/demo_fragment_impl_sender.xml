@@ -101,6 +101,14 @@
 
     </com.hazelmobile.filetransfer.library.RippleBackground>
 
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:visibility="gone"
+        android:id="@+id/layout_barcode_connect_barcode_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_preview_scaling_strategy="centerCrop"
+        app:zxing_scanner_layout="@layout/external_layout_barcode_scanner" />
+
     <!--<include layout="@layout/layout_connection_info" />-->
 
     <include layout="@layout/bottom_sheet_layout" />

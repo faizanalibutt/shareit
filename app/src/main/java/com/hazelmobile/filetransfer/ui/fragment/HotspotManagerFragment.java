@@ -9,6 +9,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.net.wifi.WifiConfiguration;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,15 +24,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ImageViewCompat;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
 import com.hazelmobile.filetransfer.Callback;
+import com.hazelmobile.filetransfer.GlideApp;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
@@ -43,6 +52,7 @@ import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.HotspotUtils;
 import com.hazelmobile.filetransfer.util.NetworkUtils;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.json.JSONObject;
 
@@ -90,7 +100,9 @@ public class HotspotManagerFragment
     private SendReceive sendReceive;
     private JSONObject hotspotInformation;
     private MyHandler mHandle = new MyHandler();
-    public static String HOTSPOT_NAME = "";
+    private ImageView mCodeView;
+    private TextView hotspot_name;
+    private ColorStateList mColorPassiveState;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,6 +126,7 @@ public class HotspotManagerFragment
 
         dataTransferTime = view.findViewById(R.id.cancelTransfer);
         dataTransferSpeed = view.findViewById(R.id.dataTransferStatus);
+        hotspot_name = view.findViewById(R.id.layout_hotspot_manager_qr_text);
 
         return view;
     }
@@ -131,6 +144,8 @@ public class HotspotManagerFragment
             getorUpdateBluetoothDiscoverable();
             mHandle.sendMessageDelayed(mHandle.obtainMessage(STATE_BLUETOOTH_DISCOVERABLE_REQUESTING), 60000);
         }
+        mColorPassiveState = ColorStateList.valueOf(ContextCompat.getColor(Objects.requireNonNull(getContext()), AppUtils.getReference(getContext(), R.attr.colorPassive)));
+        mCodeView = view.findViewById(R.id.layout_hotspot_manager_qr_image);
 
     }
 
@@ -161,6 +176,7 @@ public class HotspotManagerFragment
                 getContext().stopService(intent);
                 getContext().unregisterReceiver(mMessageReceiver);
             }*/
+                Callback.setQrCode(false);
                 Callback.setHotspotName("");
                 ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
                 if (connectionUtils.getBluetoothAdapter().isDiscovering())
@@ -315,7 +331,6 @@ public class HotspotManagerFragment
                     showMessage("Method invoke successfully");
                     if (serverClass == null) {
                         serverClass = new ServerClass(hotspotInformation);
-                        serverClass.start();
                     }
                 } catch (Exception e) {
                     Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -326,7 +341,6 @@ public class HotspotManagerFragment
                 showMessage("Scanner is Available");
                 if (serverClass == null) {
                     serverClass = new ServerClass(hotspotInformation);
-                    serverClass.start();
                 }
             }
         }
@@ -394,6 +408,7 @@ public class HotspotManagerFragment
                                 "ServerSocket: When Hotspot Enabled AND HotspotInformation is " +
                                         codeIndex);
                         serverClass.setHotspotInformation(codeIndex);
+                        serverClass.start();
 
                         if (codeIndex.has(Keyword.NETWORK_NAME) && UIConnectionUtils.isOreoAbove()) {
                             ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().setName(codeIndex.getString(Keyword.NETWORK_NAME));
@@ -405,13 +420,19 @@ public class HotspotManagerFragment
 
                 }
 
-
-               /* MultiFormatWriter formatWriter = new MultiFormatWriter();
-                BitMatrix bitMatrix = formatWriter.encode(codeIndex.toString(), BarcodeFormat.QR_CODE, 400, 400);
+                MultiFormatWriter formatWriter = new MultiFormatWriter();
+                BitMatrix bitMatrix = null;
+                bitMatrix = formatWriter.encode(codeIndex.toString(), BarcodeFormat.QR_CODE, 400, 400);
                 BarcodeEncoder encoder = new BarcodeEncoder();
-                Bitmap bitmap = encoder.createBitmap(bitMatrix);*/
+                Bitmap bitmap = encoder.createBitmap(bitMatrix);
+                GlideApp.with(getContext())
+                        .load(bitmap)
+                        .into(mCodeView);
 
+            } else {
+                mCodeView.setImageResource(R.drawable.ic_qrcode_white_128dp);
             }
+            ImageViewCompat.setImageTintList(mCodeView, showQRCode ? null : mColorPassiveState);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -557,6 +578,20 @@ public class HotspotManagerFragment
                             "ServerSocket: Socket's accept() method failed \n" + e.getMessage() + "\n");
                     createSnackbar(R.string.msg_merg_send,
                             " ServerSocket: Socket's accept() method failed \n" + e.getMessage()).show();
+                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mCodeView.setVisibility(View.VISIBLE);
+                            Callback.setQrCode(true);
+                            hotspot_name.setVisibility(View.VISIBLE);
+                            try {
+                                hotspot_name.setText(hotspotInformation.getString(Keyword.NETWORK_NAME));
+                            } catch (Exception ex) {
+                                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                        ex.getMessage() + "\n");
+                            }
+                        }
+                    });
 
                     try {
                         serverSocket.close();

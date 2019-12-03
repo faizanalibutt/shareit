@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
@@ -87,11 +88,20 @@ public class PreparationsActivity extends Activity
     }
 
     // TODO: 10/23/2019 remove this in future #33
-    public static final int REQUEST_CODE_CHOOSE_DEVICE = 0;
+    public static final int REQUEST_PERMISSION_CAMERA = 0;
+    boolean hasCameraPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Camera Permission goes here
+        hasCameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED;
+
+        if (!hasCameraPermission) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
+        }
 
         mIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
