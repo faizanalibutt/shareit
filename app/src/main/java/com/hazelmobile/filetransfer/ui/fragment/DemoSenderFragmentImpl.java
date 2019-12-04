@@ -48,6 +48,7 @@ import androidx.core.content.ContextCompat;
 
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.ResultPoint;
 import com.hazelmobile.filetransfer.BluetoothConnector;
 import com.hazelmobile.filetransfer.Callback;
@@ -227,6 +228,8 @@ public class DemoSenderFragmentImpl
         standardBottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback);
 
         updateUI();
+        setSnackbarContainer(view.findViewById(R.id.qr_container));
+        setSnackbarLength(Snackbar.LENGTH_LONG);
     }
 
     private SenderWaitingDialog senderWaitingDialog;
@@ -278,6 +281,62 @@ public class DemoSenderFragmentImpl
         mBarcodeView.pauseAndWait();
     }
 
+    // with qr try connection
+    void retryConnection() {
+
+        try {
+
+            if (standardBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HALF_EXPANDED
+                    && isSocketClosed) {
+                standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+
+            removeHanlderMessages();
+
+            if (sendReceive != null && sendReceive.bluetoothSocket != null)
+                sendReceive.bluetoothSocket.close();
+            if (sendReceive != null) {
+                sendReceive.interrupt();
+                sendReceive = null;
+            }
+            if (clientClass != null && clientClass.socket != null) clientClass.socket.close();
+            if (clientClass != null) {
+                clientClass.interrupt();
+                clientClass = null;
+            }
+            if (mGenericList != null && mGenericList.size() > 0) {
+                mGenericList.clear();
+            }
+            ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
+            if (connectionUtils.getBluetoothAdapter().isDiscovering())
+                connectionUtils.getBluetoothAdapter().cancelDiscovery();
+
+            Set<BluetoothDevice> bluetoothDeviceList = connectionUtils.getBluetoothAdapter().getBondedDevices();
+            if (bluetoothDeviceList.size() > 0) {
+                for (BluetoothDevice bluetoothDevice : bluetoothDeviceList) {
+                    try {
+                        if (bluetoothDevice.getName().contains("TS") || bluetoothDevice.getName().contains("AndroidShare")) {
+                            Method m = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
+                            m.invoke(bluetoothDevice, (Object[]) null);
+                            showMessage("SendReceive: Removed Device Name is: " + bluetoothDevice);
+                        }
+                    } catch (Exception e) {
+                        showMessage("SendReceive: Removing has been failed." + e.getMessage());
+                    }
+                }
+            }
+
+            connectionUtils.getBluetoothAdapter().disable();
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: SHEET_STATE" + standardBottomSheetBehavior.getState());
+
+        } catch (Exception e) {
+            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: onRetry(): " + e.getMessage());
+        }
+
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -285,6 +344,7 @@ public class DemoSenderFragmentImpl
 
             closeDialog();
             isThreadAlive = false;
+            isSocketClosed = false;
             removeHanlderMessages();
 
             if (sendReceive != null && sendReceive.bluetoothSocket != null)
@@ -611,9 +671,10 @@ public class DemoSenderFragmentImpl
             lv_send.setAdapter(senderListAdapter);
         }
 
-        if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED &&
-                senderListAdapter != null &&
-                mGenericList.size() > 0) {
+        if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED
+                && senderListAdapter != null
+                && mGenericList.size() > 0
+                && !isSocketClosed) {
             //user_retry.setVisibility(View.VISIBLE);
             standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
         }
@@ -649,6 +710,7 @@ public class DemoSenderFragmentImpl
 
     private void setConductItemsShowing(boolean showing) {
         mConductContainer.setVisibility(showing ? View.VISIBLE : View.GONE);
+        mConductContainer.setVisibility(showing ? View.VISIBLE : View.GONE);
     }
 
     public void setDeviceSelectedListener(NetworkDeviceSelectedListener listener) {
@@ -674,12 +736,11 @@ public class DemoSenderFragmentImpl
     }
 
     private void updateUI() {
-        mBarcodeView.decodeContinuous(new BarcodeCallback()
-        {
+        mBarcodeView.decodeContinuous(new BarcodeCallback() {
             @Override
-            public void barcodeResult(BarcodeResult result)
-            {
+            public void barcodeResult(BarcodeResult result) {
                 try {
+                    openDialog("");
                     connectToHotspot(new JSONObject(result.getResult().getText()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -687,8 +748,7 @@ public class DemoSenderFragmentImpl
             }
 
             @Override
-            public void possibleResultPoints(List<ResultPoint> resultPoints)
-            {
+            public void possibleResultPoints(List<ResultPoint> resultPoints) {
 
             }
         });
@@ -705,7 +765,7 @@ public class DemoSenderFragmentImpl
         if (isConnecting) {
             // Keep showing barcode view
             mBarcodeView.pauseAndWait();
-            setConductItemsShowing(false);
+            //setConductItemsShowing(false);
         } else {
             mBarcodeView.resume();
             updateState();
@@ -736,19 +796,15 @@ public class DemoSenderFragmentImpl
                     new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
         } else {
             if (isSocketClosed) {
-                if (pulse.isRippleAnimationRunning())
-                    pulse.stopRippleAnimation();
-                if (senderWaitingDialog.isShowing())
-                    senderWaitingDialog.dismiss();
+                closeDialog();
                 mBarcodeView.resume();
-                mConductText.setText(R.string.text_scanQRCodeHelp);
+                //mConductText.setText(R.string.text_scanQRCodeHelp);
+                createSnackbar(R.string.text_send_status).show();
             }
         }
         if (isSocketClosed) {
             if (pulse.isRippleAnimationRunning())
                 pulse.stopRippleAnimation();
-            if (senderWaitingDialog.isShowing())
-                senderWaitingDialog.dismiss();
             mBarcodeView.setVisibility(hasCameraPermission ? View.VISIBLE : View.GONE);
         }
     }
@@ -790,7 +846,7 @@ public class DemoSenderFragmentImpl
                                     ((Bluetooth) device1).getDevice().getAddress() != null &&
                                     device.getAddress().equals(((Bluetooth) device1).getDevice().getAddress()) &&
                                     device.getName().equals(((Bluetooth) device1).getDevice().getName())) {
-                                if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED) {
+                                if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED && !isSocketClosed) {
                                     standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
                                 }
                                 return;
@@ -799,7 +855,7 @@ public class DemoSenderFragmentImpl
                         mGenericList.add(new Bluetooth(device, device.getName()
                                 + "\n" + device.getAddress()
                         ));
-                        if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED) {
+                        if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED && !isSocketClosed) {
                             standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
                         }
                         if (senderListAdapter != null)
@@ -968,7 +1024,7 @@ public class DemoSenderFragmentImpl
             } catch (IOException e) {
 
                 try {
-                    socket.close();
+                    if (socket != null) socket.close();
                 } catch (IOException ex) {
                     ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "Could not close the client socket \n" + ex.getMessage());
@@ -988,7 +1044,8 @@ public class DemoSenderFragmentImpl
 
             }
 
-            manageMyConnectedSocket(socket);
+            if (socket != null)
+                manageMyConnectedSocket(socket);
 
             ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: I'm still on...send has been called " + "\n");
@@ -1031,21 +1088,38 @@ public class DemoSenderFragmentImpl
             byte[] buffer = new byte[1024];
             int bytes;
 
+            boolean success = false;
+
             while (true) {
                 try {
                     bytes = inputStream.read(buffer);
                     mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
                     ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ClientSocket: SendReceive: RECEIVING BYTES FROM SERVER" + "\n");
+                    success = true;
                 } catch (IOException e) {
-                    e.printStackTrace();
                     ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ClientSocket: SendReceive: bytes receiving and error occurs " + e.getMessage() + "\n");
+
+                    // enable camera here
+                    if (!success) {
+                        isSocketClosed = true;
+                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                cancelDiscovery();
+                                retryConnection();
+                                updateState();
+                            }
+                        });
+                    }
+
                     break;
                 } finally {
                     try {
                         inputStream.close();
                         bluetoothSocket.close();
+                        // enable camera here.
                     } catch (IOException ex) {
                         ex.printStackTrace();
                         ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),

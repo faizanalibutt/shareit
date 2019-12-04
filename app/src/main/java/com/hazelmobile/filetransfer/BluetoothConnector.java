@@ -57,18 +57,18 @@ public class BluetoothConnector {
             } catch (IOException e) {
                 //try the fallback
                 try {
-                    bluetoothSocket = new FallbackBluetoothSocket(bluetoothSocket.getUnderlyingSocket());
-                    Thread.sleep(1000);
-                    bluetoothSocket.connect();
+                    //bluetoothSocket = new FallbackBluetoothSocket(bluetoothSocket.getUnderlyingSocket());
+                    Thread.sleep(200);
+                    //bluetoothSocket.connect();
                     success = true;
-                    break;  
-                } catch (FallbackException e1) {
+                    break;
+                } /*catch (FallbackException e1) {
                     Log.w(ExtensionsUtils.getBLUETOOTH_TAG(), "Could not initialize FallbackBluetoothSocket classes.", e);
-                } catch (InterruptedException e1) {
+                } */catch (InterruptedException e1) {
                     Log.w(ExtensionsUtils.getBLUETOOTH_TAG(), e1.getMessage(), e1);
-                } catch (IOException e1) {
+                } /*catch (IOException e1) {
                     Log.w(ExtensionsUtils.getBLUETOOTH_TAG(), "Fallback failed. Cancelling.", e1);
-                }
+                }*/
             }
         }
 
