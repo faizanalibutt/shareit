@@ -179,12 +179,12 @@ public class ReceiverActivity extends Activity
             @Override
             public void onChanged(@Nullable final Boolean qr_status) {
                 if (qr_status != null && qr_status) {
+                    if (pulse.isRippleAnimationRunning()) pulse.startRippleAnimation();
                     pulse.setVisibility(View.GONE);
                     user_image.setVisibility(View.GONE);
                     textView.setVisibility(View.GONE);
                     hotspot_name.setVisibility(View.GONE);
                     receiver_status.setVisibility(View.GONE);
-
                 }
             }
         };

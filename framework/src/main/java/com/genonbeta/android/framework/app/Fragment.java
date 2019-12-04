@@ -15,6 +15,7 @@ public class Fragment
 {
 	private boolean mIsMenuShown;
 	private View mSnackbarContainer;
+	protected boolean isThreadAlive = false;
 	private int mSnackbarLength = Snackbar.LENGTH_LONG;
 
 	public Snackbar createSnackbar(int resId, Object... objects)

@@ -54,6 +54,7 @@ import com.hazelmobile.filetransfer.util.NetworkUtils;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -102,6 +103,7 @@ public class HotspotManagerFragment
     private MyHandler mHandle = new MyHandler();
     private ImageView mCodeView;
     private TextView hotspot_name;
+    private View qr_container;
     private ColorStateList mColorPassiveState;
 
     @Override
@@ -124,9 +126,12 @@ public class HotspotManagerFragment
         //progressBar.setMax(100);
         //progressBar.setProgress/*coming from service wait for that code*/(0);
 
+        setSnackbarContainer(view.findViewById(R.id.layout_hotspot_status_container));
+        setSnackbarLength(Snackbar.LENGTH_LONG);
         dataTransferTime = view.findViewById(R.id.cancelTransfer);
         dataTransferSpeed = view.findViewById(R.id.dataTransferStatus);
         hotspot_name = view.findViewById(R.id.layout_hotspot_manager_qr_text);
+        qr_container = view.findViewById(R.id.qr_container);
 
         return view;
     }
@@ -176,6 +181,7 @@ public class HotspotManagerFragment
                 getContext().stopService(intent);
                 getContext().unregisterReceiver(mMessageReceiver);
             }*/
+                isThreadAlive = false;
                 Callback.setQrCode(false);
                 Callback.setHotspotName("");
                 ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
@@ -232,12 +238,6 @@ public class HotspotManagerFragment
             ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ServerSocket: onDestroy(): " + e.getMessage());
         }
-    }
-
-    @Override
-    public Snackbar createSnackbar(int resId, Object... objects) {
-        return Snackbar.make(Objects.requireNonNull(getActivity())
-                .findViewById(R.id.layout_hotspot_status_container), getString(resId, objects), Snackbar.LENGTH_LONG);
     }
 
     @Override
@@ -408,7 +408,10 @@ public class HotspotManagerFragment
                                 "ServerSocket: When Hotspot Enabled AND HotspotInformation is " +
                                         codeIndex);
                         serverClass.setHotspotInformation(codeIndex);
-                        serverClass.start();
+                        if (!serverClass.isAlive() && !isThreadAlive) {
+                            serverClass.start();
+                            isThreadAlive = true;
+                        }
 
                         if (codeIndex.has(Keyword.NETWORK_NAME) && UIConnectionUtils.isOreoAbove()) {
                             ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().setName(codeIndex.getString(Keyword.NETWORK_NAME));
@@ -568,30 +571,15 @@ public class HotspotManagerFragment
         }
 
         public void run() {
-            BluetoothSocket socket;
+            BluetoothSocket socket = null;
 
             while (true) {
                 try {
                     socket = serverSocket.accept();
                 } catch (Exception e) {
+
                     ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ServerSocket: Socket's accept() method failed \n" + e.getMessage() + "\n");
-                    createSnackbar(R.string.msg_merg_send,
-                            " ServerSocket: Socket's accept() method failed \n" + e.getMessage()).show();
-                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mCodeView.setVisibility(View.VISIBLE);
-                            Callback.setQrCode(true);
-                            hotspot_name.setVisibility(View.VISIBLE);
-                            try {
-                                hotspot_name.setText(hotspotInformation.getString(Keyword.NETWORK_NAME));
-                            } catch (Exception ex) {
-                                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
-                                        ex.getMessage() + "\n");
-                            }
-                        }
-                    });
 
                     try {
                         serverSocket.close();
@@ -600,6 +588,27 @@ public class HotspotManagerFragment
                                 "ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n");
                         createSnackbar(R.string.app_name,
                                 " ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n").show();
+                    }
+
+                    if (Objects.requireNonNull(getActivity()).
+                            findViewById(R.id.layout_hotspot_status_container) != null) {
+                        createSnackbar(R.string.msg_merg_send,
+                                " ServerSocket: Socket's accept() method failed \n" + e.getMessage()).show();
+                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mCodeView.setVisibility(View.VISIBLE);
+                                Callback.setQrCode(true);
+                                hotspot_name.setVisibility(View.VISIBLE);
+                                qr_container.setVisibility(View.VISIBLE);
+                                try {
+                                    hotspot_name.setText(hotspotInformation.getString(Keyword.NETWORK_NAME));
+                                } catch (JSONException ex) {
+                                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                            ex.getMessage() + "\n");
+                                }
+                            }
+                        });
                     }
                     break;
                 }

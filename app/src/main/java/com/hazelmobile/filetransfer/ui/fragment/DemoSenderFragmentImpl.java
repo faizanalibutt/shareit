@@ -284,7 +284,7 @@ public class DemoSenderFragmentImpl
         try {
 
             closeDialog();
-
+            isThreadAlive = false;
             removeHanlderMessages();
 
             if (sendReceive != null && sendReceive.bluetoothSocket != null)
