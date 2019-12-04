@@ -153,6 +153,7 @@ public class HotspotManagerFragment
         };
         Callback.getHotspotName().observe(this, hotspotNameChanger);
 
+
         if (UIConnectionUtils.isOreoAbove()) {
             getorUpdateBluetoothDiscoverable();
             mHandle.sendMessageDelayed(mHandle.obtainMessage(STATE_BLUETOOTH_DISCOVERABLE_REQUESTING), 60000);
