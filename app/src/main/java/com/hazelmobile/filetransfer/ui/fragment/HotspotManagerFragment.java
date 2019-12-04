@@ -33,6 +33,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
+import androidx.lifecycle.Observer;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
@@ -144,6 +145,13 @@ public class HotspotManagerFragment
                 mMessageReceiver, new IntentFilter("ReceiverProgress"));*/
 
         Callback.setHotspotName("");
+        final Observer<String> hotspotNameChanger = new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable final String hotspot_nam) {
+                hotspot_name.setText(hotspot_nam);
+            }
+        };
+        Callback.getHotspotName().observe(this, hotspotNameChanger);
 
         if (UIConnectionUtils.isOreoAbove()) {
             getorUpdateBluetoothDiscoverable();
@@ -229,13 +237,13 @@ public class HotspotManagerFragment
                     }
                 }
                 connectionUtils.getBluetoothAdapter().setName(AppUtils.getForceLocalDeviceName(getContext()));
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: onDestroy(): " + connectionUtils.getBluetoothAdapter().getName());
                 connectionUtils.getBluetoothAdapter().disable();
             }
 
         } catch (Exception e) {
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ServerSocket: onDestroy(): " + e.getMessage());
         }
     }
@@ -404,7 +412,7 @@ public class HotspotManagerFragment
                             .putInt(Keyword.NETWORK_PIN, networkPin)
                             .apply();
                     if (serverClass != null && UIConnectionUtils.isOreoAbove()) {
-                        ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                                 "ServerSocket: When Hotspot Enabled AND HotspotInformation is " +
                                         codeIndex);
                         serverClass.setHotspotInformation(codeIndex);
@@ -415,7 +423,7 @@ public class HotspotManagerFragment
 
                         if (codeIndex.has(Keyword.NETWORK_NAME) && UIConnectionUtils.isOreoAbove()) {
                             ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().setName(codeIndex.getString(Keyword.NETWORK_NAME));
-                            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                                     "Bluetooth Name is: " + codeIndex.getString(Keyword.NETWORK_NAME));
                             Callback.setHotspotName(codeIndex.getString(Keyword.NETWORK_NAME));
                         }
@@ -432,9 +440,9 @@ public class HotspotManagerFragment
                         .load(bitmap)
                         .into(mCodeView);
 
-            } else {
+            } else
                 mCodeView.setImageResource(R.drawable.ic_qrcode_white_128dp);
-            }
+
             ImageViewCompat.setImageTintList(mCodeView, showQRCode ? null : mColorPassiveState);
 
         } catch (Exception e) {
@@ -455,7 +463,7 @@ public class HotspotManagerFragment
         showMenu();
 
         if (!isEnabled) {
-            ExtensionsUtils.getLogInfo("TRANSFER_TAG", "hotspot disabled");
+            ExtensionsUtils.getLog_D("TRANSFER_TAG", "hotspot disabled");
             updateViewsWithBlank();
         } else if (getConnectionUtils().getHotspotUtils() instanceof HotspotUtils.HackAPI
                 && wifiConfiguration != null) {
@@ -464,7 +472,7 @@ public class HotspotManagerFragment
             AppUtils.startForegroundService(getActivity(),
                     new Intent(getActivity(), CommunicationService.class)
                             .setAction(CommunicationService.ACTION_REQUEST_HOTSPOT_STATUS));
-            ExtensionsUtils.getLogInfo("TRANSFER_TAG", "hotspot status sending");
+            ExtensionsUtils.getLog_D("TRANSFER_TAG", "hotspot status sending");
         }
     }
 
@@ -561,11 +569,11 @@ public class HotspotManagerFragment
                         .getBluetoothAdapter()
                         .listenUsingInsecureRfcommWithServiceRecord(APP_NAME, MY_UUID);
 
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: its enabled " + serverSocket + "\n");
 
             } catch (IOException e) {
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: Listener got interruption \n" + e.getMessage() + "\n");
             }
         }
@@ -578,13 +586,13 @@ public class HotspotManagerFragment
                     socket = serverSocket.accept();
                 } catch (Exception e) {
 
-                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ServerSocket: Socket's accept() method failed \n" + e.getMessage() + "\n");
 
                     try {
                         serverSocket.close();
                     } catch (IOException ex) {
-                        ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                                 "ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n");
                         createSnackbar(R.string.app_name,
                                 " ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n").show();
@@ -604,7 +612,7 @@ public class HotspotManagerFragment
                                 try {
                                     hotspot_name.setText(hotspotInformation.getString(Keyword.NETWORK_NAME));
                                 } catch (JSONException ex) {
-                                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                                             ex.getMessage() + "\n");
                                 }
                             }
@@ -613,7 +621,7 @@ public class HotspotManagerFragment
                     break;
                 }
 
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: When Server Thread Enabled AND HOTSPOT_INFORMATION is " + "\n" + getHotspotInformation());
                 if (socket != null && getHotspotInformation() != null) {
                     manageServerSocket(socket);
@@ -621,7 +629,7 @@ public class HotspotManagerFragment
                 }
             }
 
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ServerSocket: I'm still on...loop has been broken" + "\n");
         }
 
@@ -631,7 +639,7 @@ public class HotspotManagerFragment
                 sendReceive.write(getHotspotInformation().toString().getBytes());
                 sendReceive.start();
 
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: send message to obtain HOTSPOT_INFORMATION" + "\n");
 
                 if (mHandle != null)
@@ -657,7 +665,7 @@ public class HotspotManagerFragment
                 tempIn = bluetoothSocket.getInputStream();
                 tempOut = bluetoothSocket.getOutputStream();
             } catch (IOException e) {
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: SendReceive: this constructor fed up \n" + e.getMessage());
             }
 
@@ -673,15 +681,15 @@ public class HotspotManagerFragment
                 try {
                     bytes = inputStream.read(buffer);
                     new DemoSenderFragmentImpl().mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
-                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ServerSocket: SendReceive: HOTSPOT BYTES TO SENDER ");
                 } catch (IOException e) {
-                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ServerSocket: SendReceive: Sending bytes to client got error \n" + e.getMessage());
                     break;
                 }
             }
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ServerSocket: SendReceive: I'm still On...loop has been broken \n");
         }
 

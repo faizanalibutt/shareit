@@ -150,7 +150,7 @@ public class ConnectionUtils {
             }
 
             if (connectionCallback.onTimePassed(1000, passedTime) || interrupter.interrupted()) {
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "establishHotspotConnection(): Timed out or onTimePassed returned true. Exiting...");
                 Log.d(TAG, "establishHotspotConnection(): Timed out or onTimePassed returned true. Exiting...");
                 break;
@@ -424,7 +424,7 @@ public class ConnectionUtils {
                         if (hotspotWifi.SSID != null && hotspotWifi.SSID.equalsIgnoreCase(config.SSID)) {
                             getWifiManager().disconnect();
                             getWifiManager().enableNetwork(hotspotWifi.networkId, true);
-                            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                                     "WIFI_CONNECTED \n");
                             return getWifiManager().reconnect();
                         }
@@ -432,12 +432,12 @@ public class ConnectionUtils {
                 } else {
                     getWifiManager().disconnect();
                     getWifiManager().enableNetwork(netId, true);
-                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "WIFI_CONNECTED \n");
                     return getWifiManager().reconnect();
                 }
             } catch (Exception exp) {
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "connecting to HOTSPOT_NETWORK and got fed up with exception \n" + exp.getMessage());
                 disableCurrentNetwork();
                 return false;

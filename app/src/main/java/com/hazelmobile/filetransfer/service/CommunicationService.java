@@ -566,7 +566,7 @@ public class CommunicationService extends Service {
     }
 
     public void sendHotspotStatusDisabling() {
-        ExtensionsUtils.getLogInfo("TRANSFER_TAG", "hotspot disabling");
+        ExtensionsUtils.getLog_D("TRANSFER_TAG", "hotspot disabling");
         sendBroadcast(new Intent(ACTION_HOTSPOT_STATUS)
                 .putExtra(EXTRA_HOTSPOT_ENABLED, false)
                 .putExtra(EXTRA_HOTSPOT_DISABLING, true));
@@ -578,7 +578,7 @@ public class CommunicationService extends Service {
                 .putExtra(EXTRA_HOTSPOT_DISABLING, false);
 
         if (wifiConfiguration != null) {
-            ExtensionsUtils.getLogInfo("TRANSFER_TAG", "hotspot wifi configured");
+            ExtensionsUtils.getLog_D("TRANSFER_TAG", "hotspot wifi configured");
             statusIntent.putExtra(EXTRA_HOTSPOT_NAME, wifiConfiguration.SSID)
                     .putExtra(EXTRA_HOTSPOT_PASSWORD, wifiConfiguration.preSharedKey)
                     .putExtra(EXTRA_HOTSPOT_KEY_MGMT, NetworkUtils.getAllowedKeyManagement(wifiConfiguration));

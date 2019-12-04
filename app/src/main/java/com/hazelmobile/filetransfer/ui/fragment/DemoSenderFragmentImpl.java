@@ -327,11 +327,11 @@ public class DemoSenderFragmentImpl
             }
 
             connectionUtils.getBluetoothAdapter().disable();
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
-                    "ClientSocket: SHEET_STATE" + standardBottomSheetBehavior.getState());
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: SHEET_STATE " + standardBottomSheetBehavior.getState());
 
         } catch (Exception e) {
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: onRetry(): " + e.getMessage());
         }
 
@@ -382,7 +382,7 @@ public class DemoSenderFragmentImpl
 
             connectionUtils.getBluetoothAdapter().disable();
         } catch (Exception e) {
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: onDestroy(): " + e.getMessage());
         }
     }
@@ -459,14 +459,14 @@ public class DemoSenderFragmentImpl
                 getContext().unregisterReceiver(wReceiver);
                 getContext().unregisterReceiver(bReceiver);
             } catch (IllegalArgumentException e) {
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: Unregistering WIFI ADN BLUETOOTH \n" + e.getMessage());
             }
             try {
                 getContext().registerReceiver(wReceiver, wifiIntentFilter);
                 getContext().registerReceiver(bReceiver, buletoothIntentFilter);
             } catch (Exception e) {
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: Registering WIFI ADN BLUETOOTH \n" + e.getMessage());
             }
         }
@@ -839,7 +839,7 @@ public class DemoSenderFragmentImpl
                                     device.getName().startsWith("AndroidShare"))) {
 
                         showMessage("Tshot device name is " + device.getName());
-                        ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                                 "Tshot device name is " + device.getName());
                         for (Object device1 : mGenericList) {
                             if (device1 instanceof Bluetooth &&
@@ -1012,7 +1012,7 @@ public class DemoSenderFragmentImpl
 
                 socket = bluetoothConnector.connect();
 
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: socket coming from Bluetooth_Connector" + "\n");
 
                 Message message = Message.obtain();
@@ -1026,11 +1026,11 @@ public class DemoSenderFragmentImpl
                 try {
                     if (socket != null) socket.close();
                 } catch (IOException ex) {
-                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "Could not close the client socket \n" + ex.getMessage());
                 }
 
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: client fed up with exception " + e.getMessage() + "\n");
 
                 Message message = Message.obtain();
@@ -1039,7 +1039,7 @@ public class DemoSenderFragmentImpl
                     mHandler.sendMessage(message);
                 }
 
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: client sending message connection failed \n " + e.getMessage() + "\n");
 
             }
@@ -1047,14 +1047,14 @@ public class DemoSenderFragmentImpl
             if (socket != null)
                 manageMyConnectedSocket(socket);
 
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: I'm still on...send has been called " + "\n");
 
         }
 
         private void manageMyConnectedSocket(BluetoothConnector.BluetoothSocketWrapper socket) {
 
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: client connected and sent message " + "\n");
 
             sendReceive = new SendReceive(socket.getUnderlyingSocket());
@@ -1076,7 +1076,7 @@ public class DemoSenderFragmentImpl
                 bluetoothSocket = socket;
                 tempIn = bluetoothSocket.getInputStream();
             } catch (IOException e) {
-                ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: SendReceive: constructor fed up " + e.getMessage() + "\n");
                 e.printStackTrace();
             }
@@ -1094,11 +1094,11 @@ public class DemoSenderFragmentImpl
                 try {
                     bytes = inputStream.read(buffer);
                     mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
-                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ClientSocket: SendReceive: RECEIVING BYTES FROM SERVER" + "\n");
                     success = true;
                 } catch (IOException e) {
-                    ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ClientSocket: SendReceive: bytes receiving and error occurs " + e.getMessage() + "\n");
 
                     // enable camera here
@@ -1122,12 +1122,12 @@ public class DemoSenderFragmentImpl
                         // enable camera here.
                     } catch (IOException ex) {
                         ex.printStackTrace();
-                        ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                                 "ClientSocket: SendReceive: Could not close the connect socket " + ex.getMessage() + "\n");
                     }
                 }
             }
-            ExtensionsUtils.getLogInfo(ExtensionsUtils.getBLUETOOTH_TAG(),
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: SendReceive: I'm still on. Loop has been broken " + "\n");
         }
 
