@@ -91,6 +91,8 @@ public class ConnectionUtils {
         return ipAddress;
     }
 
+
+
     @WorkerThread
     public String establishHotspotConnection(final Interrupter interrupter,
                                              final NetworkDeviceListAdapter.HotspotNetwork hotspotNetwork,
@@ -100,9 +102,31 @@ public class ConnectionUtils {
 
         String remoteAddress = null;
         boolean connectionToggled = false;
+        boolean secondAttempt = false;
+        boolean thirdAttempt = false;
 
         while (true) {
+
             int passedTime = (int) (System.currentTimeMillis() - startTime);
+
+
+            if (passedTime >= 10000 && !secondAttempt) {
+                secondAttempt = true;
+                disableCurrentNetwork();
+                // retry code will be here.
+                connectionToggled = false;
+                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "establishHotspotConnection(): second attempt Current Network Disabled: " + disableCurrentNetwork());
+            }
+
+            if (passedTime >= 20000 && !thirdAttempt) {
+                thirdAttempt = true;
+                disableCurrentNetwork();
+                // retry code will be here.
+                connectionToggled = false;
+                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "establishHotspotConnection(): third attempt Current Network Disabled: " + disableCurrentNetwork());
+            }
 
             if (!getWifiManager().isWifiEnabled()) {
                 Log.d(TAG, "establishHotspotConnection(): Wifi is off. Making a request to turn it on");
@@ -117,8 +141,10 @@ public class ConnectionUtils {
 
                 connectionToggled = true;
             } else {
-                Log.d(TAG, "establishHotspotConnection(): Waiting to connect to the server");
+
                 final DhcpInfo routeInfo = getWifiManager().getDhcpInfo();
+
+                Log.w(TAG, String.format("establishHotspotConnection(): DHCP: %s", routeInfo));
 
                 if (routeInfo != null && routeInfo.gateway > 0) {
                     final String testedRemoteAddress = NetworkUtils.convertInet4Address(routeInfo.gateway);
@@ -137,7 +163,6 @@ public class ConnectionUtils {
                             ? NetworkUtils.ping(testedRemoteAddress, pingTimeout) : NetworkUtils.ping(testedRemoteAddress)) {
                         Log.d(TAG, "establishHotspotConnection(): AP has been reached. Returning OK state.");
                         remoteAddress = testedRemoteAddress;
-                        //com.hazelmobile.filetransfer.Callback.setDialogInfo("Connected");
                         break;
                     } else {
                         Log.d(TAG, "establishHotspotConnection(): Connection check ping failed");
@@ -145,12 +170,11 @@ public class ConnectionUtils {
                 } else
                 {
                     Log.d(TAG, "establishHotspotConnection(): No DHCP provided. Looping...");
-                    //com.hazelmobile.filetransfer.Callback.setDialogInfo("No DHCP provided.");
                 }
             }
 
             if (connectionCallback.onTimePassed(1000, passedTime) || interrupter.interrupted()) {
-                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "establishHotspotConnection(): Timed out or onTimePassed returned true. Exiting...");
                 Log.d(TAG, "establishHotspotConnection(): Timed out or onTimePassed returned true. Exiting...");
                 break;
@@ -246,103 +270,19 @@ public class ConnectionUtils {
                 && mConnectivityManager.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_MOBILE;
     }
 
-    /**
-     * 创建WifiConfiguration的类型
-     */
-    public static final int WIFICIPHER_NOPASS = 1;
-    public static final int WIFICIPHER_WEP = 2;
-    public static final int WIFICIPHER_WPA = 3;
-
-    /**
-     * 创建WifiConfiguration
-     *
-     * @param ssid
-     * @param password
-     * @param type
-     * @return
-     */
-    public static WifiConfiguration createWifiCfg(String ssid, String password, int type) {
-        WifiConfiguration config = new WifiConfiguration();
-        config.allowedAuthAlgorithms.clear();
-        config.allowedGroupCiphers.clear();
-        config.allowedKeyManagement.clear();
-        config.allowedPairwiseCiphers.clear();
-        config.allowedProtocols.clear();
-
-        config.SSID = "\"" + ssid + "\"";
-
-        if (type == WIFICIPHER_NOPASS) {
-//            config.wepKeys[0] = "";
-            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-//            config.wepTxKeyIndex = 0;
-
-//            无密码连接WIFI时，连接不上wifi，需要注释两行代码
-//            config.wepKeys[0] = "";
-//            config.wepTxKeyIndex = 0;
-        } else if (type == WIFICIPHER_WEP) {
-            config.hiddenSSID = true;
-            config.wepKeys[0] = "\"" + password + "\"";
-            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
-            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-            config.wepTxKeyIndex = 0;
-        } else if (type == WIFICIPHER_WPA) {
-            config.preSharedKey = "\"" + password + "\"";
-            config.hiddenSSID = true;
-            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-            config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-            config.status = WifiConfiguration.Status.ENABLED;
-        }
-
-        return config;
-    }
-
-    public boolean addNetwork(WifiConfiguration wf) {
-        //断开当前的连接
-        disableCurrentNetwork();
-
-        //连接新的连接
-        try {
-            /*int netId = mWifiManager.addNetwork(wf);
-            boolean enable = mWifiManager.enableNetwork(netId, true);
-            Toast.makeText(mContext, "wifi network added", Toast.LENGTH_SHORT).show();
-            return enable;*/
-
-            boolean enable = false;
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                List<WifiConfiguration> list = mWifiManager.getConfiguredNetworks();
-                for (WifiConfiguration hotspotWifi : list) {
-                    if (hotspotWifi.SSID != null && hotspotWifi.SSID.equalsIgnoreCase(wf.SSID)) {
-                        mWifiManager.disconnect();
-                        enable = mWifiManager.enableNetwork(hotspotWifi.networkId, true);
-                        mWifiManager.reconnect();
-                    }
-                }
-            } else {
-                int netId = mWifiManager.addNetwork(wf);
-                enable = mWifiManager.enableNetwork(netId, true);
-            }
-
-            return enable;
-        } catch (Exception exp) {
-            Toast.makeText(mContext, "wifi network not added", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-    }
-
     public boolean toggleConnection(NetworkDeviceListAdapter.HotspotNetwork hotspotNetwork) {
         if (!isConnectedToNetwork(hotspotNetwork)) {
             if (isConnectedToAnyNetwork())
                 disableCurrentNetwork();
 
             WifiConfiguration config = new WifiConfiguration();
+
+            /*WifiConfiguration config = new WifiConfiguration();
+            config.allowedAuthAlgorithms.clear();
+            config.allowedGroupCiphers.clear();
+            config.allowedKeyManagement.clear();
+            config.allowedPairwiseCiphers.clear();
+            config.allowedProtocols.clear();*/
 
             config.SSID = String.format("\"%s\"", hotspotNetwork.SSID);
 
@@ -407,14 +347,6 @@ public class ConnectionUtils {
                     break;
             }
 
-            /**
-             * to add hotspot wifi;
-             */
-            /*int netId = getWifiManager().addNetwork(config);
-            getWifiManager().disconnect();
-            getWifiManager().enableNetwork(netId, true);
-            return getWifiManager().reconnect();*/
-
             try {
                 int netId = getWifiManager().addNetwork(config);
 
@@ -424,7 +356,7 @@ public class ConnectionUtils {
                         if (hotspotWifi.SSID != null && hotspotWifi.SSID.equalsIgnoreCase(config.SSID)) {
                             getWifiManager().disconnect();
                             getWifiManager().enableNetwork(hotspotWifi.networkId, true);
-                            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                            ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                                     "WIFI_CONNECTED \n");
                             return getWifiManager().reconnect();
                         }

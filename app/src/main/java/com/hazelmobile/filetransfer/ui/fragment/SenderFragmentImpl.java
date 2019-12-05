@@ -43,6 +43,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.genonbeta.android.framework.util.Interrupter;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.model.Bluetooth;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
@@ -756,7 +757,7 @@ public class SenderFragmentImpl
     }
 
     private void makeAcquaintance(Object object, int accessPin) {
-        mConnectionUtils.makeAcquaintance(getActivity(), SenderFragmentImpl.this, object, accessPin, mRegisteredListener);
+        mConnectionUtils.makeAcquaintance((Activity) getActivity(), SenderFragmentImpl.this, object, accessPin, mRegisteredListener);
     }
 
     public void setDeviceSelectedListener(NetworkDeviceSelectedListener listener) {

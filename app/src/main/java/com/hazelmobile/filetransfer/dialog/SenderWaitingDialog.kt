@@ -30,7 +30,7 @@ class SenderWaitingDialog(val activity: Activity, var anyObject: Any) :
                 R.string.layout_dialog_receiver_title, anyObject
             )
             val selectObserver =
-                Observer<Any> { select -> selectionCallback(select, mRootView.dialog_sender_title) }
+                Observer<Any> { any -> selectionCallback(any, mRootView.dialog_sender_title) }
             Callback.getDialogInfo().observe(activity, selectObserver)
         }.onFailure {
             // here you can send developer message
@@ -41,6 +41,10 @@ class SenderWaitingDialog(val activity: Activity, var anyObject: Any) :
     private fun selectionCallback(dialogInfo: Any, dialogSenderTitle: TextView) {
         when (dialogInfo) {
             is String -> dialogSenderTitle.text = dialogInfo
+            is Boolean -> if (!activity.isFinishing)
+            {
+                this.dismiss()
+            }
             else -> {}
         }
     }

@@ -282,7 +282,7 @@ public class DemoSenderFragmentImpl
     }
 
     // with qr try connection
-    void retryConnection() {
+    public void retryConnection() {
 
         try {
 
@@ -681,7 +681,7 @@ public class DemoSenderFragmentImpl
     }
 
     private void makeAcquaintance(Object object, int accessPin) {
-        mConnectionUtils.makeAcquaintance(Objects.requireNonNull
+        mConnectionUtils.makeAcquaintance((Activity) Objects.requireNonNull
                 (getActivity()), DemoSenderFragmentImpl.this, object, accessPin, mRegisteredListener);
     }
 
@@ -1056,9 +1056,11 @@ public class DemoSenderFragmentImpl
 
             ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: client connected and sent message " + "\n");
+            if (sendReceive == null) {
+                sendReceive = new SendReceive(socket.getUnderlyingSocket());
+                sendReceive.start();
+            }
 
-            sendReceive = new SendReceive(socket.getUnderlyingSocket());
-            sendReceive.start();
         }
 
     }
@@ -1098,8 +1100,23 @@ public class DemoSenderFragmentImpl
                             "ClientSocket: SendReceive: RECEIVING BYTES FROM SERVER" + "\n");
                     success = true;
                 } catch (IOException e) {
+
                     ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ClientSocket: SendReceive: bytes receiving and error occurs " + e.getMessage() + "\n");
+
+                    try {
+                        if (!success) {
+                            bytes = inputStream.read(buffer);
+                            mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
+                            ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                    "ClientSocket: SendReceive: RECEIVING BYTES FROM SERVER" + "\n");
+                            success = true;
+                        }
+                    } catch (IOException e1) {
+                        ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                "ClientSocket: SendReceive: bytes receiving and error occurs " + e.getMessage() + "\n");
+                    }
+
 
                     // enable camera here
                     if (!success) {

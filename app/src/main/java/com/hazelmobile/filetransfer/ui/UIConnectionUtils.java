@@ -19,9 +19,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.genonbeta.CoolSocket.CoolSocket;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
+import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.dialog.SenderWaitingDialog;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
@@ -101,7 +103,7 @@ public class UIConnectionUtils {
         return mSnackbarSupport;
     }
 
-    public void makeAcquaintance(final Activity activity, final UITask task, final Object object, final int accessPin,
+    public void makeAcquaintance(final com.hazelmobile.filetransfer.app.Activity activity, final UITask task, final Object object, final int accessPin,
                                  final NetworkDeviceLoader.OnDeviceRegisteredListener registerListener) {
         WorkerService.RunningTask runningTask = new WorkerService.RunningTask() {
             private boolean mConnected = false;
@@ -123,7 +125,7 @@ public class UIConnectionUtils {
                                 new ConnectionUtils.ConnectionCallback() {
                                     @Override
                                     public boolean onTimePassed(int delimiter, long timePassed) {
-                                        return timePassed >= 20000;
+                                        return timePassed >= 30000;
                                     }
                                 });
                     } else if (object instanceof String)
@@ -150,17 +152,22 @@ public class UIConnectionUtils {
                             @Override
                             public void run() {
                                 if (!activity.isFinishing()) {
-                                    /*AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
-                                            .setMessage(R.string.mesg_connectionFailure)
-                                            .setNegativeButton(R.string.butn_close, null)
-                                            .setPositiveButton(R.string.butn_retry, retryButtonListener);
-
-                                    if (object instanceof NetworkDevice)
-                                        dialogBuilder.setTitle(((NetworkDevice) object).nickname);
-
-                                    dialogBuilder.show();*/
-
                                     Callback.setDialogInfo("Connection Failed, Please try again");
+                                    Callback.setDialogInfo(true);
+                                    getSnackbarSupport().createSnackbar(R.string.mesg_connectionFailure)
+                                            .setAction(R.string.butn_retry, new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    makeAcquaintance(activity, task, object, accessPin, registerListener);
+                                                    if(!activity.isFinishing()) {
+                                                        SenderWaitingDialog senderWaitingDialog = new SenderWaitingDialog(activity, "");
+                                                        senderWaitingDialog.show();
+                                                        Callback.setDialogInfo("Waiting to Connect");
+                                                    }
+                                                }
+                                            })
+                                            .setDuration(Snackbar.LENGTH_INDEFINITE)
+                                            .show();
                                 }
                             }
                         });
