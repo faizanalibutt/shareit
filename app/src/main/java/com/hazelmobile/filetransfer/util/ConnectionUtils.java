@@ -144,9 +144,9 @@ public class ConnectionUtils {
 
                 final DhcpInfo routeInfo = getWifiManager().getDhcpInfo();
 
-                Log.w(TAG, String.format("establishHotspotConnection(): DHCP: %s", routeInfo));
+                //Log.w(TAG, String.format("establishHotspotConnection(): DHCP: %s", routeInfo));
 
-                if (routeInfo != null && routeInfo.gateway > 0) {
+                if (routeInfo != null && routeInfo.gateway != 0) {
                     final String testedRemoteAddress = NetworkUtils.convertInet4Address(routeInfo.gateway);
 
                     Log.d(TAG, String.format("establishHotspotConnection(): DhcpInfo: gateway: %s dns1: %s dns2: %s ipAddr: %s serverAddr: %s netMask: %s",
@@ -171,6 +171,10 @@ public class ConnectionUtils {
                 {
                     Log.d(TAG, "establishHotspotConnection(): No DHCP provided. Looping...");
                 }
+                /*if (routeInfo != null) {
+                    Log.w(TAG, String.format("establishHotspotConnection(): DHCP: %s %s %s", routeInfo, routeInfo.gateway,  routeInfo.gateway > 0));
+                }*/
+
             }
 
             if (connectionCallback.onTimePassed(1000, passedTime) || interrupter.interrupted()) {
