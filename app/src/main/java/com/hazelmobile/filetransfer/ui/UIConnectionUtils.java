@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.WorkerThread;
@@ -244,6 +245,7 @@ public class UIConnectionUtils {
                     client.setReturn(device);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Log.d(TAG, e.getMessage());
                 }
 
             }

@@ -2,6 +2,7 @@ package com.hazelmobile.filetransfer.task;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
@@ -21,6 +22,7 @@ import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.activity.AddDevicesToTransferActivity;
 import com.hazelmobile.filetransfer.ui.activity.DemoSenderActivity;
+import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
 
@@ -30,6 +32,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class DemoAddDeviceRunningTask extends WorkerService.RunningTask<DemoSenderActivity> {
     private TransferGroup mGroup;
@@ -183,9 +187,9 @@ public class DemoAddDeviceRunningTask extends WorkerService.RunningTask<DemoSend
                                     AppUtils.getDatabase(context).insert(pendingRegistry, progressUpdater);
 
                                 if (getAnchorListener() != null) {
-                                    /*getAnchorListener().setResult(RESULT_OK, new Intent()
+                                    getAnchorListener().setResult(RESULT_OK, new Intent()
                                             .putExtra(SenderActivity.EXTRA_DEVICE_ID, assignee.deviceId)
-                                            .putExtra(SenderActivity.EXTRA_GROUP_ID, assignee.groupId));*/
+                                            .putExtra(SenderActivity.EXTRA_GROUP_ID, assignee.groupId));
                                     getAnchorListener().finish();
                                 }
                             } else if (getAnchorListener() != null) {

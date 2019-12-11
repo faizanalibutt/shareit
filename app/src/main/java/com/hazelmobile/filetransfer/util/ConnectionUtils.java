@@ -109,7 +109,6 @@ public class ConnectionUtils {
 
             int passedTime = (int) (System.currentTimeMillis() - startTime);
 
-
             if (passedTime >= 10000 && !secondAttempt) {
                 secondAttempt = true;
                 disableCurrentNetwork();
@@ -144,9 +143,9 @@ public class ConnectionUtils {
 
                 final DhcpInfo routeInfo = getWifiManager().getDhcpInfo();
 
-                //Log.w(TAG, String.format("establishHotspotConnection(): DHCP: %s", routeInfo));
+                Log.w(TAG, String.format("establishHotspotConnection(): DHCP: %s", routeInfo));
 
-                if (routeInfo != null && routeInfo.gateway != 0) {
+                if (routeInfo != null && routeInfo.gateway != 0 && routeInfo.dns2 == 0) {
                     final String testedRemoteAddress = NetworkUtils.convertInet4Address(routeInfo.gateway);
 
                     Log.d(TAG, String.format("establishHotspotConnection(): DhcpInfo: gateway: %s dns1: %s dns2: %s ipAddr: %s serverAddr: %s netMask: %s",
@@ -170,6 +169,9 @@ public class ConnectionUtils {
                 } else
                 {
                     Log.d(TAG, "establishHotspotConnection(): No DHCP provided. Looping...");
+                    /*disableCurrentNetwork();
+                    // retry code will be here.
+                    connectionToggled = false;*/
                 }
                 /*if (routeInfo != null) {
                     Log.w(TAG, String.format("establishHotspotConnection(): DHCP: %s %s %s", routeInfo, routeInfo.gateway,  routeInfo.gateway > 0));
