@@ -24,10 +24,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.framework.io.DocumentFile;
-import com.genonbeta.android.framework.util.Interrupter;
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
-import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.Callback;
+import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.dialog.TransferInfoDialog;
@@ -430,8 +429,9 @@ public class TransferListFragment
         cancelTransfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Interrupter interrupter = new Interrupter();
-                interrupter.interrupt(true);
+                /*Interrupter interrupter = new Interrupter();
+                interrupter.interrupt(true);*/
+                Callback.cancelTransfer(true);
             }
         });
 

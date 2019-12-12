@@ -16,6 +16,8 @@ object Callback {
     val showHotspot = MutableLiveData<String>()
     @JvmField
     val showQr = MutableLiveData<Boolean>()
+    @JvmField
+    val cancelTransferProgress = MutableLiveData<Boolean>()
 
 
     @JvmStatic
@@ -66,6 +68,16 @@ object Callback {
     @JvmStatic
     fun getQrCode(): LiveData<Boolean> {
         return showQr
+    }
+
+    @JvmStatic
+    fun cancelTransfer(showing: Boolean) {
+        cancelTransferProgress.postValue(showing)
+    }
+
+    @JvmStatic
+    fun getTransferProgress(): LiveData<Boolean> {
+        return cancelTransferProgress
     }
 
 }

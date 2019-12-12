@@ -606,5 +606,6 @@
     <string name="transfer_time">(%s)</string>
     <string name="text_send_status">Ask your friend to open the app and tap RECEIVE</string>
     <string name="text_receive_status">Ask your friend to open the app and tap SEND</string>
+    <string name="mesg_cancelTransfer">Do you want to Cancel the Transfer</string>
 
 </resources>

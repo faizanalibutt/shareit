@@ -2,6 +2,7 @@ package com.hazelmobile.filetransfer.ui.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
@@ -13,9 +14,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 
 import com.genonbeta.android.database.CursorItem;
 import com.genonbeta.android.database.SQLQuery;
@@ -23,6 +26,7 @@ import com.genonbeta.android.framework.io.StreamInfo;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.google.android.material.snackbar.Snackbar;
+import com.hazelmobile.filetransfer.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
@@ -75,6 +79,12 @@ public class ViewTransferActivity
     private MenuItem mWebShareShortcut;
     private MenuItem mToggleBrowserShare;
     private CrunchLatestDataTask mDataCruncher;
+
+    boolean hasIncoming;
+    boolean hasOutgoing;
+    boolean hasAnyFiles;
+    boolean hasRunning;
+
     //private TextView dataTransferTime;
     //private TextView dataTransferSpeed;
 
@@ -252,6 +262,25 @@ public class ViewTransferActivity
                     toolbar.setVisibility(!started ? View.VISIBLE : View.GONE);
                 }
             });
+
+            final Observer<Boolean> cancelTransferStatus = new Observer<Boolean>() {
+                @Override
+                public void onChanged(final Boolean status) {
+                    if (status)
+                        new AlertDialog.Builder(ViewTransferActivity.this)
+                                .setMessage(getString(R.string.mesg_cancelTransfer))
+                                .setNegativeButton(R.string.butn_no, null)
+                                .setPositiveButton(R.string.butn_yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        toggleTask();
+                                    }
+                                })
+                                .show();
+                }
+            };
+            Callback.getTransferProgress().observe(fragment, cancelTransferStatus);
+
         }
 
         //dataTransferTime = findViewById(R.id.dataTransferTime);
@@ -417,8 +446,17 @@ public class ViewTransferActivity
 
     @Override
     public void onBackPressed() {
-        if (mBackPressedListener == null || !mBackPressedListener.onBackPressed())
+
+        if (hasAnyFiles || hasRunning)
+            Callback.cancelTransfer(true);
+        else if (mBackPressedListener == null || !mBackPressedListener.onBackPressed())
             super.onBackPressed();
+        else
+        {
+            Callback.cancelTransfer(false);
+            super.onBackPressed();
+        }
+
     }
 
     private void attachListeners(Fragment initiatedItem) {
@@ -484,14 +522,14 @@ public class ViewTransferActivity
     }
 
     private void showMenus() {
-        boolean hasIncoming = getIndex().incomingCount > 0;
-        boolean hasOutgoing = getIndex().outgoingCount > 0;
-        boolean hasAnyFiles = hasIncoming || hasOutgoing;
-        boolean hasRunning = mActiveProcesses.size() > 0;
+
+        hasIncoming = getIndex().incomingCount > 0;
+        hasOutgoing = getIndex().outgoingCount > 0;
+        hasAnyFiles = hasIncoming || hasOutgoing;
+        hasRunning = mActiveProcesses.size() > 0;
 
         if (mToggleMenu == null || mRetryMenu == null || mShowFilesMenu == null)
             return;
-
         if (hasAnyFiles || hasRunning) {
             if (hasRunning)
                 mToggleMenu.setTitle(R.string.butn_pause);
@@ -556,8 +594,9 @@ public class ViewTransferActivity
             } /*else
                 new ToggleMultipleTransferDialog(ViewTransferActivity.this,
                         mGroup, assigneeList, mActiveProcesses, getIndex()).show();*/
-        } else if (getIndex().outgoingCount > 0)
-            startDeviceAddingActivity();
+        } /*else if (getIndex().outgoingCount > 0)
+            startDeviceAddingActivity();*/
+        finish();
     }
 
     public void toggleTaskForAssignee(final ShowingAssignee assignee, TransferObject.Type type,
