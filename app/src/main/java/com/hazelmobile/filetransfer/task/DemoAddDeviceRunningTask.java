@@ -190,6 +190,9 @@ public class DemoAddDeviceRunningTask extends WorkerService.RunningTask<DemoSend
                                     getAnchorListener().setResult(RESULT_OK, new Intent()
                                             .putExtra(SenderActivity.EXTRA_DEVICE_ID, assignee.deviceId)
                                             .putExtra(SenderActivity.EXTRA_GROUP_ID, assignee.groupId));
+                                    /*if (AppUtils.getDefaultPreferences(getAnchorListener()).getLong("add_devices_to_transfer", -1) != -1)
+                                        ViewTransferActivity.startInstance(getAnchorListener(),
+                                                AppUtils.getDefaultPreferences(getAnchorListener()).getLong("add_devices_to_transfer", -1));*/
                                     getAnchorListener().finish();
                                 }
                             } else if (getAnchorListener() != null) {

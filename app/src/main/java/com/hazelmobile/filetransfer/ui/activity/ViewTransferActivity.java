@@ -274,12 +274,13 @@ public class ViewTransferActivity
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         toggleTask();
+                                        Callback.cancelTransfer(false);
                                     }
                                 })
                                 .show();
                 }
             };
-            Callback.getTransferProgress().observe(fragment, cancelTransferStatus);
+            Callback.getTransferProgress().observe(this, cancelTransferStatus);
 
         }
 
@@ -324,6 +325,7 @@ public class ViewTransferActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Callback.cancelTransfer(false);
         unregisterReceiver(mMessageReceiver);
     }
 
@@ -447,12 +449,22 @@ public class ViewTransferActivity
     @Override
     public void onBackPressed() {
 
-        if (hasAnyFiles || hasRunning)
-            Callback.cancelTransfer(true);
-        else if (mBackPressedListener == null || !mBackPressedListener.onBackPressed())
+        if (hasRunning)
+            new AlertDialog.Builder(ViewTransferActivity.this)
+                    .setMessage(getString(R.string.mesg_cancelTransfer))
+                    .setNegativeButton(R.string.butn_no, null)
+                    .setPositiveButton(R.string.butn_yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            toggleTask();
+                            Callback.cancelTransfer(false);
+                        }
+                    })
+                    .show();
+        else if (mBackPressedListener == null || !mBackPressedListener.onBackPressed()) {
+            Callback.cancelTransfer(false);
             super.onBackPressed();
-        else
-        {
+        } else {
             Callback.cancelTransfer(false);
             super.onBackPressed();
         }
@@ -596,7 +608,6 @@ public class ViewTransferActivity
                         mGroup, assigneeList, mActiveProcesses, getIndex()).show();*/
         } /*else if (getIndex().outgoingCount > 0)
             startDeviceAddingActivity();*/
-        finish();
     }
 
     public void toggleTaskForAssignee(final ShowingAssignee assignee, TransferObject.Type type,
