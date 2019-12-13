@@ -1,6 +1,5 @@
 package com.hazelmobile.filetransfer.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -8,9 +7,6 @@ import androidx.annotation.Nullable;
 
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
-import com.hazelmobile.filetransfer.object.NetworkDevice;
-import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 
 public class DemoBarcodeScannerActivity extends Activity {
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
@@ -26,7 +22,7 @@ public class DemoBarcodeScannerActivity extends Activity {
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SenderFragmentImpl fragment = (SenderFragmentImpl) getSupportFragmentManager().findFragmentById(R.id.barcodeScannerFragment);
+        /*SenderFragmentImpl fragment = (SenderFragmentImpl) getSupportFragmentManager().findFragmentById(R.id.barcodeScannerFragment);
 
         if (fragment != null)
             fragment.setDeviceSelectedListener(new NetworkDeviceSelectedListener() {
@@ -44,7 +40,7 @@ public class DemoBarcodeScannerActivity extends Activity {
                 public boolean isListenerEffective() {
                     return true;
                 }
-            });
+            });*/
     }
 
     @Override

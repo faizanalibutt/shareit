@@ -5,12 +5,12 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <fragment
+   <!-- <fragment
         android:id="@+id/barcodeScannerFragment"
         android:name="com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:tag="scannerFragment" />
+        android:tag="scannerFragment" />-->
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

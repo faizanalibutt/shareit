@@ -27,7 +27,6 @@ import com.hazelmobile.filetransfer.task.AddDeviceRunningTask;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
@@ -163,9 +162,9 @@ public class SenderActivity extends Activity
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SenderFragmentImpl fragment = (SenderFragmentImpl) getSupportFragmentManager().findFragmentById(R.id.senderFragment);
+        //SenderFragmentImpl fragment = (SenderFragmentImpl) getSupportFragmentManager().findFragmentById(R.id.senderFragment);
 
-        if (fragment != null)
+        /*if (fragment != null)
             fragment.setDeviceSelectedListener(new NetworkDeviceSelectedListener() {
                 @Override
                 public boolean onNetworkDeviceSelected(NetworkDevice networkDevice, NetworkDevice.Connection connection) {
@@ -180,10 +179,10 @@ public class SenderActivity extends Activity
                         // do nothing
                     }
 
-                    /*setResult(RESULT_OK, new Intent()
+                    setResult(RESULT_OK, new Intent()
                             .putExtra(EXTRA_DEVICE_ID, networkDevice.deviceId)
                             .putExtra(EXTRA_CONNECTION_ADAPTER, connection.adapterName));
-                    finish();*/
+                    finish();
 
                     return true;
                 }
@@ -192,7 +191,7 @@ public class SenderActivity extends Activity
                 public boolean isListenerEffective() {
                     return true;
                 }
-            });
+            });*/
     }
 
     @Override

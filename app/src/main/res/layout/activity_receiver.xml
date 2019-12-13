@@ -76,6 +76,25 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/userProfileImageRetry"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/v3i"
+                style="@style/TextAppearance.Primary.Enlarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                app:srcCompat="@drawable/ic_retry_white_24dp" />
+
+        </LinearLayout>
+
         <ImageView
             android:id="@+id/userProfileImage1"
             style="@style/TextAppearance.Primary.Enlarge"

@@ -133,7 +133,8 @@ public class DemoSenderFragmentImpl
     private boolean mShowAsText = false;
 
     private ListView lv_send;
-    private ImageView user_image, user_retry;
+    private ViewGroup user_retry;
+    private ImageView user_image;
     private TextView textView, sender_status;
     private SendReceive sendReceive;
     private BottomSheetBehavior standardBottomSheetBehavior;
@@ -154,17 +155,13 @@ public class DemoSenderFragmentImpl
         mIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         mIntentFilter.addAction(LocationManager.PROVIDERS_CHANGED_ACTION);
-
-
-        buletoothIntentFilter.addAction(BluetoothDevice.ACTION_FOUND);
-        buletoothIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-        buletoothIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        buletoothIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {*/
-        wifiIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        wifiIntentFilter.addAction(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE);
-        wifiIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        mIntentFilter.addAction(BluetoothDevice.ACTION_FOUND);
+        mIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        mIntentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        mIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE);
+        mIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
 
 
         setHasOptionsMenu(true);
@@ -172,23 +169,13 @@ public class DemoSenderFragmentImpl
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
         View view = inflater.inflate(R.layout.demo_fragment_impl_sender, container, false);
-
-        //mConductContainer = view.findViewById(R.id.layout_barcode_connect_conduct_container);
-        //mTextModeIndicator = view.findViewById(R.id.layout_barcode_connect_mode_text_indicator);
-        //mConductButton = view.findViewById(R.id.layout_barcode_connect_conduct_button);
         mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
-        //mConductText = view.findViewById(R.id.layout_barcode_connect_conduct_text);
-        //mConductImage = view.findViewById(R.id.layout_barcode_connect_conduct_image);
-        //mTaskContainer = view.findViewById(R.id.container_task);
-        //mTaskInterruptButton = view.findViewById(R.id.task_interrupter_button);
-        //lvb_result = view.findViewById(R.id.lvb_result);
-
         lv_send = view.findViewById(R.id.lv_send);
         status = view.findViewById(R.id.status);
         mGenericList = new ArrayList<>();
-
         return view;
     }
 
@@ -212,9 +199,7 @@ public class DemoSenderFragmentImpl
 
         BottomSheetBehavior.BottomSheetCallback bottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-            }
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {}
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
@@ -251,8 +236,6 @@ public class DemoSenderFragmentImpl
         super.onResume();
         if (getContext() != null) {
             getContext().registerReceiver(mReceiver, mIntentFilter);
-            getContext().registerReceiver(bReceiver, buletoothIntentFilter);
-            getContext().registerReceiver(wReceiver, wifiIntentFilter);
             BluetoothAdapter bluetoothAdapter = ConnectionUtils.getInstance(getContext()).getBluetoothAdapter();
             if (!bluetoothAdapter.isDiscovering() && bluetoothAdapter.isEnabled()) {
                 ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().startDiscovery();
@@ -269,14 +252,12 @@ public class DemoSenderFragmentImpl
         try {
             if (getContext() != null) {
                 getContext().unregisterReceiver(mReceiver);
-                getContext().unregisterReceiver(bReceiver);
-                getContext().unregisterReceiver(wReceiver);
-                if (ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().isDiscovering()) {
-                    ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
-                }
             }
         } catch (Exception exp) {
             exp.printStackTrace();
+        }
+        if (ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().isDiscovering()) {
+            ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
         }
         mBarcodeView.pauseAndWait();
     }
@@ -288,8 +269,8 @@ public class DemoSenderFragmentImpl
 
             if (standardBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HALF_EXPANDED
                     && isSocketClosed) {
-                standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
+            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
             removeHanlderMessages();
 
@@ -370,7 +351,7 @@ public class DemoSenderFragmentImpl
                 for (BluetoothDevice bluetoothDevice : bluetoothDeviceList) {
                     try {
                         if (bluetoothDevice.getName().contains("TS") || bluetoothDevice.getName().contains("AndroidShare")) {
-                            Method m = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
+                            Method m = bluetoothDevice.getClass().getMethod(String.format("%s", "removeBond"), (Class[]) null);
                             m.invoke(bluetoothDevice, (Object[]) null);
                             showMessage("SendReceive: Removed Device Name is: " + bluetoothDevice);
                         }
@@ -455,28 +436,28 @@ public class DemoSenderFragmentImpl
 
     private void retryDiscovery() {
         if (getContext() != null) {
+
             try {
-                getContext().unregisterReceiver(wReceiver);
-                getContext().unregisterReceiver(bReceiver);
+                getContext().unregisterReceiver(mReceiver);
             } catch (IllegalArgumentException e) {
                 ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: Unregistering WIFI ADN BLUETOOTH \n" + e.getMessage());
             }
+
             try {
-                getContext().registerReceiver(wReceiver, wifiIntentFilter);
-                getContext().registerReceiver(bReceiver, buletoothIntentFilter);
+                getContext().registerReceiver(mReceiver, mIntentFilter);
             } catch (Exception e) {
                 ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: Registering WIFI ADN BLUETOOTH \n" + e.getMessage());
             }
+
         }
     }
 
     private void cancelDiscovery() {
         if (getContext() != null) {
             try {
-                getContext().unregisterReceiver(wReceiver);
-                getContext().unregisterReceiver(bReceiver);
+                getContext().unregisterReceiver(mReceiver);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
@@ -657,11 +638,8 @@ public class DemoSenderFragmentImpl
             }
 
         }
-
         //showMessage("SendReceive: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
-
         mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
-
         //showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
 
         if (senderListAdapter != null) {
@@ -704,7 +682,6 @@ public class DemoSenderFragmentImpl
         mHandler.removeMessages(STATE_CONNECTION_FAILED);
         mHandler.removeMessages(STATE_MESSAGE_RECEIVED);
         mHandler.removeMessages(STATE_LISTENING);
-
         mHandler = null;
     }
 
@@ -748,9 +725,7 @@ public class DemoSenderFragmentImpl
             }
 
             @Override
-            public void possibleResultPoints(List<ResultPoint> resultPoints) {
-
-            }
+            public void possibleResultPoints(List<ResultPoint> resultPoints) {}
         });
         getOrUpdateWifiScanResult();
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 12000);
@@ -809,26 +784,50 @@ public class DemoSenderFragmentImpl
         }
     }
 
-    public static double getRandomDoubleBetweenRange(double min, double max) {
-        return (Math.random() * ((max - min) + 1)) + min;
-    }
+    private UIConnectionUtils.RequestWatcher mPermissionWatcher = new UIConnectionUtils.RequestWatcher() {
+        @Override
+        public void onResultReturned(boolean result, boolean shouldWait) {
+            if (isResumed()) // isResumed
+                updateState();
+            else {
+                mBarcodeView.pauseAndWait();
+            }
 
-    // #bReceiver
-    private final BroadcastReceiver bReceiver = new BroadcastReceiver() {
+            // We don't want to keep this when the result is ok
+            // or not asked to wait
+            //if (!shouldWait || result)
+            //    mPreviousScanResult = null;
+        }
+    };
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
         public void onReceive(Context context, Intent intent) {
+
+            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
+                if (!mConnectionUtils.getConnectionUtils().isLocationServiceEnabled()) {
+                    sender_status.setText(String.format("%s", "Location is disabled, Kindly open it to start the Process"));
+                } else {
+                    sender_status.setText(R.string.text_send_status);
+                }
+            }
+
             String action = intent.getAction();
+            int state;
+            WifiManager wifiManager = ConnectionUtils.getInstance(getContext()).getWifiManager();
+
             // When discovery finds a device
             assert action != null;
             switch (action) {
                 case BluetoothAdapter.ACTION_STATE_CHANGED:
 
-                    final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                    state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
                     if (state == BluetoothAdapter.STATE_ON) {
                         ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().startDiscovery();
                         sender_status.setText(R.string.text_send_status);
                     }
                     if (state == BluetoothAdapter.STATE_OFF)
-                        sender_status.setText("Bluetooth is disabled, Kindly open it to start the Process");
+                        sender_status.setText(String.format("%s", "Bluetooth is disabled, Kindly open it to start the Process"));
                     break;
                 case BluetoothDevice.ACTION_FOUND:
 
@@ -876,45 +875,16 @@ public class DemoSenderFragmentImpl
 
                     //showMessage("Bluetooth discovery started");
                     break;
-                default:
-                    break;
-            }
-        }
-    };
 
-    private UIConnectionUtils.RequestWatcher mPermissionWatcher = new UIConnectionUtils.RequestWatcher() {
-        @Override
-        public void onResultReturned(boolean result, boolean shouldWait) {
-            if (isResumed()) // isResumed
-                updateState();
-            else {
-                mBarcodeView.pauseAndWait();
-            }
-
-            // We don't want to keep this when the result is ok
-            // or not asked to wait
-            //if (!shouldWait || result)
-            //    mPreviousScanResult = null;
-        }
-    };
-
-    // #wReceiver
-    private final BroadcastReceiver wReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            WifiManager wifiManager = ConnectionUtils.getInstance(getContext()).getWifiManager();
-            assert action != null;
-            switch (action) {
                 case WifiManager.WIFI_STATE_CHANGED_ACTION:
 
-                    int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
+                    state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
                     if (state == WifiManager.WIFI_STATE_ENABLED) {
                         wifiManager.startScan();
                         sender_status.setText(R.string.text_send_status);
                     }
                     if (state == WifiManager.WIFI_STATE_DISABLED)
-                        sender_status.setText("Wifi is disabled, Kindly open it to start the Process");
+                        sender_status.setText(String.format("%s", "Wifi is disabled, Kindly open it to start the Process"));
                     break;
 
                 case WifiManager.SCAN_RESULTS_AVAILABLE_ACTION:
@@ -927,26 +897,11 @@ public class DemoSenderFragmentImpl
                     } else
                         getWifiScanResults(wifiManager);
                     break;
+
+                default:
+                    break;
             }
 
-        }
-    };
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            /*if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction())
-                    || ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())
-                    || LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction()))
-                updateState();*/
-
-            if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
-                if (!mConnectionUtils.getConnectionUtils().isLocationServiceEnabled()) {
-                    sender_status.setText("Location is disabled, Kindly open it to start the Process");
-                } else {
-                    sender_status.setText(R.string.text_send_status);
-                }
-            }
         }
     };
 
