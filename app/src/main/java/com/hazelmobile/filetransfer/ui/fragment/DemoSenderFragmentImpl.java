@@ -2,13 +2,10 @@ package com.hazelmobile.filetransfer.ui.fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,7 +35,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -214,7 +210,7 @@ public class DemoSenderFragmentImpl
 
         updateUI();
         setSnackbarContainer(view.findViewById(R.id.qr_container));
-        setSnackbarLength(Snackbar.LENGTH_LONG);
+        setSnackbarLength(Snackbar.LENGTH_INDEFINITE);
     }
 
     private SenderWaitingDialog senderWaitingDialog;
@@ -241,7 +237,8 @@ public class DemoSenderFragmentImpl
                 ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().startDiscovery();
             }
         }
-        updateState();
+        // it goes behind the interface so don't need to call it every time.
+        //updateState();
         //if (mPreviousScanResult != null)
         //    handleBarcode(mPreviousScanResult);
     }
@@ -384,33 +381,10 @@ public class DemoSenderFragmentImpl
                     .setMessage(R.string.text_scanQRCodeHelp)
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
-        } /*else if (id == R.id.change_mode) {
-            mShowAsText = !mShowAsText;
-            mTextModeIndicator.setVisibility(mShowAsText ? View.VISIBLE : View.GONE);
-            item.setIcon(mShowAsText ? R.drawable.ic_qrcode_white_24dp : R.drawable.ic_short_text_white_24dp);
-
-            createSnackbar(mShowAsText ? R.string.mesg_qrScannerTextMode : R.string.mesg_qrScannerDefaultMode)
-                    .show();
-
-            updateState();
-        }*/ else
+        } else
             return super.onOptionsItemSelected(item);
 
         return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (permissions.length > 0)
-            for (int permIterator = 0; permIterator < permissions.length; permIterator++) {
-                if (Manifest.permission.CAMERA.equals(permissions[permIterator]) &&
-                        grantResults[permIterator] == PackageManager.PERMISSION_GRANTED) {
-                    updateState();
-                    mPermissionRequestedCamera = false;
-                }
-            }
     }
 
     @Override
@@ -541,38 +515,6 @@ public class DemoSenderFragmentImpl
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            assert getActivity() != null;
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.text_unrecognizedQrCode)
-                    .setMessage(hotspotInformation.toString())
-                    .setNegativeButton(R.string.butn_close, null)
-                    .setPositiveButton(R.string.butn_show, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            /*TextStreamObject textObject = new TextStreamObject(
-                                    AppUtils.getUniqueNumber(), hotspotInformation.toString());
-                            AppUtils.getDatabase(getContext()).publish(textObject);
-
-                            Toast.makeText(getContext(), R.string.mesg_textStreamSaved, Toast.LENGTH_SHORT).show();
-
-                            startActivity(new Intent(getContext(), TextEditorActivity.class)
-                                    .setAction(TextEditorActivity.ACTION_EDIT_TEXT)
-                                    .putExtra(TextEditorActivity.EXTRA_CLIPBOARD_ID, textObject.id));*/
-                        }
-                    })
-                    .setNeutralButton(R.string.butn_copyToClipboard, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (getContext() != null) {
-                                ClipboardManager manager = (ClipboardManager) getContext().getSystemService(
-                                        Service.CLIPBOARD_SERVICE);
-                                manager.setPrimaryClip(ClipData.newPlainText("copiedText", hotspotInformation.toString()));
-                                Toast.makeText(getContext(), R.string.mesg_textCopiedToClipboard, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    })
-                    .setOnDismissListener(dismissListener)
-                    .show();
         }
     }
 
@@ -729,6 +671,16 @@ public class DemoSenderFragmentImpl
         });
         getOrUpdateWifiScanResult();
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 12000);
+        user_retry.setOnClickListener(v -> {
+            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    cancelDiscovery();
+                    retryConnection();
+                    updateState();
+                }
+            });
+        });
     }
 
     private void updateState(boolean isConnecting, final Interrupter interrupter) {
@@ -774,7 +726,7 @@ public class DemoSenderFragmentImpl
                 closeDialog();
                 mBarcodeView.resume();
                 //mConductText.setText(R.string.text_scanQRCodeHelp);
-                createSnackbar(R.string.text_send_status).show();
+                //createSnackbar(R.string.text_send_status).show();
             }
         }
         if (isSocketClosed) {
@@ -1076,14 +1028,7 @@ public class DemoSenderFragmentImpl
                     // enable camera here
                     if (!success) {
                         isSocketClosed = true;
-                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                cancelDiscovery();
-                                retryConnection();
-                                updateState();
-                            }
-                        });
+                        createSnackbar(R.string.text_qrPromptRequired).show();
                     }
 
                     break;

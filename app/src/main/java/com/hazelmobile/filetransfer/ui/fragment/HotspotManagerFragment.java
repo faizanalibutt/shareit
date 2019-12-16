@@ -106,6 +106,7 @@ public class HotspotManagerFragment
     private TextView hotspot_name;
     private View qr_container;
     private ColorStateList mColorPassiveState;
+    private ViewGroup userProfileImageRetry;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,18 +122,15 @@ public class HotspotManagerFragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = getLayoutInflater().inflate(R.layout.demo_layout_hotspot_manager, container, false);
-
-        //progressBar = view.findViewById(R.id.progressBar);
-        //progressBar.setMax(100);
-        //progressBar.setProgress/*coming from service wait for that code*/(0);
+        View view = getLayoutInflater().inflate(R.layout.layout_hotspot_manager, container, false);
 
         setSnackbarContainer(view.findViewById(R.id.layout_hotspot_status_container));
-        setSnackbarLength(Snackbar.LENGTH_LONG);
+        setSnackbarLength(Snackbar.LENGTH_INDEFINITE);
         dataTransferTime = view.findViewById(R.id.cancelTransfer);
         dataTransferSpeed = view.findViewById(R.id.dataTransferStatus);
         hotspot_name = view.findViewById(R.id.layout_hotspot_manager_qr_text);
         qr_container = view.findViewById(R.id.qr_container);
+        userProfileImageRetry = view.findViewById(R.id.userProfileImageRetry);
 
         return view;
     }
@@ -140,9 +138,6 @@ public class HotspotManagerFragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        /*if (getActivity() != null) getActivity().registerReceiver(
-                mMessageReceiver, new IntentFilter("ReceiverProgress"));*/
 
         Callback.setHotspotName("");
         final Observer<String> hotspotNameChanger = new Observer<String>() {
@@ -160,6 +155,19 @@ public class HotspotManagerFragment
         }
         mColorPassiveState = ColorStateList.valueOf(ContextCompat.getColor(Objects.requireNonNull(getContext()), AppUtils.getReference(getContext(), R.attr.colorPassive)));
         mCodeView = view.findViewById(R.id.layout_hotspot_manager_qr_image);
+        userProfileImageRetry.setOnClickListener(
+                v -> {
+                    mCodeView.setVisibility(View.VISIBLE);
+                    hotspot_name.setVisibility(View.VISIBLE);
+                    try {
+                        hotspot_name.setText(hotspotInformation.getString(Keyword.NETWORK_NAME));
+                    } catch (JSONException ex) {
+                        ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                                ex.getMessage() + "\n");
+                    }
+                    qr_container.setVisibility(View.VISIBLE);
+                }
+        );
 
     }
 
@@ -606,18 +614,10 @@ public class HotspotManagerFragment
                         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mCodeView.setVisibility(View.VISIBLE);
                                 Callback.setQrCode(true);
-                                hotspot_name.setVisibility(View.VISIBLE);
-                                qr_container.setVisibility(View.VISIBLE);
-                                try {
-                                    hotspot_name.setText(hotspotInformation.getString(Keyword.NETWORK_NAME));
-                                } catch (JSONException ex) {
-                                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                                            ex.getMessage() + "\n");
-                                }
                             }
                         });
+                        createSnackbar(R.string.text_qrPromptRequired).show();
                     }
                     break;
                 }

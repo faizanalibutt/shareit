@@ -15,7 +15,7 @@
     <string name="text_image">Image</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="text_file_transfer">File Transfer 0.0.5</string>
+    <string name="text_file_transfer">File Transfer 0.0.6</string>
     <string name="text_slide_menu">text_slide_menu</string>
     <string name="text_notification_icon">notify user for updateds</string>
     <string name="text_back_arrow_icon">text_back_arrow_icon</string>
@@ -607,5 +607,6 @@
     <string name="text_send_status">Ask your friend to open the app and tap RECEIVE</string>
     <string name="text_receive_status">Ask your friend to open the app and tap SEND</string>
     <string name="mesg_cancelTransfer">Do you want to Cancel the Transfer</string>
+    <string name="text_qrPromptRequired">Please click on retry icon to make connection with QR</string>
 
 </resources>

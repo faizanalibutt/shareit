@@ -58,6 +58,7 @@ public class ReceiverActivity extends Activity
     private boolean mHotspotClosed = false;
     private UIConnectionUtils mConnectionUtils;
     private TextView hotspot_name;
+    RippleBackground pulse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +158,7 @@ public class ReceiverActivity extends Activity
                 finish();
             }
         });
-        final RippleBackground pulse = findViewById(R.id.content);
+        pulse = findViewById(R.id.content);
         pulse.startRippleAnimation();
         hotspot_name = findViewById(R.id.receiver_status_name);
 
@@ -175,17 +176,14 @@ public class ReceiverActivity extends Activity
         };
         Callback.getHotspotName().observe(this, hotspotNameChanger);
 
-        final Observer<Boolean> showQrObserver = new Observer<Boolean>() {
-            @Override
-            public void onChanged(@Nullable final Boolean qr_status) {
-                if (qr_status != null && qr_status) {
-                    if (pulse.isRippleAnimationRunning()) pulse.startRippleAnimation();
-                    pulse.setVisibility(View.GONE);
-                    user_image.setVisibility(View.GONE);
-                    textView.setVisibility(View.GONE);
-                    hotspot_name.setVisibility(View.GONE);
-                    receiver_status.setVisibility(View.GONE);
-                }
+        final Observer<Boolean> showQrObserver = qr_status -> {
+            if (qr_status) {
+                if (pulse.isRippleAnimationRunning()) pulse.stopRippleAnimation();
+                pulse.setVisibility(View.GONE);
+                user_image.setVisibility(View.GONE);
+                textView.setVisibility(View.GONE);
+                hotspot_name.setVisibility(View.GONE);
+                receiver_status.setVisibility(View.GONE);
             }
         };
         Callback.getQrCode().observe(this, showQrObserver);

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/qr_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/qr_container"
     android:orientation="vertical">
 
     <com.hazelmobile.filetransfer.library.RippleBackground
@@ -35,26 +35,8 @@
             android:layout_height="80dp"
             android:layout_centerInParent="true"
             android:background="@drawable/background_user_icon_extended"
-            android:gravity="center">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/userProfileImageRetry"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_centerInParent="true"
             android:gravity="center"
-            android:visibility="gone">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/v3i"
-                style="@style/TextAppearance.Primary.Enlarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                app:srcCompat="@drawable/ic_retry_white_24dp" />
+            android:orientation="vertical">
 
         </LinearLayout>
 
@@ -89,13 +71,43 @@
             android:gravity="center"
             android:text="@string/text_send_status" />
 
+        <LinearLayout
+            android:id="@+id/userProfileImageRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/margin_smallest_size"
+            android:layout_marginEnd="@dimen/margin_smaller_size"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="@dimen/margin_absolute_size"
+                android:text="@string/butn_scanQrCode" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/v3i"
+                style="@style/TextAppearance.Primary.Enlarge"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:padding="@dimen/margin_smallest_size"
+                android:background="@drawable/background_user_icon_default"
+                android:gravity="center"
+                app:srcCompat="@drawable/ic_retry_white_24dp" />
+
+        </LinearLayout>
+
     </com.hazelmobile.filetransfer.library.RippleBackground>
 
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
-        android:visibility="gone"
         android:id="@+id/layout_barcode_connect_barcode_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         app:zxing_preview_scaling_strategy="centerCrop"
         app:zxing_scanner_layout="@layout/external_layout_barcode_scanner" />
 

@@ -171,7 +171,7 @@ public class CommunicationService extends Service {
         if (getWifiLock() != null)
             getWifiLock().acquire();
 
-        updateServiceState(getDefaultPreferences().getBoolean("trust_always", false));
+        updateServiceState(true/*getDefaultPreferences().getBoolean("trust_always", false)*/);
 
         if (!AppUtils.checkRunningConditions(this)
                 || !mCommunicationServer.start()
