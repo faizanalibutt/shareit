@@ -275,6 +275,7 @@ public class ViewTransferActivity
                                     public void onClick(DialogInterface dialog, int which) {
                                         toggleTask();
                                         Callback.cancelTransfer(false);
+                                        finish();
                                     }
                                 })
                                 .show();

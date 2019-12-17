@@ -52,8 +52,8 @@ import static com.hazelmobile.filetransfer.ui.activity.ShareActivity.EXTRA_FILEN
 public class PreparationsActivity extends Activity
         implements SnackbarSupport, WorkerService.OnAttachListener {
 
-    private static final int LOCATION_PERMISSION_RESULT = 0;
-    public static final int LOCATION_SERVICE_RESULT = 1;
+    private static final int LOCATION_PERMISSION_RESULT = 3;
+    public static final int LOCATION_SERVICE_RESULT = 2;
     public static final String EXTRA_CLOSE_PERMISSION_SCREEN = "permissions";
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
     public static final String EXTRA_REQUEST_TYPE = "extraRequestType";
@@ -123,7 +123,9 @@ public class PreparationsActivity extends Activity
             enableWifi(wifiButton);
         }
         // gps check
-        if (ConnectionUtils.getInstance(this).isLocationServiceEnabled()) {
+        if (ConnectionUtils.getInstance(this).isLocationServiceEnabled()
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
             openGPS(gpsButton);
         }
         // hotspot check
@@ -422,25 +424,45 @@ public class PreparationsActivity extends Activity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_RESULT) {
-            if (!getConnectionUtils().hasLocationPermission(this)) {
-                // Permission is not granted
-                disableGPS(gpsButton);
-                createSnackbar(R.string.mesg_locationDisabledSelfHotspot).show();
-            } else {
-                if (ConnectionUtils.getInstance(PreparationsActivity.this).isLocationServiceEnabled()) {
-                    enableGPS(gpsButton);
+        switch (requestCode) {
+            case LOCATION_PERMISSION_RESULT:
+                if (!getConnectionUtils().hasLocationPermission(this)) {
+                    // Permission is not granted
+                    disableGPS(gpsButton);
+                    createSnackbar(R.string.mesg_locationDisabledSelfHotspot).show();
                 } else {
-                    startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SERVICE_RESULT);
+                    if (ConnectionUtils.getInstance(PreparationsActivity.this).isLocationServiceEnabled()) {
+                        enableGPS(gpsButton);
+                    } else {
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), LOCATION_SERVICE_RESULT);
+                    }
                 }
-            }
-        } else if (requestCode == LOCATION_SERVICE_RESULT) {
-            if (ConnectionUtils.getInstance(PreparationsActivity.this).isLocationServiceEnabled()) {
-                enableGPS(gpsButton);
-            } else {
-                createSnackbar(R.string.mesg_locationDisabledSelfHotspot).show();
-                disableGPS(gpsButton);
-            }
+                break;
+            case REQUEST_PERMISSION_CAMERA:
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_DENIED)
+                    createSnackbar(R.string.text_cameraPermissionRequired).show();
+                else {
+                    if (isReceiver) {
+                        startActivity(new Intent(PreparationsActivity.this, ReceiverActivity.class)
+                                .putExtra(Keyword.EXTRA_RECEIVE, true)
+                                .putExtra(EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
+                                .putExtra(EXTRA_REQUEST_TYPE,
+                                        ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
+                        finish();
+                    } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1) {
+                        ViewTransferActivity.startInstance(this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
+                        startActivity(new Intent(PreparationsActivity.this, /*SenderActivity*/DemoSenderActivity.class)
+                                .putExtra(Keyword.EXTRA_SEND, true)
+                                .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
+                                .putExtra(SenderActivity.EXTRA_REQUEST_TYPE,
+                                        SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
+                        finish();
+                    }
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -522,21 +544,26 @@ public class PreparationsActivity extends Activity
     }
 
     public void btnOnClick(View view) {
-        if (isReceiver) {
-            startActivity(new Intent(PreparationsActivity.this, ReceiverActivity.class)
-                    .putExtra(Keyword.EXTRA_RECEIVE, true)
-                    .putExtra(EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
-                    .putExtra(EXTRA_REQUEST_TYPE,
-                            ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
-            finish();
-        } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1) {
-            ViewTransferActivity.startInstance(this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
-            startActivity(new Intent(PreparationsActivity.this, /*SenderActivity*/DemoSenderActivity.class)
-                    .putExtra(Keyword.EXTRA_SEND, true)
-                    .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
-                    .putExtra(SenderActivity.EXTRA_REQUEST_TYPE,
-                            SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
-            finish();
+        if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED))
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
+        else {
+            if (isReceiver) {
+                startActivity(new Intent(PreparationsActivity.this, ReceiverActivity.class)
+                        .putExtra(Keyword.EXTRA_RECEIVE, true)
+                        .putExtra(EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
+                        .putExtra(EXTRA_REQUEST_TYPE,
+                                ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
+                finish();
+            } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1) {
+                ViewTransferActivity.startInstance(this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
+                startActivity(new Intent(PreparationsActivity.this, /*SenderActivity*/DemoSenderActivity.class)
+                        .putExtra(Keyword.EXTRA_SEND, true)
+                        .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
+                        .putExtra(SenderActivity.EXTRA_REQUEST_TYPE,
+                                SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
+                finish();
+            }
         }
     }
 
@@ -556,7 +583,7 @@ public class PreparationsActivity extends Activity
             @Override
             public void run() {
 
-                createSnackbar(R.string.msg_merg_send, text).show();
+                //createSnackbar(R.string.msg_merg_send, text).show();
 
             }
         });

@@ -165,8 +165,7 @@ public class DemoSenderFragmentImpl
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.demo_fragment_impl_sender, container, false);
         mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
         lv_send = view.findViewById(R.id.lv_send);
@@ -195,7 +194,8 @@ public class DemoSenderFragmentImpl
 
         BottomSheetBehavior.BottomSheetCallback bottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {}
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+            }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
@@ -264,11 +264,7 @@ public class DemoSenderFragmentImpl
 
         try {
 
-            if (standardBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HALF_EXPANDED
-                    && isSocketClosed) {
-            }
-            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
+            closeDialog();
             removeHanlderMessages();
 
             if (sendReceive != null && sendReceive.bluetoothSocket != null)
@@ -305,6 +301,8 @@ public class DemoSenderFragmentImpl
             }
 
             connectionUtils.getBluetoothAdapter().disable();
+
+            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: SHEET_STATE " + standardBottomSheetBehavior.getState());
 
@@ -589,6 +587,10 @@ public class DemoSenderFragmentImpl
             senderListAdapter = new SenderListAdapter(getContext(), mGenericList,
                     ((DemoSenderActivity) Objects.requireNonNull(getActivity())));
             lv_send.setAdapter(senderListAdapter);
+        } else {
+            senderListAdapter = new SenderListAdapter(getContext(), mGenericList,
+                    ((DemoSenderActivity) Objects.requireNonNull(getActivity())));
+            lv_send.setAdapter(senderListAdapter);
         }
 
         if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -667,20 +669,19 @@ public class DemoSenderFragmentImpl
             }
 
             @Override
-            public void possibleResultPoints(List<ResultPoint> resultPoints) {}
+            public void possibleResultPoints(List<ResultPoint> resultPoints) {
+            }
         });
         getOrUpdateWifiScanResult();
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 12000);
-        user_retry.setOnClickListener(v -> {
-            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    cancelDiscovery();
-                    retryConnection();
-                    updateState();
-                }
-            });
-        });
+        user_retry.setOnClickListener(
+                v -> {
+                    if (isSocketClosed) {
+                        cancelDiscovery();
+                        retryConnection();
+                        updateState();
+                    }
+                });
     }
 
     private void updateState(boolean isConnecting, final Interrupter interrupter) {
@@ -987,10 +988,11 @@ public class DemoSenderFragmentImpl
             } catch (IOException e) {
                 ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: SendReceive: constructor fed up " + e.getMessage() + "\n");
-                e.printStackTrace();
+                //e.printStackTrace();
             }
 
             inputStream = tempIn;
+            // here i will test if issue comes in one device repeatedly...till then continue...
         }
 
         public void run() {

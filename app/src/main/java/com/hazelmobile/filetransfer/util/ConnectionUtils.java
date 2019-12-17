@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat;
 
 import com.genonbeta.android.framework.util.Interrupter;
 import com.hazelmobile.filetransfer.files.AppConfig;
-import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
@@ -92,7 +91,6 @@ public class ConnectionUtils {
     }
 
 
-
     @WorkerThread
     public String establishHotspotConnection(final Interrupter interrupter,
                                              final NetworkDeviceListAdapter.HotspotNetwork hotspotNetwork,
@@ -158,16 +156,15 @@ public class ConnectionUtils {
 
                     Log.d(TAG, "establishHotspotConnection(): There is DHCP info provided waiting to reach the address " + testedRemoteAddress);
 
-                    if (UIConnectionUtils.isOSAbove(Build.VERSION_CODES.P)
-                            ? NetworkUtils.ping(testedRemoteAddress, pingTimeout) : NetworkUtils.ping(testedRemoteAddress)) {
+                    if (/*UIConnectionUtils.isOSAbove(Build.VERSION_CODES.P)? */
+                            NetworkUtils.ping(testedRemoteAddress, pingTimeout)/* : NetworkUtils.ping(testedRemoteAddress)*/) {
                         Log.d(TAG, "establishHotspotConnection(): AP has been reached. Returning OK state.");
                         remoteAddress = testedRemoteAddress;
                         break;
                     } else {
                         Log.d(TAG, "establishHotspotConnection(): Connection check ping failed");
                     }
-                } else
-                {
+                } else {
                     Log.d(TAG, "establishHotspotConnection(): No DHCP provided. Looping...");
                     /*disableCurrentNetwork();
                     // retry code will be here.
@@ -180,7 +177,7 @@ public class ConnectionUtils {
             }
 
             if (connectionCallback.onTimePassed(1000, passedTime) || interrupter.interrupted()) {
-                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "establishHotspotConnection(): Timed out or onTimePassed returned true. Exiting...");
                 Log.d(TAG, "establishHotspotConnection(): Timed out or onTimePassed returned true. Exiting...");
                 break;
@@ -268,7 +265,7 @@ public class ConnectionUtils {
     }
 
     public boolean isLocationServiceEnabled() {
-        return mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return /*mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) &&*/ mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     public boolean isMobileDataActive() {

@@ -77,8 +77,8 @@
             android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/margin_smallest_size"
             android:layout_marginEnd="@dimen/margin_smaller_size"
+            android:layout_marginTop="@dimen/margin_smaller_size"
             android:orientation="horizontal">
 
             <TextView
