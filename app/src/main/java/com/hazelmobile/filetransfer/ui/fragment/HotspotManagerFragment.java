@@ -55,7 +55,6 @@ import com.hazelmobile.filetransfer.util.NetworkUtils;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -157,15 +156,12 @@ public class HotspotManagerFragment
         mCodeView = view.findViewById(R.id.layout_hotspot_manager_qr_image);
         userProfileImageRetry.setOnClickListener(
                 v -> {
-                    mCodeView.setVisibility(View.VISIBLE);
-                    hotspot_name.setVisibility(View.VISIBLE);
-                    try {
-                        hotspot_name.setText(hotspotInformation.getString(Keyword.NETWORK_NAME));
-                    } catch (JSONException ex) {
-                        ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                                ex.getMessage() + "\n");
+                    if (Callback.getQrCode().getValue() != null && Callback.getQrCode().getValue())
+                    {
+                        mCodeView.setVisibility(View.VISIBLE);
+                        hotspot_name.setVisibility(View.VISIBLE);
+                        qr_container.setVisibility(View.VISIBLE);
                     }
-                    qr_container.setVisibility(View.VISIBLE);
                 }
         );
 
