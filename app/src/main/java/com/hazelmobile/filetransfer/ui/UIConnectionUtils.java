@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.WorkerThread;
@@ -35,6 +34,7 @@ import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.HotspotUtils;
+import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
 import org.json.JSONException;
@@ -214,16 +214,39 @@ public class UIConnectionUtils {
             @Override
             public void onConnect(CommunicationBridge.Client client) {
                 try {
+
+                    LogUtils.getLogInformation("Client",
+                            String.format("setUpConnection(): CommunicationBridge.connect(): AccessPin is %s"
+                                    , accessPin));
                     client.setSecureKey(accessPin);
 
                     CoolSocket.ActiveConnection activeConnection = client.connectWithHandshake(ipAddress, false);
+                    LogUtils.getLogDebug("Client",
+                            String.format("setUpConnection(): CommunicationBridge.connect(): activeConnection is %s", activeConnection));
+
                     NetworkDevice device = client.loadDevice(activeConnection);
+                    LogUtils.getLogDebug("Client",
+                            String.format("setUpConnection(): CommunicationBridge.connect(): NetworkDevice is %s", device));
 
                     activeConnection.reply(new JSONObject()
                             .put(Keyword.REQUEST, Keyword.REQUEST_ACQUAINTANCE)
                             .toString());
+                    LogUtils.getLogInformation("Client",
+                            String.format("setUpConnection(): CommunicationBridge.connect():" +
+                                    " Requesting for Making connection to Server %s", Keyword.REQUEST_ACQUAINTANCE));
 
                     JSONObject receivedReply = new JSONObject(activeConnection.receive().response);
+
+                    LogUtils.getLogInformation("Client",
+                            String.format("setUpConnection(): CommunicationBridge.connect():" +
+                                    " receivedReply is %s", receivedReply));
+
+                    LogUtils.getLogInformation("Client",
+                            String.format("setUpConnection(): CommunicationBridge.connect():" +
+                                            " Before getting response from server NetworkDevice: isTrusted: %s isRestricted: %s tempSecureKey: %s",
+                                    device.isTrusted,
+                                    device.isRestricted,
+                                    device.tmpSecureKey));
 
                     if (receivedReply.has(Keyword.RESULT)
                             && receivedReply.getBoolean(Keyword.RESULT)
@@ -237,6 +260,13 @@ public class UIConnectionUtils {
 
                         AppUtils.getDatabase(activity).publish(device);
 
+                        LogUtils.getLogWarning("Client",
+                                String.format("setUpConnection(): CommunicationBridge.connect():" +
+                                                " After getting response from server NetworkDevice: isTrusted: %s isRestricted: %s tempSecureKey: %s",
+                                        device.isTrusted,
+                                        device.isRestricted,
+                                        device.tmpSecureKey));
+
                         if (listener != null)
                             listener.onDeviceRegistered(AppUtils.getDatabase(activity), device, connection);
                     } else
@@ -245,7 +275,9 @@ public class UIConnectionUtils {
                     client.setReturn(device);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.d(TAG, e.getMessage());
+                    LogUtils.getLogInformation("Client",
+                            String.format("setUpConnection(): CommunicationBridge.connect():" +
+                                    " while making connection to server error occurs:\n %s", e.getMessage()));
                 }
 
             }

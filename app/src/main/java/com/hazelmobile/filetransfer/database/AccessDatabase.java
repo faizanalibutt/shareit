@@ -428,7 +428,6 @@ public class AccessDatabase extends SQLiteDatabase {
         if (activity == null || activity.isFinishing())
             return;
 
-        // TODO: 10/23/2019 AccessDb WorkerService call commented #32
        /* new WorkerService.RunningTask() {
             @Override
             protected void onRun() {

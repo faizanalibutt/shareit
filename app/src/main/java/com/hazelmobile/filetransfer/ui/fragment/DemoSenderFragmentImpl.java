@@ -68,6 +68,7 @@ import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.ListUtils;
+import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 import com.journeyapps.barcodescanner.BarcodeCallback;
@@ -259,60 +260,6 @@ public class DemoSenderFragmentImpl
         mBarcodeView.pauseAndWait();
     }
 
-    // with qr try connection
-    public void retryConnection() {
-
-        try {
-
-            closeDialog();
-            removeHanlderMessages();
-
-            if (sendReceive != null && sendReceive.bluetoothSocket != null)
-                sendReceive.bluetoothSocket.close();
-            if (sendReceive != null) {
-                sendReceive.interrupt();
-                sendReceive = null;
-            }
-            if (clientClass != null && clientClass.socket != null) clientClass.socket.close();
-            if (clientClass != null) {
-                clientClass.interrupt();
-                clientClass = null;
-            }
-            if (mGenericList != null && mGenericList.size() > 0) {
-                mGenericList.clear();
-            }
-            ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
-            if (connectionUtils.getBluetoothAdapter().isDiscovering())
-                connectionUtils.getBluetoothAdapter().cancelDiscovery();
-
-            Set<BluetoothDevice> bluetoothDeviceList = connectionUtils.getBluetoothAdapter().getBondedDevices();
-            if (bluetoothDeviceList.size() > 0) {
-                for (BluetoothDevice bluetoothDevice : bluetoothDeviceList) {
-                    try {
-                        if (bluetoothDevice.getName().contains("TS") || bluetoothDevice.getName().contains("AndroidShare")) {
-                            Method m = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
-                            m.invoke(bluetoothDevice, (Object[]) null);
-                            showMessage("SendReceive: Removed Device Name is: " + bluetoothDevice);
-                        }
-                    } catch (Exception e) {
-                        showMessage("SendReceive: Removing has been failed." + e.getMessage());
-                    }
-                }
-            }
-
-            connectionUtils.getBluetoothAdapter().disable();
-
-            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                    "ClientSocket: SHEET_STATE " + standardBottomSheetBehavior.getState());
-
-        } catch (Exception e) {
-            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                    "ClientSocket: onRetry(): " + e.getMessage());
-        }
-
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -473,6 +420,8 @@ public class DemoSenderFragmentImpl
                     ? hotspotInformation.getInt(Keyword.NETWORK_PIN)
                     : -1;
 
+            LogUtils.getLogWarning("Client", String.format("HotspotInformation Pin Value is: %s", accessPin));
+
             if (hotspotInformation.has(Keyword.NETWORK_NAME)) {
                 hotspotNetwork.SSID = hotspotInformation.getString(Keyword.NETWORK_NAME);
                 hotspotNetwork.qrConnection = true;
@@ -627,6 +576,60 @@ public class DemoSenderFragmentImpl
         mHandler.removeMessages(STATE_MESSAGE_RECEIVED);
         mHandler.removeMessages(STATE_LISTENING);
         mHandler = null;
+    }
+
+    // with qr try connection
+    public void retryConnection() {
+
+        try {
+
+            closeDialog();
+            removeHanlderMessages();
+
+            if (sendReceive != null && sendReceive.bluetoothSocket != null)
+                sendReceive.bluetoothSocket.close();
+            if (sendReceive != null) {
+                sendReceive.interrupt();
+                sendReceive = null;
+            }
+            if (clientClass != null && clientClass.socket != null) clientClass.socket.close();
+            if (clientClass != null) {
+                clientClass.interrupt();
+                clientClass = null;
+            }
+            if (mGenericList != null && mGenericList.size() > 0) {
+                mGenericList.clear();
+            }
+            ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
+            if (connectionUtils.getBluetoothAdapter().isDiscovering())
+                connectionUtils.getBluetoothAdapter().cancelDiscovery();
+
+            Set<BluetoothDevice> bluetoothDeviceList = connectionUtils.getBluetoothAdapter().getBondedDevices();
+            if (bluetoothDeviceList.size() > 0) {
+                for (BluetoothDevice bluetoothDevice : bluetoothDeviceList) {
+                    try {
+                        if (bluetoothDevice.getName().contains("TS") || bluetoothDevice.getName().contains("AndroidShare")) {
+                            Method m = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
+                            m.invoke(bluetoothDevice, (Object[]) null);
+                            showMessage("SendReceive: Removed Device Name is: " + bluetoothDevice);
+                        }
+                    } catch (Exception e) {
+                        showMessage("SendReceive: Removing has been failed." + e.getMessage());
+                    }
+                }
+            }
+
+            connectionUtils.getBluetoothAdapter().disable();
+
+            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: SHEET_STATE " + standardBottomSheetBehavior.getState());
+
+        } catch (Exception e) {
+            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    "ClientSocket: onRetry(): " + e.getMessage());
+        }
+
     }
 
     private void setConductItemsShowing(boolean showing) {

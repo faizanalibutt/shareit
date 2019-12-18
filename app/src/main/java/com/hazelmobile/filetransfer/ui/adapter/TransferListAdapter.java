@@ -427,7 +427,7 @@ public class TransferListAdapter
                 final View parentView = holder.getView();
 
                 @ColorInt
-                int appliedColor;
+                int appliedColor = 0;
                 int percentage = (int) (object.getPercent() * 100);
                 ProgressBar progressBar = parentView.findViewById(R.id.progressBar);
                 ImageView thumbnail = parentView.findViewById(R.id.thumbnail);
@@ -440,24 +440,28 @@ public class TransferListAdapter
 
                 parentView.setSelected(object.isSelectableSelected());
 
-                if (object.isComplete())
+                /*if (object.isComplete())
                     appliedColor = mColorDone;
-                else if (object.hasIssues())
-                    appliedColor = mColorError;
                 else
-                    appliedColor = mColorPending;
+                else
+                    appliedColor = mColorPending;*/
+
+                if (object.hasIssues()) {
+                    thirdText.setVisibility(View.VISIBLE);
+                    appliedColor = mColorError;
+                    thirdText.setText(object.getThirdText(this));
+                    thirdText.setTextColor(appliedColor);
+                }
 
                 titleText.setText(object.friendlyName);
                 firstText.setText(getContext().getString(R.string.transfer_file_size, object.getFirstText(this)));
                 secondText.setText(object.getSecondText(this));
-                thirdText.setText(object.getThirdText(this));
 
                 object.handleStatusIcon(sIcon, mGroup);
                 ImageViewCompat.setImageTintList(sIcon, ColorStateList.valueOf(appliedColor));
                 progressBar.setMax(100);
                 progressBar.setProgress(percentage <= 0 ? 1 : percentage);
 
-                thirdText.setTextColor(appliedColor);
                 //ImageViewCompat.setImageTintList(image, ColorStateList.valueOf(appliedColor));
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {

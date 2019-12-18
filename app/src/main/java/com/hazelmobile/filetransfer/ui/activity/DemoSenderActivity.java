@@ -29,6 +29,7 @@ import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
 import com.hazelmobile.filetransfer.ui.fragment.DemoSenderFragmentImpl;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
+import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 
 import static com.hazelmobile.filetransfer.ui.activity.PreparationsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
@@ -250,8 +251,12 @@ public class DemoSenderActivity extends Activity
             if (mRequestType.equals(RequestType.RETURN_RESULT)) {
 
                 try {
+                    // #TAG_TRANSFER_NEEDS need to check deviceID here must
                     getDatabase().reconstruct(networkDevice);
                     getDatabase().reconstruct(connection);
+                    LogUtils.getLogWarning("Client",
+                            String.format("ConnectionManagerActivity: onActivityResult() DeviceInfo + ConnectionInfo is \n%s \n%s",
+                                    networkDevice.deviceId, connection.adapterName));
                     doCommunicate(networkDevice, connection);
                 } catch (Exception e) {
                     Toast.makeText(DemoSenderActivity.this,

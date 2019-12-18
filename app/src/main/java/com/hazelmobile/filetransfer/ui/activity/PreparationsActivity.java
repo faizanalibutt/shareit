@@ -442,7 +442,7 @@ public class PreparationsActivity extends Activity
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                         == PackageManager.PERMISSION_DENIED)
                     createSnackbar(R.string.text_cameraPermissionRequired).show();
-                else {
+                else if (isAllEnabled) {
                     if (isReceiver) {
                         startActivity(new Intent(PreparationsActivity.this, ReceiverActivity.class)
                                 .putExtra(Keyword.EXTRA_RECEIVE, true)

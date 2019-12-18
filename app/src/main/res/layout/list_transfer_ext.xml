@@ -69,6 +69,19 @@
             app:layout_constraintStart_toEndOf="@+id/text"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/text4"
+            style="@style/TextAppearance.Secondary.SingleLine"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_smallest_size"
+            android:gravity="center|start"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/text2"
+            app:layout_constraintStart_toEndOf="@+id/thumbnail"
+            app:layout_constraintTop_toBottomOf="@+id/text" />
+
         <!--<ProgressBar
            android:id="@+id/progressBar"
            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -174,7 +187,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/text4"
+                    android:id="@+id/text41"
                     style="@style/TextAppearance.Secondary.SingleLine"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />

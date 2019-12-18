@@ -25,6 +25,7 @@ import com.hazelmobile.filetransfer.ui.activity.DemoSenderActivity;
 import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
+import com.hazelmobile.filetransfer.util.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -63,7 +64,10 @@ public class DemoAddDeviceRunningTask extends WorkerService.RunningTask<DemoSend
                 new CommunicationBridge.Client.ConnectionHandler() {
                     @Override
                     public void onConnect(CommunicationBridge.Client client) {
+
                         client.setDevice(mDevice);
+                        LogUtils.getLogInformation("Client", String.format("onRun():" +
+                                " CommunicationBridge.connect() -> mDevice is %s", mDevice));
 
                         try {
                             boolean doPublish = false;
@@ -167,11 +171,15 @@ public class DemoAddDeviceRunningTask extends WorkerService.RunningTask<DemoSend
                             });
 
                             activeConnection.reply(jsonRequest.toString());
+                            LogUtils.getLogInformation("Client",
+                                    String.format("onRun(): CommunicationBridge.connect() -> jsonRequest: %s", jsonRequest));
 
                             CoolSocket.ActiveConnection.Response response = activeConnection.receive();
                             activeConnection.getSocket().close();
 
                             JSONObject clientResponse = new JSONObject(response.response);
+                            LogUtils.getLogInformation("Client",
+                                    String.format("onRun(): CommunicationBridge.connect() -> clientResponse: %s", clientResponse));
 
                             if (clientResponse.has(Keyword.RESULT) && clientResponse.getBoolean(Keyword.RESULT)) {
                                 publishStatusText(context.getString(R.string.mesg_organizingFiles));

@@ -46,6 +46,7 @@ import com.hazelmobile.filetransfer.util.CommunicationNotificationHelper;
 import com.hazelmobile.filetransfer.util.DynamicNotification;
 import com.hazelmobile.filetransfer.util.FileUtils;
 import com.hazelmobile.filetransfer.util.HotspotUtils;
+import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 import com.hazelmobile.filetransfer.util.NetworkUtils;
 import com.hazelmobile.filetransfer.util.NotificationUtils;
@@ -75,7 +76,10 @@ import java.util.concurrent.TimeoutException;
 
 
 public class CommunicationService extends Service {
+
     public static final String TAG = "CommunicationService";
+    private static final String TAG_LOCAL = "CoolSocketLocal";
+    public static final String TAG_TRANSFER = "TransferModule";
 
     public static final String ACTION_FILE_TRANSFER = "com.genonbeta.TrebleShot.action.FILE_TRANSFER";
     public static final String ACTION_CLIPBOARD = "com.genonbeta.TrebleShot.action.CLIPBOARD";
@@ -125,7 +129,6 @@ public class CommunicationService extends Service {
 
     public static final int TASK_STATUS_ONGOING = 0;
     public static final int TASK_STATUS_STOPPED = 1;
-    private static final String TAG_LOCAL = "CoolSocketLocal";
 
     private List<ProcessHolder> mActiveProcessList = new ArrayList<>();
     private CommunicationServer mCommunicationServer = new CommunicationServer();
@@ -171,7 +174,7 @@ public class CommunicationService extends Service {
         if (getWifiLock() != null)
             getWifiLock().acquire();
 
-        updateServiceState(true/*getDefaultPreferences().getBoolean("trust_always", false)*/);
+        updateServiceState(getDefaultPreferences().getBoolean("trust_always", false));
 
         if (!AppUtils.checkRunningConditions(this)
                 || !mCommunicationServer.start()
@@ -187,23 +190,14 @@ public class CommunicationService extends Service {
 
                     sendHotspotStatus(reservation.getWifiConfiguration());
 
-                    /*if (getDefaultPreferences().getBoolean("hotspot_trust", false))
+                    if (getDefaultPreferences().getBoolean("hotspot_trust", false))
                     {
                         Log.w(TAG_LOCAL, "onCreate(): seamLessMode is true");
-
-                    }*/
-                    updateServiceState(true);
+                        updateServiceState(true);
+                    }
                 }
             });
 
-
-        /*try {
-            mWebShareServer = new WebShareServer(this, AppConfig.SERVER_PORT_WEBSHARE);
-            mWebShareServer.setAsyncRunner(new WebShareServer.BoundRunner(
-                    Executors.newFixedThreadPool(AppConfig.WEB_SHARE_CONNECTION_MAX)));
-        } catch (Throwable t) {
-            Log.e(TAG, "Failed to start Web Share Server");
-        }*/
     }
 
     @Override
@@ -599,10 +593,10 @@ public class CommunicationService extends Service {
 
     public void setupHotspot() {
         boolean isEnabled = !getHotspotUtils().isEnabled();
-        boolean overrideTrustZone = true/*getDefaultPreferences().getBoolean("hotspot_trust", false)*/;
+        boolean overrideTrustZone = getDefaultPreferences().getBoolean("hotspot_trust", false);
 
         // On Oreo devices, we will use platform specific code.
-        if (/*overrideTrustZone && */(!isEnabled || Build.VERSION.SDK_INT < 26)) {
+        if (overrideTrustZone && (!isEnabled || Build.VERSION.SDK_INT < 26)) {
             updateServiceState(isEnabled);
             Log.d(TAG, "setupHotspot(): Start with TrustZone");
         }
@@ -685,7 +679,9 @@ public class CommunicationService extends Service {
             try {
                 ActiveConnection.Response clientRequest = activeConnection.receive();
                 JSONObject responseJSON = analyzeResponse(clientRequest);
-                Log.w(TAG_LOCAL, "CommunicationServer.onConnected(): receive: " + responseJSON);
+                LogUtils.getLogInformation("Server", String.format("CommunicationService:" +
+                        " CommunicationServer.onConnected() -> ClientRequest: %s", responseJSON));
+
                 JSONObject replyJSON = new JSONObject();
 
                 if (responseJSON.has(Keyword.REQUEST)
@@ -716,10 +712,13 @@ public class CommunicationService extends Service {
                 final boolean isSecureConnection = networkPin != -1
                         && responseJSON.has(Keyword.DEVICE_SECURE_KEY)
                         && responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin;
-                Log.w(TAG_LOCAL, "CommunicationServer.onConnected(): " + "isSecureConnection Value is: "
-                        + isSecureConnection + " " + networkPin + " "
-                        + responseJSON.has(Keyword.DEVICE_SECURE_KEY) + " "
-                        + (responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin));
+
+                LogUtils.getLogWarning("Server", String.format("CommunicationService: CommunicationServer.onConnected() -> " +
+                                "networkPin: %s Keyword.DEVICE_SECURE_KEY: %s responseJSON.has(Keyword.DEVICE_SECURE_KEY): %s Connection is Secure: %s ",
+                        networkPin,
+                        responseJSON.getInt(Keyword.DEVICE_SECURE_KEY),
+                        responseJSON.has(Keyword.DEVICE_SECURE_KEY),
+                        isSecureConnection));
 
                 String deviceSerial = null;
 
@@ -735,8 +734,8 @@ public class CommunicationService extends Service {
 
                         clientRequest = activeConnection.receive();
                         responseJSON = analyzeResponse(clientRequest);
-                        //Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): " + "");
-                        Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): " + "HandShake_ONLY " + responseJSON);
+
+                        LogUtils.getLogWarning(TAG_LOCAL, "CommunicationServer.onConnected(): " + "HandShake_ONLY " + responseJSON);
                     } else {
                         return;
                     }
@@ -746,7 +745,7 @@ public class CommunicationService extends Service {
                     NetworkDevice device = new NetworkDevice(deviceSerial);
 
                     try {
-                        Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Device Value is: " + deviceSerial);
+                        LogUtils.getLogInformation(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Device Value is: " + deviceSerial);
                         getDatabase().reconstruct(device);
 
                         if (isSecureConnection)
@@ -755,11 +754,11 @@ public class CommunicationService extends Service {
                         if (!device.isRestricted)
                             shouldContinue = true;
 
-                        Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Device Restricted Output " + shouldContinue);
+                        LogUtils.getLogWarning(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Device Restricted Output " + device.isRestricted);
                     } catch (Exception e1) {
                         e1.printStackTrace();
 
-                        Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): " + "EXCEPTION_LOVER " + e1.getMessage());
+                        LogUtils.getLogWarning(TAG_LOCAL, "CommunicationServer.onConnected(): " + "EXCEPTION_LOVER " + e1.getMessage());
 
                         device = NetworkDeviceLoader.load(true, getDatabase(), activeConnection.getClientAddress(), null);
 
@@ -775,7 +774,7 @@ public class CommunicationService extends Service {
 
                         shouldContinue = true;
 
-                        Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Device Restricted Output " + shouldContinue);
+                        LogUtils.getLogInformation(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Device Restricted Output " + device.isRestricted);
 
                         if (device.isRestricted)
                         {
@@ -791,22 +790,24 @@ public class CommunicationService extends Service {
                     final boolean isSeamlessAvailable = (mSeamlessMode && device.isTrusted)
                             || (isSecureConnection /*&& getDefaultPreferences().getBoolean("qr_trust", false)*/);
 
-                    Log.w(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Check if isSeamlessAvailable or NOT " +
+                    LogUtils.getLogInformation("Server", "CommunicationServer.onConnected(): " + "Check if isSeamlessAvailable or NOT " +
                             "First Condition: " + (mSeamlessMode && device.isTrusted) +
                             " mSeamLessMode: " + mSeamlessMode + " device.isTrusted: " + device.isTrusted +
                             "\nSecond Condition: " + (isSecureConnection && getDefaultPreferences().getBoolean("qr_trust", false)) +
-                            " isSecureConnection: " + isSecureConnection + " getDefaultPreferences().getBoolean(qr_trust, false) " + getDefaultPreferences().getBoolean("qr_trust", false)
+                            " isSecureConnection: " + isSecureConnection + " getDefaultPreferences().getBoolean(\"qr_trust\", false) " + getDefaultPreferences().getBoolean("qr_trust", false)
                     );
 
                     if (!shouldContinue)
                         replyJSON.put(Keyword.ERROR, Keyword.ERROR_NOT_ALLOWED);
                     else if (responseJSON.has(Keyword.REQUEST)) {
-                        if (isSecureConnection && !mPinAccess)
+
+                        if (isSecureConnection && !mPinAccess) {
                             // Probably pin access has just activated, so we should update the service state
                             refreshServiceState();
+                            LogUtils.getLogWarning(TAG_LOCAL, "CommunicationServer.onConnected(): mPinAccess is refresh " + mPinAccess);
+                        }
 
-
-                        Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Get the response of Receiver: " + responseJSON);
+                        LogUtils.getLogWarning(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Get the response of Receiver: " + responseJSON);
                         switch (responseJSON.getString(Keyword.REQUEST)) {
                             case (Keyword.REQUEST_TRANSFER):
                                 if (responseJSON.has(Keyword.FILES_INDEX) && responseJSON.has(Keyword.TRANSFER_GROUP_ID) && getOngoingIndexList().size() < 1) {
@@ -931,7 +932,7 @@ public class CommunicationService extends Service {
 
                                                 if (isSeamlessAvailable)
                                                     try {
-                                                        Log.w(TAG_LOCAL, "onCommunicationServer(): SealessServer is Available");
+                                                        LogUtils.getLogWarning(TAG_LOCAL, "onCommunicationServer(): SealessServer is Available");
                                                         startFileReceiving(group.groupId, finalDevice.deviceId);
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
@@ -939,7 +940,7 @@ public class CommunicationService extends Service {
                                                 else
                                                 {
                                                     getNotificationHelper().notifyTransferRequest(transferObject, finalDevice, pendingRegistry.size());
-                                                    Log.w(TAG_LOCAL, "onCommunicationServer(): SealessServer is not Available");
+                                                    LogUtils.getLogWarning(TAG_LOCAL, "onCommunicationServer(): SealessServer is not Available");
                                                 }
                                             }
                                         }
