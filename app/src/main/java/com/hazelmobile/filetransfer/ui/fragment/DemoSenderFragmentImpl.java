@@ -898,6 +898,7 @@ public class DemoSenderFragmentImpl
                     com.hazelmobile.filetransfer.Callback.setDialogInfo(tempMsg);
                     try {
                         JSONObject hotspotInformation = new JSONObject(tempMsg);
+                        LogUtils.getLogWarning("Client", String.format("Message Received From Server: %s", hotspotInformation));
                         connectToHotspot(hotspotInformation);
                     } catch (JSONException e) {
                         e.printStackTrace();

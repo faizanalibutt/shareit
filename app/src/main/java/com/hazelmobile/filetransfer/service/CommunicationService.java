@@ -193,8 +193,9 @@ public class CommunicationService extends Service {
                     if (getDefaultPreferences().getBoolean("hotspot_trust", false))
                     {
                         Log.w(TAG_LOCAL, "onCreate(): seamLessMode is true");
-                        updateServiceState(true);
+
                     }
+                    updateServiceState(true);
                 }
             });
 
@@ -381,7 +382,7 @@ public class CommunicationService extends Service {
                             if (mDestroyApproved
                                     && !getHotspotUtils().isStarted()
                                     && !hasOngoingTasks()
-                                    && getDefaultPreferences().getBoolean("kill_service_on_exit", false)) {
+                                    /*&& getDefaultPreferences().getBoolean("kill_service_on_exit", false)*/) {
                                 stopSelf();
                                 Log.d(TAG, "onStartCommand(): Destroy state has been applied");
                             }
@@ -399,6 +400,7 @@ public class CommunicationService extends Service {
             } else if (ACTION_REQUEST_TASK_RUNNING_LIST_CHANGE.equals(intent.getAction())) {
                 notifyTaskRunningListChange();
             } else if (ACTION_REVOKE_ACCESS_PIN.equals(intent.getAction())) {
+                Log.d("Revoke", "it came to action_revoke code");
                 revokePinAccess();
                 refreshServiceState();
             } else if (ACTION_REQUEST_TRUSTZONE_STATUS.equals(intent.getAction())) {
@@ -448,6 +450,7 @@ public class CommunicationService extends Service {
             Log.d(TAG, "onDestroy(): Releasing Wi-Fi lock");
         }
 
+        Log.d("Revoke", "it came to Service.ondestroy() code");
         revokePinAccess();
         stopForeground(true);
 
@@ -708,14 +711,15 @@ public class CommunicationService extends Service {
                 boolean result = false;
                 boolean shouldContinue = false;
 
-                final int networkPin = getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1);
+                int networkPin = getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1);
                 final boolean isSecureConnection = networkPin != -1
                         && responseJSON.has(Keyword.DEVICE_SECURE_KEY)
                         && responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin;
 
                 LogUtils.getLogWarning("Server", String.format("CommunicationService: CommunicationServer.onConnected() -> " +
-                                "networkPin: %s Keyword.DEVICE_SECURE_KEY: %s responseJSON.has(Keyword.DEVICE_SECURE_KEY): %s Connection is Secure: %s ",
+                                "networkPin: %s getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1): %s Keyword.DEVICE_SECURE_KEY: %s responseJSON.has(Keyword.DEVICE_SECURE_KEY): %s Connection is Secure: %s ",
                         networkPin,
+                        getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1),
                         responseJSON.getInt(Keyword.DEVICE_SECURE_KEY),
                         responseJSON.has(Keyword.DEVICE_SECURE_KEY),
                         isSecureConnection));
@@ -932,7 +936,7 @@ public class CommunicationService extends Service {
 
                                                 if (isSeamlessAvailable)
                                                     try {
-                                                        LogUtils.getLogWarning(TAG_LOCAL, "onCommunicationServer(): SealessServer is Available");
+                                                        LogUtils.getLogDebug(TAG_LOCAL, "onCommunicationServer(): SealessServer is Available");
                                                         startFileReceiving(group.groupId, finalDevice.deviceId);
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
@@ -940,7 +944,7 @@ public class CommunicationService extends Service {
                                                 else
                                                 {
                                                     getNotificationHelper().notifyTransferRequest(transferObject, finalDevice, pendingRegistry.size());
-                                                    LogUtils.getLogWarning(TAG_LOCAL, "onCommunicationServer(): SealessServer is not Available");
+                                                    LogUtils.getLogDebug(TAG_LOCAL, "onCommunicationServer(): SealessServer is not Available");
                                                 }
                                             }
                                         }
@@ -1036,7 +1040,7 @@ public class CommunicationService extends Service {
             activeConnection.reply(reply
                     .put(Keyword.RESULT, result)
                     .toString());
-            Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Message to SENDER " + reply);
+            LogUtils.getLogDebug(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Message to SENDER " + reply);
         }
     }
 

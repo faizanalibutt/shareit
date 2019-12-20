@@ -51,6 +51,7 @@ import com.hazelmobile.filetransfer.ui.callback.IconSupport;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.HotspotUtils;
+import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.util.NetworkUtils;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -416,6 +417,10 @@ public class HotspotManagerFragment
                     AppUtils.getDefaultPreferences(getContext()).edit()
                             .putInt(Keyword.NETWORK_PIN, networkPin)
                             .apply();
+
+                    LogUtils.getLogDebug("Client", String.format("Finally I'm going to extract PIN Keyword.NETWORK_PIN: %s",
+                            AppUtils.getDefaultPreferences(getContext()).getInt(Keyword.NETWORK_PIN, -1)));
+
                     if (serverClass != null && UIConnectionUtils.isOreoAbove()) {
                         ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                                 "ServerSocket: When Hotspot Enabled AND HotspotInformation is " +
@@ -633,7 +638,9 @@ public class HotspotManagerFragment
         private void manageServerSocket(BluetoothSocket socket) {
             if (sendReceive == null) {
                 sendReceive = new SendReceive(socket);
+                LogUtils.getLogWarning("Client", String.format("Before_Message_SEND to Client: %s", hotspotInformation));
                 sendReceive.write(getHotspotInformation().toString().getBytes());
+                LogUtils.getLogWarning("Client", String.format("\n\n After_Message_SEND to Client: %s", getHotspotInformation().toString()));
                 sendReceive.start();
 
                 ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
