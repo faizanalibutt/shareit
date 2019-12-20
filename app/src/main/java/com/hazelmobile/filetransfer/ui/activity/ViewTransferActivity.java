@@ -450,7 +450,7 @@ public class ViewTransferActivity
     @Override
     public void onBackPressed() {
 
-        if (hasRunning)
+        if (hasRunning || hasAnyFiles)
             new AlertDialog.Builder(ViewTransferActivity.this)
                     .setMessage(getString(R.string.mesg_cancelTransfer))
                     .setNegativeButton(R.string.butn_no, null)
@@ -459,6 +459,7 @@ public class ViewTransferActivity
                         public void onClick(DialogInterface dialog, int which) {
                             toggleTask();
                             Callback.cancelTransfer(false);
+                            finish();
                         }
                     })
                     .show();

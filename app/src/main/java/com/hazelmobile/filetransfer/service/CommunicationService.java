@@ -400,7 +400,7 @@ public class CommunicationService extends Service {
             } else if (ACTION_REQUEST_TASK_RUNNING_LIST_CHANGE.equals(intent.getAction())) {
                 notifyTaskRunningListChange();
             } else if (ACTION_REVOKE_ACCESS_PIN.equals(intent.getAction())) {
-                Log.d("Revoke", "it came to action_revoke code");
+                LogUtils.getLogInformation("Revoke:", "it came to action_revoke code");
                 revokePinAccess();
                 refreshServiceState();
             } else if (ACTION_REQUEST_TRUSTZONE_STATUS.equals(intent.getAction())) {
@@ -450,7 +450,7 @@ public class CommunicationService extends Service {
             Log.d(TAG, "onDestroy(): Releasing Wi-Fi lock");
         }
 
-        Log.d("Revoke", "it came to Service.ondestroy() code");
+        LogUtils.getLogInformation("Revoke:", "it came to Service.ondestroy() code");
         revokePinAccess();
         stopForeground(true);
 
@@ -629,10 +629,15 @@ public class CommunicationService extends Service {
     }
 
     public void updateServiceState(boolean seamlessMode) {
+
         boolean broadcastStatus = mSeamlessMode != seamlessMode;
         mSeamlessMode = seamlessMode;
         mPinAccess = getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1) != -1;
-        Log.w(TAG_LOCAL, "updateServiceState(): mSeamLessMode is: " + mSeamlessMode + " mPinAccess is: " + mPinAccess);
+        LogUtils.getLogWarning("Both", String.format("updateServiceState(): mSeamLessMode is: %s mPinAccess is: %s And Value is: %s",
+                mPinAccess,
+                mSeamlessMode,
+                getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1)
+        ));
 
         if (broadcastStatus)
             sendTrustZoneStatus();
@@ -711,10 +716,10 @@ public class CommunicationService extends Service {
                 boolean result = false;
                 boolean shouldContinue = false;
 
-                int networkPin = getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1);
-                final boolean isSecureConnection = networkPin != -1
-                        && responseJSON.has(Keyword.DEVICE_SECURE_KEY)
-                        && responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin;
+                final int networkPin = getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1);
+                final boolean isSecureConnection = /*networkPin != -1
+                        && */responseJSON.has(Keyword.DEVICE_SECURE_KEY)
+                        /*&& responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin*/;
 
                 LogUtils.getLogWarning("Server", String.format("CommunicationService: CommunicationServer.onConnected() -> " +
                                 "networkPin: %s getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1): %s Keyword.DEVICE_SECURE_KEY: %s responseJSON.has(Keyword.DEVICE_SECURE_KEY): %s Connection is Secure: %s ",
@@ -807,8 +812,8 @@ public class CommunicationService extends Service {
 
                         if (isSecureConnection && !mPinAccess) {
                             // Probably pin access has just activated, so we should update the service state
+                            LogUtils.getLogWarning(TAG_LOCAL, "CommunicationServer.onConnected(): mPinAccess is refreshing " + mPinAccess);
                             refreshServiceState();
-                            LogUtils.getLogWarning(TAG_LOCAL, "CommunicationServer.onConnected(): mPinAccess is refresh " + mPinAccess);
                         }
 
                         LogUtils.getLogWarning(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Get the response of Receiver: " + responseJSON);

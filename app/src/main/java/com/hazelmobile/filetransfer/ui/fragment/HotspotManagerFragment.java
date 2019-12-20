@@ -65,6 +65,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.hazelmobile.filetransfer.pictures.Keyword.NETWORK_PIN;
 import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_HOTSPOT_STATUS;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_DISABLING;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_ENABLED;
@@ -412,14 +413,14 @@ public class HotspotManagerFragment
                 {
                     int networkPin = AppUtils.getUniqueNumber();
 
-                    codeIndex.put(Keyword.NETWORK_PIN, networkPin);
+                    codeIndex.put(NETWORK_PIN, networkPin);
 
                     AppUtils.getDefaultPreferences(getContext()).edit()
-                            .putInt(Keyword.NETWORK_PIN, networkPin)
+                            .putInt(NETWORK_PIN, networkPin)
                             .apply();
 
                     LogUtils.getLogDebug("Client", String.format("Finally I'm going to extract PIN Keyword.NETWORK_PIN: %s",
-                            AppUtils.getDefaultPreferences(getContext()).getInt(Keyword.NETWORK_PIN, -1)));
+                            AppUtils.getDefaultPreferences(getContext()).getInt(NETWORK_PIN, -1)));
 
                     if (serverClass != null && UIConnectionUtils.isOreoAbove()) {
                         ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
@@ -638,9 +639,7 @@ public class HotspotManagerFragment
         private void manageServerSocket(BluetoothSocket socket) {
             if (sendReceive == null) {
                 sendReceive = new SendReceive(socket);
-                LogUtils.getLogWarning("Client", String.format("Before_Message_SEND to Client: %s", hotspotInformation));
                 sendReceive.write(getHotspotInformation().toString().getBytes());
-                LogUtils.getLogWarning("Client", String.format("\n\n After_Message_SEND to Client: %s", getHotspotInformation().toString()));
                 sendReceive.start();
 
                 ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
