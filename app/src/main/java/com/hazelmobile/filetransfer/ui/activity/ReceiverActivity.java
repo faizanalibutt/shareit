@@ -184,6 +184,13 @@ public class ReceiverActivity extends Activity
                 textView.setVisibility(View.GONE);
                 hotspot_name.setVisibility(View.GONE);
                 receiver_status.setVisibility(View.GONE);
+            } else {
+                pulse.startRippleAnimation();
+                pulse.setVisibility(View.VISIBLE);
+                user_image.setVisibility(View.VISIBLE);
+                textView.setVisibility(View.VISIBLE);
+                hotspot_name.setVisibility(View.VISIBLE);
+                receiver_status.setVisibility(View.VISIBLE);
             }
         };
         Callback.getQrCode().observe(this, showQrObserver);

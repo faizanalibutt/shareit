@@ -373,10 +373,13 @@ public class DemoSenderFragmentImpl
         }
     }
 
-    private void cancelDiscovery() {
+    private void bluetoothDiscoveryStatus(boolean enableReceiver) {
         if (getContext() != null) {
             try {
-                getContext().unregisterReceiver(mReceiver);
+                if (!enableReceiver)
+                    getContext().registerReceiver(mReceiver, mIntentFilter);
+                else
+                    getContext().unregisterReceiver(mReceiver);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
@@ -496,7 +499,7 @@ public class DemoSenderFragmentImpl
                                 ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
                             }
                             mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
-                            cancelDiscovery();
+                            bluetoothDiscoveryStatus(false);
                             clientClass = new ClientClass(((Bluetooth) object).getDevice());
                             clientClass.start();
                         }
@@ -679,11 +682,16 @@ public class DemoSenderFragmentImpl
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 12000);
         user_retry.setOnClickListener(
                 v -> {
-                    if (isSocketClosed) {
-                        cancelDiscovery();
-                        retryConnection();
+                    if (!isSocketClosed) {
+                        //bluetoothDiscoveryStatus();
+                        //retryConnection();
+                        isSocketClosed = true;
+                        bluetoothDiscoveryStatus(false);
                         updateState();
+                        return;
                     }
+                    isSocketClosed = false;
+                    bluetoothDiscoveryStatus(true);
                 });
     }
 
@@ -1033,7 +1041,7 @@ public class DemoSenderFragmentImpl
 
                     // enable camera here
                     if (!success) {
-                        isSocketClosed = true;
+                        closeDialog();
                         createSnackbar(R.string.text_qrPromptRequired).show();
                     }
 

@@ -158,12 +158,20 @@ public class HotspotManagerFragment
         mCodeView = view.findViewById(R.id.layout_hotspot_manager_qr_image);
         userProfileImageRetry.setOnClickListener(
                 v -> {
-                    if (Callback.getQrCode().getValue() != null && Callback.getQrCode().getValue())
+
+                    if (Callback.getQrCode().getValue() != null && !Callback.getQrCode().getValue())
                     {
                         mCodeView.setVisibility(View.VISIBLE);
                         hotspot_name.setVisibility(View.VISIBLE);
                         qr_container.setVisibility(View.VISIBLE);
+                        Callback.setQrCode(true);
+                        return;
                     }
+
+                    mCodeView.setVisibility(View.GONE);
+                    hotspot_name.setVisibility(View.GONE);
+                    qr_container.setVisibility(View.GONE);
+                    Callback.setQrCode(false);
                 }
         );
 
