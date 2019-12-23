@@ -6,16 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Build;
-import android.preference.PreferenceManager;
-
 
 import com.genonbeta.android.framework.preference.DbSharablePreferences;
-import com.genonbeta.android.framework.util.PreferenceUtils;
-import com.genonbeta.android.updatewithgithub.GitHubUpdater;
-import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
-import com.hazelmobile.filetransfer.pictures.Keyword;
 
 /**
  * created by: Veli

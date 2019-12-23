@@ -717,9 +717,9 @@ public class CommunicationService extends Service {
                 boolean shouldContinue = false;
 
                 final int networkPin = getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1);
-                final boolean isSecureConnection = /*networkPin != -1
-                        && */responseJSON.has(Keyword.DEVICE_SECURE_KEY)
-                        /*&& responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin*/;
+                final boolean isSecureConnection = networkPin != -1
+                        && responseJSON.has(Keyword.DEVICE_SECURE_KEY)
+                        && responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin;
 
                 LogUtils.getLogWarning("Server", String.format("CommunicationService: CommunicationServer.onConnected() -> " +
                                 "networkPin: %s getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1): %s Keyword.DEVICE_SECURE_KEY: %s responseJSON.has(Keyword.DEVICE_SECURE_KEY): %s Connection is Secure: %s ",
