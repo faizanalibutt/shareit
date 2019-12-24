@@ -139,6 +139,7 @@ public class DemoSenderFragmentImpl
     private List<Object> mGenericList;
     private SenderListAdapter senderListAdapter;
     private boolean isSocketClosed = false;
+    private BluetoothAdapter bluetoothAdapter;
 
     private RippleBackground pulse;
     private int btm_margin = 0;
@@ -148,6 +149,7 @@ public class DemoSenderFragmentImpl
         super.onCreate(savedInstanceState);
 
         mConnectionUtils = new UIConnectionUtils(ConnectionUtils.getInstance(getContext()), this);
+        bluetoothAdapter = mConnectionUtils.getConnectionUtils().getBluetoothAdapter();
 
         mIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
@@ -159,7 +161,6 @@ public class DemoSenderFragmentImpl
         mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         mIntentFilter.addAction(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE);
         mIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-
 
         setHasOptionsMenu(true);
     }
@@ -233,10 +234,8 @@ public class DemoSenderFragmentImpl
         super.onResume();
         if (getContext() != null) {
             getContext().registerReceiver(mReceiver, mIntentFilter);
-            BluetoothAdapter bluetoothAdapter = ConnectionUtils.getInstance(getContext()).getBluetoothAdapter();
-            if (!bluetoothAdapter.isDiscovering() && bluetoothAdapter.isEnabled()) {
-                ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().startDiscovery();
-            }
+            if (bluetoothAdapter!= null && !bluetoothAdapter.isDiscovering() && bluetoothAdapter.isEnabled())
+                bluetoothAdapter.startDiscovery();
         }
         // it goes behind the interface so don't need to call it every time.
         //updateState();
@@ -254,9 +253,8 @@ public class DemoSenderFragmentImpl
         } catch (Exception exp) {
             exp.printStackTrace();
         }
-        if (ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().isDiscovering()) {
-            ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
-        }
+        if (bluetoothAdapter!= null && bluetoothAdapter.isDiscovering())
+            bluetoothAdapter.cancelDiscovery();
         mBarcodeView.pauseAndWait();
     }
 
@@ -377,9 +375,9 @@ public class DemoSenderFragmentImpl
         if (getContext() != null) {
             try {
                 if (!enableReceiver)
-                    getContext().registerReceiver(mReceiver, mIntentFilter);
-                else
                     getContext().unregisterReceiver(mReceiver);
+                else
+                    getContext().registerReceiver(mReceiver, mIntentFilter);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
@@ -494,14 +492,17 @@ public class DemoSenderFragmentImpl
 
                         if (object instanceof ScanResult)
                             connectToHotspot(((ScanResult) object));
-                        else if (object instanceof Bluetooth) {
-                            if (ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().isDiscovering()) {
-                                ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().cancelDiscovery();
+                        else if (object instanceof Bluetooth)
+                        {
+                            if (bluetoothAdapter != null)
+                            {
+                                if (bluetoothAdapter.isDiscovering())
+                                    bluetoothAdapter.cancelDiscovery();
+                                mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
+                                bluetoothDiscoveryStatus(false);
+                                clientClass = new ClientClass(((Bluetooth) object).getDevice());
+                                clientClass.start();
                             }
-                            mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
-                            bluetoothDiscoveryStatus(false);
-                            clientClass = new ClientClass(((Bluetooth) object).getDevice());
-                            clientClass.start();
                         }
 
                     }
@@ -662,6 +663,7 @@ public class DemoSenderFragmentImpl
         Log.d(ConnectionUtils.TAG, "\n" + message + "\n");
     }
 
+    // #retry
     private void updateUI() {
         mBarcodeView.decodeContinuous(new BarcodeCallback() {
             @Override
@@ -683,15 +685,17 @@ public class DemoSenderFragmentImpl
         user_retry.setOnClickListener(
                 v -> {
                     if (!isSocketClosed) {
-                        //bluetoothDiscoveryStatus();
                         //retryConnection();
                         isSocketClosed = true;
                         bluetoothDiscoveryStatus(false);
+                        standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         updateState();
                         return;
                     }
                     isSocketClosed = false;
                     bluetoothDiscoveryStatus(true);
+                    user_image.setVisibility(View.VISIBLE);
+                    updateState();
                 });
     }
 
@@ -736,6 +740,7 @@ public class DemoSenderFragmentImpl
         } else {
             if (isSocketClosed) {
                 closeDialog();
+                user_image.setVisibility(View.GONE);
                 mBarcodeView.resume();
                 //mConductText.setText(R.string.text_scanQRCodeHelp);
                 //createSnackbar(R.string.text_send_status).show();
@@ -745,6 +750,12 @@ public class DemoSenderFragmentImpl
             if (pulse.isRippleAnimationRunning())
                 pulse.stopRippleAnimation();
             mBarcodeView.setVisibility(hasCameraPermission ? View.VISIBLE : View.GONE);
+            user_image.setVisibility(View.GONE);
+        } else {
+            pulse.startRippleAnimation();
+            mBarcodeView.pauseAndWait();
+            user_image.setVisibility(View.VISIBLE);
+            mBarcodeView.setVisibility(hasCameraPermission ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -787,7 +798,7 @@ public class DemoSenderFragmentImpl
 
                     state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
                     if (state == BluetoothAdapter.STATE_ON) {
-                        ConnectionUtils.getInstance(getContext()).getBluetoothAdapter().startDiscovery();
+                        bluetoothAdapter.startDiscovery();
                         sender_status.setText(R.string.text_send_status);
                     }
                     if (state == BluetoothAdapter.STATE_OFF)
@@ -818,9 +829,8 @@ public class DemoSenderFragmentImpl
                         mGenericList.add(new Bluetooth(device, device.getName()
                                 + "\n" + device.getAddress()
                         ));
-                        if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED && !isSocketClosed) {
+                        if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED && !isSocketClosed)
                             standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
-                        }
                         if (senderListAdapter != null)
                             senderListAdapter.notifyDataSetChanged();
                         else {
@@ -923,7 +933,7 @@ public class DemoSenderFragmentImpl
 
         ClientClass(BluetoothDevice device1) {
             bluetoothConnector = new BluetoothConnector(device1, false,
-                    ConnectionUtils.getInstance(getContext()).getBluetoothAdapter(), null);
+                    bluetoothAdapter, null);
         }
 
         public void run() {

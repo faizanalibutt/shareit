@@ -78,7 +78,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/margin_smaller_size"
-            android:layout_marginTop="@dimen/margin_smaller_size"
+            android:layout_marginTop="@dimen/margin_smallest_size"
             android:orientation="horizontal">
 
             <TextView
@@ -107,6 +107,7 @@
         android:id="@+id/layout_barcode_connect_barcode_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         android:visibility="gone"
         app:zxing_preview_scaling_strategy="centerCrop"
         app:zxing_scanner_layout="@layout/external_layout_barcode_scanner" />
