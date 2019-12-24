@@ -79,17 +79,6 @@ public class ConnectionUtils {
                 && getWifiManager().disableNetwork(getWifiManager().getConnectionInfo().getNetworkId());
     }
 
-    public String getHotspotLocalIpAddress() {
-        String ipAddress = "192.168.43.1";
-        DhcpInfo dhcpInfo = mWifiManager.getDhcpInfo();
-        int address = dhcpInfo.serverAddress;
-        ipAddress = ((address & 0xFF)
-                + "." + ((address >> 8) & 0xFF)
-                + "." + ((address >> 16) & 0xFF)
-                + "." + ((address >> 24) & 0xFF));
-        return ipAddress;
-    }
-
 
     @WorkerThread
     public String establishHotspotConnection(final Interrupter interrupter,

@@ -143,6 +143,10 @@ public class DemoSenderFragmentImpl
 
     private RippleBackground pulse;
     private int btm_margin = 0;
+    private SenderWaitingDialog senderWaitingDialog;
+    private boolean isConnected = false;
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -215,20 +219,6 @@ public class DemoSenderFragmentImpl
         setSnackbarLength(Snackbar.LENGTH_INDEFINITE);
     }
 
-    private SenderWaitingDialog senderWaitingDialog;
-
-    private void setMargins(View view, int left, int top, int right, int bottom) {
-        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-            p.setMargins(left, top, right, bottom);
-            view.requestLayout();
-        }
-    }
-
-    private int pxToDp(int px) {
-        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -247,7 +237,7 @@ public class DemoSenderFragmentImpl
     public void onPause() {
         super.onPause();
         try {
-            if (getContext() != null) {
+            if (getContext() != null && !isConnected) {
                 getContext().unregisterReceiver(mReceiver);
             }
         } catch (Exception exp) {
@@ -266,6 +256,7 @@ public class DemoSenderFragmentImpl
             closeDialog();
             isThreadAlive = false;
             isSocketClosed = false;
+            isConnected = false;
             removeHanlderMessages();
 
             if (sendReceive != null && sendReceive.bluetoothSocket != null)
@@ -404,7 +395,6 @@ public class DemoSenderFragmentImpl
             showMessage("SendReceive: Connecting to Open Network " + e.getMessage());
         }
     }
-
     private void connectToHotspot(final JSONObject hotspotInformation) {
 
         final DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
@@ -468,7 +458,7 @@ public class DemoSenderFragmentImpl
 
     private void getOrUpdateWifiScanResult() {
 
-        // google restricts startscan() call to every 2 minute for api 28 and above.
+        // please note google restricts startscan() call to every 2 minute for api 28 and above.
         if (getContext() != null) {
             // FOR DEVICES HAVING OREO BELOW
             WifiManager wifiManager = ConnectionUtils.getInstance(getContext()).getWifiManager();
@@ -502,6 +492,7 @@ public class DemoSenderFragmentImpl
                                 bluetoothDiscoveryStatus(false);
                                 clientClass = new ClientClass(((Bluetooth) object).getDevice());
                                 clientClass.start();
+                                isConnected = true;
                             }
                         }
 
@@ -641,6 +632,14 @@ public class DemoSenderFragmentImpl
         mConductContainer.setVisibility(showing ? View.VISIBLE : View.GONE);
     }
 
+    private void setMargins(View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
+    }
+
     public void setDeviceSelectedListener(NetworkDeviceSelectedListener listener) {
         mDeviceSelectedListener = listener;
     }
@@ -661,6 +660,10 @@ public class DemoSenderFragmentImpl
 
     public static void showMessage(String message) {
         Log.d(ConnectionUtils.TAG, "\n" + message + "\n");
+    }
+
+    private int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
     // #retry

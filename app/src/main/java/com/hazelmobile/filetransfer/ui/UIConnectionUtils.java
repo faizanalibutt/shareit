@@ -162,8 +162,9 @@ public class UIConnectionUtils {
                                                     makeAcquaintance(activity, task, object, accessPin, registerListener);
                                                     if(!activity.isFinishing()) {
                                                         SenderWaitingDialog senderWaitingDialog = new SenderWaitingDialog(activity, "");
-                                                        senderWaitingDialog.show();
-                                                        Callback.setDialogInfo("Waiting to Connect");
+                                                        if (!activity.isFinishing())
+                                                            senderWaitingDialog.show();
+                                                        Callback.setDialogInfo(activity.getString(R.string.mesg_waiting));
                                                     }
                                                 }
                                             })
@@ -275,6 +276,7 @@ public class UIConnectionUtils {
                     client.setReturn(device);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    //Callback.setDialogInfo(e.getMessage());
                     LogUtils.getLogInformation("Client",
                             String.format("setUpConnection(): CommunicationBridge.connect():" +
                                     " while making connection to server error occurs:\n %s", e.getMessage()));

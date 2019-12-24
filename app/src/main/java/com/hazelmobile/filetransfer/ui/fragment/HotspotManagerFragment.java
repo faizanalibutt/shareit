@@ -199,11 +199,7 @@ public class HotspotManagerFragment
         super.onDestroy();
         try {
             if (UIConnectionUtils.isOreoAbove()) {
-            /*if (getContext() != null) {
-                Intent intent = new Intent(getContext(), CommunicationService.class);
-                getContext().stopService(intent);
-                getContext().unregisterReceiver(mMessageReceiver);
-            }*/
+
                 isThreadAlive = false;
                 Callback.setQrCode(false);
                 Callback.setHotspotName("");
@@ -658,6 +654,16 @@ public class HotspotManagerFragment
             }
         }
 
+        // Closes the connect socket and causes the thread to finish.
+        public void cancel() {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        String.format("Could not close the connect socket %s", e.getMessage()));
+            }
+        }
+
     }
 
     private class SendReceive extends Thread {
@@ -712,6 +718,15 @@ public class HotspotManagerFragment
             }
         }
 
+        // Closes the connect socket and causes the thread to finish.
+        public void cancel() {
+            try {
+                bluetoothSocket.close();
+            } catch (IOException e) {
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        String.format("Could not close the connect socket %s", e));
+            }
+        }
 
     }
 
