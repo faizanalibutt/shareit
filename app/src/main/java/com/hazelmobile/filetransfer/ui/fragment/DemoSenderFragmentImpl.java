@@ -222,7 +222,7 @@ public class DemoSenderFragmentImpl
     @Override
     public void onResume() {
         super.onResume();
-        if (getContext() != null) {
+        if (getContext() != null && !isConnected) {
             getContext().registerReceiver(mReceiver, mIntentFilter);
             if (bluetoothAdapter!= null && !bluetoothAdapter.isDiscovering() && bluetoothAdapter.isEnabled())
                 bluetoothAdapter.startDiscovery();
@@ -260,12 +260,12 @@ public class DemoSenderFragmentImpl
             removeHanlderMessages();
 
             if (sendReceive != null && sendReceive.bluetoothSocket != null)
-                sendReceive.bluetoothSocket.close();
+                sendReceive.cancel();
             if (sendReceive != null) {
                 sendReceive.interrupt();
                 sendReceive = null;
             }
-            if (clientClass != null && clientClass.socket != null) clientClass.socket.close();
+            if (clientClass != null) clientClass.cancel();
             if (clientClass != null) {
                 clientClass.interrupt();
                 clientClass = null;
@@ -456,7 +456,7 @@ public class DemoSenderFragmentImpl
         }
     }
 
-    private void getOrUpdateWifiScanResult() {
+    private void getOrUpdateScanResult() {
 
         // please note google restricts startscan() call to every 2 minute for api 28 and above.
         if (getContext() != null) {
@@ -478,6 +478,9 @@ public class DemoSenderFragmentImpl
 
                         Object object = mGenericList.get(position);
 
+                        if (isConnected)
+                            retryConnection();
+
                         openDialog(object);
 
                         if (object instanceof ScanResult)
@@ -490,7 +493,6 @@ public class DemoSenderFragmentImpl
                                     bluetoothAdapter.cancelDiscovery();
                                 mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
                                 bluetoothDiscoveryStatus(false);
-                                retryConnection();
                                 clientClass = new ClientClass(((Bluetooth) object).getDevice());
                                 clientClass.start();
                                 isConnected = true;
@@ -580,7 +582,6 @@ public class DemoSenderFragmentImpl
         try {
 
             closeDialog();
-            removeHanlderMessages();
 
             if (sendReceive != null && sendReceive.bluetoothSocket != null)
                 sendReceive.bluetoothSocket.close();
@@ -614,8 +615,6 @@ public class DemoSenderFragmentImpl
                     }
                 }
             }
-
-            connectionUtils.getBluetoothAdapter().disable();
 
             standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
@@ -684,7 +683,7 @@ public class DemoSenderFragmentImpl
             public void possibleResultPoints(List<ResultPoint> resultPoints) {
             }
         });
-        getOrUpdateWifiScanResult();
+        getOrUpdateScanResult();
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 12000);
         user_retry.setOnClickListener(
                 v -> {
@@ -693,10 +692,12 @@ public class DemoSenderFragmentImpl
                         isSocketClosed = true;
                         bluetoothDiscoveryStatus(false);
                         standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        bluetoothAdapter.disable();
                         updateState();
                         return;
                     }
                     isSocketClosed = false;
+                    bluetoothAdapter.enable();
                     bluetoothDiscoveryStatus(true);
                     user_image.setVisibility(View.VISIBLE);
                     updateState();

@@ -478,32 +478,43 @@ public class HotspotManagerFragment
         showMenu();
 
         if (!isEnabled) {
-            ExtensionsUtils.getLog_D("TRANSFER_TAG", "hotspot disabled");
+
+            ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(), "hotspot disabled");
             updateViewsWithBlank();
+            toggleHotspot();
         } else if (getConnectionUtils().getHotspotUtils() instanceof HotspotUtils.HackAPI
                 && wifiConfiguration != null) {
+
             updateViews(wifiConfiguration.SSID, wifiConfiguration.preSharedKey, NetworkUtils.getAllowedKeyManagement(wifiConfiguration));
+            ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(), "hotspot is enabled for below oreo");
         } else if (Build.VERSION.SDK_INT >= 26) {
+
             AppUtils.startForegroundService(getActivity(),
                     new Intent(getActivity(), CommunicationService.class)
                             .setAction(CommunicationService.ACTION_REQUEST_HOTSPOT_STATUS));
-            ExtensionsUtils.getLog_D("TRANSFER_TAG", "hotspot status sending");
+            ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(), "requesting hotspot status above oreo 26 from communicationservice");
         }
+
     }
 
     private class StatusReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+
             if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction())) {
                 updateState();
+
             } else if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
+
                 if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false))
                     updateViews(intent.getStringExtra(CommunicationService.EXTRA_HOTSPOT_NAME),
                             intent.getStringExtra(CommunicationService.EXTRA_HOTSPOT_PASSWORD),
                             intent.getIntExtra(CommunicationService.EXTRA_HOTSPOT_KEY_MGMT, 0));
+
                 else if (getConnectionUtils().getHotspotUtils().isEnabled()
                         && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
+
                     updateViewsStartedExternally();
                 }
             }
@@ -646,8 +657,8 @@ public class HotspotManagerFragment
                 sendReceive.write(getHotspotInformation().toString().getBytes());
                 sendReceive.start();
 
-                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ServerSocket: send message to obtain HOTSPOT_INFORMATION" + "\n");
+                ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        "ServerSocket: Received Request To Give HOTSPOT_INFORMATION" + "\n");
 
                 if (mHandle != null)
                     mHandle.removeMessages(STATE_BLUETOOTH_DISCOVERABLE_REQUESTING);
