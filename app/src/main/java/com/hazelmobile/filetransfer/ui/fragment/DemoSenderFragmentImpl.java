@@ -490,6 +490,7 @@ public class DemoSenderFragmentImpl
                                     bluetoothAdapter.cancelDiscovery();
                                 mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
                                 bluetoothDiscoveryStatus(false);
+                                retryConnection();
                                 clientClass = new ClientClass(((Bluetooth) object).getDevice());
                                 clientClass.start();
                                 isConnected = true;
