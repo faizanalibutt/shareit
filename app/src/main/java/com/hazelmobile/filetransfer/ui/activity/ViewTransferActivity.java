@@ -330,6 +330,20 @@ public class ViewTransferActivity
         unregisterReceiver(mMessageReceiver);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == android.R.id.home) {
+            toggleTask();
+            Callback.cancelTransfer(false);
+            finish();
+        } else
+            return super.onOptionsItemSelected(item);
+
+        return true;
+    }
+
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);

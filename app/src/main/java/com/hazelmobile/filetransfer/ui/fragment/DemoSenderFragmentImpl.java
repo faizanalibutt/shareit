@@ -996,6 +996,16 @@ public class DemoSenderFragmentImpl
 
         }
 
+        // Closes the connect socket and causes the thread to finish.
+        public void cancel() {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        String.format("Could not close the connect socket %s", e.getMessage()));
+            }
+        }
+
     }
 
     private class SendReceive extends Thread {
@@ -1073,6 +1083,16 @@ public class DemoSenderFragmentImpl
             }
             ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: SendReceive: I'm still on. Loop has been broken " + "\n");
+        }
+
+        // Closes the connect socket and causes the thread to finish.
+        public void cancel() {
+            try {
+                bluetoothSocket.close();
+            } catch (IOException e) {
+                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        String.format("Could not close the connect socket %s", e));
+            }
         }
 
     }
