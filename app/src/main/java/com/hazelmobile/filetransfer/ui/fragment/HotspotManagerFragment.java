@@ -254,7 +254,7 @@ public class HotspotManagerFragment
             }
 
         } catch (Exception e) {
-            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+            ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ServerSocket: onDestroy(): " + e.getMessage());
         }
     }
@@ -588,7 +588,7 @@ public class HotspotManagerFragment
                         "ServerSocket: its enabled " + serverSocket + "\n");
 
             } catch (IOException e) {
-                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: Listener got interruption \n" + e.getMessage() + "\n");
             }
         }
@@ -601,13 +601,13 @@ public class HotspotManagerFragment
                     socket = serverSocket.accept();
                 } catch (Exception e) {
 
-                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ServerSocket: Socket's accept() method failed \n" + e.getMessage() + "\n");
 
                     try {
                         serverSocket.close();
                     } catch (IOException ex) {
-                        ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                        ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                                 "ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n");
                         createSnackbar(R.string.app_name,
                                 " ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n").show();
@@ -682,7 +682,7 @@ public class HotspotManagerFragment
                 tempIn = bluetoothSocket.getInputStream();
                 tempOut = bluetoothSocket.getOutputStream();
             } catch (IOException e) {
-                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: SendReceive: this constructor fed up \n" + e.getMessage());
             }
 
@@ -701,7 +701,7 @@ public class HotspotManagerFragment
                     ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ServerSocket: SendReceive: HOTSPOT BYTES TO SENDER ");
                 } catch (IOException e) {
-                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ServerSocket: SendReceive: Sending bytes to client got error \n" + e.getMessage());
                     break;
                 }
@@ -723,7 +723,7 @@ public class HotspotManagerFragment
             try {
                 bluetoothSocket.close();
             } catch (IOException e) {
-                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                         String.format("Could not close the connect socket %s", e));
             }
         }
