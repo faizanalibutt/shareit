@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.net.wifi.WifiConfiguration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -181,7 +180,8 @@ public class HotspotManagerFragment
     public void onResume() {
         super.onResume();
 
-        if (getContext() != null) getContext().registerReceiver(mStatusReceiver, mIntentFilter);
+        if (getContext() != null)
+            getContext().registerReceiver(mStatusReceiver, mIntentFilter);
         updateState();
 
         if (mWaitForHotspot)
@@ -481,13 +481,13 @@ public class HotspotManagerFragment
 
             ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(), "hotspot disabled");
             updateViewsWithBlank();
-            toggleHotspot();
+            //toggleHotspot();
         } else if (getConnectionUtils().getHotspotUtils() instanceof HotspotUtils.HackAPI
                 && wifiConfiguration != null) {
 
             updateViews(wifiConfiguration.SSID, wifiConfiguration.preSharedKey, NetworkUtils.getAllowedKeyManagement(wifiConfiguration));
             ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(), "hotspot is enabled for below oreo");
-        } else if (Build.VERSION.SDK_INT >= 26) {
+        } else if (UIConnectionUtils.isOSAbove(26)) {
 
             AppUtils.startForegroundService(getActivity(),
                     new Intent(getActivity(), CommunicationService.class)

@@ -126,6 +126,7 @@ public class ConnectionUtils {
                 toggleConnection(hotspotNetwork);
 
                 connectionToggled = true;
+                // wait for receiver here before moving up
             } else {
 
                 final DhcpInfo routeInfo = getWifiManager().getDhcpInfo();
@@ -356,7 +357,7 @@ public class ConnectionUtils {
                 } else {
                     getWifiManager().disconnect();
                     getWifiManager().enableNetwork(netId, true);
-                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
+                    ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "WIFI_CONNECTED \n");
                     return getWifiManager().reconnect();
                 }

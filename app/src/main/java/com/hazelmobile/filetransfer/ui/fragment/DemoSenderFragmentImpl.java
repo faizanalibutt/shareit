@@ -165,6 +165,8 @@ public class DemoSenderFragmentImpl
         mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         mIntentFilter.addAction(WifiManager.ACTION_REQUEST_SCAN_ALWAYS_AVAILABLE);
         mIntentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        mIntentFilter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
+        mIntentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
 
         setHasOptionsMenu(true);
     }
@@ -858,12 +860,16 @@ public class DemoSenderFragmentImpl
                 case WifiManager.WIFI_STATE_CHANGED_ACTION:
 
                     state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
+                    ExtensionsUtils.getLog_W(ExtensionsUtils.getTHREAD_TAG(),
+                            String.format("wifi state is monitored: %s", state));
+
                     if (state == WifiManager.WIFI_STATE_ENABLED) {
                         wifiManager.startScan();
                         sender_status.setText(R.string.text_send_status);
                     }
                     if (state == WifiManager.WIFI_STATE_DISABLED)
                         sender_status.setText(String.format("%s", "Wifi is disabled, Kindly open it to start the Process"));
+
                     break;
 
                 case WifiManager.SCAN_RESULTS_AVAILABLE_ACTION:
@@ -876,6 +882,20 @@ public class DemoSenderFragmentImpl
                     } else
                         getWifiScanResults(wifiManager);
                     break;
+
+                /*case WifiManager.NETWORK_STATE_CHANGED_ACTION:
+                    ExtensionsUtils.getLog_W(ExtensionsUtils.getTHREAD_TAG(), String.format("", ));
+                    break;
+
+                case WifiManager.NETWORK_STATE_CHANGED_ACTION:
+                    NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+                    boolean connected = info.isConnected();
+                    ExtensionsUtils.getLog_W(ExtensionsUtils.getTHREAD_TAG(), String.format("NetworkInfo is: %s", info));
+                    break;
+
+                case WifiManager.NETWORK_STATE_CHANGED_ACTION:
+                    ExtensionsUtils.getLog_W(ExtensionsUtils.getTHREAD_TAG(), String.format("", ));
+                    break;*/
 
                 default:
                     break;
