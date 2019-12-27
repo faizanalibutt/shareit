@@ -87,7 +87,6 @@ public class PreparationsActivity extends Activity
         return Snackbar.make(findViewById(R.id.container), getString(resId, objects), Snackbar.LENGTH_SHORT);
     }
 
-    // TODO: 10/23/2019 remove this in future #33
     public static final int REQUEST_PERMISSION_CAMERA = 0;
     boolean hasCameraPermission;
 

@@ -53,7 +53,6 @@ public class TextUtils {
     }
 
     public static String getLetters(String text, int length) {
-        // TODO: 10/30/2019 text is replaced with none #37
         if (text == null || text.length() == 0)
             text = ""/*"?"*/;
 

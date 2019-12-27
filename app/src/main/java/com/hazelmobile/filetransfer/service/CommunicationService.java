@@ -278,7 +278,6 @@ public class CommunicationService extends Service {
                 if (interrupter != null)
                     interrupter.interrupt();
             } else if (ACTION_CLIPBOARD.equals(intent.getAction()) && intent.hasExtra(EXTRA_CLIPBOARD_ACCEPTED)) {
-                // TODO: 10/29/2019 its related to text stream object commented #35
                 /*int notificationId = intent.getIntExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, -1);
                 long clipboardId = intent.getLongExtra(EXTRA_CLIPBOARD_ID, -1);
                 boolean isAccepted = intent.getBooleanExtra(EXTRA_CLIPBOARD_ACCEPTED, false);
@@ -371,7 +370,6 @@ public class CommunicationService extends Service {
                     && intent.hasExtra(EXTRA_STATUS_STARTED)) {
                 boolean startRequested = intent.getBooleanExtra(EXTRA_STATUS_STARTED, false);
 
-                // TODO: 10/29/2019 its possible to be out of comment ACTION_SERVICE_STATUS commented #36
                 mDestroyApproved = !startRequested && !hasOngoingTasks()/* && (mWebShareServer == null
                         || !mWebShareServer.isAlive())*/;
 
