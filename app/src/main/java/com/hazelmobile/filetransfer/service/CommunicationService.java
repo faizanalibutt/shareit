@@ -40,6 +40,7 @@ import com.hazelmobile.filetransfer.object.TransferInstance;
 import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
+import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.fragment.FileListFragment;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
 import com.hazelmobile.filetransfer.util.CommunicationNotificationHelper;
@@ -68,7 +69,9 @@ import java.io.StreamCorruptedException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -579,6 +582,27 @@ public class CommunicationService extends Service {
 
         if (wifiConfiguration != null) {
             ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(), "hotspot wifi configured for above oreo");
+            if (UIConnectionUtils.isOSAbove(Build.VERSION_CODES.M))
+                LogUtils.getLogDebug("Server",
+                    String.format(Locale.getDefault(),
+                            "WifiConfiguration is: SSID: %s, preSharedKey: %s, BSSID: %s, networkId: %d, providerFriendlyName: %s, allowedAuthAlgorithms: %s," +
+                                    " allowedGroupCiphers: %s, allowedKeyManagement: %s, allowedPairwiseCiphers: %s, allowedProtocols: %s, hiddenSSID: %b, enterpriseConfig: %s," +
+                                    " status: %d, FQDN: %s, roamingConsortiumIds: %s",
+                    wifiConfiguration.SSID,
+                    wifiConfiguration.preSharedKey,
+                    wifiConfiguration.BSSID,
+                    wifiConfiguration.networkId,
+                    wifiConfiguration.providerFriendlyName,
+                            Arrays.toString(wifiConfiguration.allowedAuthAlgorithms.toLongArray()),
+                            Arrays.toString(wifiConfiguration.allowedGroupCiphers.toLongArray()),
+                            Arrays.toString(wifiConfiguration.allowedKeyManagement.toLongArray()),
+                            Arrays.toString(wifiConfiguration.allowedPairwiseCiphers.toLongArray()),
+                            wifiConfiguration.allowedProtocols.toString(),
+                    wifiConfiguration.hiddenSSID,
+                    wifiConfiguration.enterpriseConfig.toString(),
+                    wifiConfiguration.status,
+                    wifiConfiguration.FQDN,
+                            Arrays.toString(wifiConfiguration.roamingConsortiumIds)));
             statusIntent.putExtra(EXTRA_HOTSPOT_NAME, wifiConfiguration.SSID)
                     .putExtra(EXTRA_HOTSPOT_PASSWORD, wifiConfiguration.preSharedKey)
                     .putExtra(EXTRA_HOTSPOT_KEY_MGMT, NetworkUtils.getAllowedKeyManagement(wifiConfiguration));
@@ -715,9 +739,12 @@ public class CommunicationService extends Service {
                 boolean shouldContinue = false;
 
                 final int networkPin = getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1);
-                final boolean isSecureConnection = networkPin != -1
-                        && responseJSON.has(Keyword.DEVICE_SECURE_KEY)
-                        && responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin;
+                final boolean isSecureConnection = UIConnectionUtils.isOSBelow(Build.VERSION_CODES.N_MR1)
+                        || (
+                                networkPin != -1
+                                && responseJSON.has(Keyword.DEVICE_SECURE_KEY)
+                                && responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin
+                        );
 
                 LogUtils.getLogWarning("Server", String.format("CommunicationService: CommunicationServer.onConnected() -> " +
                                 "networkPin: %s getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1): %s Keyword.DEVICE_SECURE_KEY: %s responseJSON.has(Keyword.DEVICE_SECURE_KEY): %s Connection is Secure: %s ",

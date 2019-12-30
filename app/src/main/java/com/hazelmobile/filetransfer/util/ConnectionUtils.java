@@ -123,9 +123,9 @@ public class ConnectionUtils {
                 }
             } else if (!isConnectedToNetwork(hotspotNetwork) && !connectionToggled) {
                 Log.d(TAG, "establishHotspotConnection(): Requested network toggle");
-                toggleConnection(hotspotNetwork);
+                //toggleConnection(hotspotNetwork);
 
-                connectionToggled = true;
+                connectionToggled = toggleConnection(hotspotNetwork);
                 // wait for receiver here before moving up
             } else {
 
@@ -324,12 +324,20 @@ public class ConnectionUtils {
                     }
                     break;
                 case 4: // WPA2_AES
+
+                    // KeyMgmt
                     config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+                    // AuthAlgorithms
                     config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+                    // Protocols
                     config.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+                    config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+                    // PairwiseCiphers
                     config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+                    config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+                    // GroupCiphers
                     config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-                    config.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+                    config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
 
                     if (hotspotNetwork.password != null
                             && hotspotNetwork.password.matches("[0-9A-Fa-f]{64}")) {
@@ -338,6 +346,31 @@ public class ConnectionUtils {
                         config.preSharedKey = '"' + hotspotNetwork.password + '"';
                     }
                     break;
+
+                    /**
+                     * LocalOnlyHotspotCallbackProxy: handle message what: 0 msg: { when=-11ms what=0 obj=* ID: -2 SSID: AndroidShare_6876 PROVIDER-NAME: null BSSID: null FQDN: null PRIO: 0 HIDDEN: false
+                     *      NetworkSelectionStatus NETWORK_SELECTION_ENABLED
+                     *      hasEverConnected: false
+                     *      KeyMgmt: WPA2_PSK Protocols:
+                     *      AuthAlgorithms:
+                     *      PairwiseCiphers:
+                     *      GroupCiphers:
+                     *      GroupMgmtCiphers:
+                     *      SuiteBCiphers:
+                     *      PSK: *
+                     *
+                     *     Enterprise config:
+                     *
+                     *     DPP config:
+                     *     IP config:
+                     *     IP assignment: UNASSIGNED
+                     *     Proxy settings: UNASSIGNED
+                     *      cuid=-1 luid=-1 lcuid=0 userApproved=USER_UNSPECIFIED noInternetAccessExpected=false
+                     *     recentFailure: Association Rejection code: 0
+                     *     ShareThisAp: false
+                     *      target=android.net.wifi.WifiManager$LocalOnlyHotspotCallbackProxy$1 }
+                     * */
+
             }
 
             try {
