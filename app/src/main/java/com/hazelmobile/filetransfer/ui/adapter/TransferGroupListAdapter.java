@@ -19,8 +19,8 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.ShowingAssignee;
 import com.hazelmobile.filetransfer.object.TransferGroup;
-import com.hazelmobile.filetransfer.pictures.AppUtils;
-import com.hazelmobile.filetransfer.pictures.GroupEditableListAdapter;
+import com.hazelmobile.filetransfer.util.AppUtils;
+import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
 import com.hazelmobile.filetransfer.util.FileUtils;
 
 import java.text.NumberFormat;

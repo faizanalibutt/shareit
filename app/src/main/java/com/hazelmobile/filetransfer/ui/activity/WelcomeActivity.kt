@@ -12,7 +12,7 @@ import androidx.transition.TransitionManager
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.`object`.NetworkDevice
 import com.hazelmobile.filetransfer.app.Activity
-import com.hazelmobile.filetransfer.pictures.AppUtils
+import com.hazelmobile.filetransfer.util.AppUtils
 import kotlinx.android.synthetic.main.activity_side_menu.*
 import kotlinx.android.synthetic.main.activity_welcome.*
 

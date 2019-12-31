@@ -9,22 +9,24 @@ import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
-import com.hazelmobile.filetransfer.Callback
+import com.hazelmobile.filetransfer.callback.Callback
 import com.hazelmobile.filetransfer.R
+import com.hazelmobile.filetransfer.`object`.Editable
+import com.hazelmobile.filetransfer.`object`.Shareable
 import com.hazelmobile.filetransfer.app.Activity
-import com.hazelmobile.filetransfer.files.SharingActionModeCallback
-import com.hazelmobile.filetransfer.pictures.*
+import com.hazelmobile.filetransfer.app.EditableListFragment
+import com.hazelmobile.filetransfer.app.EditableListFragmentImpl
+import com.hazelmobile.filetransfer.ui.callback.SharingActionModeCallback
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
-import com.hazelmobile.filetransfer.ui.fragment.ApplicationListFragment
-import com.hazelmobile.filetransfer.ui.fragment.FileExplorerFragment
-import com.hazelmobile.filetransfer.ui.fragment.MusicListFragment
-import com.hazelmobile.filetransfer.ui.fragment.VideoListFragment
+import com.hazelmobile.filetransfer.ui.callback.PowerfulActionModeSupport
+import com.hazelmobile.filetransfer.ui.fragment.*
 import kotlinx.android.synthetic.main.activity_content_sharing.*
 import kotlinx.android.synthetic.main.content_sharing.*
 import kotlinx.android.synthetic.main.file_transfer_general_button.*
 
 @Suppress("UNCHECKED_CAST")
-class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
+class ContentSharingActivity : Activity(),
+    PowerfulActionModeSupport {
 
     private lateinit var mSelectionCallback: SharingActionModeCallback<Shareable>
     private var mBackPressedListener: Activity.OnBackPressedListener? = null
@@ -47,7 +49,10 @@ class ContentSharingActivity : Activity(), PowerfulActionModeSupport {
             toolbar.visibility = if (!started) View.VISIBLE else View.GONE
         }
 
-        mSelectionCallback = SharingActionModeCallback(null)
+        mSelectionCallback =
+            SharingActionModeCallback(
+                null
+            )
         val selectorConnection: PowerfulActionMode.SelectorConnection<Shareable> =
             PowerfulActionMode.SelectorConnection(mMode, mSelectionCallback)
 

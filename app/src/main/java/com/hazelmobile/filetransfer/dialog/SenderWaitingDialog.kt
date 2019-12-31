@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import com.hazelmobile.filetransfer.Callback
+import com.hazelmobile.filetransfer.callback.Callback
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.model.Bluetooth

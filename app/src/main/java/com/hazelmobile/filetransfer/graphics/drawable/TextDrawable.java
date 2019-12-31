@@ -13,7 +13,7 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.RectShape;
 import android.graphics.drawable.shapes.RoundRectShape;
 
-import com.hazelmobile.filetransfer.pictures.TextUtils;
+import com.hazelmobile.filetransfer.util.TextUtils;
 
 public class TextDrawable extends ShapeDrawable {
     private static final float SHADE_FACTOR = 0.9f;

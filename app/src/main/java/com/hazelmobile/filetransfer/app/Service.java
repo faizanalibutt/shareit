@@ -3,7 +3,7 @@ package com.hazelmobile.filetransfer.app;
 import android.content.SharedPreferences;
 
 import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.util.NotificationUtils;
 
 

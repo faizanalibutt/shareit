@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 
-import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.util.HotspotUtils;
 

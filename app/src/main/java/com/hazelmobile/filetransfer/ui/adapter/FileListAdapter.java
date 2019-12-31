@@ -19,12 +19,12 @@ import com.genonbeta.android.framework.util.listing.ComparableMerger;
 import com.genonbeta.android.framework.util.listing.Merger;
 import com.hazelmobile.filetransfer.GlideApp;
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.files.AppConfig;
+import com.hazelmobile.filetransfer.config.AppConfig;
 import com.hazelmobile.filetransfer.object.FileShortcutObject;
 import com.hazelmobile.filetransfer.object.WritablePathObject;
-import com.hazelmobile.filetransfer.pictures.AppUtils;
-import com.hazelmobile.filetransfer.pictures.GroupEditableListAdapter;
-import com.hazelmobile.filetransfer.pictures.NotReadyException;
+import com.hazelmobile.filetransfer.util.AppUtils;
+import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
+import com.hazelmobile.filetransfer.exception.NotReadyException;
 import com.hazelmobile.filetransfer.util.FileUtils;
 import com.hazelmobile.filetransfer.util.MimeIconUtils;
 

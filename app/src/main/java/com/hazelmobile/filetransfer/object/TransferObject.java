@@ -9,7 +9,6 @@ import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLiteDatabase;
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.pictures.Editable;
 import com.hazelmobile.filetransfer.util.FileUtils;
 
 import java.lang.annotation.Retention;

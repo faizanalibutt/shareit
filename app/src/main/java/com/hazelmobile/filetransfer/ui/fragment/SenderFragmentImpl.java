@@ -46,8 +46,8 @@ import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.ResultPoint;
-import com.hazelmobile.filetransfer.BluetoothConnector;
-import com.hazelmobile.filetransfer.Callback;
+import com.hazelmobile.filetransfer.BluetoothConnectorUtils;
+import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
@@ -55,8 +55,8 @@ import com.hazelmobile.filetransfer.dialog.SenderWaitingDialog;
 import com.hazelmobile.filetransfer.library.RippleBackground;
 import com.hazelmobile.filetransfer.model.Bluetooth;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
-import com.hazelmobile.filetransfer.pictures.AppUtils;
-import com.hazelmobile.filetransfer.pictures.Keyword;
+import com.hazelmobile.filetransfer.util.AppUtils;
+import com.hazelmobile.filetransfer.config.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
@@ -944,21 +944,21 @@ public class SenderFragmentImpl
 
             switch (msg.what) {
                 case STATE_LISTENING:
-                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Listening");
+                    com.hazelmobile.filetransfer.callback.Callback.setDialogInfo("Listening");
                     break;
                 case STATE_CONNECTING:
-                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Connecting");
+                    com.hazelmobile.filetransfer.callback.Callback.setDialogInfo("Connecting");
                     break;
                 case STATE_CONNECTED:
-                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Connected");
+                    com.hazelmobile.filetransfer.callback.Callback.setDialogInfo("Connected");
                     break;
                 case STATE_CONNECTION_FAILED:
-                    com.hazelmobile.filetransfer.Callback.setDialogInfo("Connection Failed");
+                    com.hazelmobile.filetransfer.callback.Callback.setDialogInfo("Connection Failed");
                     break;
                 case STATE_MESSAGE_RECEIVED:
                     byte[] readBuff = (byte[]) msg.obj;
                     String tempMsg = new String(readBuff, 0, msg.arg1);
-                    com.hazelmobile.filetransfer.Callback.setDialogInfo(tempMsg);
+                    com.hazelmobile.filetransfer.callback.Callback.setDialogInfo(tempMsg);
                     try {
                         JSONObject hotspotInformation = new JSONObject(tempMsg);
                         LogUtils.getLogWarning("Client", String.format("Message Received From Server: %s", hotspotInformation));
@@ -973,11 +973,11 @@ public class SenderFragmentImpl
 
     public class ClientClass extends Thread {
 
-        private BluetoothConnector.BluetoothSocketWrapper socket;
-        private BluetoothConnector bluetoothConnector;
+        private BluetoothConnectorUtils.BluetoothSocketWrapper socket;
+        private BluetoothConnectorUtils bluetoothConnectorUtils;
 
         ClientClass(BluetoothDevice device1) {
-            bluetoothConnector = new BluetoothConnector(device1, false,
+            bluetoothConnectorUtils = new BluetoothConnectorUtils(device1, false,
                     bluetoothAdapter, null);
         }
 
@@ -985,7 +985,7 @@ public class SenderFragmentImpl
 
             try {
 
-                socket = bluetoothConnector.connect();
+                socket = bluetoothConnectorUtils.connect();
 
                 ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ClientSocket: socket coming from Bluetooth_Connector" + "\n");
@@ -1027,7 +1027,7 @@ public class SenderFragmentImpl
 
         }
 
-        private void manageMyConnectedSocket(BluetoothConnector.BluetoothSocketWrapper socket) {
+        private void manageMyConnectedSocket(BluetoothConnectorUtils.BluetoothSocketWrapper socket) {
 
             ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: client connected and sent message " + "\n");

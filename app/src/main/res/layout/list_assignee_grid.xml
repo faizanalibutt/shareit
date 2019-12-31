@@ -9,7 +9,7 @@
     android:background="?rectSelector"
     android:orientation="vertical">
 
-    <com.hazelmobile.filetransfer.pictures.ComparativeRelativeLayout
+    <com.hazelmobile.filetransfer.view.ComparativeRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -34,7 +34,7 @@
             android:visibility="gone"
             app:tint="?colorControlNormal" />
 
-    </com.hazelmobile.filetransfer.pictures.ComparativeRelativeLayout>
+    </com.hazelmobile.filetransfer.view.ComparativeRelativeLayout>
 
     <LinearLayout
         android:id="@+id/infoContainer"

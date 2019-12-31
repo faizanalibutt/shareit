@@ -16,8 +16,8 @@ import com.genonbeta.android.framework.io.DocumentFile;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferObject;
-import com.hazelmobile.filetransfer.pictures.AppUtils;
-import com.hazelmobile.filetransfer.pictures.TextUtils;
+import com.hazelmobile.filetransfer.util.AppUtils;
+import com.hazelmobile.filetransfer.util.TextUtils;
 import com.hazelmobile.filetransfer.util.FileUtils;
 
 import java.io.IOException;

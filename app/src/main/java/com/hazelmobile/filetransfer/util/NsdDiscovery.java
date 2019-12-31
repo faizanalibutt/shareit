@@ -9,8 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.files.AppConfig;
-import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.config.AppConfig;
 
 /**
  * created by: Veli

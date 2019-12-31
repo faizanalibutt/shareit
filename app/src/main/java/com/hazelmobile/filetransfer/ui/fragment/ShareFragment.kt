@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hazelmobile.filetransfer.R
-import com.hazelmobile.filetransfer.pictures.Keyword
+import com.hazelmobile.filetransfer.config.Keyword
 import com.hazelmobile.filetransfer.ui.activity.ContentSharingActivity
 import com.hazelmobile.filetransfer.ui.activity.PreparationsActivity
 import com.hazelmobile.filetransfer.ui.callback.IconSupport

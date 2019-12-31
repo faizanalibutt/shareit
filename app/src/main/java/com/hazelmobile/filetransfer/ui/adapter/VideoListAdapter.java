@@ -16,8 +16,8 @@ import androidx.annotation.NonNull;
 import com.hazelmobile.filetransfer.GlideApp;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.util.FileUtils;
-import com.hazelmobile.filetransfer.pictures.EditableListAdapter;
-import com.hazelmobile.filetransfer.pictures.Shareable;
+import com.hazelmobile.filetransfer.app.EditableListAdapter;
+import com.hazelmobile.filetransfer.object.Shareable;
 import com.hazelmobile.filetransfer.util.TimeUtils;
 
 import java.util.ArrayList;

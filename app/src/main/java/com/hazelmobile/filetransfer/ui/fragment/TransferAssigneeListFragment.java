@@ -17,9 +17,9 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.ShowingAssignee;
-import com.hazelmobile.filetransfer.pictures.AppUtils;
-import com.hazelmobile.filetransfer.pictures.EditableListAdapter;
-import com.hazelmobile.filetransfer.pictures.EditableListFragment;
+import com.hazelmobile.filetransfer.util.AppUtils;
+import com.hazelmobile.filetransfer.app.EditableListAdapter;
+import com.hazelmobile.filetransfer.app.EditableListFragment;
 import com.hazelmobile.filetransfer.ui.adapter.TransferAssigneeListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 

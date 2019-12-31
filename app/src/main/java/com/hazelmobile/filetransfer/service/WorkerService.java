@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Service;
-import com.hazelmobile.filetransfer.pictures.AppUtils;
+import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.util.DynamicNotification;
 import com.hazelmobile.filetransfer.util.InterruptAwareJob;
 import com.hazelmobile.filetransfer.util.NotificationUtils;

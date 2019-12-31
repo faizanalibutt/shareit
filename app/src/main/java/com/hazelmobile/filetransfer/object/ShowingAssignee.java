@@ -1,7 +1,5 @@
 package com.hazelmobile.filetransfer.object;
 
-import com.hazelmobile.filetransfer.pictures.Editable;
-
 import java.util.Locale;
 
 public class ShowingAssignee extends TransferGroup.Assignee implements Editable {

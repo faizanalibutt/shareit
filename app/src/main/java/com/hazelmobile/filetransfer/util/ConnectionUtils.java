@@ -20,7 +20,7 @@ import androidx.annotation.WorkerThread;
 import androidx.core.content.ContextCompat;
 
 import com.genonbeta.android.framework.util.Interrupter;
-import com.hazelmobile.filetransfer.files.AppConfig;
+import com.hazelmobile.filetransfer.config.AppConfig;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 

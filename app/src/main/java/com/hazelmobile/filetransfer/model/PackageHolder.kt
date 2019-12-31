@@ -1,12 +1,10 @@
 package com.hazelmobile.filetransfer.model
 
 import android.content.pm.ApplicationInfo
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import com.genonbeta.android.framework.util.FileUtils
-import com.hazelmobile.filetransfer.pictures.Shareable
+import com.hazelmobile.filetransfer.`object`.Shareable
 import java.io.File
-import java.lang.reflect.Executable
 
 /***
  * @param friendlyName give app name

@@ -11,9 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.pictures.EditableListAdapter;
-import com.hazelmobile.filetransfer.pictures.EditableListFragment;
-import com.hazelmobile.filetransfer.pictures.Shareable;
+import com.hazelmobile.filetransfer.app.EditableListAdapter;
+import com.hazelmobile.filetransfer.app.EditableListFragment;
+import com.hazelmobile.filetransfer.object.Shareable;
 
 import java.io.File;
 import java.util.ArrayList;

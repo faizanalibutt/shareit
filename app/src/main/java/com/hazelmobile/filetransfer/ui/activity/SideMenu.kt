@@ -10,7 +10,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.`object`.NetworkDevice
 import com.hazelmobile.filetransfer.app.Activity
-import com.hazelmobile.filetransfer.pictures.AppUtils
+import com.hazelmobile.filetransfer.util.AppUtils
 import com.hazelmobile.filetransfer.ui.callback.SnackbarSupport
 import kotlinx.android.synthetic.main.activity_side_menu.*
 
