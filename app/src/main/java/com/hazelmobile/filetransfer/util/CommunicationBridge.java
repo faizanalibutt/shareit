@@ -79,7 +79,7 @@ abstract public class CommunicationBridge implements CoolSocket.Client.Connectio
         public CoolSocket.ActiveConnection connect(String ipAddress) throws IOException {
             InetAddress inetAddress = InetAddress.getByName(ipAddress);
 
-            if (!inetAddress.isReachable(1000))
+            if (!inetAddress.isReachable(2000))
                 throw new IOException("Ping test before connection to the address has failed");
 
             return connect(new InetSocketAddress(ipAddress, AppConfig.SERVER_PORT_COMMUNICATION), AppConfig.DEFAULT_SOCKET_TIMEOUT);

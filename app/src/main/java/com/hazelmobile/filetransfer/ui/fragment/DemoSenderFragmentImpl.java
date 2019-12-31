@@ -489,12 +489,33 @@ public class DemoSenderFragmentImpl
                             connectToHotspot(((ScanResult) object));
                         else if (object instanceof Bluetooth)
                         {
-                            if (bluetoothAdapter != null)
-                            {
+                            if (bluetoothAdapter != null) {
                                 if (bluetoothAdapter.isDiscovering())
                                     bluetoothAdapter.cancelDiscovery();
                                 mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
                                 bluetoothDiscoveryStatus(false);
+
+                                try {
+                                    Set<BluetoothDevice> bluetoothDeviceList = bluetoothAdapter.getBondedDevices();
+                                    if (bluetoothDeviceList.size() > 0) {
+                                        for (BluetoothDevice bluetoothDevice : bluetoothDeviceList) {
+                                            try {
+                                                if (bluetoothDevice.getAddress().equalsIgnoreCase(((Bluetooth) object).getDevice().getAddress())) {
+                                                    BluetoothDevice bondedDevice = bluetoothAdapter.getRemoteDevice(bluetoothDevice.getAddress());
+                                                    clientClass = new ClientClass(bondedDevice);
+                                                    clientClass.start();
+                                                    isConnected = true;
+                                                    return;
+                                                }
+                                            } catch (Exception e) {
+                                                showMessage("ClientClass(): Reconnect has been failed." + e.getMessage());
+                                            }
+                                        }
+                                    }
+                                } catch (Exception exp) {
+                                    ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(), " " + exp.getMessage());
+                                }
+
                                 clientClass = new ClientClass(((Bluetooth) object).getDevice());
                                 clientClass.start();
                                 isConnected = true;
@@ -603,7 +624,7 @@ public class DemoSenderFragmentImpl
             if (connectionUtils.getBluetoothAdapter().isDiscovering())
                 connectionUtils.getBluetoothAdapter().cancelDiscovery();
 
-            Set<BluetoothDevice> bluetoothDeviceList = connectionUtils.getBluetoothAdapter().getBondedDevices();
+            /*Set<BluetoothDevice> bluetoothDeviceList = connectionUtils.getBluetoothAdapter().getBondedDevices();
             if (bluetoothDeviceList.size() > 0) {
                 for (BluetoothDevice bluetoothDevice : bluetoothDeviceList) {
                     try {
@@ -616,7 +637,7 @@ public class DemoSenderFragmentImpl
                         showMessage("SendReceive: Removing has been failed." + e.getMessage());
                     }
                 }
-            }
+            }*/
 
             standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
