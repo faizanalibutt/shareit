@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -46,17 +45,17 @@ import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.ResultPoint;
-import com.hazelmobile.filetransfer.BluetoothConnectorUtils;
-import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
+import com.hazelmobile.filetransfer.bluetooth.ClientClass;
+import com.hazelmobile.filetransfer.bluetooth.SendReceive;
+import com.hazelmobile.filetransfer.callback.Callback;
+import com.hazelmobile.filetransfer.config.Keyword;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.dialog.SenderWaitingDialog;
 import com.hazelmobile.filetransfer.library.RippleBackground;
 import com.hazelmobile.filetransfer.model.Bluetooth;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
-import com.hazelmobile.filetransfer.util.AppUtils;
-import com.hazelmobile.filetransfer.config.Keyword;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
@@ -65,6 +64,7 @@ import com.hazelmobile.filetransfer.ui.adapter.SenderListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.IconSupport;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
+import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.ListUtils;
 import com.hazelmobile.filetransfer.util.LogUtils;
@@ -78,8 +78,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +144,6 @@ public class SenderFragmentImpl
     private boolean isConnected = false;
 
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -209,7 +206,8 @@ public class SenderFragmentImpl
                 float h = bottomSheet.getHeight();
                 float off = h * slideOffset;
                 int finalVal = (int) (off * 0.85F);
-                setMargins(pulse, 0, 0, 0, finalVal + pxToDp(standardBottomSheetBehavior.getPeekHeight() + btm_margin));
+                AppUtils.setMargins(pulse, 0, 0, 0,
+                        finalVal + pxToDp(standardBottomSheetBehavior.getPeekHeight() + btm_margin));
             }
         };
 
@@ -654,14 +652,6 @@ public class SenderFragmentImpl
         mConductContainer.setVisibility(showing ? View.VISIBLE : View.GONE);
     }
 
-    public static void setMargins(View view, int left, int top, int right, int bottom) {
-        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-            p.setMargins(left, top, right, bottom);
-            view.requestLayout();
-        }
-    }
-
     public void setDeviceSelectedListener(NetworkDeviceSelectedListener listener) {
         mDeviceSelectedListener = listener;
     }
@@ -903,20 +893,6 @@ public class SenderFragmentImpl
                         getWifiScanResults(wifiManager);
                     break;
 
-                /*case WifiManager.NETWORK_STATE_CHANGED_ACTION:
-                    ExtensionsUtils.getLog_W(ExtensionsUtils.getTHREAD_TAG(), String.format("", ));
-                    break;
-
-                case WifiManager.NETWORK_STATE_CHANGED_ACTION:
-                    NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-                    boolean connected = info.isConnected();
-                    ExtensionsUtils.getLog_W(ExtensionsUtils.getTHREAD_TAG(), String.format("NetworkInfo is: %s", info));
-                    break;
-
-                case WifiManager.NETWORK_STATE_CHANGED_ACTION:
-                    ExtensionsUtils.getLog_W(ExtensionsUtils.getTHREAD_TAG(), String.format("", ));
-                    break;*/
-
                 default:
                     break;
             }
@@ -970,173 +946,5 @@ public class SenderFragmentImpl
             }
         }
     };
-
-    public class ClientClass extends Thread {
-
-        private BluetoothConnectorUtils.BluetoothSocketWrapper socket;
-        private BluetoothConnectorUtils bluetoothConnectorUtils;
-
-        ClientClass(BluetoothDevice device1) {
-            bluetoothConnectorUtils = new BluetoothConnectorUtils(device1, false,
-                    bluetoothAdapter, null);
-        }
-
-        public void run() {
-
-            try {
-
-                socket = bluetoothConnectorUtils.connect();
-
-                ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ClientSocket: socket coming from Bluetooth_Connector" + "\n");
-
-                Message message = Message.obtain();
-                message.what = STATE_CONNECTED;
-                if (mHandler != null) {
-                    mHandler.sendMessage(message);
-                }
-
-            } catch (IOException e) {
-
-                try {
-                    if (socket != null) socket.close();
-                } catch (IOException ex) {
-                    ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                            "Could not close the client socket \n" + ex.getMessage());
-                }
-
-                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ClientSocket: client fed up with exception " + e.getMessage() + "\n");
-
-                Message message = Message.obtain();
-                message.what = STATE_CONNECTION_FAILED;
-                if (mHandler != null) {
-                    mHandler.sendMessage(message);
-                }
-
-                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ClientSocket: client sending message connection failed \n " + e.getMessage() + "\n");
-
-            }
-
-            if (socket != null)
-                manageMyConnectedSocket(socket);
-
-            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                    "ClientSocket: I'm still on...send has been called " + "\n");
-
-        }
-
-        private void manageMyConnectedSocket(BluetoothConnectorUtils.BluetoothSocketWrapper socket) {
-
-            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                    "ClientSocket: client connected and sent message " + "\n");
-            if (sendReceive == null) {
-                sendReceive = new SendReceive(socket.getUnderlyingSocket());
-                sendReceive.start();
-            }
-
-        }
-
-        // Closes the connect socket and causes the thread to finish.
-        public void cancel() {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        String.format("Could not close the connect socket %s", e.getMessage()));
-            }
-        }
-
-    }
-
-    private class SendReceive extends Thread {
-
-        private BluetoothSocket bluetoothSocket = null;
-        private final InputStream inputStream;
-
-        SendReceive(BluetoothSocket socket) {
-
-            InputStream tempIn = null;
-
-            try {
-                bluetoothSocket = socket;
-                tempIn = bluetoothSocket.getInputStream();
-            } catch (IOException e) {
-                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ClientSocket: SendReceive: constructor fed up " + e.getMessage() + "\n");
-                //e.printStackTrace();
-            }
-
-            inputStream = tempIn;
-            // here i will test if issue comes in one device repeatedly...till then continue...
-        }
-
-        public void run() {
-            byte[] buffer = new byte[1024];
-            int bytes;
-
-            boolean success = false;
-
-            while (true) {
-                try {
-                    bytes = inputStream.read(buffer);
-                    mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
-                    ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(),
-                            "ClientSocket: SendReceive: RECEIVING BYTES FROM SERVER" + "\n");
-                    success = true;
-                } catch (IOException e) {
-
-                    ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                            "ClientSocket: SendReceive: bytes receiving and error occurs " + e.getMessage() + "\n");
-
-                    try {
-                        if (!success) {
-                            bytes = inputStream.read(buffer);
-                            mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
-                            ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(),
-                                    "ClientSocket: SendReceive: RECEIVING BYTES FROM SERVER" + "\n");
-                            success = true;
-                        }
-                    } catch (IOException e1) {
-                        ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                                "ClientSocket: SendReceive: bytes receiving and error occurs " + e.getMessage() + "\n");
-                    }
-
-
-                    // enable camera here
-                    if (!success) {
-                        closeDialog();
-                        createSnackbar(R.string.text_qrPromptRequired).show();
-                    }
-
-                    break;
-                } finally {
-                    try {
-                        inputStream.close();
-                        bluetoothSocket.close();
-                        // enable camera here.
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                                "ClientSocket: SendReceive: Could not close the connect socket " + ex.getMessage() + "\n");
-                    }
-                }
-            }
-            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                    "ClientSocket: SendReceive: I'm still on. Loop has been broken " + "\n");
-        }
-
-        // Closes the connect socket and causes the thread to finish.
-        public void cancel() {
-            try {
-                bluetoothSocket.close();
-            } catch (IOException e) {
-                ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        String.format("Could not close the connect socket %s", e));
-            }
-        }
-
-    }
 
 }

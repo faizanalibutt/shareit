@@ -18,6 +18,8 @@ import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.AnyRes;
 import androidx.annotation.AttrRes;
@@ -32,13 +34,13 @@ import com.genonbeta.android.framework.preference.SuperPreferences;
 import com.genonbeta.android.framework.util.PreferenceUtils;
 import com.hazelmobile.filetransfer.BuildConfig;
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.dialog.RationalePermissionRequest;
 import com.hazelmobile.filetransfer.app.App;
 import com.hazelmobile.filetransfer.config.AppConfig;
+import com.hazelmobile.filetransfer.config.Keyword;
+import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.dialog.RationalePermissionRequest;
 import com.hazelmobile.filetransfer.graphics.drawable.TextDrawable;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
-import com.hazelmobile.filetransfer.config.Keyword;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -399,6 +401,14 @@ public class AppUtils {
 
         context.startActivity(startIntent);
     }*/
+
+    public static void setMargins(View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
+    }
 
     public static void startForegroundService(Context context, Intent intent) {
         if (Build.VERSION.SDK_INT >= 26)
