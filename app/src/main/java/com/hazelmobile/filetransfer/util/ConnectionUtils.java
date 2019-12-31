@@ -2,6 +2,7 @@ package com.hazelmobile.filetransfer.util;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -44,7 +45,9 @@ public class ConnectionUtils {
 
         if (mContext != null) {
             mWifiManager = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            //bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            BluetoothManager bluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
+            bluetoothAdapter = bluetoothManager.getAdapter();
             mLocationManager = (LocationManager) mContext.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
             mHotspotUtils = HotspotUtils.getInstance(mContext);
             mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -60,6 +63,10 @@ public class ConnectionUtils {
             return "";
 
         return networkName.replace("\"", "");
+    }
+
+    public boolean isBleAvailable() {
+        return getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
     }
 
     public boolean canAccessLocation() {

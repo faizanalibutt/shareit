@@ -103,17 +103,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.SenderActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-        <activity
             android:name=".ui.activity.ShareActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-        <activity
-            android:name=".ui.activity.AddDevicesToTransferActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" /> <!-- @string/text_transactionViewer -->
         <activity
             android:name=".ui.activity.ViewTransferActivity"
             android:label="File Transfer"
@@ -140,7 +132,7 @@
             android:label="@string/text_fileExplorer"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.DemoSenderActivity"
+            android:name=".ui.activity.SenderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
         <activity

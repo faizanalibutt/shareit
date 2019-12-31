@@ -408,9 +408,9 @@ public class ViewTransferActivity
             createSnackbar(R.string.mesg_retryReceivingNotice)
                     .show();
         } else if (id == R.id.actions_transfer_receiver_show_files) {
-            *//*startActivity(new Intent(this, FileExplorerActivity.class)
+            startActivity(new Intent(this, FileExplorerActivity.class)
                     .putExtra(FileExplorerActivity.EXTRA_FILE_PATH,
-                            FileUtils.getSavePath(this, mGroup).getUri()));*//*
+                            FileUtils.getSavePath(this, mGroup).getUri()));
         } else if (id == R.id.actions_transfer_sender_add_device) {
             startDeviceAddingActivity();
         } else if (id == R.id.actions_transfer_test_connection) {
@@ -454,12 +454,12 @@ public class ViewTransferActivity
             return super.onOptionsItemSelected(item);
 
         return true;
-    }*/
+    }
 
     public void startDeviceAddingActivity() {
         startActivityForResult(new Intent(this, AddDevicesToTransferActivity.class)
                 .putExtra(AddDevicesToTransferActivity.EXTRA_GROUP_ID, mGroup.groupId), REQUEST_ADD_DEVICES);
-    }
+    }*/
 
     @Override
     public void onBackPressed() {

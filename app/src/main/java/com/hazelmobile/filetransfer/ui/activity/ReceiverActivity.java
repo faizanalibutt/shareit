@@ -34,7 +34,7 @@ import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
 import com.hazelmobile.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.hazelmobile.filetransfer.ui.fragment.DemoSenderFragmentImpl;
+import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 import com.hazelmobile.filetransfer.ui.fragment.HotspotManagerFragment;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
@@ -282,7 +282,7 @@ public class ReceiverActivity extends Activity
                     mHotspotClosed = true;
                     ViewTransferActivity.startInstance(ReceiverActivity.this,
                             intent.getLongExtra(CommunicationService.EXTRA_GROUP_ID, -1));
-                    DemoSenderFragmentImpl.showMessage("EstablishConnection(): Going to Transfer Activity Finally");
+                    SenderFragmentImpl.showMessage("EstablishConnection(): Going to Transfer Activity Finally");
                     finish();
                 }
             } else if (LocationManager.PROVIDERS_CHANGED_ACTION.equals(intent.getAction())) {
@@ -311,12 +311,12 @@ public class ReceiverActivity extends Activity
                 UITask uiTask = new UITask() {
                     @Override
                     public void updateTaskStarted(Interrupter interrupter) {
-                        Log.d(DemoSenderFragmentImpl.TAG, "sending file started");
+                        Log.d(SenderFragmentImpl.TAG, "sending file started");
                     }
 
                     @Override
                     public void updateTaskStopped() {
-                        Log.d(DemoSenderFragmentImpl.TAG, "sending file stopped due to some reason");
+                        Log.d(SenderFragmentImpl.TAG, "sending file stopped due to some reason");
                     }
                 };
 

@@ -68,9 +68,9 @@ import static com.hazelmobile.filetransfer.pictures.Keyword.NETWORK_PIN;
 import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_HOTSPOT_STATUS;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_DISABLING;
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_ENABLED;
-import static com.hazelmobile.filetransfer.ui.fragment.DemoSenderFragmentImpl.APP_NAME;
-import static com.hazelmobile.filetransfer.ui.fragment.DemoSenderFragmentImpl.MY_UUID;
-import static com.hazelmobile.filetransfer.ui.fragment.DemoSenderFragmentImpl.STATE_MESSAGE_RECEIVED;
+import static com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl.APP_NAME;
+import static com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl.MY_UUID;
+import static com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl.STATE_MESSAGE_RECEIVED;
 
 /**
  * created by: veli
@@ -708,7 +708,7 @@ public class HotspotManagerFragment
             while (true) {
                 try {
                     bytes = inputStream.read(buffer);
-                    new DemoSenderFragmentImpl().mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
+                    new SenderFragmentImpl().mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
                     ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                             "ServerSocket: SendReceive: HOTSPOT BYTES TO SENDER ");
                 } catch (IOException e) {

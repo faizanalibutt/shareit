@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.model.Bluetooth;
-import com.hazelmobile.filetransfer.ui.activity.DemoSenderActivity;
+import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 
 import java.util.List;
 import java.util.Random;
@@ -60,7 +60,7 @@ public class SenderListAdapter extends CommonAdapter<Object> {
             viewHolder.tv_mac.setText(((Bluetooth) object).getDevice().getAddress());
         }
 
-        ((DemoSenderActivity) mActivity).loadProfilePictureInto(viewHolder.tv_name.getText().toString(), viewHolder.iv_device);
+        ((SenderActivity) mActivity).loadProfilePictureInto(viewHolder.tv_name.getText().toString(), viewHolder.iv_device);
 
         if (viewHolder.iv_device.getDrawable() instanceof ShapeDrawable) {
             ShapeDrawable shapeDrawable = (ShapeDrawable) viewHolder.iv_device.getDrawable();

@@ -5,7 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
-import com.hazelmobile.filetransfer.ui.fragment.DemoSenderFragmentImpl;
+import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class BluetoothConnector {
 
         if (this.uuidCandidates == null || this.uuidCandidates.isEmpty()) {
             this.uuidCandidates = new ArrayList<>();
-            this.uuidCandidates.add(DemoSenderFragmentImpl.MY_UUID);
+            this.uuidCandidates.add(SenderFragmentImpl.MY_UUID);
         }
     }
 

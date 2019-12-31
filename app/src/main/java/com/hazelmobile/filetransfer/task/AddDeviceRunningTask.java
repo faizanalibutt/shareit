@@ -2,6 +2,7 @@ package com.hazelmobile.filetransfer.task;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
@@ -19,10 +20,10 @@ import com.hazelmobile.filetransfer.pictures.AppUtils;
 import com.hazelmobile.filetransfer.pictures.Keyword;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
-import com.hazelmobile.filetransfer.ui.activity.AddDevicesToTransferActivity;
 import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
+import com.hazelmobile.filetransfer.util.LogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,6 +31,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivity> {
     private TransferGroup mGroup;
@@ -59,7 +62,10 @@ public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivi
                 new CommunicationBridge.Client.ConnectionHandler() {
                     @Override
                     public void onConnect(CommunicationBridge.Client client) {
+
                         client.setDevice(mDevice);
+                        LogUtils.getLogInformation("Client", String.format("onRun():" +
+                                " CommunicationBridge.connect() -> mDevice is %s", mDevice));
 
                         try {
                             boolean doPublish = false;
@@ -135,7 +141,7 @@ public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivi
                                     filesArray.put(thisJson);
                                     pendingRegistry.add(copyObject);
                                 } catch (Exception e) {
-                                    Log.e(AddDevicesToTransferActivity.TAG, "Sender error on fileUri: " + e.getClass().getName() + " : " + copyObject.friendlyName);
+                                    Log.e(SenderActivity.TAG, "Sender error on fileUri: " + e.getClass().getName() + " : " + copyObject.friendlyName);
                                 }
                             }
 
@@ -163,11 +169,15 @@ public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivi
                             });
 
                             activeConnection.reply(jsonRequest.toString());
+                            LogUtils.getLogInformation("Client",
+                                    String.format("onRun(): CommunicationBridge.connect() -> jsonRequest: %s", jsonRequest));
 
                             CoolSocket.ActiveConnection.Response response = activeConnection.receive();
                             activeConnection.getSocket().close();
 
                             JSONObject clientResponse = new JSONObject(response.response);
+                            LogUtils.getLogInformation("Client",
+                                    String.format("onRun(): CommunicationBridge.connect() -> clientResponse: %s", clientResponse));
 
                             if (clientResponse.has(Keyword.RESULT) && clientResponse.getBoolean(Keyword.RESULT)) {
                                 publishStatusText(context.getString(R.string.mesg_organizingFiles));
@@ -183,9 +193,12 @@ public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivi
                                     AppUtils.getDatabase(context).insert(pendingRegistry, progressUpdater);
 
                                 if (getAnchorListener() != null) {
-                                    /*getAnchorListener().setResult(RESULT_OK, new Intent()
+                                    getAnchorListener().setResult(RESULT_OK, new Intent()
                                             .putExtra(SenderActivity.EXTRA_DEVICE_ID, assignee.deviceId)
-                                            .putExtra(SenderActivity.EXTRA_GROUP_ID, assignee.groupId));*/
+                                            .putExtra(SenderActivity.EXTRA_GROUP_ID, assignee.groupId));
+                                    /*if (AppUtils.getDefaultPreferences(getAnchorListener()).getLong("add_devices_to_transfer", -1) != -1)
+                                        ViewTransferActivity.startInstance(getAnchorListener(),
+                                                AppUtils.getDefaultPreferences(getAnchorListener()).getLong("add_devices_to_transfer", -1));*/
                                     getAnchorListener().finish();
                                 }
                             } else if (getAnchorListener() != null) {
