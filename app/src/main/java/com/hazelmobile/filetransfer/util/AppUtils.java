@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -374,6 +375,9 @@ public class AppUtils {
                 .apply();
     }
 
+    public static int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
 
     public static <T> T quickAction(T clazz, QuickActions<T> quickActions) {
         quickActions.onQuickActions(clazz);

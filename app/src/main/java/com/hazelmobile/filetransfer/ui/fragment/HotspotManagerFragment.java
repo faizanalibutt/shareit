@@ -38,16 +38,16 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
-import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.GlideApp;
 import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.util.AppUtils;
+import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.config.Keyword;
 import com.hazelmobile.filetransfer.receiver.NetworkStatusReceiver;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.callback.IconSupport;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
+import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
 import com.hazelmobile.filetransfer.util.HotspotUtils;
 import com.hazelmobile.filetransfer.util.LogUtils;
@@ -70,7 +70,6 @@ import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HO
 import static com.hazelmobile.filetransfer.service.CommunicationService.EXTRA_HOTSPOT_ENABLED;
 import static com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl.APP_NAME;
 import static com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl.MY_UUID;
-import static com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl.STATE_MESSAGE_RECEIVED;
 
 /**
  * created by: veli
@@ -237,13 +236,13 @@ public class HotspotManagerFragment
                         /*if (bluetoothDevice.getName().contains("TS") || bluetoothDevice.getName().contains("AndroidShare")) {
                             Method m = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
                             m.invoke(bluetoothDevice, (Object[]) null);
-                            showMessage("SendReceive: Removed Device Name is: " + bluetoothDevice);
+                            showMessage("BluetoothDataTransferThread: Removed Device Name is: " + bluetoothDevice);
                         }*/
                             Method m = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
                             m.invoke(bluetoothDevice, (Object[]) null);
-                            showMessage("SendReceive: Removed Device Name is: " + bluetoothDevice);
+                            showMessage("BluetoothDataTransferThread: Removed Device Name is: " + bluetoothDevice);
                         } catch (Exception e) {
-                            showMessage("SendReceive: Removing has been failed." + e.getMessage());
+                            showMessage("BluetoothDataTransferThread: Removing has been failed." + e.getMessage());
                         }
                     }
                 }
@@ -557,7 +556,7 @@ public class HotspotManagerFragment
 
             if (msg.what == STATE_BLUETOOTH_DISCOVERABLE_REQUESTING) {
                 getorUpdateBluetoothDiscoverable();
-                this.sendMessageDelayed(this.obtainMessage(STATE_BLUETOOTH_DISCOVERABLE_REQUESTING), 60000);
+                sendMessageDelayed(obtainMessage(STATE_BLUETOOTH_DISCOVERABLE_REQUESTING), 60000);
             }
 
             /*else if (msg.what == STATE_PROGRESS) {
@@ -694,7 +693,7 @@ public class HotspotManagerFragment
                 tempOut = bluetoothSocket.getOutputStream();
             } catch (IOException e) {
                 ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ServerSocket: SendReceive: this constructor fed up \n" + e.getMessage());
+                        "ServerSocket: BluetoothDataTransferThread: this constructor fed up \n" + e.getMessage());
             }
 
             inputStream = tempIn;
@@ -708,17 +707,17 @@ public class HotspotManagerFragment
             while (true) {
                 try {
                     bytes = inputStream.read(buffer);
-                    new SenderFragmentImpl().mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
+                    //new SenderFragmentImpl().mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
                     ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                            "ServerSocket: SendReceive: HOTSPOT BYTES TO SENDER ");
+                            "ServerSocket: BluetoothDataTransferThread: HOTSPOT BYTES TO SENDER ");
                 } catch (IOException e) {
                     ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                            "ServerSocket: SendReceive: Sending bytes to client got error \n" + e.getMessage());
+                            "ServerSocket: BluetoothDataTransferThread: Sending bytes to client got error \n" + e.getMessage());
                     break;
                 }
             }
             ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                    "ServerSocket: SendReceive: I'm still On...loop has been broken \n");
+                    "ServerSocket: BluetoothDataTransferThread: I'm still On...loop has been broken \n");
         }
 
         void write(byte[] bytes) {

@@ -431,7 +431,7 @@ public class TransferListFragment
             public void onClick(View v) {
                 /*Interrupter interrupter = new Interrupter();
                 interrupter.interrupt(true);*/
-                Callback.cancelTransfer(true);
+                Callback.setTransferProgress(true);
             }
         });
 

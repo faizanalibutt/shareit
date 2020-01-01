@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
-import com.hazelmobile.filetransfer.callback.Callback
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
+import com.hazelmobile.filetransfer.callback.Callback
 import com.hazelmobile.filetransfer.model.Bluetooth
 import kotlinx.android.synthetic.main.layout_dialog_connection_info.view.*
 
@@ -43,7 +43,7 @@ class SenderWaitingDialog(val activity: Activity, var anyObject: Any) :
             is String -> dialogSenderTitle.text = dialogInfo
             is Boolean -> if (!activity.isFinishing)
             {
-                this.dismiss()
+                dismiss()
             }
             else -> {}
         }

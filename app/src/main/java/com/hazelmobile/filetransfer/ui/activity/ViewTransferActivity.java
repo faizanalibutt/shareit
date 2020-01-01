@@ -274,7 +274,7 @@ public class ViewTransferActivity
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         toggleTask();
-                                        Callback.cancelTransfer(false);
+                                        Callback.setTransferProgress(false);
                                         finish();
                                     }
                                 })
@@ -326,7 +326,7 @@ public class ViewTransferActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Callback.cancelTransfer(false);
+        Callback.setTransferProgress(false);
         unregisterReceiver(mMessageReceiver);
     }
 
@@ -336,7 +336,7 @@ public class ViewTransferActivity
 
         if (id == android.R.id.home) {
             toggleTask();
-            Callback.cancelTransfer(false);
+            Callback.setTransferProgress(false);
             finish();
         } else
             return super.onOptionsItemSelected(item);
@@ -472,16 +472,16 @@ public class ViewTransferActivity
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             toggleTask();
-                            Callback.cancelTransfer(false);
+                            Callback.setTransferProgress(false);
                             finish();
                         }
                     })
                     .show();
         else if (mBackPressedListener == null || !mBackPressedListener.onBackPressed()) {
-            Callback.cancelTransfer(false);
+            Callback.setTransferProgress(false);
             super.onBackPressed();
         } else {
-            Callback.cancelTransfer(false);
+            Callback.setTransferProgress(false);
             super.onBackPressed();
         }
 

@@ -17,7 +17,9 @@ object Callback {
     @JvmField
     val showQr = MutableLiveData<Boolean>()
     @JvmField
-    val cancelTransferProgress = MutableLiveData<Boolean>()
+    val transferProgress = MutableLiveData<Boolean>()
+    @JvmField
+    val onSenderActionNeed = MutableLiveData<Any>()
 
 
     @JvmStatic
@@ -71,13 +73,23 @@ object Callback {
     }
 
     @JvmStatic
-    fun cancelTransfer(showing: Boolean) {
-        cancelTransferProgress.postValue(showing)
+    fun setTransferProgress(showing: Boolean) {
+        transferProgress.postValue(showing)
     }
 
     @JvmStatic
     fun getTransferProgress(): LiveData<Boolean> {
-        return cancelTransferProgress
+        return transferProgress
+    }
+
+    @JvmStatic
+    fun setSenderAction(action: Any) {
+        onSenderActionNeed.postValue(action)
+    }
+
+    @JvmStatic
+    fun getSenderAction(): LiveData<Any> {
+        return onSenderActionNeed
     }
 
 }

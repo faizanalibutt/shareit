@@ -2,24 +2,30 @@ package com.hazelmobile.filetransfer.bluetooth;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.os.Message;
+import android.view.View;
 
 import com.hazelmobile.filetransfer.BluetoothConnectorUtils;
-import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-public class ClientClass extends Thread {
+import static com.hazelmobile.filetransfer.bluetooth.MyHandler.STATE_CONNECTED;
+import static com.hazelmobile.filetransfer.bluetooth.MyHandler.STATE_CONNECTION_FAILED;
+
+public class ClientThread extends Thread {
 
         private BluetoothConnectorUtils.BluetoothSocketWrapper socket;
         private BluetoothConnectorUtils bluetoothConnectorUtils;
+        private MyHandler mHandler;
+        private View mView;
+        private BluetoothDataTransferThread bluetoothTransferThread;
 
-        ClientClass(BluetoothDevice device1, BluetoothAdapter bluetoothAdapter) {
+        public ClientThread(BluetoothDevice device1, BluetoothAdapter bluetoothAdapter, View rootView, MyHandler handler) {
             bluetoothConnectorUtils = new BluetoothConnectorUtils(device1, false,
                     bluetoothAdapter, null);
+            mView = rootView;
+            mHandler = handler;
         }
 
         public void run() {
@@ -72,9 +78,9 @@ public class ClientClass extends Thread {
 
             ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: client connected and sent message " + "\n");
-            if (sendReceive == null) {
-                sendReceive = new SendReceive(socket.getUnderlyingSocket());
-                sendReceive.start();
+            if (bluetoothTransferThread == null) {
+                bluetoothTransferThread = new BluetoothDataTransferThread(socket.getUnderlyingSocket(), mView, mHandler);
+                bluetoothTransferThread.start();
             }
 
         }
