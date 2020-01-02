@@ -76,7 +76,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -202,17 +201,24 @@ public class SenderFragmentImpl
         final Observer<Object> senderAction = new Observer<Object>() {
             @Override
             public void onChanged(Object action) {
-                if (action instanceof JSONObject) {
-                    connectToHotspot((JSONObject) action);
-                } else if (action instanceof SenderType) {
-                    if (SenderType.DISCOVERY.equals(action)) {
+
+                if (action instanceof JSONObject)
+                    connectToHotspot(((JSONObject) action));
+                else if (action instanceof ScanResult)
+                    connectToHotspot(((ScanResult) action));
+                else if (action instanceof SenderType) {
+                    if (SenderType.DISCOVERY.equals(action))
                         retryDiscovery();
-                    } else if (SenderType.CLOSE_DIALOG.equals(action)) {
+                    else if (SenderType.CLOSE_DIALOG.equals(action))
                         closeDialog();
-                    }
+                    else if (SenderType.UNKNOWN.equals(action))
+                        LogUtils.getWTF(SenderFragmentImpl.class.getSimpleName(),
+                                "That's the worst thing a LiveData have...Fuck Developer");
                 }
+
             }
         };
+
         Callback.getSenderAction().observe(this, senderAction);
 
     }
@@ -222,7 +228,7 @@ public class SenderFragmentImpl
         super.onResume();
         if (getContext() != null && !isConnected) {
             getContext().registerReceiver(mReceiver, mIntentFilter);
-            if (bluetoothAdapter!= null && !bluetoothAdapter.isDiscovering() && bluetoothAdapter.isEnabled())
+            if (bluetoothAdapter != null && !bluetoothAdapter.isDiscovering() && bluetoothAdapter.isEnabled())
                 bluetoothAdapter.startDiscovery();
         }
         // it goes behind the interface so don't need to call it every time.
@@ -241,7 +247,7 @@ public class SenderFragmentImpl
         } catch (Exception exp) {
             exp.printStackTrace();
         }
-        if (bluetoothAdapter!= null && bluetoothAdapter.isDiscovering())
+        if (bluetoothAdapter != null && bluetoothAdapter.isDiscovering())
             bluetoothAdapter.cancelDiscovery();
         mBarcodeView.pauseAndWait();
     }
@@ -252,30 +258,31 @@ public class SenderFragmentImpl
         try {
 
             closeDialog();
+            Callback.setSenderAction(SenderType.UNKNOWN);
+            Callback.getSenderAction().removeObservers(this);
             isThreadAlive = false;
             isSocketClosed = false;
             isConnected = false;
             mHandler.removeHanlderMessages();
 
-            if (bluetoothDataTransferThread != null)
-                bluetoothDataTransferThread.cancel();
             if (bluetoothDataTransferThread != null) {
-                bluetoothDataTransferThread.interrupt();
+                bluetoothDataTransferThread.cancel();
                 bluetoothDataTransferThread = null;
             }
-            if (clientThread != null) clientThread.cancel();
+
             if (clientThread != null) {
-                clientThread.interrupt();
+                clientThread.cancel();
                 clientThread = null;
             }
+
             if (mGenericList != null && mGenericList.size() > 0) {
                 mGenericList.clear();
             }
-            ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
-            if (connectionUtils.getBluetoothAdapter().isDiscovering())
-                connectionUtils.getBluetoothAdapter().cancelDiscovery();
 
-            Set<BluetoothDevice> bluetoothDeviceList = connectionUtils.getBluetoothAdapter().getBondedDevices();
+            if (bluetoothAdapter.isDiscovering())
+                bluetoothAdapter.cancelDiscovery();
+
+            /*Set<BluetoothDevice> bluetoothDeviceList = bluetoothAdapter.getBondedDevices();
             if (bluetoothDeviceList.size() > 0) {
                 for (BluetoothDevice bluetoothDevice : bluetoothDeviceList) {
                     try {
@@ -288,9 +295,9 @@ public class SenderFragmentImpl
                         showMessage("BluetoothDataTransferThread: Removing has been failed." + e.getMessage());
                     }
                 }
-            }
+            }*/
 
-            connectionUtils.getBluetoothAdapter().disable();
+            bluetoothAdapter.disable();
         } catch (Exception e) {
             ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: onDestroy(): " + e.getMessage());
@@ -393,6 +400,7 @@ public class SenderFragmentImpl
             showMessage("BluetoothDataTransferThread: Connecting to Open Network " + e.getMessage());
         }
     }
+
     private void connectToHotspot(final JSONObject hotspotInformation) {
 
         final DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener() {
@@ -484,8 +492,7 @@ public class SenderFragmentImpl
 
                         if (object instanceof ScanResult)
                             connectToHotspot(((ScanResult) object));
-                        else if (object instanceof Bluetooth)
-                        {
+                        else if (object instanceof Bluetooth) {
                             if (bluetoothAdapter != null) {
                                 if (bluetoothAdapter.isDiscovering())
                                     bluetoothAdapter.cancelDiscovery();
@@ -596,13 +603,11 @@ public class SenderFragmentImpl
 
             if (bluetoothDataTransferThread != null) {
                 bluetoothDataTransferThread.cancel();
-                bluetoothDataTransferThread.interrupt();
                 bluetoothDataTransferThread = null;
             }
 
             if (clientThread != null) {
                 clientThread.cancel();
-                clientThread.interrupt();
                 clientThread = null;
             }
 

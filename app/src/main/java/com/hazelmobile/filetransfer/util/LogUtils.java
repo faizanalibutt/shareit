@@ -18,4 +18,7 @@ public class LogUtils {
         Log.w(CommunicationService.TAG_TRANSFER, String.format("%s: %s ", type, message));
     }
 
+    public static void getWTF(String wtf, String TAG) {
+        Log.e(TAG, wtf);
+    }
 }

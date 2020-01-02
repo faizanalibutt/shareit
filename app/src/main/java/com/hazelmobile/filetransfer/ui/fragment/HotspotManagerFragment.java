@@ -2,7 +2,6 @@ package com.hazelmobile.filetransfer.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
@@ -58,11 +57,9 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Objects;
-import java.util.Set;
 
 import static com.hazelmobile.filetransfer.config.Keyword.NETWORK_PIN;
 import static com.hazelmobile.filetransfer.service.CommunicationService.ACTION_HOTSPOT_STATUS;
@@ -228,16 +225,16 @@ public class HotspotManagerFragment
                     serverClass = null;
                 }
 
-                Set<BluetoothDevice> bluetoothDeviceList = connectionUtils.getBluetoothAdapter().getBondedDevices();
+                /*Set<BluetoothDevice> bluetoothDeviceList = connectionUtils.getBluetoothAdapter().getBondedDevices();
                 if (bluetoothDeviceList.size() > 0) {
                     for (BluetoothDevice bluetoothDevice : bluetoothDeviceList) {
 
                         try {
-                        /*if (bluetoothDevice.getName().contains("TS") || bluetoothDevice.getName().contains("AndroidShare")) {
+                        *//*if (bluetoothDevice.getName().contains("TS") || bluetoothDevice.getName().contains("AndroidShare")) {
                             Method m = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
                             m.invoke(bluetoothDevice, (Object[]) null);
                             showMessage("BluetoothDataTransferThread: Removed Device Name is: " + bluetoothDevice);
-                        }*/
+                        }*//*
                             Method m = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);
                             m.invoke(bluetoothDevice, (Object[]) null);
                             showMessage("BluetoothDataTransferThread: Removed Device Name is: " + bluetoothDevice);
@@ -245,7 +242,8 @@ public class HotspotManagerFragment
                             showMessage("BluetoothDataTransferThread: Removing has been failed." + e.getMessage());
                         }
                     }
-                }
+                }*/
+
                 connectionUtils.getBluetoothAdapter().setName(AppUtils.getForceLocalDeviceName(getContext()));
                 ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: onDestroy(): " + connectionUtils.getBluetoothAdapter().getName());
@@ -574,7 +572,7 @@ public class HotspotManagerFragment
 
     private class ServerClass extends Thread {
 
-        private BluetoothServerSocket serverSocket;
+        private final BluetoothServerSocket serverSocket;
         private JSONObject hotspotInformation;
 
         JSONObject getHotspotInformation() {
@@ -586,25 +584,29 @@ public class HotspotManagerFragment
         }
 
         ServerClass(JSONObject hotspotInformations) {
+            BluetoothServerSocket tmp = null;
+
             try {
 
                 hotspotInformation = hotspotInformations;
 
-                serverSocket = ConnectionUtils.getInstance(getContext())
+                tmp = ConnectionUtils.getInstance(getContext())
                         .getBluetoothAdapter()
                         .listenUsingInsecureRfcommWithServiceRecord(APP_NAME, MY_UUID);
 
                 ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ServerSocket: its enabled " + serverSocket + "\n");
+                        "ServerSocket: its enabled " + tmp + "\n");
 
             } catch (IOException e) {
                 ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: Listener got interruption \n" + e.getMessage() + "\n");
             }
+
+            serverSocket = tmp;
         }
 
         public void run() {
-            BluetoothSocket socket = null;
+            BluetoothSocket socket;
 
             while (true) {
                 try {
@@ -640,21 +642,18 @@ public class HotspotManagerFragment
 
                 ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: When Server Thread Enabled AND HOTSPOT_INFORMATION is " + "\n" + getHotspotInformation());
-                if (socket != null && getHotspotInformation() != null) {
+                if (socket != null) {
                     manageServerSocket(socket);
                     break;
                 }
             }
-
-            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                    "ServerSocket: I'm still on...loop has been broken" + "\n");
         }
 
         private void manageServerSocket(BluetoothSocket socket) {
             if (sendReceive == null) {
                 sendReceive = new SendReceive(socket);
-                sendReceive.write(getHotspotInformation().toString().getBytes());
                 sendReceive.start();
+                sendReceive.write(getHotspotInformation().toString().getBytes());
 
                 ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: Received Request To Give HOTSPOT_INFORMATION" + "\n");
@@ -679,46 +678,22 @@ public class HotspotManagerFragment
     private class SendReceive extends Thread {
 
         private final BluetoothSocket bluetoothSocket;
-        private final InputStream inputStream;
-        private final OutputStream outputStream;
+        private OutputStream outputStream;
 
 
         SendReceive(BluetoothSocket socket) {
             bluetoothSocket = socket;
-            InputStream tempIn = null;
             OutputStream tempOut = null;
-
             try {
-                tempIn = bluetoothSocket.getInputStream();
                 tempOut = bluetoothSocket.getOutputStream();
             } catch (IOException e) {
                 ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: BluetoothDataTransferThread: this constructor fed up \n" + e.getMessage());
             }
-
-            inputStream = tempIn;
             outputStream = tempOut;
         }
 
-        public void run() {
-            byte[] buffer = new byte[1024];
-            int bytes;
-
-            while (true) {
-                try {
-                    bytes = inputStream.read(buffer);
-                    //new SenderFragmentImpl().mHandler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
-                    ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                            "ServerSocket: BluetoothDataTransferThread: HOTSPOT BYTES TO SENDER ");
-                } catch (IOException e) {
-                    ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
-                            "ServerSocket: BluetoothDataTransferThread: Sending bytes to client got error \n" + e.getMessage());
-                    break;
-                }
-            }
-            ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                    "ServerSocket: BluetoothDataTransferThread: I'm still On...loop has been broken \n");
-        }
+        public void run() {}
 
         void write(byte[] bytes) {
             try {

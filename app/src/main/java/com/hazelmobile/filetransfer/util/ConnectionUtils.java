@@ -45,7 +45,6 @@ public class ConnectionUtils {
 
         if (mContext != null) {
             mWifiManager = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            //bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             BluetoothManager bluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
             bluetoothAdapter = bluetoothManager.getAdapter();
             mLocationManager = (LocationManager) mContext.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
