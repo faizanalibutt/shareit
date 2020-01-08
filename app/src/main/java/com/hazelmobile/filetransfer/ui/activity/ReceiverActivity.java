@@ -108,18 +108,6 @@ public class ReceiverActivity extends Activity
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (!mHotspotClosed)
-            if (UIConnectionUtils.isOreoAbove())
-                AppUtils.startForegroundService(this, new Intent(this, CommunicationService.class)
-                        .setAction(CommunicationService.ACTION_TOGGLE_HOTSPOT));
-            else
-                getUIConnectionUtils().getConnectionUtils().getHotspotUtils().disable();
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -129,12 +117,6 @@ public class ReceiverActivity extends Activity
             return super.onOptionsItemSelected(item);
 
         return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
-        super.onBackPressed();
     }
 
     @Override

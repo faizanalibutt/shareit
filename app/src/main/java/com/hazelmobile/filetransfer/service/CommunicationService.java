@@ -94,6 +94,7 @@ public class CommunicationService extends Service {
     public static final String ACTION_TOGGLE_SEAMLESS_MODE = "com.genonbeta.TrebleShot.transaction.action.TOGGLE_SEAMLESS_MODE";
     public static final String ACTION_REVOKE_ACCESS_PIN = "com.genonbeta.TrebleShot.transaction.action.REVOKE_ACCESS_PIN";
     public static final String ACTION_TOGGLE_HOTSPOT = "com.genonbeta.TrebleShot.transaction.action.TOGGLE_HOTSPOT";
+    public static final String ACTION_FORCEFULLY_TOGGLE_HOTSPOT = "com.genonbeta.TrebleShot.transaction.action.FORCE_HOTSPOT";
     public static final String ACTION_REQUEST_HOTSPOT_STATUS = "com.genonbeta.TrebleShot.transaction.action.REQUEST_HOTSPOT_STATUS";
     public static final String ACTION_HOTSPOT_STATUS = "com.genonbeta.TrebleShot.transaction.action.HOTSPOT_STATUS";
     public static final String ACTION_DEVICE_ACQUAINTANCE = "com.genonbeta.TrebleShot.transaction.action.DEVICE_ACQUAINTANCE";
@@ -367,6 +368,8 @@ public class CommunicationService extends Service {
             } else if (ACTION_TOGGLE_HOTSPOT.equals(intent.getAction())
                     && (Build.VERSION.SDK_INT < 23 || Settings.System.canWrite(this))) {
                 setupHotspot();
+            } else if (ACTION_FORCEFULLY_TOGGLE_HOTSPOT.equals(intent.getAction())) {
+                getHotspotUtils().disable();
             } else if (ACTION_REQUEST_HOTSPOT_STATUS.equals(intent.getAction())) {
                 sendHotspotStatus(getHotspotUtils().getConfiguration());
             } else if (ACTION_SERVICE_STATUS.equals(intent.getAction())

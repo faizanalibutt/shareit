@@ -6,16 +6,23 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Message;
 import android.view.View;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.callback.Callback;
+import com.hazelmobile.filetransfer.ui.callback.SnackbarSupport;
 import com.hazelmobile.filetransfer.ui.fragment.SenderFragmentImpl;
 import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
+import java.util.Objects;
 
 import static com.hazelmobile.filetransfer.bluetooth.MyHandler.STATE_CONNECTED;
 import static com.hazelmobile.filetransfer.bluetooth.MyHandler.STATE_CONNECTION_FAILED;
 
-public class ClientThread extends Thread {
+public class ClientThread extends Thread implements SnackbarSupport {
 
     private final BluetoothSocket mSocket;
     private MyHandler mHandler;
@@ -66,6 +73,9 @@ public class ClientThread extends Thread {
 
             ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: client sending message connection failed \n " + e.getMessage() + "\n");
+
+            Callback.setSenderAction(SenderType.CLOSE_DIALOG);
+            Objects.requireNonNull(createSnackbar(R.string.text_qrPromptRequired)).show();
             return;
         }
 
@@ -100,6 +110,12 @@ public class ClientThread extends Thread {
             ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                     String.format("Could not close the connect mSocket %s", e.getMessage()));
         }
+    }
+
+    @Override
+    public Snackbar createSnackbar(int resId, @NotNull Object... objects) {
+        return Snackbar.make(mView,
+                mView.getContext().getString(resId, objects), Snackbar.LENGTH_INDEFINITE);
     }
 
 }

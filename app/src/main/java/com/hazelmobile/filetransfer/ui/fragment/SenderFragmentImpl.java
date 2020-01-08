@@ -40,7 +40,7 @@ import androidx.lifecycle.Observer;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.zxing.ResultPoint;
+
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.bluetooth.BluetoothDataTransferThread;
@@ -68,6 +68,7 @@ import com.hazelmobile.filetransfer.util.ListUtils;
 import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
+import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
@@ -541,14 +542,13 @@ public class SenderFragmentImpl
 
         if (mGenericList.size() > 0) {
 
-            try {
-                for (Object object : mGenericList) {
-                    if (object instanceof ScanResult) {
+            for (Object object : mGenericList) {
+                try {
+                    if (object instanceof ScanResult)
                         mGenericList.remove(object);
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
         }
