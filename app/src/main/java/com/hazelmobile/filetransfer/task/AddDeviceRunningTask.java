@@ -7,21 +7,21 @@ import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.genonbeta.CoolSocket.CoolSocket;
+import com.genonbeta.android.coolsocket.CoolSocket;
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLiteDatabase;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.config.Keyword;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferObject;
-import com.hazelmobile.filetransfer.util.AppUtils;
-import com.hazelmobile.filetransfer.config.Keyword;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
+import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.util.CommunicationBridge;
 import com.hazelmobile.filetransfer.util.LogUtils;
 

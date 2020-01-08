@@ -62,7 +62,7 @@ dependencies {
     // genonbeta frameworks
     //implementation 'com.genonbeta.android:framework:1.0.2.8'
     implementation 'com.genonbeta.android:gdatabase:1.0.2.6.1'
-    implementation 'com.genonbeta.coolsocket:main:1.0.3.2'
+    //implementation 'com.genonbeta.com.genonbeta.android.coolsocket:main:1.0.3.2'
 
     // chrome custom tabs
     implementation 'com.android.support:customtabs:28.0.0'

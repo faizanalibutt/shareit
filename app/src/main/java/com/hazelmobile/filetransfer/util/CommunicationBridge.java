@@ -4,11 +4,11 @@ import android.content.Context;
 
 import androidx.annotation.Nullable;
 
-import com.genonbeta.CoolSocket.CoolSocket;
-import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.genonbeta.android.coolsocket.CoolSocket;
 import com.hazelmobile.filetransfer.config.AppConfig;
-import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.config.Keyword;
+import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.object.NetworkDevice;
 
 import org.json.JSONException;
 import org.json.JSONObject;

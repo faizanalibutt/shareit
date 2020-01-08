@@ -8,14 +8,14 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.genonbeta.CoolSocket.CoolTransfer;
+import com.genonbeta.android.coolsocket.CoolTransfer;
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.config.Keyword;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferInstance;
 import com.hazelmobile.filetransfer.object.TransferObject;
-import com.hazelmobile.filetransfer.config.Keyword;
 import com.hazelmobile.filetransfer.receiver.DialogEventReceiver;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.ui.activity.ViewTransferActivity;
