@@ -110,6 +110,8 @@ public class CommunicationService extends Service {
     public static final String ACTION_TOGGLE_WEBSHARE = "com.genonbeta.TrebleShot.transaction.action.TOGGLE_WEBSHARE";
     public static final String ACTION_WEBSHARE_STATUS = "com.genonbeta.TrebleShot.transaction.action.WEBSHARE_STATUS";
     public static final String ACTION_REQUEST_WEBSHARE_STATUS = "com.genonbeta.TrebleShot.transaction.action.REQUEST_WEBSHARE_STATUS";
+    public static final String ACTION_RECEIVER_PROGRESS = "ReceiverProgress";
+    public static final String ACTION_SENDER_PROGRESS = "SenderProgress";
 
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
     public static final String EXTRA_STATUS_STARTED = "extraStatusStarted";
@@ -128,8 +130,6 @@ public class CommunicationService extends Service {
     public static final String EXTRA_TASK_LIST_RUNNING = "extraTaskListRunning";
     public static final String EXTRA_DEVICE_LIST_RUNNING = "extraDeviceListRunning";
     public static final String EXTRA_TOGGLE_WEBSHARE_START_ALWAYS = "extraToggleWebShareStartAlways";
-    public static final String ACTION_RECEIVER_PROGRESS = "ReceiverProgress";
-    public static final String ACTION_SENDER_PROGRESS = "SenderProgress";
 
     public static final int TASK_STATUS_ONGOING = 0;
     public static final int TASK_STATUS_STOPPED = 1;
