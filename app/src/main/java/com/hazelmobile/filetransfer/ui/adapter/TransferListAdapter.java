@@ -36,10 +36,11 @@ import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.util.AppUtils;
-import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
-import com.hazelmobile.filetransfer.util.TextUtils;
 import com.hazelmobile.filetransfer.util.FileUtils;
+import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.util.MimeIconUtils;
+import com.hazelmobile.filetransfer.util.TextUtils;
+import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
 
 import java.io.File;
 import java.text.NumberFormat;
@@ -292,6 +293,10 @@ public class TransferListAdapter
         /* CRACK THE CODE HERE AND ADD LIVE DATA TO OBSERVE */
         crackTransfer.totalBytes = statusItem.getSecondText(this);
         crackTransfer.totalProgress = (int) (statusItem.getPercent() * 100);
+        LogUtils.getLogInformation("Transfer", String.format("Transfer Status: Bytes: %s, Progress: %s",
+                statusItem.getSecondText(this),
+                (int)(statusItem.getPercent() * 100)
+        ));
         Callback.setCrackTransfer(crackTransfer);
 
         if (storageItem != null)

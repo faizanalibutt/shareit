@@ -359,7 +359,7 @@ public class PreparationsActivity extends Activity
         enableButton();
     }
 
-    private void enableButton() {
+    private boolean enableButton() {
         if (isAllEnabled) {
             nextScreen.setEnabled(true);
             nextScreen.setBackgroundResource(R.drawable.background_content_share_button_select);
@@ -371,6 +371,7 @@ public class PreparationsActivity extends Activity
                     )
             );
             nextScreen.setTextColor(ContextCompat.getColor(this, R.color.white));
+            return isAllEnabled;
         } else {
             nextScreen.setEnabled(false);
             nextScreen.setBackgroundResource(R.drawable.background_content_share_button);
@@ -382,6 +383,7 @@ public class PreparationsActivity extends Activity
                     )
             );
             nextScreen.setTextColor(ContextCompat.getColor(this, R.color.black_transparent));
+            return isAllEnabled;
         }
     }
 
@@ -484,9 +486,9 @@ public class PreparationsActivity extends Activity
             if (BluetoothAdapter.ACTION_STATE_CHANGED.equalsIgnoreCase(action)) {
                 int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
                 switch (state) {
+                    /*case BluetoothAdapter.STATE_TURNING_ON:*/
                     case BluetoothAdapter.STATE_ON:
-                        /*case BluetoothAdapter.STATE_TURNING_ON:*/
-                        if (isReceiver && UIConnectionUtils.isOreoAbove())
+                        if ((isReceiver || isSender) && UIConnectionUtils.isOreoAbove())
                             enableBluetooth(bluetoothButton);
                         break;
                     case BluetoothAdapter.STATE_OFF:
