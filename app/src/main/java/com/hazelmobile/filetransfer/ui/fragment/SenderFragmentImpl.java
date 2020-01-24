@@ -40,7 +40,7 @@ import androidx.lifecycle.Observer;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
-
+import com.google.zxing.ResultPoint;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.bluetooth.BluetoothDataTransferThread;
@@ -68,7 +68,6 @@ import com.hazelmobile.filetransfer.util.ListUtils;
 import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader;
 import com.hazelmobile.filetransfer.widget.ExtensionsUtils;
-import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
@@ -132,6 +131,7 @@ public class SenderFragmentImpl
 
         mConnectionUtils = new UIConnectionUtils(ConnectionUtils.getInstance(getContext()), this);
         bluetoothAdapter = mConnectionUtils.getConnectionUtils().getBluetoothAdapter();
+        mGenericList = new ArrayList<>();
 
         mIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
@@ -155,7 +155,6 @@ public class SenderFragmentImpl
         View view = inflater.inflate(R.layout.demo_fragment_impl_sender, container, false);
         mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
         lv_send = view.findViewById(R.id.lv_send);
-        mGenericList = new ArrayList<>();
         return view;
     }
 
@@ -214,7 +213,7 @@ public class SenderFragmentImpl
                         closeDialog();
                     else if (SenderType.UNKNOWN.equals(action))
                         LogUtils.getWTF(SenderFragmentImpl.class.getSimpleName(),
-                                "That's the worst thing a LiveData have...Fuck Developer");
+                                "That's the worst thing a LiveData have...FUCK CODER");
                 }
 
             }
@@ -390,6 +389,16 @@ public class SenderFragmentImpl
 
     private void connectToHotspot(ScanResult scanResult) {
         try {
+
+            if (bluetoothAdapter != null) {
+                if (bluetoothAdapter.isDiscovering())
+                    bluetoothAdapter.cancelDiscovery();
+                mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
+                bluetoothDiscoveryStatus(false);
+                Callback.setSenderAction(SenderType.UNKNOWN);
+                isConnected = true;
+            }
+
             NetworkDeviceListAdapter.HotspotNetwork hotspotNetwork = new NetworkDeviceListAdapter.HotspotNetwork();
             final int accessPin = 0;
             hotspotNetwork.SSID = scanResult.SSID;
@@ -542,18 +551,23 @@ public class SenderFragmentImpl
 
         if (mGenericList.size() > 0) {
 
-            for (Object object : mGenericList) {
-                try {
-                    if (object instanceof ScanResult)
-                        mGenericList.remove(object);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                for (Object object : mGenericList) {
+                    try {
+                        if (object instanceof ScanResult)
+                            mGenericList.remove(object);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }
 
-        //showMessage("BluetoothDataTransferThread: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
+        showMessage("BluetoothDataTransferThread: Above API Level 23 Wifi Scan results are " + wifiManager.getScanResults());
         mGenericList.addAll(ListUtils.filterWithNoPassword(wifiManager.getScanResults()));
         //showMessage("mScanResultList: GENERIC List Results after Duplicates removed   " + mGenericList);
 
