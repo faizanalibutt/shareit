@@ -563,6 +563,7 @@ public class SenderFragmentImpl
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                mGenericList.clear();
             }
 
         }
@@ -874,6 +875,8 @@ public class SenderFragmentImpl
                         boolean success = intent.getBooleanExtra(
                                 WifiManager.EXTRA_RESULTS_UPDATED, false);
                         if (success)
+                            getWifiScanResults(wifiManager);
+                        else
                             getWifiScanResults(wifiManager);
                     } else
                         getWifiScanResults(wifiManager);

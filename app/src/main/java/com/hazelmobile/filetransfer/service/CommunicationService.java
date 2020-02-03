@@ -749,11 +749,13 @@ public class CommunicationService extends Service {
                                 && responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin
                         );
 
+                /*getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1): %s
+                UIConnectionUtils.isOSBelow(Build.VERSION_CODES.N_MR1) ?
+                        0 : responseJSON.getInt(Keyword.DEVICE_SECURE_KEY),*/
                 LogUtils.getLogWarning("Server", String.format("CommunicationService: CommunicationServer.onConnected() -> " +
-                                "networkPin: %s getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1): %s Keyword.DEVICE_SECURE_KEY: %s responseJSON.has(Keyword.DEVICE_SECURE_KEY): %s Connection is Secure: %s ",
+                                "networkPin: %s Keyword.DEVICE_SECURE_KEY: %s responseJSON.has(Keyword.DEVICE_SECURE_KEY): %s Connection is Secure: %s ",
                         networkPin,
                         getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1),
-                        responseJSON.getInt(Keyword.DEVICE_SECURE_KEY),
                         responseJSON.has(Keyword.DEVICE_SECURE_KEY),
                         isSecureConnection));
 
@@ -844,7 +846,7 @@ public class CommunicationService extends Service {
                             refreshServiceState();
                         }
 
-                        LogUtils.getLogWarning(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Get the response of Receiver: " + responseJSON);
+                        LogUtils.getLogWarning(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Get the response of Sender: " + responseJSON);
                         switch (responseJSON.getString(Keyword.REQUEST)) {
                             case (Keyword.REQUEST_TRANSFER):
                                 if (responseJSON.has(Keyword.FILES_INDEX) && responseJSON.has(Keyword.TRANSFER_GROUP_ID) && getOngoingIndexList().size() < 1) {

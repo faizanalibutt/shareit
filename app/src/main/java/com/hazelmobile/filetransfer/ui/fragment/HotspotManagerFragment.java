@@ -194,11 +194,13 @@ public class HotspotManagerFragment
     public void onDestroy() {
         super.onDestroy();
         try {
+
+            Callback.setQrCode(false);
+            Callback.setHotspotName("");
+
             if (UIConnectionUtils.isOreoAbove()) {
 
                 isThreadAlive = false;
-                Callback.setQrCode(false);
-                Callback.setHotspotName("");
                 ConnectionUtils connectionUtils = ConnectionUtils.getInstance(getContext());
                 if (connectionUtils.getBluetoothAdapter().isDiscovering())
                     connectionUtils.getBluetoothAdapter().cancelDiscovery();
