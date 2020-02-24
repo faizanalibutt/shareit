@@ -1,6 +1,7 @@
 package com.hazelmobile.filetransfer.dialog;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+
 import com.genonbeta.android.framework.object.Selectable;
 import com.hazelmobile.filetransfer.R;
 
@@ -24,6 +27,7 @@ public class SelectionEditorDialog<T extends Selectable> extends AlertDialog.Bui
     private LayoutInflater mLayoutInflater;
     private SelfAdapter mAdapter;
     private ListView mListView;
+    private AlertDialog dialog;
 
     public SelectionEditorDialog(Context context, List<T> list) {
         super(context);
@@ -51,6 +55,10 @@ public class SelectionEditorDialog<T extends Selectable> extends AlertDialog.Bui
         setPositiveButton(R.string.butn_close, null);
     }
 
+    public AlertDialog getDialog() {
+        return dialog;
+    }
+
     public void checkReversed(View removeSign, Selectable selectable) {
         selectable.setSelectableSelected(!selectable.isSelectableSelected());
         removeSign.setVisibility(selectable.isSelectableSelected() ? View.GONE : View.VISIBLE);
@@ -66,6 +74,7 @@ public class SelectionEditorDialog<T extends Selectable> extends AlertDialog.Bui
     @Override
     public AlertDialog show() {
         final AlertDialog dialog = super.show();
+        this.dialog = dialog;
 
         dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,10 +90,21 @@ public class SelectionEditorDialog<T extends Selectable> extends AlertDialog.Bui
             }
         });
 
+        setDialogButton(dialog, Color.GRAY, false);
+
+
         return dialog;
     }
 
+    private void setDialogButton(AlertDialog dialog, int color, boolean isTrue) {
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(color);
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setEnabled(isTrue);
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(color);
+        dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setEnabled(isTrue);
+    }
+
     private class SelfAdapter extends BaseAdapter {
+
         @Override
         public int getCount() {
             return mList.size();
@@ -116,6 +136,8 @@ public class SelectionEditorDialog<T extends Selectable> extends AlertDialog.Bui
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    setDialogButton(getDialog(),
+                            ContextCompat.getColor(getContext(), R.color.colorPrimary), true);
                     checkReversed(removalSignView, selectable);
                 }
             });

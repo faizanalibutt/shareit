@@ -257,9 +257,10 @@ public class FileListFragment
                     clazz.getView().findViewById(R.id.selector).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (getSelectionConnection() != null)
-                                if (getSelectionConnection().setSelected(clazz.getAdapterPosition()))
-                                    Callback.setColor(true);
+                            if (getSelectionConnection() != null) {
+                                getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                Callback.setColor(true);
+                            }
                         }
                     });
 
