@@ -263,6 +263,16 @@ public class FileListFragment
                         }
                     });
 
+                    clazz.getView().setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            if (getSelectionConnection() != null)
+                                if (getSelectionConnection().setSelected(clazz.getAdapterPosition()))
+                                    Callback.setColor(true);
+                            return false;
+                        }
+                    });
+
                     /*clazz.getView().findViewById(R.id.menu).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
