@@ -3,11 +3,10 @@ package com.hazelmobile.filetransfer.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.ui.callback.IconSupport
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport
@@ -22,7 +21,7 @@ class BrowseFragment : Fragment(), IconSupport, TitleSupport {
     }
 
     override fun getIconRes(): Int {
-        return R.drawable.ic_browse_hv_blue_24dp
+        return R.drawable.ic_search_black_24dp
     }
 
     override fun getTitle(context: Context): CharSequence {

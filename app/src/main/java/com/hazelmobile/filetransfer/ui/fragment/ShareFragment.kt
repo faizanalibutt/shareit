@@ -21,7 +21,7 @@ class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_share, container, false)
+        return inflater.inflate(R.layout.fragment_share_new, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

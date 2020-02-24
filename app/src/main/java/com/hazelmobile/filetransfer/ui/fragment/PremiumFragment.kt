@@ -3,11 +3,10 @@ package com.hazelmobile.filetransfer.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.ui.callback.IconSupport
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport
@@ -23,11 +22,11 @@ class PremiumFragment : Fragment(), IconSupport, TitleSupport {
     }
 
     override fun getIconRes(): Int {
-        return R.drawable.ic_premium_black_24dp
+        return R.drawable.ic_settings_icon
     }
 
     override fun getTitle(context: Context): CharSequence {
-        return context.getString(R.string.text_Premium)
+        return context.getString(R.string.text_settings)
     }
 
 }
