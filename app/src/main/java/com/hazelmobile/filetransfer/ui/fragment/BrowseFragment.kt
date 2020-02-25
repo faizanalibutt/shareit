@@ -21,7 +21,7 @@ class BrowseFragment : Fragment(), IconSupport, TitleSupport {
     }
 
     override fun getIconRes(): Int {
-        return R.drawable.ic_search_black_24dp
+        return R.drawable.ic_browse_grey_24dp
     }
 
     override fun getTitle(context: Context): CharSequence {

@@ -118,7 +118,7 @@ abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject e
         }
 
         try {
-            Method setColor = Class.forName("com.hazelmobile.filetransfer.Callback")
+            Method setColor = Class.forName("com.hazelmobile.filetransfer.callback.Callback")
                     .getDeclaredMethod("setColor", boolean.class);
             boolean select = (boolean) setColor.invoke(null, true);
         } catch (Exception e) {

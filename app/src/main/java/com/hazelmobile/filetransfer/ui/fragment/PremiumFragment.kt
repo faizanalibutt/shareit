@@ -22,7 +22,7 @@ class PremiumFragment : Fragment(), IconSupport, TitleSupport {
     }
 
     override fun getIconRes(): Int {
-        return R.drawable.ic_settings_icon
+        return R.drawable.ic_settings_grey_24dp
     }
 
     override fun getTitle(context: Context): CharSequence {

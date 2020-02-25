@@ -267,9 +267,10 @@ public class FileListFragment
                     clazz.getView().setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
-                            if (getSelectionConnection() != null)
-                                if (getSelectionConnection().setSelected(clazz.getAdapterPosition()))
-                                    Callback.setColor(true);
+                            if (getSelectionConnection() != null){
+                                getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                Callback.setColor(true);
+                            }
                             return false;
                         }
                     });
@@ -377,14 +378,6 @@ public class FileListFragment
 
     @Override
     public boolean onDefaultClickAction(GroupEditableListAdapter.GroupViewHolder holder) {
-        // todo See this for your own good selection call back its just like application list fragment #18
-        /*if (getSelectionConnection() != null) {
-            Callback.setColor(true);
-            return getSelectionConnection().setSelected(holder);
-        } else {
-            Callback.setColor(false);
-            return performLayoutClickOpen(holder);
-        }*/
         performLayoutClick(holder);
         return true;
     }

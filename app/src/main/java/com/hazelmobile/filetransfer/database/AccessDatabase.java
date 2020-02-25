@@ -15,8 +15,10 @@ import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLType;
 import com.genonbeta.android.database.SQLValues;
 import com.genonbeta.android.database.SQLiteDatabase;
+import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferObject;
+import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.util.TransferUtils;
 
 import java.util.ArrayList;
@@ -428,7 +430,7 @@ public class AccessDatabase extends SQLiteDatabase {
         if (activity == null || activity.isFinishing())
             return;
 
-       /* new WorkerService.RunningTask() {
+        new WorkerService.RunningTask() {
             @Override
             protected void onRun() {
                 if (getService() != null)
@@ -437,7 +439,7 @@ public class AccessDatabase extends SQLiteDatabase {
                 runnable.run();
             }
         }.setTitle(activity.getString(R.string.mesg_removing))
-                .run(activity);*/
+                .run(activity);
     }
 
     @Override

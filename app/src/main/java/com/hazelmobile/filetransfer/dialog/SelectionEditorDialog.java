@@ -61,7 +61,8 @@ public class SelectionEditorDialog<T extends Selectable> extends AlertDialog.Bui
 
     public void checkReversed(View removeSign, Selectable selectable) {
         selectable.setSelectableSelected(!selectable.isSelectableSelected());
-        removeSign.setVisibility(selectable.isSelectableSelected() ? View.GONE : View.VISIBLE);
+        //removeSign.setVisibility(selectable.isSelectableSelected() ? View.GONE : View.VISIBLE);
+        removeSign.setSelected(selectable.isSelectableSelected());
     }
 
     public void massCheck(boolean check) {
@@ -130,7 +131,8 @@ public class SelectionEditorDialog<T extends Selectable> extends AlertDialog.Bui
             final View removalSignView = convertView.findViewById(R.id.removalSign);
 
             text1.setText(selectable.getSelectableTitle());
-            removalSignView.setVisibility(selectable.isSelectableSelected() ? View.GONE : View.VISIBLE);
+            //removalSignView.setVisibility(selectable.isSelectableSelected() ? View.GONE : View.VISIBLE);
+            removalSignView.setSelected(selectable.isSelectableSelected());
 
             convertView.setClickable(true);
             convertView.setOnClickListener(new View.OnClickListener() {

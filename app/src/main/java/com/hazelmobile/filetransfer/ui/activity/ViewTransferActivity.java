@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
@@ -26,21 +27,20 @@ import com.genonbeta.android.framework.io.StreamInfo;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.google.android.material.snackbar.Snackbar;
-import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
+import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.dialog.TransferInfoDialog;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.ShowingAssignee;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferObject;
-import com.hazelmobile.filetransfer.util.AppUtils;
-import com.hazelmobile.filetransfer.config.Keyword;
-import com.hazelmobile.filetransfer.ui.callback.PowerfulActionModeSupport;
-import com.hazelmobile.filetransfer.util.TextUtils;
 import com.hazelmobile.filetransfer.service.CommunicationService;
+import com.hazelmobile.filetransfer.ui.callback.PowerfulActionModeSupport;
 import com.hazelmobile.filetransfer.ui.fragment.TransferFileExplorerFragment;
+import com.hazelmobile.filetransfer.util.AppUtils;
+import com.hazelmobile.filetransfer.util.TextUtils;
 import com.hazelmobile.filetransfer.util.TransferUtils;
 
 import java.util.ArrayList;
@@ -160,10 +160,10 @@ public class ViewTransferActivity
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null) {
+        /*if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_24dp);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        }*/
 
         if (Intent.ACTION_VIEW.equals(getIntent().getAction()) && getIntent().getData() != null) {
             try {
@@ -283,22 +283,21 @@ public class ViewTransferActivity
             };
             Callback.getTransferProgress().observe(this, cancelTransferStatus);
 
+            final Observer<Boolean> updateBar = select -> {
+                int colorPrimary = ContextCompat.getColor(ViewTransferActivity.this, R.color.colorPrimary);
+                int whiteColor = ContextCompat.getColor(ViewTransferActivity.this, R.color.white);
+                if (select) {
+                    mMode.setBackgroundColor(colorPrimary);
+                    mMode.setTitleTextColor(whiteColor);
+                    mMode.setOverflowIcon(
+                            getResources().getDrawable(R.drawable.ic_action_overflow_menu_icon_white_24db));
+                }
+            };
+            Callback.getColor().observe(this, updateBar);
+
         }
 
-        //dataTransferTime = findViewById(R.id.dataTransferTime);
-        //dataTransferSpeed = findViewById(R.id.dataTransferSpeed);
-        registerReceiver(mMessageReceiver, new IntentFilter("SenderProgress"));
     }
-
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String duration = intent.getStringExtra(Keyword.DATA_TRANSFER_TIME);
-            String speed = intent.getStringExtra(Keyword.DATA_TRANSFER_SPEED);
-            //dataTransferTime.setText(duration);
-            //dataTransferSpeed.setText(speed);
-        }
-    };
 
     @Override
     protected void onResume() {
@@ -327,7 +326,7 @@ public class ViewTransferActivity
     protected void onDestroy() {
         super.onDestroy();
         Callback.setTransferProgress(false);
-        unregisterReceiver(mMessageReceiver);
+        Callback.setColor(false);
     }
 
     @Override

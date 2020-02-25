@@ -170,8 +170,21 @@ public class TransferListFragment
                     clazz.getView().findViewById(R.id.layout_image).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (getSelectionConnection() != null)
+                            if (getSelectionConnection() != null) {
                                 getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                Callback.setColor(true);
+                            }
+                        }
+                    });
+
+                    clazz.getView().setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            if (getSelectionConnection() != null) {
+                                getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                Callback.setColor(true);
+                            }
+                            return true;
                         }
                     });
                 }
