@@ -34,7 +34,7 @@
         android:layout_width="@dimen/dp_20"
         android:layout_height="@dimen/dp_20"
         android:layout_marginEnd="@dimen/dp_16"
-        android:background="@drawable/state_selected_image_rounded_blue"
+        android:background="?stateSelectedImageRoundedCustom"
         android:button="@null"
         android:contentDescription="@string/tick_text"
         android:visibility="visible"

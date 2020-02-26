@@ -61,7 +61,7 @@ public class PreparationsActivity extends Activity
     public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
 
     private ImageView bluetoothStatus, wifiStatus, gpsStatus, hotspotStatus;
-    private AppCompatButton gpsButton, nextScreen, bluetoothButton, wifiButton, hotspotButton;
+    private AppCompatButton gpsButton, nextScreen, bluetoothButton, wifiButton, hotspotButton, button;
     private ProgressBar bluetoothPbr, wifiPbr, gpsPbr, hotspotPbr;
     private boolean isWifi, isBluetooth, isGps, isAllEnabled, isHotspot = false;
     private boolean isSender = false;
@@ -371,6 +371,7 @@ public class PreparationsActivity extends Activity
                     )
             );
             nextScreen.setTextColor(ContextCompat.getColor(this, R.color.white));
+            btnOnClick(nextScreen);
             return isAllEnabled;
         } else {
             nextScreen.setEnabled(false);
@@ -440,27 +441,7 @@ public class PreparationsActivity extends Activity
                 }
                 break;
             case REQUEST_PERMISSION_CAMERA:
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                        == PackageManager.PERMISSION_DENIED)
-                    createSnackbar(R.string.text_cameraPermissionRequired).show();
-                else if (isAllEnabled) {
-                    if (isReceiver) {
-                        startActivity(new Intent(PreparationsActivity.this, ReceiverActivity.class)
-                                .putExtra(Keyword.EXTRA_RECEIVE, true)
-                                .putExtra(EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
-                                .putExtra(EXTRA_REQUEST_TYPE,
-                                        ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
-                        finish();
-                    } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1) {
-                        ViewTransferActivity.startInstance(this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
-                        startActivity(new Intent(PreparationsActivity.this, SenderActivity.class)
-                                .putExtra(Keyword.EXTRA_SEND, true)
-                                .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
-                                .putExtra(SenderActivity.EXTRA_REQUEST_TYPE,
-                                        SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
-                        finish();
-                    }
-                }
+                btnOnClick(nextScreen);
                 break;
             default:
                 break;

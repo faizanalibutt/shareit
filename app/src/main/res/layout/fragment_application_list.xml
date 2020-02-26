@@ -34,7 +34,7 @@
         android:id="@+id/selectAll"
         android:layout_width="@dimen/dp_24"
         android:layout_height="@dimen/dp_24"
-        android:background="@drawable/state_selected_image_rounded_blue"
+        android:background="?stateSelectedImageRoundedCustom"
         android:button="@null"
         android:paddingEnd="@dimen/dp_5"
         android:paddingStart="@dimen/dp_5"
