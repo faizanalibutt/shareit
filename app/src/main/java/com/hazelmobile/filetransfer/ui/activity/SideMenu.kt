@@ -10,8 +10,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.`object`.NetworkDevice
 import com.hazelmobile.filetransfer.app.Activity
-import com.hazelmobile.filetransfer.util.AppUtils
 import com.hazelmobile.filetransfer.ui.callback.SnackbarSupport
+import com.hazelmobile.filetransfer.util.AppUtils
 import kotlinx.android.synthetic.main.activity_side_menu.*
 
 class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
@@ -25,20 +25,20 @@ class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
 
     private fun init() {
         menu_histroy.setOnClickListener(this@SideMenu)
-        menu_help.setOnClickListener(this@SideMenu)
+        //menu_help.setOnClickListener(this@SideMenu)
         menu_settings.setOnClickListener(this@SideMenu)
-        menu_feedback.setOnClickListener(this@SideMenu)
+        //menu_feedback.setOnClickListener(this@SideMenu)
         menu_rateus.setOnClickListener(this@SideMenu)
         menu_privacy.setOnClickListener(this@SideMenu)
-        menu_about.setOnClickListener(this@SideMenu)
+        //menu_about.setOnClickListener(this@SideMenu)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.menu_histroy -> startActivity(Intent(this@SideMenu, HistoryActivity::class.java))
-            R.id.menu_help -> createSnackbar(R.string.menu_generic_text)?.show()
+            //R.id.menu_help -> createSnackbar(R.string.menu_generic_text)?.show()
             R.id.menu_settings -> startActivity(Intent(this@SideMenu, SettingsActivity::class.java))
-            R.id.menu_feedback -> createSnackbar(R.string.menu_generic_text)?.show()
+            //R.id.menu_feedback -> createSnackbar(R.string.menu_generic_text)?.show()
             R.id.menu_rateus -> createSnackbar(R.string.menu_generic_text)?.show()
             R.id.menu_privacy -> {
                 val url = "https://fiverr.com/faizistudio"
@@ -46,7 +46,7 @@ class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
                 val customTabsIntent = builder.build ()
                 customTabsIntent.launchUrl(this, Uri.parse(url))
             }
-            R.id.menu_about -> createSnackbar(R.string.menu_generic_text)?.show()
+            //R.id.menu_about -> createSnackbar(R.string.menu_generic_text)?.show()
             else -> return
         }
     }

@@ -59,7 +59,7 @@
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Hazel.Base.NoActionBar">
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

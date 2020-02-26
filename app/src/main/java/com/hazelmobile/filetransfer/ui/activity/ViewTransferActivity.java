@@ -96,7 +96,8 @@ public class ViewTransferActivity
                     reconstructGroup();
                 else if (intent.hasExtra(AccessDatabase.EXTRA_CHANGE_TYPE)
                         && AccessDatabase.TABLE_TRANSFER.equals(intent.getStringExtra(AccessDatabase.EXTRA_TABLE_NAME))
-                        && (AccessDatabase.TYPE_INSERT.equals(intent.getStringExtra(AccessDatabase.EXTRA_CHANGE_TYPE)) || AccessDatabase.TYPE_REMOVE.equals(intent.getStringExtra(AccessDatabase.EXTRA_CHANGE_TYPE)))) {
+                        && (AccessDatabase.TYPE_INSERT.equals(intent.getStringExtra(AccessDatabase.EXTRA_CHANGE_TYPE))
+                        || AccessDatabase.TYPE_REMOVE.equals(intent.getStringExtra(AccessDatabase.EXTRA_CHANGE_TYPE)))) {
                     updateCalculations();
                 }
             } else if (CommunicationService.ACTION_TASK_STATUS_CHANGE.equals(intent.getAction())
