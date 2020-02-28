@@ -620,7 +620,7 @@ public class HotspotManagerFragment
 
                     try {
                         serverSocket.close();
-                    } catch (IOException ex) {
+                    } catch (IOException | RuntimeException ex) {
                         ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                                 "ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n");
                         createSnackbar(R.string.app_name,

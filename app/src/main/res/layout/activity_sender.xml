@@ -27,7 +27,7 @@
             android:layout_centerInParent="true"
             android:background="@drawable/round_selector"
             android:contentDescription="@string/text_home"
-            app:srcCompat="@drawable/ic_back_24dp" />
+            app:srcCompat="@drawable/ic_back_icon_grey_24db" />
 
         <ImageView
             android:id="@+id/sender_back"

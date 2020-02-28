@@ -60,7 +60,7 @@ public class SenderActivity extends Activity
         setResult(RESULT_CANCELED);
         if (!checkGroupIntegrity())
             return;
-        setContentView(R.layout.demo_activity_sender);
+        setContentView(R.layout.activity_sender);
 //        final RippleBackground pulse = findViewById(R.id.content);
 //        pulse.startRippleAnimation();
 //

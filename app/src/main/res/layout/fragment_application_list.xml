@@ -32,8 +32,8 @@
 
     <CheckBox
         android:id="@+id/selectAll"
-        android:layout_width="@dimen/dp_24"
-        android:layout_height="@dimen/dp_24"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
         android:background="?stateSelectedImageRoundedCustom"
         android:button="@null"
         android:paddingEnd="@dimen/dp_5"
