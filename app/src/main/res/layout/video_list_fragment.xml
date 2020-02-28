@@ -34,7 +34,7 @@
         android:layout_width="@dimen/dp_20"
         android:layout_height="@dimen/dp_20"
         android:layout_marginEnd="@dimen/dp_16"
-        android:background="?stateSelectedImageRoundedCustom"
+        android:background="@drawable/state_selected_image_rounded_blue"
         android:button="@null"
         android:contentDescription="@string/tick_text"
         android:visibility="visible"
@@ -44,10 +44,12 @@
         app:srcCompat="@drawable/ic_tick_icon_blue" />
 
     <View
+        android:id="@+id/v0"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_zero_size"
         android:layout_marginTop="@dimen/margin_smaller_size"
         android:background="@color/colorShadowEnd"
+        app:layout_constraintBottom_toTopOf="@+id/videosList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/myVideosText" />
@@ -56,11 +58,11 @@
         android:id="@+id/videosList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_smaller_size"
+        android:layout_marginTop="@dimen/margin_smallest_size"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/selectAll"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/myVideosText"
-        app:layout_constraintTop_toBottomOf="@+id/myVideosText" />
+        app:layout_constraintTop_toBottomOf="@+id/v0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
