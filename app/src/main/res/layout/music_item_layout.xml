@@ -55,7 +55,7 @@
         android:layout_height="1dp"
         android:background="@color/colorShadowEnd"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/layout_image"
         app:layout_constraintStart_toEndOf="@+id/audio_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

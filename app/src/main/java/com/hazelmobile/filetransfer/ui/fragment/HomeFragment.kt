@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
-import com.hazelmobile.filetransfer.ui.activity.SideMenu
+import com.hazelmobile.filetransfer.ui.activity.SettingsActivity
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -78,7 +78,7 @@ class HomeFragment : Fragment(), TitleSupport, Activity.OnBackPressedListener {
 
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             if (menuItem.order == 2) {
-                startActivity(Intent(context, SideMenu::class.java))
+                startActivity(Intent(context, SettingsActivity::class.java))
                 true
             }
             else

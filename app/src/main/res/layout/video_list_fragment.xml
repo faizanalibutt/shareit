@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/myVideosText"
-        style="@style/TextAppearance.Primary.Big"
+        style="@style/TextAppearance.Primary.Normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_smaller_size"
@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/select_text"
-        style="@style/TextAppearance.Primary"
+        style="@style/TextAppearance.Primary.Normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_absolute_size"
@@ -60,7 +60,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_smallest_size"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/selectAll"
         app:layout_constraintStart_toStartOf="@id/myVideosText"
         app:layout_constraintTop_toBottomOf="@+id/v0" />
 

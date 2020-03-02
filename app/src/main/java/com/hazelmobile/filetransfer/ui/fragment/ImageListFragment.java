@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.callback.Callback;
@@ -63,7 +64,8 @@ public class ImageListFragment
 
     @Override
     public ImageListAdapter onAdapter() {
-        final AppUtils.QuickActions<GroupEditableListAdapter.GroupViewHolder> quickActions = new AppUtils.QuickActions<GroupEditableListAdapter.GroupViewHolder>() {
+        final AppUtils.QuickActions<GroupEditableListAdapter.GroupViewHolder> quickActions =
+                new AppUtils.QuickActions<GroupEditableListAdapter.GroupViewHolder>() {
             @Override
             public void onQuickActions(final GroupEditableListAdapter.GroupViewHolder clazz) {
                 if (!clazz.isRepresentative()) {
@@ -133,5 +135,14 @@ public class ImageListFragment
     @Override
     public CharSequence getTitle(Context context) {
         return context.getString(R.string.text_photo);
+    }
+
+    @Override
+    protected RecyclerView onListView(View mainContainer, ViewGroup listViewContainer) {
+
+        View adaptedView = getLayoutInflater().inflate(R.layout.fragment_image_list, null, false);
+        listViewContainer.addView(adaptedView);
+
+        return super.onListView(mainContainer, (ViewGroup) adaptedView.findViewById(R.id.imagesList));
     }
 }

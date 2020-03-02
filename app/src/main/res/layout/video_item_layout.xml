@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Video_Size"
-        android:textSize="@dimen/font_size_tiny"
+        android:textSize="@dimen/font_size_primary_normal"
         android:paddingEnd="@dimen/dp_5"
         android:paddingStart="@dimen/dp_5"
         app:layout_constraintBottom_toTopOf="@+id/layer"
@@ -93,7 +93,6 @@
     <FrameLayout
         android:id="@+id/layout_image"
         style="@style/ListContentIconStyleExtended"
-        android:layout_marginEnd="@dimen/dp_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
