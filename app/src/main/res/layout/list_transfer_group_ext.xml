@@ -48,40 +48,56 @@
             android:layout_marginStart="@dimen/margin_smallest_size"
             android:gravity="center|start"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/text2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/thumbnail"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text2"
-            style="@style/TextAppearance.Primary.SingleLine"
-            android:layout_width="0dp"
+            style="@style/TextAppearance.Secondary.Small.SingleLine"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_smallest_size"
-            android:layout_marginEnd="@dimen/margin_smallest_size"
             android:gravity="center|start"
+            android:text="2.2mb"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/text"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/v1"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/text"
+            app:layout_constraintTop_toBottomOf="@+id/text" />
 
         <TextView
             android:id="@+id/text3"
             style="@style/TextAppearance.Secondary.Small.SingleLine"
-            android:textColor="@color/black_dominant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center|start"
             android:text="Receiving"
-            android:layout_marginStart="@dimen/dp_9"
-            android:layout_marginBottom="@dimen/margin_absolute_size"
-            app:layout_constraintEnd_toEndOf="@+id/layout_image"
+            android:textColor="@color/black_dominant"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/layout_image" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/v1"
+            app:layout_constraintTop_toBottomOf="@+id/text" />
+
+        <View
+            android:id="@+id/v1"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/dp_5"
+            android:layout_marginEnd="@dimen/dp_5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:background="@color/text_color_gray"
+            app:layout_constraintBottom_toBottomOf="@id/text2"
+            app:layout_constraintEnd_toStartOf="@+id/text3"
+            app:layout_constraintStart_toEndOf="@+id/text2"
+            app:layout_constraintTop_toTopOf="@+id/text2" />
+
 
         <FrameLayout
             android:id="@+id/layout_image"
-            android:visibility="invisible"
             style="@style/ListContentIconStyle"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/detail"
             app:layout_constraintStart_toStartOf="parent"

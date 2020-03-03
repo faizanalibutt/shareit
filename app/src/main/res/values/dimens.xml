@@ -107,5 +107,6 @@
     <dimen name="rippleRadius">64dp</dimen>
     <dimen name="preparation_button_width">80dp</dimen>
     <dimen name="preparation_button_height">30dp</dimen>
+    <dimen name="transfer_icon_size_80dp">70dp</dimen>
 
 </resources>

@@ -602,7 +602,7 @@
     <string name="msg_merg_send">\"%s\"</string>
     <string name="layout_dialog_receiver_title" tools:ignore="TypographyEllipsis">Connecting to %s...</string>
     <string name="total_transfer_time">%s / %s (%s)</string>
-    <string name="transfer_file_size">(%s)</string>
+    <string name="transfer_file_size">%s</string>
     <string name="transfer_time">(%s)</string>
     <string name="text_send_status">Ask your friend to open the app and tap RECEIVE</string>
     <string name="text_receive_status">Ask your friend to open the app and tap SEND</string>

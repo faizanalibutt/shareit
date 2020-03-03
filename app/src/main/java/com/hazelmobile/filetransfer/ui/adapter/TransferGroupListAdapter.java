@@ -1,8 +1,12 @@
 package com.hazelmobile.filetransfer.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -161,13 +165,36 @@ public class TransferGroupListAdapter
                         image.setImageResource(object.index.outgoingCount > 0
                                 ? R.drawable.ic_arrow_up_white_24dp
                                 : R.drawable.ic_arrow_down_white_24dp);
-                        text3.setText(object.index.outgoingCount > 0 ? "Sending" : "Receiving");
+                        text3.setText(
+                                object.index.outgoingCount > 0 ?
+                                        String.format("Sent to %s", object.assignees)
+                                        : String.format("Received from %s", object.assignees)
+                        );
+
+                        SpannableString spanString = new SpannableString(text3.getText());
+                        ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
+                        ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
+                        ForegroundColorSpan fcsBlue = new ForegroundColorSpan(Color.BLUE);
+
+                        if (object.index.outgoingCount > 0)
+                            spanString.setSpan(fcsGreen, 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        else
+                            spanString.setSpan(fcsRed, 0, 8, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                        spanString.setSpan(
+                                fcsBlue,
+                                object.index.outgoingCount > 0 ? 8 : 14,
+                                text3.getText().length(),
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        );
+
+                        text3.setText(spanString);
                     }
                 }
 
                 statusLayoutWeb.setVisibility(object.index.outgoingCount > 0 && object.isServedOnWeb
                         ? View.VISIBLE : View.GONE);
-                text1.setText(object.assignees);
+                text1.setText(AppUtils.getLocalDeviceName(holder.getView().getContext()));
                 text2.setText(getContext().getString(R.string.transfer_file_size, FileUtils.sizeExpression(object.totalBytes, false)));
                 //text3.setText(mPercentFormat.format(object.totalPercent));
                 text4.setText(getContext().getString(R.string.text_transferStatusFiles, object.totalCountCompleted, object.totalCount));
