@@ -235,12 +235,12 @@
     </style>
 
     <style name="ListContentLayoutStyleOutside">
-        <item name="android:layout_marginLeft">@dimen/margin_small_size</item>
-        <item name="android:layout_marginStart">@dimen/margin_small_size</item>
-        <item name="android:layout_marginRight">@dimen/margin_small_size</item>
-        <item name="android:layout_marginEnd">@dimen/margin_small_size</item>
-        <item name="android:layout_marginTop">@dimen/margin_smallest_size</item>
-        <item name="android:layout_marginBottom">@dimen/margin_smallest_size</item>
+        <item name="android:layout_marginLeft">@dimen/margin_smaller_size</item>
+        <item name="android:layout_marginStart">@dimen/margin_smaller_size</item>
+        <item name="android:layout_marginRight">@dimen/margin_smaller_size</item>
+        <item name="android:layout_marginEnd">@dimen/margin_smaller_size</item>
+        <item name="android:layout_marginTop">@dimen/margin_absolute_size</item>
+        <item name="android:layout_marginBottom">@dimen/margin_zero_size</item>
     </style>
 
     <style name="ListContentLayoutStyle.WithOverflowButton">

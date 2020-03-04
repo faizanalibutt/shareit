@@ -51,7 +51,8 @@
     <dimen name="margin_smaller_size">16dp</dimen>
     <dimen name="margin_smallest_size">8dp</dimen>
     <dimen name="margin_absolute_size">5dp</dimen>
-    <dimen name="margin_zero_size">1dp</dimen>
+    <dimen name="margin_zero_size">2dp</dimen>
+    <dimen name="margin_nano_size">1dp</dimen>
     <dimen name="margin_menu_size">22dp</dimen>
     <dimen name="user_icon_size">24dp</dimen>
     <dimen name="dp_4">4dp</dimen>

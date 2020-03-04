@@ -2,8 +2,7 @@ package com.hazelmobile.filetransfer.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.graphics.drawable.ShapeDrawable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.genonbeta.android.database.SQLQuery;
 import com.hazelmobile.filetransfer.R;
@@ -24,12 +22,13 @@ import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.ShowingAssignee;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.util.AppUtils;
-import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
 import com.hazelmobile.filetransfer.util.FileUtils;
+import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * created by: Veli
@@ -43,6 +42,8 @@ public class TransferGroupListAdapter
     private AccessDatabase mDatabase;
     private SQLQuery.Select mSelect;
     private NumberFormat mPercentFormat;
+    private int userProfileColor;
+    private int[] colorsList;
 
     @ColorInt
     private int mColorPending;
@@ -59,6 +60,8 @@ public class TransferGroupListAdapter
         mColorError = ContextCompat.getColor(context, AppUtils.getReference(context, R.attr.colorError));
 
         setSelect(new SQLQuery.Select(AccessDatabase.TABLE_TRANSFERGROUP));
+
+        colorsList = context.getResources().getIntArray(R.array.colorsList);
     }
 
     @Override
@@ -192,6 +195,15 @@ public class TransferGroupListAdapter
                     }
                 }
 
+                userProfileColor = new Random().nextInt(colorsList.length);
+
+                AppUtils.loadProfilePictureInto(object.assignees, image, parentView.getContext());
+
+                if (image.getDrawable() instanceof ShapeDrawable) {
+                    ShapeDrawable shapeDrawable = (ShapeDrawable) image.getDrawable();
+                    shapeDrawable.getPaint().setColor(colorsList[userProfileColor]);
+                }
+
                 statusLayoutWeb.setVisibility(object.index.outgoingCount > 0 && object.isServedOnWeb
                         ? View.VISIBLE : View.GONE);
                 text1.setText(AppUtils.getLocalDeviceName(holder.getView().getContext()));
@@ -200,14 +212,14 @@ public class TransferGroupListAdapter
                 text4.setText(getContext().getString(R.string.text_transferStatusFiles, object.totalCountCompleted, object.totalCount));
                 progressBar.setMax(100);
                 progressBar.setProgress(percentage <= 0 ? 1 : percentage);
-                //ImageViewCompat.setImageTintList(image, ColorStateList.valueOf(appliedColor));
 
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                //ImageViewCompat.setImageTintList(image, ColorStateList.valueOf(appliedColor));
+                /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getProgressDrawable());
 
                     DrawableCompat.setTint(wrapDrawable, appliedColor);
                     progressBar.setProgressDrawable(DrawableCompat.unwrap(wrapDrawable));
-                } /*else*/
+                } else*/
                 //progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
             }
         } catch (Exception e) {

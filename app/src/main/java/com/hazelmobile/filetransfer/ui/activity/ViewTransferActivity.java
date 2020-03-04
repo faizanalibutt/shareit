@@ -143,7 +143,7 @@ public class ViewTransferActivity
         }
     };
 
-    public static void startInstance(Context context, long groupId) {
+    public static void startInstance(Context context, long groupId, boolean isHistory) {
         context.startActivity(new Intent(context, ViewTransferActivity.class)
                 .setAction(ACTION_LIST_TRANSFERS)
                 .putExtra(EXTRA_GROUP_ID, groupId)

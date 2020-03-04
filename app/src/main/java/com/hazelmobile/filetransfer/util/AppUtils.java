@@ -21,6 +21,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.AnyRes;
 import androidx.annotation.AttrRes;
@@ -34,6 +35,7 @@ import com.genonbeta.android.framework.preference.DbSharablePreferences;
 import com.genonbeta.android.framework.preference.SuperPreferences;
 import com.genonbeta.android.framework.util.PreferenceUtils;
 import com.hazelmobile.filetransfer.BuildConfig;
+import com.hazelmobile.filetransfer.GlideApp;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.App;
 import com.hazelmobile.filetransfer.config.AppConfig;
@@ -48,6 +50,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -411,6 +415,21 @@ public class AppUtils {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
             p.setMargins(left, top, right, bottom);
             view.requestLayout();
+        }
+    }
+
+    public static void loadProfilePictureInto(String deviceName, ImageView imageView, Context context) {
+        try {
+            FileInputStream inputStream = context.openFileInput("profilePicture");
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+            GlideApp.with(context)
+                    .load(bitmap)
+                    .circleCrop()
+                    .into(imageView);
+        } catch (FileNotFoundException e) {
+            //e.printStackTrace();
+            imageView.setImageDrawable(AppUtils.getDefaultIconBuilder(context).buildRect(deviceName));
         }
     }
 

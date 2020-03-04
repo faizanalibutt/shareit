@@ -4,13 +4,13 @@
     android:gravity="center"
     android:orientation="horizontal">
 
-    <View
+    <!--<View
         android:layout_width="100dp"
         android:layout_height="1dp"
         android:layout_gravity="center"
-        android:background="@color/black_dominant"/>
+        android:background="@color/black_dominant"/>-->
 
-    <TextView
+    <!--<TextView
         android:id="@+id/layout_list_title_text"
         style="@style/CondensedTitleStyle"
         android:layout_width="wrap_content"
@@ -18,12 +18,20 @@
         android:layout_marginStart="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_gravity="center"
-        android:gravity="center" />
+        android:gravity="center" />-->
 
-    <View
+    <!--<View
         android:layout_width="100dp"
         android:layout_height="1dp"
         android:layout_gravity="center"
-        android:background="@color/black_dominant"/>
+        android:background="@color/black_dominant"/>-->
+
+    <TextView
+        android:id="@+id/layout_list_title_text"
+        style="@style/CondensedTitleStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|start"
+        android:gravity="center|start" />
 
 </LinearLayout>
