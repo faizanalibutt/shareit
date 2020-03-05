@@ -158,7 +158,13 @@ public class TransferGroupListFragment
     @Override
     public boolean onDefaultClickAction(GroupEditableListAdapter.GroupViewHolder holder) {
         try {
-            ViewTransferActivity.startInstance(getActivity(), getAdapter().getItem(holder).groupId);
+            final TransferGroupListAdapter.PreloadedGroup parentView = getAdapter().getItem(holder);
+            ViewTransferActivity.startInstance(
+                    getActivity(), parentView.groupId,
+                    parentView.index.outgoing > 0 ?
+                            String.format("Sent to %s", parentView.assignees) :
+                            String.format("Received from %s", parentView.assignees), true
+            );
             return true;
         } catch (Exception e) {
         }

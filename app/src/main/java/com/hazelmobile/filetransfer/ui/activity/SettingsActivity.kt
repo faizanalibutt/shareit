@@ -11,7 +11,6 @@ class SettingsActivity : Activity() {
         setContentView(R.layout.activity_settings)
         supportActionBar.let {
             it?.setDisplayHomeAsUpEnabled(true)
-            it?.setHomeAsUpIndicator(R.drawable.ic_back_24dp)
         }
 
     }

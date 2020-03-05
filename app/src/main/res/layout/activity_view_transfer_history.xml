@@ -39,6 +39,7 @@
         android:id="@+id/activity_transaction_content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#F0F0F0"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".activity.ViewTransferActivity"
         tools:showIn="@layout/activity_view_transfer" />

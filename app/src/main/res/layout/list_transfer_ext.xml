@@ -2,38 +2,36 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="85dp"
-    app:cardCornerRadius="8dp"
     style="@style/ListContentLayoutStyleOutside"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
     app:cardElevation="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="60dp"
         android:background="?rectSelector">
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="@dimen/dp_64"
-            android:layout_height="@dimen/dp_64"
+            android:layout_width="@dimen/transfer_icon_size_80dp"
+            android:layout_height="match_parent"
             android:contentDescription="@string/text_image"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/text"
+            app:layout_constraintEnd_toEndOf="@+id/thumbnail"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_calender_white_icon_24dp" />
+            app:srcCompat="@drawable/ic_compare_arrows_white_24dp" />
 
         <ImageView
             android:id="@+id/thumbnail"
             android:layout_width="@dimen/dp_64"
-            android:layout_height="@dimen/dp_64"
+            android:layout_height="match_parent"
             android:contentDescription="@string/text_image"
-            app:layout_constraintEnd_toStartOf="@+id/text"
             android:scaleType="centerCrop"
-            app:layout_constraintTop_toTopOf="@+id/image"
-            app:layout_constraintBottom_toBottomOf="@+id/image"
-            app:layout_constraintStart_toStartOf="@+id/image" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -42,7 +40,6 @@
             android:layout_height="match_parent"
             android:progressDrawable="@drawable/custom_progressbar"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/thumbnail"
             app:layout_constraintTop_toTopOf="parent" />
@@ -52,12 +49,10 @@
             style="@style/TextAppearance.Primary.SingleLine"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_12"
-            android:paddingEnd="@dimen/dp_5"
+            android:layout_marginStart="@dimen/margin_smallest_size"
             android:gravity="center|start"
-            app:layout_constraintVertical_bias="0.30"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/text2"
             app:layout_constraintStart_toEndOf="@+id/thumbnail"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,13 +61,14 @@
             style="@style/TextAppearance.Primary.SingleLine"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_smallest_size"
             android:gravity="center|start"
             android:layout_marginEnd="@dimen/margin_smallest_size"
-            app:layout_constraintVertical_bias="0.25"
-            app:layout_constraintStart_toStartOf="@+id/text"
+            android:text="@string/transfer_file_size"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text"
-            android:text="@string/transfer_file_size" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/text"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text4"

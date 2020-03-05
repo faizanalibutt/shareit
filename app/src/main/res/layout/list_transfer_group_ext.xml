@@ -57,15 +57,13 @@
 
         <TextView
             android:id="@+id/text"
-            style="@style/TextAppearance.Primary.SingleLine"
+            style="@style/TextAppearance.Primary.Normal.SingleLine"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
             android:layout_marginStart="@dimen/dp_12"
             android:gravity="center|start"
             android:text="UJ"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/image"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.25" />
@@ -77,7 +75,6 @@
             android:layout_height="wrap_content"
             android:gravity="center|start"
             android:text="2.2mb"
-            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/v1"
             app:layout_constraintHorizontal_bias="0.0"
@@ -88,18 +85,16 @@
 
         <TextView
             android:id="@+id/text3"
-            style="@style/TextAppearance.Secondary.Small.SingleLine"
+            style="@style/TextAppearance.Primary.Normal.SingleLine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center|start"
             android:text="Receiving"
-            android:textSize="14sp"
             android:textColor="@color/black_dominant"
-            app:layout_constraintBottom_toBottomOf="@+id/text2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@+id/v1"
-            app:layout_constraintTop_toTopOf="@+id/text2" />
+            android:layout_marginStart="@dimen/margin_absolute_size"
+            app:layout_constraintBottom_toBottomOf="@+id/text"
+            app:layout_constraintStart_toEndOf="@+id/text"
+            app:layout_constraintTop_toTopOf="@+id/text" />
 
         <View
             android:id="@+id/v1"
@@ -108,6 +103,7 @@
             android:layout_marginStart="@dimen/dp_5"
             android:layout_marginEnd="@dimen/dp_5"
             android:background="@color/text_color_gray"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/text2"
             app:layout_constraintEnd_toStartOf="@+id/text3"
             app:layout_constraintHorizontal_chainStyle="packed"

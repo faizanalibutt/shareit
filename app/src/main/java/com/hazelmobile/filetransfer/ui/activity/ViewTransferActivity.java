@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +49,7 @@ import com.hazelmobile.filetransfer.util.TransferUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by: veli
@@ -63,6 +68,8 @@ public class ViewTransferActivity
     public static final String EXTRA_REQUEST_TYPE = "extraRequestType";
 
     public static final int REQUEST_ADD_DEVICES = 5045;
+    public static final String EXTRA_LAYOUT_INFLATER = "inflateLayout";
+    public static final String EXTRA_ASSIGNEE_TITLE = "titleAssignee";
     final private List<String> mActiveProcesses = new ArrayList<>();
     final private TransferGroup.Index mTransactionIndex = new TransferGroup.Index();
     private OnBackPressedListener mBackPressedListener;
@@ -87,6 +94,7 @@ public class ViewTransferActivity
 
     //private TextView dataTransferTime;
     //private TextView dataTransferSpeed;
+    private boolean isHistroy = false;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -143,10 +151,16 @@ public class ViewTransferActivity
         }
     };
 
-    public static void startInstance(Context context, long groupId, boolean isHistory) {
+    public static void startInstance(Context context, long groupId) {
+        startInstance(context, groupId, "", false);
+    }
+
+    public static void startInstance(Context context, long groupId, String assigneeTitle, boolean isHistory) {
         context.startActivity(new Intent(context, ViewTransferActivity.class)
                 .setAction(ACTION_LIST_TRANSFERS)
                 .putExtra(EXTRA_GROUP_ID, groupId)
+                .putExtra(EXTRA_ASSIGNEE_TITLE, assigneeTitle)
+                .putExtra(EXTRA_LAYOUT_INFLATER, isHistory)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
@@ -154,7 +168,14 @@ public class ViewTransferActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_view_transfer);
+        if (ACTION_LIST_TRANSFERS.equals(getIntent().getAction()) && getIntent().hasExtra(EXTRA_GROUP_ID)) {
+            isHistroy = getIntent().getBooleanExtra(EXTRA_LAYOUT_INFLATER, false);
+        }
+
+        if (isHistroy)
+            setContentView(R.layout.activity_view_transfer_history);
+        else
+            setContentView(R.layout.activity_view_transfer);
 
         mMode = findViewById(R.id.activity_transaction_action_mode);
 
@@ -208,13 +229,28 @@ public class ViewTransferActivity
             try {
                 getDatabase().reconstruct(group);
                 mGroup = group;
+                if (isHistroy) {
+                    Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+                    final String title = getIntent().getStringExtra(EXTRA_ASSIGNEE_TITLE);
+                    getSupportActionBar().setTitle(title);
 
+                    SpannableString spanString = new SpannableString(title);
+                    ForegroundColorSpan fcsBlue = new ForegroundColorSpan(Color.BLUE);
+
+                    spanString.setSpan(
+                            fcsBlue,
+                            title.startsWith("S") ? 8 : 14,
+                            Objects.requireNonNull(getSupportActionBar().getTitle()).length(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    );
+                    getSupportActionBar().setTitle(spanString);
+
+                }
                 if (getIntent().hasExtra(EXTRA_REQUEST_ID)
                         && getIntent().hasExtra(EXTRA_DEVICE_ID)
                         && getIntent().hasExtra(EXTRA_REQUEST_TYPE)) {
                     long requestId = getIntent().getLongExtra(EXTRA_REQUEST_ID, -1);
                     String deviceId = getIntent().getStringExtra(EXTRA_DEVICE_ID);
-
                     try {
                         TransferObject.Type type = TransferObject.Type
                                 .valueOf(getIntent().getStringExtra(EXTRA_REQUEST_TYPE));
@@ -241,6 +277,7 @@ public class ViewTransferActivity
             transactionFragmentArgs.putString(TransferFileExplorerFragment.ARG_PATH,
                     mTransferObject == null || mTransferObject.directory == null
                             ? null : mTransferObject.directory);
+            transactionFragmentArgs.putBoolean(TransferFileExplorerFragment.HISTORY_LAYOUT_INFLATER, isHistroy);
 
             TransferFileExplorerFragment fragment = (TransferFileExplorerFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.activity_transaction_content_frame);
@@ -267,7 +304,7 @@ public class ViewTransferActivity
             final Observer<Boolean> cancelTransferStatus = new Observer<Boolean>() {
                 @Override
                 public void onChanged(final Boolean status) {
-                    if (status)
+                    if (status && !isHistroy)
                         new AlertDialog.Builder(ViewTransferActivity.this)
                                 .setMessage(getString(R.string.mesg_cancelTransfer))
                                 .setNegativeButton(R.string.butn_no, null)

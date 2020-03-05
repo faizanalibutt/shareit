@@ -71,7 +71,9 @@ public class TransferListAdapter
     private int mColorDone;
     private int mColorError;
 
-    public TransferListAdapter(Context context) {
+    private boolean isHistory = false;
+
+    public TransferListAdapter(Context context, boolean isHistory) {
         super(context, MODE_GROUP_BY_DEFAULT);
 
         mPercentFormat = NumberFormat.getPercentInstance();
@@ -80,6 +82,7 @@ public class TransferListAdapter
         mColorError = ContextCompat.getColor(context, AppUtils.getReference(context, R.attr.colorError));
 
         setSelect(new SQLQuery.Select(AccessDatabase.TABLE_TRANSFER));
+        this.isHistory = isHistory;
     }
 
     @Override
@@ -420,7 +423,7 @@ public class TransferListAdapter
         if (viewType == VIEW_TYPE_REPRESENTATIVE)
             return new GroupViewHolder(getInflater().inflate(R.layout.layout_list_title, parent, false), R.id.layout_list_title_text);
 
-        return new GroupEditableListAdapter.GroupViewHolder(getInflater().inflate(R.layout.list_transfer_ext, parent, false));
+        return new GroupEditableListAdapter.GroupViewHolder(getInflater().inflate(isHistory ? R.layout.list_transfer_history : R.layout.list_transfer_ext, parent, false));
     }
 
     @Override
@@ -479,7 +482,10 @@ public class TransferListAdapter
 
                 boolean supportThumbnail = object.loadThumbnail(thumbnail);
 
-                progressBar.setVisibility(!supportThumbnail || !object.isComplete()
+                if (isHistory)
+                    progressBar.setVisibility(View.GONE);
+                else
+                    progressBar.setVisibility(!supportThumbnail || !object.isComplete()
                         ? View.VISIBLE
                         : View.GONE);
 

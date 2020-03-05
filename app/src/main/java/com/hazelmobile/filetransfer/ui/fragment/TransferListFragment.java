@@ -63,12 +63,14 @@ public class TransferListFragment
     public static final String ARG_DEVICE_ID = "argDeviceId";
     public static final String ARG_GROUP_ID = "argGroupId";
     public static final String ARG_PATH = "argPath";
+    public static final String HISTORY_LAYOUT_INFLATER = "historyLayout";
 
     public static final int REQUEST_CHOOSE_FOLDER = 1;
 
     private TransferGroup mHeldGroup;
     private String mLastKnownPath;
     private IntentFilter intentFilter;
+    private boolean isHistroy = false;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -112,6 +114,12 @@ public class TransferListFragment
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Bundle args = getArguments();
+
+        if (args != null && args.containsKey(HISTORY_LAYOUT_INFLATER)) {
+            isHistroy = args.getBoolean(HISTORY_LAYOUT_INFLATER);
+        }
+
         super.onCreate(savedInstanceState);
 
         setFilteringSupported(true);
@@ -191,7 +199,7 @@ public class TransferListFragment
             }
         };
 
-        return new TransferListAdapter(getActivity()) {
+        return new TransferListAdapter(getActivity(), isHistroy) {
             @NonNull
             @Override
             public GroupEditableListAdapter.GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -429,7 +437,9 @@ public class TransferListFragment
     @Override
     protected RecyclerView onListView(View mainContainer, ViewGroup listViewContainer) {
 
-        final View adaptedView = getLayoutInflater().inflate(R.layout.fragment_transfer_list, null, false);
+        final View adaptedView = isHistroy ?
+                getLayoutInflater().inflate(R.layout.fragment_transfer_history_list, null, false) :
+                getLayoutInflater().inflate(R.layout.fragment_transfer_list, null, false);
         ((ViewGroup) mainContainer).addView(adaptedView);
 
         crackProgress = adaptedView.findViewById(R.id.progressBar);
