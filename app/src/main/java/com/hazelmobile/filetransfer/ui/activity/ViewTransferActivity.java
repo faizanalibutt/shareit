@@ -501,7 +501,7 @@ public class ViewTransferActivity
     @Override
     public void onBackPressed() {
 
-        if (hasRunning || hasAnyFiles)
+        if ((hasRunning || hasAnyFiles) && !isHistroy)
             new AlertDialog.Builder(ViewTransferActivity.this)
                     .setMessage(getString(R.string.mesg_cancelTransfer))
                     .setNegativeButton(R.string.butn_no, null)

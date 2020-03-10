@@ -70,7 +70,7 @@ public class TransferListFragment
     private TransferGroup mHeldGroup;
     private String mLastKnownPath;
     private IntentFilter intentFilter;
-    private boolean isHistroy = false;
+    private boolean isHistory = false;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -117,7 +117,7 @@ public class TransferListFragment
         Bundle args = getArguments();
 
         if (args != null && args.containsKey(HISTORY_LAYOUT_INFLATER)) {
-            isHistroy = args.getBoolean(HISTORY_LAYOUT_INFLATER);
+            isHistory = args.getBoolean(HISTORY_LAYOUT_INFLATER);
         }
 
         super.onCreate(savedInstanceState);
@@ -199,7 +199,7 @@ public class TransferListFragment
             }
         };
 
-        return new TransferListAdapter(getActivity(), isHistroy) {
+        return new TransferListAdapter(getActivity(), isHistory) {
             @NonNull
             @Override
             public GroupEditableListAdapter.GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -437,7 +437,7 @@ public class TransferListFragment
     @Override
     protected RecyclerView onListView(View mainContainer, ViewGroup listViewContainer) {
 
-        final View adaptedView = isHistroy ?
+        final View adaptedView = isHistory ?
                 getLayoutInflater().inflate(R.layout.fragment_transfer_history_list, null, false) :
                 getLayoutInflater().inflate(R.layout.fragment_transfer_list, null, false);
         ((ViewGroup) mainContainer).addView(adaptedView);
