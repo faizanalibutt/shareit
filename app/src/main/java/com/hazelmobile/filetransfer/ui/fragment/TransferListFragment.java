@@ -137,7 +137,7 @@ public class TransferListFragment
 
         Bundle args = getArguments();
 
-        if (args != null && args.containsKey(ARG_GROUP_ID)) {
+        if  (args != null && args.containsKey(ARG_GROUP_ID)) {
             goPath(args.getLong(ARG_GROUP_ID), args.getString(ARG_PATH),
                     args.getString(ARG_DEVICE_ID));
         }

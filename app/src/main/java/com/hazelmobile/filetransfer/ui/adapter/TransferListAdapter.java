@@ -743,8 +743,9 @@ public class TransferListAdapter
 
         @Override
         public String getSecondText(TransferListAdapter adapter) {
-            return adapter.getContext()
-                    .getString(R.string.text_transferStatusBytes,
+            return adapter.isHistory ? adapter.getContext().getString(R.string.total_transfer_time,
+                                    FileUtils.sizeExpression(bytesReceived, false)) :
+                    adapter.getContext().getString(R.string.text_transferStatusBytes,
                             FileUtils.sizeExpression(bytesReceived, false),
                             FileUtils.sizeExpression(bytesTotal, false));
         }
