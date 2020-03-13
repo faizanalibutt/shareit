@@ -88,6 +88,7 @@ public class AppUtils {
         connection.adapterName = Keyword.Local.NETWORK_INTERFACE_UNKNOWN;
     }
 
+    // #SERVER
     public static void applyDeviceToJSON(Context context, JSONObject object) throws JSONException {
         NetworkDevice device = getLocalDevice(context);
         JSONObject deviceInformation = new JSONObject();

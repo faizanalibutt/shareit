@@ -120,6 +120,9 @@ public class NetworkDeviceLoader {
 
         saveProfilePicture(database.getContext(), device, deviceInfo);
 
+        LogUtils.getLogWarning("Client", String.format("NetworkDeviceLoader.loadFrom(): Response from Server: %s",
+                object));
+
         return device;
     }
 

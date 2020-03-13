@@ -1020,6 +1020,8 @@ public class CommunicationService extends Service {
                                 sendBroadcast(new Intent(ACTION_DEVICE_ACQUAINTANCE)
                                         .putExtra(EXTRA_DEVICE_ID, device.deviceId)
                                         .putExtra(EXTRA_CONNECTION_ADAPTER_NAME, connection.adapterName));
+                                LogUtils.getLogInformation("Server", String.format("CommunicationServer.onConnected(): ConnectionAdapter is: %s",
+                                        connection.adapterName));
 
                                 result = true;
                                 break;
