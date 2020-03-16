@@ -39,7 +39,7 @@ class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
             //R.id.menu_help -> createSnackbar(R.string.menu_generic_text)?.show()
             R.id.menu_settings -> startActivity(Intent(this@SideMenu, SettingsActivity::class.java))
             //R.id.menu_feedback -> createSnackbar(R.string.menu_generic_text)?.show()
-            R.id.menu_rateus -> createSnackbar(R.string.menu_generic_text)?.show()
+            R.id.menu_rateus -> showRateUsDialogue()
             R.id.menu_privacy -> {
                 val url = "https://fiverr.com/faizistudio"
                 val builder = CustomTabsIntent.Builder()
@@ -49,6 +49,10 @@ class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
             //R.id.menu_about -> createSnackbar(R.string.menu_generic_text)?.show()
             else -> return
         }
+    }
+
+    private fun showRateUsDialogue() {
+
     }
 
     override fun createSnackbar(resId: Int, vararg objects: Any): Snackbar? {

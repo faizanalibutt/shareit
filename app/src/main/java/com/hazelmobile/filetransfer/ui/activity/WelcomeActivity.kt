@@ -10,10 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.transition.TransitionManager
 import com.hazelmobile.filetransfer.R
-import com.hazelmobile.filetransfer.`object`.NetworkDevice
 import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.util.AppUtils
-import kotlinx.android.synthetic.main.activity_side_menu.*
 import kotlinx.android.synthetic.main.activity_welcome.*
 
 
@@ -31,6 +29,8 @@ class WelcomeActivity : Activity() {
         setWelcomePageDisallowed(true)
         defaultPreferences.edit().putBoolean("introduction_shown", true).apply()
         colorsList = resources.getIntArray(R.array.colorsList)
+        setProfilePicture()
+
 
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -115,21 +115,41 @@ class WelcomeActivity : Activity() {
                 finish()
             }
         }
+
+        if (editText.text == null || editText.text.isEmpty()) {
+            button.isClickable = false
+        } else {
+            button.isClickable = true
+            button.setBackgroundResource(R.drawable.background_content_share_button_select)
+            image.setImageResource(R.drawable.ic_tick_white_24dp)
+            text.setTextColor(
+                ContextCompat.getColor(
+                    this@WelcomeActivity,
+                    R.color.white
+                )
+            )
+            ViewCompat.setBackgroundTintList(
+                button,
+                ContextCompat.getColorStateList(
+                    this@WelcomeActivity,
+                    R.color.text_button_text_color_selector_blue
+                )
+            )
+        }
     }
 
     private fun setProfilePicture() {
-        val localDevice: NetworkDevice = AppUtils.getLocalDevice(applicationContext)
-        textView.text = localDevice.nickname
-        loadProfilePictureInto(localDevice.nickname, user_image)
-        val color =
-            AppUtils.getDefaultPreferences(this@WelcomeActivity)
+        val device_name = defaultPreferences.getString("device_name", "")
+        editText.setText(device_name)
+        loadProfilePictureInto(device_name, userProfileImage)
+        val color = AppUtils.getDefaultPreferences(this@WelcomeActivity)
                 .getInt("device_name_color", -1)
 
-        if (user_image.drawable is ShapeDrawable && (color != -1 or R.color.white)) {
-            val shapeDrawable: ShapeDrawable = user_image.drawable as ShapeDrawable
+        if (userProfileImage.drawable is ShapeDrawable && (color != -1 or R.color.white)) {
+            val shapeDrawable: ShapeDrawable = userProfileImage.drawable as ShapeDrawable
             shapeDrawable.paint.color = color
         } else {
-            user_image.setBackgroundResource(R.drawable.background_user_icon_default)
+            userProfileImage.setBackgroundResource(R.drawable.background_user_icon_default)
         }
     }
 

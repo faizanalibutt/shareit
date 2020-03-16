@@ -7,40 +7,25 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="60dp"
         android:background="?rectSelector">
-
-        <!--<ImageView
-            android:layout_width="@dimen/dp_32"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/text_image"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/thumbnail"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_compare_arrows_white_24dp" />-->
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/image"
-            style="@style/TextAppearance.Primary.Enlarge"
             android:layout_width="@dimen/dp_64"
-            android:layout_height="@dimen/dp_64"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="@dimen/margin_smaller_size"
-            android:layout_marginTop="@dimen/margin_small_size"
-            android:layout_marginBottom="@dimen/margin_small_size"
+            android:layout_height="match_parent"
+            app:layout_constraintHorizontal_bias="0.0"
             android:background="@drawable/background_user_icon_default"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/thumbnail"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/thumbnail"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/thumbnail"
-            android:layout_width="@dimen/dp_64"
+            android:layout_width="@dimen/dp_48"
             android:layout_height="match_parent"
             android:contentDescription="@string/text_image"
-            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ProgressBar
@@ -52,7 +37,7 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/thumbnail"
+            app:layout_constraintStart_toEndOf="@+id/image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -114,7 +99,8 @@
         <FrameLayout
             android:id="@+id/layout_image"
             style="@style/ListContentIconStyle"
-            android:visibility="invisible"
+            android:layout_margin="0dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/detail"
             app:layout_constraintStart_toStartOf="parent"
