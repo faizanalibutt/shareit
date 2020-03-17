@@ -67,8 +67,8 @@ public class TransferGroupListFragment
         setDefaultSortingCriteria(TransferGroupListAdapter.MODE_SORT_BY_DATE);
         setDefaultGroupingCriteria(TransferGroupListAdapter.MODE_GROUP_BY_DATE);
         setDefaultSelectionCallback(new SelectionCallback(this));
-        setUseDefaultPaddingDecoration(true);
-        setUseDefaultPaddingDecorationSpaceForEdges(true);
+        setUseDefaultPaddingDecoration(false);
+        setUseDefaultPaddingDecorationSpaceForEdges(false);
         setDefaultPaddingDecorationSize(getResources().getDimension(R.dimen.padding_list_content_parent_layout));
     }
 

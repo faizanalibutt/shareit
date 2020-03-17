@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:text="File Transfer"
                 android:textSize="@dimen/font_size_big"
-                android:textColor="@color/hazel_text_color"
+                android:textColor="@color/black_gray"
                 android:layout_gravity="center"
                 android:id="@+id/toolbar_title" />
 

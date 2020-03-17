@@ -108,9 +108,9 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:padding="@dimen/margin_smallest_size"
-                android:background="@drawable/background_user_icon_default"
+                android:background="@drawable/background_user_icon_default_dark"
                 android:gravity="center"
-                app:srcCompat="@drawable/ic_retry_white_24dp" />
+                app:srcCompat="@drawable/ic_qr_icon_white_24dp" />
 
         </LinearLayout>
 

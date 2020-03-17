@@ -2,6 +2,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
+    android:layout_marginTop="@dimen/margin_smaller_size"
+    android:layout_marginBottom="@dimen/margin_absolute_size"
+    style="@style/ListContentLayoutStyleOutside"
     android:orientation="horizontal">
 
     <!--<View
@@ -28,7 +31,7 @@
 
     <TextView
         android:id="@+id/layout_list_title_text"
-        style="@style/CondensedTitleStyle"
+        style="@style/LightTitleStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center|start"
