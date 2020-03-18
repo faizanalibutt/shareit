@@ -373,13 +373,13 @@
                     android:text="Your name"
                     android:textColor="@color/black_dominant"
                     android:textSize="@dimen/font_size_big"
-                    app:layout_constraintBottom_toTopOf="@+id/s3"
+                    app:layout_constraintBottom_toTopOf="@+id/user_name"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/s3"
+                    android:id="@+id/user_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="Faizan Ali"

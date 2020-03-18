@@ -1,20 +1,25 @@
 package com.hazelmobile.filetransfer.ui.activity
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.ShapeDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.`object`.NetworkDevice
 import com.hazelmobile.filetransfer.app.Activity
+import com.hazelmobile.filetransfer.callback.Callback
+import com.hazelmobile.filetransfer.callback.Callback.getColor
+import com.hazelmobile.filetransfer.dialog.RateUsDialog
 import com.hazelmobile.filetransfer.ui.callback.SnackbarSupport
 import com.hazelmobile.filetransfer.util.AppUtils
 import kotlinx.android.synthetic.main.activity_side_menu.*
 
-class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
+class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,26 +29,26 @@ class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
     }
 
     private fun init() {
-        menu_histroy.setOnClickListener(this@SideMenu)
+        menu_histroy.setOnClickListener(this@SideMenuActivity)
         //menu_help.setOnClickListener(this@SideMenu)
-        menu_settings.setOnClickListener(this@SideMenu)
+        menu_settings.setOnClickListener(this@SideMenuActivity)
         //menu_feedback.setOnClickListener(this@SideMenu)
-        menu_rateus.setOnClickListener(this@SideMenu)
-        menu_privacy.setOnClickListener(this@SideMenu)
+        menu_rateus.setOnClickListener(this@SideMenuActivity)
+        menu_privacy.setOnClickListener(this@SideMenuActivity)
         //menu_about.setOnClickListener(this@SideMenu)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.menu_histroy -> startActivity(Intent(this@SideMenu, HistoryActivity::class.java))
+            R.id.menu_histroy -> startActivity(Intent(this@SideMenuActivity, HistoryActivity::class.java))
             //R.id.menu_help -> createSnackbar(R.string.menu_generic_text)?.show()
-            R.id.menu_settings -> startActivity(Intent(this@SideMenu, SettingsActivity::class.java))
+            R.id.menu_settings -> startActivity(Intent(this@SideMenuActivity, SettingsActivity::class.java))
             //R.id.menu_feedback -> createSnackbar(R.string.menu_generic_text)?.show()
             R.id.menu_rateus -> showRateUsDialogue()
             R.id.menu_privacy -> {
                 val url = "https://fiverr.com/faizistudio"
                 val builder = CustomTabsIntent.Builder()
-                val customTabsIntent = builder.build ()
+                val customTabsIntent = builder.build()
                 customTabsIntent.launchUrl(this, Uri.parse(url))
             }
             //R.id.menu_about -> createSnackbar(R.string.menu_generic_text)?.show()
@@ -52,7 +57,17 @@ class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
     }
 
     private fun showRateUsDialogue() {
-
+        val rateUsDialog = RateUsDialog(this@SideMenuActivity)
+        val dialog = rateUsDialog.show()
+        val rating:  Observer<Float> =
+            Observer {
+                    rating ->
+                if (rating < 4)
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).text = "Feedback"
+                else
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).text = "Rate Us"
+            }
+        Callback.getRating().observe(this@SideMenuActivity, rating)
     }
 
     override fun createSnackbar(resId: Int, vararg objects: Any): Snackbar? {
@@ -67,7 +82,7 @@ class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
         val localDevice: NetworkDevice = AppUtils.getLocalDevice(applicationContext)
         textView.text = localDevice.nickname
         loadProfilePictureInto(localDevice.nickname, user_image)
-        val color = AppUtils.getDefaultPreferences(this@SideMenu).getInt("device_name_color", -1)
+        val color = AppUtils.getDefaultPreferences(this@SideMenuActivity).getInt("device_name_color", -1)
 
         if (user_image.drawable is ShapeDrawable && (color != -1 or R.color.white)) {
             val shapeDrawable: ShapeDrawable = user_image.drawable as ShapeDrawable
@@ -84,7 +99,7 @@ class SideMenu : Activity(), View.OnClickListener, SnackbarSupport {
 
     fun setProfileImage(view: View) {
         if (checkPermissionsState()) {
-            startActivity(Intent(this@SideMenu, WelcomeActivity::class.java))
+            startActivity(Intent(this@SideMenuActivity, WelcomeActivity::class.java))
         } else
             requestRequiredPermissions(false)
     }

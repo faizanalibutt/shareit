@@ -17,7 +17,7 @@ class MainActivity : Activity() {
         setContentView(R.layout.activity_main)
 
         slide_menu.setOnClickListener {
-            startActivity(Intent(this@MainActivity, SideMenu::class.java))
+            startActivity(Intent(this@MainActivity, SideMenuActivity::class.java))
         }
 
     }

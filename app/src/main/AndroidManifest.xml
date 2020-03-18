@@ -38,7 +38,7 @@
         <activity
             android:name=".ui.activity.HistoryActivity"
             android:label="@string/text_history"
-            android:parentActivityName=".ui.activity.SideMenu"
+            android:parentActivityName=".ui.activity.SideMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.White" />
         <activity android:name=".ui.activity.DialogSheetActivity" />
@@ -71,11 +71,11 @@
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".ui.activity.SideMenu"
+            android:parentActivityName=".ui.activity.SideMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.White" />
         <activity
-            android:name=".ui.activity.SideMenu"
+            android:name=".ui.activity.SideMenuActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.Base.NoActionBar" />
         <activity

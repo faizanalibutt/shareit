@@ -2,20 +2,20 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:scrollbars="none"
-    android:id="@+id/container"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:scrollbars="none">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        tools:context=".ui.activity.SideMenu"
-        android:paddingBottom="@dimen/margin_medium_size">
+        android:paddingBottom="@dimen/margin_medium_size"
+        tools:context=".ui.activity.SideMenuActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar"
@@ -33,14 +33,14 @@
                 <ImageView
                     android:layout_width="@dimen/dp_32"
                     android:layout_height="@dimen/dp_32"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:background="@drawable/round_selector"
                     android:contentDescription="@string/text_back_arrow_icon"
                     android:onClick="closeMenu"
                     android:padding="@dimen/dp_8"
-                    android:layout_marginStart="@dimen/dp_16"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/imageView"
-                    android:background="@drawable/round_selector"
                     app:srcCompat="@drawable/ic_back_icon_grey_24db" />
 
                 <ImageView
@@ -50,9 +50,9 @@
                     android:layout_marginTop="@dimen/dp_24"
                     android:layout_marginEnd="@dimen/dp_24"
                     android:contentDescription="@string/text_notification_icon"
+                    android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="invisible"
                     app:srcCompat="@drawable/ic_notification_24dp" />
 
 
@@ -79,10 +79,10 @@
 
                     <ImageView
                         android:id="@+id/user_image"
-                        android:onClick="setProfileImage"
                         android:layout_width="@dimen/dp_64"
                         android:layout_height="@dimen/dp_64"
                         android:contentDescription="@string/text_user_icon"
+                        android:onClick="setProfileImage"
                         app:layout_constraintBottom_toTopOf="@+id/textView"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -99,9 +99,9 @@
             android:id="@+id/v1"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_6"
+            android:background="@drawable/app_bar_shadow"
             app:layout_constraintBottom_toTopOf="@+id/c1"
-            app:layout_constraintTop_toBottomOf="@+id/app_bar"
-            android:background="@drawable/app_bar_shadow" />
+            app:layout_constraintTop_toBottomOf="@+id/app_bar" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/c1"
@@ -199,16 +199,17 @@
 
         <LinearLayout
             android:id="@+id/side_menu_list"
-            app:layout_constraintTop_toBottomOf="@+id/v2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/v2">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_histroy"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium_size">
+                android:layout_height="32dp"
+                android:layout_marginTop="@dimen/margin_small_size"
+                android:background="?rectSelector">
 
                 <TextView
                     android:layout_width="0dp"
@@ -217,16 +218,17 @@
                     android:text="@string/text_history"
                     android:textColor="@color/black_dominant"
                     android:textSize="@dimen/font_size_primary"
-                    app:layout_constraintBottom_toBottomOf="@+id/histroy"
-                    app:layout_constraintLeft_toRightOf="@+id/histroy"
-                    app:layout_constraintTop_toTopOf="@+id/histroy" />
+                    app:layout_constraintBottom_toBottomOf="@id/history"
+                    app:layout_constraintLeft_toRightOf="@id/history"
+                    app:layout_constraintTop_toTopOf="@id/history" />
 
                 <ImageView
-                    android:id="@+id/histroy"
+                    android:id="@+id/history"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
                     android:layout_marginStart="@dimen/margin_small_size"
                     android:contentDescription="@string/text_history"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_history_icon_grey_24dp" />
@@ -265,8 +267,9 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_settings"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium_size">
+                android:layout_height="32dp"
+                android:layout_marginTop="@dimen/margin_small_size"
+                android:background="?rectSelector">
 
                 <TextView
                     android:layout_width="0dp"
@@ -285,6 +288,7 @@
                     android:layout_height="@dimen/dp_20"
                     android:layout_marginStart="@dimen/margin_small_size"
                     android:contentDescription="@string/text_settings"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_settings_icon_grey_24dp" />
@@ -323,8 +327,9 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_rateus"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium_size">
+                android:layout_height="32dp"
+                android:layout_marginTop="@dimen/margin_small_size"
+                android:background="?rectSelector">
 
                 <TextView
                     android:layout_width="0dp"
@@ -343,6 +348,7 @@
                     android:layout_height="@dimen/dp_20"
                     android:layout_marginStart="@dimen/margin_small_size"
                     android:contentDescription="@string/text_rate"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_rate_us_icon_grey_24dp" />
@@ -352,8 +358,9 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_privacy"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium_size">
+                android:layout_height="32dp"
+                android:layout_marginTop="@dimen/margin_small_size"
+                android:background="?rectSelector">
 
                 <TextView
                     android:layout_width="0dp"
@@ -372,6 +379,7 @@
                     android:layout_height="@dimen/dp_24"
                     android:layout_marginStart="@dimen/margin_small_size"
                     android:contentDescription="@string/text_privacy"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_privacy_policy_grey_24dp" />

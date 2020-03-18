@@ -20,6 +20,16 @@ object Callback {
     val transferProgress = MutableLiveData<Boolean>()
     @JvmField
     val onSenderActionNeed = MutableLiveData<Any>()
+    @JvmField
+    val ratingData = MutableLiveData<Float>()
+
+    fun getRating(): MutableLiveData<Float> {
+        return ratingData
+    }
+
+    fun setRating(rating: Float) {
+        ratingData.value = rating
+    }
 
 
     @JvmStatic
