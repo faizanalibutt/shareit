@@ -32,7 +32,7 @@ class RateUsDialog(val activity: Activity) : AlertDialog.Builder(activity) {
 
             setNegativeButton("Cancel", null)
 
-            val dialog = this.show()
+            //val dialog = this.show()
 
             mRootView.rating_bar_value.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
                     if (rating < 4)
