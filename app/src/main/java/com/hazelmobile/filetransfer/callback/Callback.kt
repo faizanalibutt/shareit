@@ -23,10 +23,12 @@ object Callback {
     @JvmField
     val ratingData = MutableLiveData<Float>()
 
+    @JvmStatic
     fun getRating(): MutableLiveData<Float> {
         return ratingData
     }
 
+    @JvmStatic
     fun setRating(rating: Float) {
         ratingData.value = rating
     }

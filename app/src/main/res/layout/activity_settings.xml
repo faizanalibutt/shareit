@@ -318,7 +318,7 @@ tools:context=".ui.activity.SettingsActivity">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/shareUserName"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:background="?rectSelector"
             app:layout_constraintBottom_toTopOf="@+id/sv3"
             app:layout_constraintEnd_toEndOf="parent"
@@ -350,11 +350,12 @@ tools:context=".ui.activity.SettingsActivity">
                 <TextView
                     android:id="@+id/s2"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginStart="@dimen/dp_16"
                     android:text="Your name"
                     android:textColor="@color/black_dominant"
                     android:textSize="@dimen/font_size_big"
+                    android:gravity="bottom"
                     app:layout_constraintBottom_toTopOf="@+id/user_name"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -363,9 +364,10 @@ tools:context=".ui.activity.SettingsActivity">
                 <TextView
                     android:id="@+id/user_name"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:text="Faizan Ali"
                     android:textSize="@dimen/font_size_primary"
+                    android:gravity="top"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/s2"
                     app:layout_constraintStart_toStartOf="@+id/s2"
@@ -378,7 +380,7 @@ tools:context=".ui.activity.SettingsActivity">
         <View
             android:id="@+id/sv3"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_20"
+            android:layout_height="@dimen/dp_10"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

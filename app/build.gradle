@@ -67,6 +67,9 @@ dependencies {
     // chrome custom tabs
     implementation 'com.android.support:customtabs:28.0.0'
 
+    // rating bar lib
+    implementation 'me.zhanghai.android.materialratingbar:library:1.4.0'
+
     // frameworks to test your blunders
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

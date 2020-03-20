@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.provider.Settings
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
+import com.hazelmobile.filetransfer.callback.Callback
 import com.hazelmobile.filetransfer.service.CommunicationService
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils
 import com.hazelmobile.filetransfer.util.AppUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : Activity() {
+
+    //private var mExitPressTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +23,16 @@ class MainActivity : Activity() {
             startActivity(Intent(this@MainActivity, SideMenuActivity::class.java))
         }
 
+    }
+
+    override fun onBackPressed() {
+        /*if (System.currentTimeMillis() - mExitPressTime < 2000)
+            super.onBackPressed()
+        else {
+            mExitPressTime = System.currentTimeMillis()
+            Toast.makeText(this, R.string.mesg_secureExit, Toast.LENGTH_SHORT).show()
+        }*/
+        showRateExitDialogue(this@MainActivity)
     }
 
     companion object {

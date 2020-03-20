@@ -207,8 +207,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_histroy"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_marginTop="@dimen/margin_small_size"
+                android:layout_height="?attr/actionBarSize"
                 android:background="?rectSelector">
 
                 <TextView
@@ -267,8 +266,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_settings"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_marginTop="@dimen/margin_small_size"
+                android:layout_height="?attr/actionBarSize"
                 android:background="?rectSelector">
 
                 <TextView
@@ -327,8 +325,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_rateus"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_marginTop="@dimen/margin_small_size"
+                android:layout_height="?attr/actionBarSize"
                 android:background="?rectSelector">
 
                 <TextView
@@ -358,8 +355,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_privacy"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:layout_marginTop="@dimen/margin_small_size"
+                android:layout_height="?attr/actionBarSize"
                 android:background="?rectSelector">
 
                 <TextView

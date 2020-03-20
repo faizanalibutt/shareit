@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.target.SizeReadyCallback;
@@ -29,19 +30,24 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.hazelmobile.filetransfer.GlideApp;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.config.AppConfig;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.dialog.RateExitDialog;
 import com.hazelmobile.filetransfer.dialog.RationalePermissionRequest;
-import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.service.WorkerService;
+import com.hazelmobile.filetransfer.ui.activity.MainActivity;
+import com.hazelmobile.filetransfer.ui.activity.SideMenuActivity;
 import com.hazelmobile.filetransfer.ui.activity.WelcomeActivity;
+import com.hazelmobile.filetransfer.util.AppUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Activity extends AppCompatActivity {
     public static final int REQUEST_PICK_PROFILE_PHOTO = 1000;
@@ -112,6 +118,7 @@ public abstract class Activity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
+        Callback.setRating(0f);
     }
 
     @Override
@@ -165,7 +172,7 @@ public abstract class Activity extends AppCompatActivity {
 
     }
 
-    public boolean checkPermissionsState()  {
+    public boolean checkPermissionsState() {
         if (Build.VERSION.SDK_INT < 23)
             return true;
 
@@ -410,4 +417,41 @@ public abstract class Activity extends AppCompatActivity {
     public interface OnPreloadArgumentWatcher {
         Bundle passPreLoadingArguments();
     }
+
+    protected void showRateExitDialogue(Activity activity) {
+        RateExitDialog rateUsDialog = new RateExitDialog(this,
+                activity instanceof SideMenuActivity ? getString(R.string.rate_us_title) : getString(R.string.butn_exit),
+                activity instanceof MainActivity);
+        Callback.setRating(0f);
+        AlertDialog dialog = rateUsDialog.show();
+        Objects.requireNonNull(dialog.getWindow()).
+                setBackgroundDrawable(getDrawable(R.drawable.background_rate_exit_dialog));
+        Observer<Float> rating =
+                ratingValue -> {
+                    if (activity instanceof SideMenuActivity) {
+                        if (ratingValue == 0f) {
+                            changeDialogButtonState(dialog, AlertDialog.BUTTON_POSITIVE, getString(R.string.text_rate), false);
+                        } else if (ratingValue < 4f) {
+                            changeDialogButtonState(dialog, AlertDialog.BUTTON_POSITIVE, getString(R.string.txt_feedback), true);
+                        } else {
+                            changeDialogButtonState(dialog, AlertDialog.BUTTON_POSITIVE, getString(R.string.text_rate), true);
+                        }
+                    } else {
+                        if (ratingValue == 0f)
+                            changeDialogButtonState(dialog, AlertDialog.BUTTON_NEGATIVE, getString(R.string.butn_cancel), true);
+                        else if (ratingValue < 4f) {
+                            changeDialogButtonState(dialog, AlertDialog.BUTTON_NEGATIVE, getString(R.string.txt_feedback), true);
+                        } else {
+                            changeDialogButtonState(dialog, AlertDialog.BUTTON_NEGATIVE, getString(R.string.text_rate), true);
+                        }
+                    }
+                };
+        Callback.getRating().observe(this, rating);
+    }
+
+    public void changeDialogButtonState(AlertDialog dialog, int buttonType, String title, boolean isDisable) {
+        dialog.getButton(buttonType).setText(title);
+        dialog.getButton(buttonType).setEnabled(isDisable);
+    }
+
 }

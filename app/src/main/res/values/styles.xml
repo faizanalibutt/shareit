@@ -39,6 +39,15 @@
         <item name="buttonBarButtonStyle">@style/Widget.Hazel.ButtonStyle.Dialog</item>
     </style>
 
+    <style name="Widget.Hazel.AppCompats.DialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="buttonBarButtonStyle">@style/Widget.Hazel.ButtonStyle.Dialog</item>
+    </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/colorPassive</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
+
     <style name="Widget.Hazel.PopupTheme" parent="ThemeOverlay.MaterialComponents">
         <!--<item name="android:background">?cardBackgroundColor</item>-->
         <!-- Later handle this -->

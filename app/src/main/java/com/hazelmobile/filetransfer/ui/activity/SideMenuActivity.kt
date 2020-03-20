@@ -1,20 +1,16 @@
 package com.hazelmobile.filetransfer.ui.activity
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.ShapeDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.`object`.NetworkDevice
 import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.callback.Callback
-import com.hazelmobile.filetransfer.callback.Callback.getColor
-import com.hazelmobile.filetransfer.dialog.RateUsDialog
 import com.hazelmobile.filetransfer.ui.callback.SnackbarSupport
 import com.hazelmobile.filetransfer.util.AppUtils
 import kotlinx.android.synthetic.main.activity_side_menu.*
@@ -26,6 +22,11 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
         setContentView(R.layout.activity_side_menu)
         setProfilePicture()
         init()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        setProfilePicture()
     }
 
     private fun init() {
@@ -44,7 +45,7 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
             //R.id.menu_help -> createSnackbar(R.string.menu_generic_text)?.show()
             R.id.menu_settings -> startActivity(Intent(this@SideMenuActivity, SettingsActivity::class.java))
             //R.id.menu_feedback -> createSnackbar(R.string.menu_generic_text)?.show()
-            R.id.menu_rateus -> showRateUsDialogue()
+            R.id.menu_rateus -> showRateExitDialogue(this@SideMenuActivity)
             R.id.menu_privacy -> {
                 val url = "https://fiverr.com/faizistudio"
                 val builder = CustomTabsIntent.Builder()
@@ -54,20 +55,6 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
             //R.id.menu_about -> createSnackbar(R.string.menu_generic_text)?.show()
             else -> return
         }
-    }
-
-    private fun showRateUsDialogue() {
-        val rateUsDialog = RateUsDialog(this@SideMenuActivity)
-        val dialog = rateUsDialog.show()
-        val rating:  Observer<Float> =
-            Observer {
-                    rating ->
-                if (rating < 4)
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).text = "Feedback"
-                else
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).text = "Rate Us"
-            }
-        Callback.getRating().observe(this@SideMenuActivity, rating)
     }
 
     override fun createSnackbar(resId: Int, vararg objects: Any): Snackbar? {
@@ -90,11 +77,6 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
         } else {
             user_image.setBackgroundResource(R.drawable.background_user_icon_default)
         }
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        setProfilePicture()
     }
 
     fun setProfileImage(view: View) {

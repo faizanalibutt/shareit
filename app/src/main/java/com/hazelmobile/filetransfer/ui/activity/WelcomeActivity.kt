@@ -141,6 +141,7 @@ class WelcomeActivity : Activity() {
     private fun setProfilePicture() {
         val device_name = defaultPreferences.getString("device_name", "")
         editText.setText(device_name)
+        editText.setSelection(editText.text.length)
         loadProfilePictureInto(device_name, userProfileImage)
         val color = AppUtils.getDefaultPreferences(this@WelcomeActivity)
                 .getInt("device_name_color", -1)
