@@ -21,7 +21,7 @@
         <item name="colorPrimary">@color/white</item>
     </style>
 
-    <style name="BalckPatch">
+    <style name="BlackPatch">
         <!--<item name="backgroundDialog">@drawable/background_dialog_black</item>
         <item name="backgroundPopupMenu">@drawable/background_popup_black</item>
         <item name="colorPrimary">@color/black_dominant</item>
@@ -39,7 +39,7 @@
         <item name="buttonBarButtonStyle">@style/Widget.Hazel.ButtonStyle.Dialog</item>
     </style>
 
-    <style name="Widget.Hazel.AppCompats.DialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+    <style name="Widget.Hazel.AppCompat.DialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="buttonBarButtonStyle">@style/Widget.Hazel.ButtonStyle.Dialog</item>
     </style>
 

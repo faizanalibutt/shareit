@@ -5,7 +5,7 @@ import androidx.appcompat.app.AlertDialog
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
 
-class ExitDialog(val activity: Activity, val title: String) : AlertDialog.Builder(activity, R.style.Widget_Hazel_AppCompats_DialogTheme) {
+class ExitDialog(val activity: Activity, val title: String) : AlertDialog.Builder(activity, R.style.Widget_Hazel_AppCompat_DialogTheme) {
 
     init {
         kotlin.runCatching {

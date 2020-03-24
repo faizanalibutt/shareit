@@ -100,7 +100,6 @@
             android:numStars="5"
             android:progressTint="@color/colorPrimary"
             android:stepSize="1"
-            android:theme="@style/RatingBar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintStart_toEndOf="@+id/guideline_start"

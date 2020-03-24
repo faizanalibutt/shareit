@@ -12,7 +12,7 @@ import com.hazelmobile.filetransfer.callback.Callback
 import kotlinx.android.synthetic.main.layout_exit_rating_dialog.view.*
 
 class RateExitDialog(val activity: Activity, val title: String, val adsVisible: Boolean) :
-    AlertDialog.Builder(activity, R.style.Widget_Hazel_AppCompats_DialogTheme) {
+    AlertDialog.Builder(activity, R.style.Widget_Hazel_AppCompat_DialogTheme) {
 
     init {
         kotlin.runCatching {
