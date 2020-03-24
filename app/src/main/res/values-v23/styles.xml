@@ -32,5 +32,4 @@
         <item name="statusBarColor">@android:color/transparent</item>
     </style>
 
-    <dimen name="font_size_monster">48sp</dimen>
 </resources>
