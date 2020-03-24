@@ -378,7 +378,7 @@ public class FileListFragment
 
     @Override
     public boolean onDefaultClickAction(GroupEditableListAdapter.GroupViewHolder holder) {
-        performLayoutClick(holder);
+        performLayoutClickOpen(holder);
         return true;
     }
 

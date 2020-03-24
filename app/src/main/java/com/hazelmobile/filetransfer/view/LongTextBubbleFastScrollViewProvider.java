@@ -35,7 +35,7 @@ public class LongTextBubbleFastScrollViewProvider extends ScrollerViewProvider {
 
         int handleWidth = getContext().getResources().getDimensionPixelSize(getScroller().isVertical() ? com.genonbeta.android.framework.R.dimen.genfw_fastscroll_handle_clickable_width : com.genonbeta.android.framework.R.dimen.genfw_fastscroll_handle_height);
         int handleHeight = getContext().getResources().getDimensionPixelSize(getScroller().isVertical() ? com.genonbeta.android.framework.R.dimen.genfw_fastscroll_handle_height : com.genonbeta.android.framework.R.dimen.genfw_fastscroll_handle_clickable_width);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(handleWidth, handleHeight);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(0, 0);
 
         mHandle.setLayoutParams(params);
 

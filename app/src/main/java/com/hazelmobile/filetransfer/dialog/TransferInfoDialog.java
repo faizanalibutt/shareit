@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.bluetooth.ActionType;
+import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferObject;
 import com.hazelmobile.filetransfer.util.AppUtils;
@@ -54,7 +57,7 @@ public class TransferInfoDialog extends AlertDialog.Builder {
             boolean fileExists = pseudoFile != null && pseudoFile.canRead();
 
             @SuppressLint("InflateParams")
-            View rootView = LayoutInflater.from(context).inflate(R.layout.layout_transfer_info, null);
+            View rootView = LayoutInflater.from(context).inflate(R.layout.layout_transfer_info_ext, null);
 
             TextView nameText = rootView.findViewById(R.id.transfer_info_file_name);
             TextView sizeText = rootView.findViewById(R.id.transfer_info_file_size);
@@ -64,8 +67,15 @@ public class TransferInfoDialog extends AlertDialog.Builder {
             View incomingDetailsLayout = rootView.findViewById(R.id.transfer_info_incoming_details_layout);
             TextView receivedSizeText = rootView.findViewById(R.id.transfer_info_received_size);
             TextView locationText = rootView.findViewById(R.id.transfer_info_pseudo_location);
+            final ImageView closeDialog = rootView.findViewById(R.id.closeTransferDialog);
+            closeDialog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Callback.setAppAction(ActionType.CLOSE_DIALOG);
+                }
+            });
 
-            setTitle(R.string.text_transactionDetails);
+            setTitle("");
             setView(rootView);
 
             nameText.setText(transferObject.friendlyName);
@@ -81,7 +91,7 @@ public class TransferInfoDialog extends AlertDialog.Builder {
                     ? FileUtils.getReadableUri(pseudoFile.getUri())
                     : getContext().getString(R.string.text_unknown));
 
-            setPositiveButton(R.string.butn_close, null);
+            //setPositiveButton(R.string.butn_close, null);
             setNegativeButton(R.string.butn_remove, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -105,17 +115,19 @@ public class TransferInfoDialog extends AlertDialog.Builder {
 
                 if (TransferObject.Flag.INTERRUPTED.equals(transferObject.flag)
                         || TransferObject.Flag.IN_PROGRESS.equals(transferObject.flag)) {
-                    setNeutralButton(R.string.butn_retry, new DialogInterface.OnClickListener() {
+                    setPositiveButton(R.string.butn_retry, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             transferObject.flag = TransferObject.Flag.PENDING;
                             AppUtils.getDatabase(context).publish(transferObject);
                         }
                     });
+
+
                 } else if (fileExists) {
                     if (TransferObject.Flag.REMOVED.equals(transferObject.flag)
                             && pseudoFile.getParentFile() != null) {
-                        setNeutralButton(R.string.butn_saveAnyway, new DialogInterface.OnClickListener() {
+                        setPositiveButton(R.string.butn_saveAnyway, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 AlertDialog.Builder saveAnyway = new AlertDialog.Builder(getContext());
@@ -145,7 +157,7 @@ public class TransferInfoDialog extends AlertDialog.Builder {
                             }
                         });
                     } else if (TransferObject.Flag.DONE.equals(transferObject.flag)) {
-                        setNeutralButton(R.string.butn_open, new DialogInterface.OnClickListener() {
+                        setPositiveButton(R.string.butn_open, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 try {
@@ -163,7 +175,7 @@ public class TransferInfoDialog extends AlertDialog.Builder {
                     try {
                         final Intent startIntent = FileUtils.getOpenIntent(getContext(), attemptedFile);
 
-                        setNeutralButton(R.string.butn_open, new DialogInterface.OnClickListener() {
+                        setPositiveButton(R.string.butn_open, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 try {

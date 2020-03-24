@@ -76,7 +76,7 @@ public class BluetoothDataTransferThread extends Thread implements SnackbarSuppo
 
                 // enable camera here
                 if (!success) {
-                    Callback.setSenderAction(SenderType.CLOSE_DIALOG);
+                    Callback.setSenderAction(ActionType.CLOSE_DIALOG);
                     Objects.requireNonNull(createSnackbar(R.string.text_qrPromptRequired)).show();
                 }
 

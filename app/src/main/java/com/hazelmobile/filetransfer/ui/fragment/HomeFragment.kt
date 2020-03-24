@@ -43,13 +43,23 @@ class HomeFragment : Fragment(), TitleSupport, Activity.OnBackPressedListener {
                 null
             )
         )
-        mAdapter.add(
+
+       /* mAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 1,
                 BrowseFragment::class.java,
                 null
             )
+        )*/
+
+        mAdapter.add(
+            SmartFragmentPagerAdapter.Companion.StableItem(
+                1,
+                FileExplorerFragment::class.java,
+                null
+            ).setTitle(getString(R.string.text_Browser))
         )
+
         mAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 2,
@@ -80,9 +90,7 @@ class HomeFragment : Fragment(), TitleSupport, Activity.OnBackPressedListener {
             if (menuItem.order == 2) {
                 startActivity(Intent(context, SettingsActivity::class.java))
                 true
-            }
-            else
-            {
+            } else {
                 mViewPager.currentItem = menuItem.order
                 true
             }

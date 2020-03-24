@@ -441,7 +441,8 @@ public class PreparationsActivity extends Activity
                 }
                 break;
             case REQUEST_PERMISSION_CAMERA:
-                btnOnClick(nextScreen);
+                if (isAllEnabled)
+                    btnOnClick(nextScreen);
                 break;
             default:
                 break;

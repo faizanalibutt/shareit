@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.framework.io.DocumentFile;
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
+import com.hazelmobile.filetransfer.bluetooth.ActionType;
 import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
@@ -147,6 +148,16 @@ public class TransferListFragment
         intentFilter.addAction(CommunicationService.ACTION_RECEIVER_PROGRESS);
         intentFilter.addAction(CommunicationService.ACTION_SENDER_PROGRESS);
 
+        final Observer<Object> appAction = action -> {
+            if (action instanceof ActionType) {
+                if (action.equals(ActionType.CLOSE_DIALOG)) {
+                    if (dialog != null)
+                        dialog.dismiss();
+                }
+            }
+        };
+        Callback.getAppAction().observe(this, appAction);
+
     }
 
     @Override
@@ -215,12 +226,15 @@ public class TransferListFragment
                 : super.onGridSpanSize(viewType, currentSpanSize);
     }
 
+    private AlertDialog dialog;
     @Override
     public boolean onDefaultClickAction(GroupEditableListAdapter.GroupViewHolder holder) {
         try {
             final TransferObject transferObject = getAdapter().getItem(holder);
-            new TransferInfoDialog(getActivity(), transferObject).show();
-
+            dialog = new TransferInfoDialog(holder.itemView.getContext(), transferObject).show();
+            Objects.requireNonNull(dialog.getWindow()).
+                    setBackgroundDrawable(holder.itemView.getContext().getDrawable(R.drawable.background_rate_exit_dialog));
+            Callback.setAppAction(ActionType.UNKNOWN);
             return true;
         } catch (Exception e) {
 

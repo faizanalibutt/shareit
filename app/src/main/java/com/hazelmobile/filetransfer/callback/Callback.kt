@@ -22,17 +22,8 @@ object Callback {
     val onSenderActionNeed = MutableLiveData<Any>()
     @JvmField
     val ratingData = MutableLiveData<Float>()
-
-    @JvmStatic
-    fun getRating(): MutableLiveData<Float> {
-        return ratingData
-    }
-
-    @JvmStatic
-    fun setRating(rating: Float) {
-        ratingData.value = rating
-    }
-
+    @JvmField
+    val onAppAction = MutableLiveData<Any>()
 
     @JvmStatic
     fun getColor(): LiveData<Boolean> {
@@ -102,6 +93,26 @@ object Callback {
     @JvmStatic
     fun getSenderAction(): LiveData<Any> {
         return onSenderActionNeed
+    }
+
+    @JvmStatic
+    fun getRating(): MutableLiveData<Float> {
+        return ratingData
+    }
+
+    @JvmStatic
+    fun setRating(rating: Float) {
+        ratingData.value = rating
+    }
+
+    @JvmStatic
+    fun getAppAction(): MutableLiveData<Any> {
+        return onAppAction
+    }
+
+    @JvmStatic
+    fun setAppAction(any: Any) {
+        onAppAction.postValue(any)
     }
 
 }

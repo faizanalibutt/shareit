@@ -22,7 +22,7 @@ public class MyHandler extends Handler {
         super.handleMessage(msg);
 
         if (msg.what == MSG_TO_SHOW_SCAN_RESULT) {
-            com.hazelmobile.filetransfer.callback.Callback.setSenderAction(SenderType.DISCOVERY);
+            com.hazelmobile.filetransfer.callback.Callback.setSenderAction(ActionType.DISCOVERY);
             sendMessageDelayed(obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 15000);
         }
 

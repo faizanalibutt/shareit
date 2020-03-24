@@ -74,7 +74,7 @@ public class ClientThread extends Thread implements SnackbarSupport {
             ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: client sending message connection failed \n " + e.getMessage() + "\n");
 
-            Callback.setSenderAction(SenderType.CLOSE_DIALOG);
+            Callback.setSenderAction(ActionType.CLOSE_DIALOG);
             Objects.requireNonNull(createSnackbar(R.string.text_qrPromptRequired)).show();
             return;
         }

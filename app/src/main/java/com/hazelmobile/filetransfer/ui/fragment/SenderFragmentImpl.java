@@ -46,7 +46,7 @@ import com.hazelmobile.filetransfer.app.Activity;
 import com.hazelmobile.filetransfer.bluetooth.BluetoothDataTransferThread;
 import com.hazelmobile.filetransfer.bluetooth.ClientThread;
 import com.hazelmobile.filetransfer.bluetooth.MyHandler;
-import com.hazelmobile.filetransfer.bluetooth.SenderType;
+import com.hazelmobile.filetransfer.bluetooth.ActionType;
 import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.config.Keyword;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
@@ -206,12 +206,12 @@ public class SenderFragmentImpl
                     connectToHotspot(((JSONObject) action));
                 else if (action instanceof ScanResult)
                     connectToHotspot(((ScanResult) action));
-                else if (action instanceof SenderType) {
-                    if (SenderType.DISCOVERY.equals(action))
+                else if (action instanceof ActionType) {
+                    if (ActionType.DISCOVERY.equals(action))
                         retryDiscovery();
-                    else if (SenderType.CLOSE_DIALOG.equals(action))
+                    else if (ActionType.CLOSE_DIALOG.equals(action))
                         closeDialog();
-                    else if (SenderType.UNKNOWN.equals(action))
+                    else if (ActionType.UNKNOWN.equals(action))
                         LogUtils.getWTF(SenderFragmentImpl.class.getSimpleName(),
                                 "That's the worst thing a LiveData have...FUCK CODER");
                 }
@@ -258,7 +258,7 @@ public class SenderFragmentImpl
         try {
 
             closeDialog();
-            Callback.setSenderAction(SenderType.UNKNOWN);
+            Callback.setSenderAction(ActionType.UNKNOWN);
             Callback.getSenderAction().removeObservers(this);
             isThreadAlive = false;
             isSocketClosed = false;
@@ -395,7 +395,7 @@ public class SenderFragmentImpl
                     bluetoothAdapter.cancelDiscovery();
                 mHandler.removeMessages(MSG_TO_SHOW_SCAN_RESULT);
                 bluetoothDiscoveryStatus(false);
-                Callback.setSenderAction(SenderType.UNKNOWN);
+                Callback.setSenderAction(ActionType.UNKNOWN);
                 isConnected = true;
             }
 

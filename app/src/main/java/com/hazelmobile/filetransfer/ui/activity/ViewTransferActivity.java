@@ -33,6 +33,7 @@ import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
+import com.hazelmobile.filetransfer.bluetooth.ActionType;
 import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.dialog.TransferInfoDialog;
