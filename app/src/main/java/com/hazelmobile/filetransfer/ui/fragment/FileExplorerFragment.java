@@ -144,7 +144,7 @@ public class FileExplorerFragment
 
     @Override
     public int getIconRes() {
-        return R.drawable.ic_folder_white_24dp;
+        return R.drawable.ic_browse_grey_24dp;
     }
 
     public PathResolverRecyclerAdapter getPathAdapter() {

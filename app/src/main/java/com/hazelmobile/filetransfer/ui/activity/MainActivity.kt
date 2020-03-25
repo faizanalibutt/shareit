@@ -27,8 +27,6 @@ class MainActivity : Activity() {
         mHomeFragment =
             supportFragmentManager.findFragmentById(R.id.activitiy_home_fragment) as HomeFragment?
 
-        showRateExitDialogue(this@MainActivity)
-
     }
 
     override fun onBackPressed() {
