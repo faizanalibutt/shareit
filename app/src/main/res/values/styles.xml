@@ -43,8 +43,8 @@
         <item name="buttonBarButtonStyle">@style/Widget.Hazel.ButtonStyle.Dialog</item>
     </style>
 
-    <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@color/colorPassive</item>
+    <style name="RatingBar" parent="Widget.MaterialRatingBar.RatingBar">
+        <item name="colorControlNormal">@color/colorControlNormal</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
@@ -337,6 +337,13 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">?colorDivider</item>
+    </style>
+
+    <style name="CustomDialog" parent="Theme.AppCompat.Light.Dialog">
+
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+
     </style>
 
 </resources>

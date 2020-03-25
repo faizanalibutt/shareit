@@ -9,7 +9,7 @@
     <color name="colorError">#afb42b</color>
     <color name="colorOnPrimary">@color/colorControlNormal</color>
     <color name="colorOnSecondary">@color/colorControlNormal</color>
-    <color name="colorSecondary">#1A73E9</color>
+    <color name="colorSecondary">@color/colorPrimary</color>
     <color name="colorSurface">#fefefe</color>
     <color name="windowBackground">#ffffff</color>
     <!-- local objects coloring -->
@@ -25,7 +25,7 @@
     <!-- SEPARATOR FOR DARK COLOR -->
     <color name="dark_colorSecondary">#66bb6a</color>
 
-    <color name="button_color">#1a73e9</color>
+    <color name="button_color">@color/colorPrimary</color>
     <color name="white">#FFFFFF</color>
     <color name="dark_colorShadowEnd">#500E171A</color>
     <color name="black_dominant">#000000</color>

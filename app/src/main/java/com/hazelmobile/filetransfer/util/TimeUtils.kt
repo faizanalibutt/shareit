@@ -1,7 +1,9 @@
 package com.hazelmobile.filetransfer.util
 
+import android.app.Dialog
 import android.content.Context
 import android.text.format.DateUtils
+import android.view.Window
 import com.genonbeta.android.framework.util.date.ElapsedTime
 import com.hazelmobile.filetransfer.R
 
@@ -117,6 +119,16 @@ object TimeUtils {
             )
 
         return context.getString(R.string.text_longAgo)
+    }
+
+    fun initCustomDialog(context: Context, layout: Int): Dialog? {
+
+        val dialog = Dialog(context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(layout)
+        return dialog
+
     }
 
 }

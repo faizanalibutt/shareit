@@ -8,8 +8,10 @@
         <item name="bottomNavigationStyle">@style/Widget.Hazel.BottomNavigationView</item>
         <item name="cardViewStyle">@style/Widget.Hazel.CardView</item>
         <item name="colorControlNormal">@color/colorControlNormal</item>
+        <!--<item name="colorControlActivated">@color/colorPrimary</item>-->
+        <!--<item name="colorControlHighlight">@color/colorControlNormal</item>-->
         <item name="colorError">@color/colorError</item>
-        <item name="colorOnPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSurface">@color/colorSurface</item>
