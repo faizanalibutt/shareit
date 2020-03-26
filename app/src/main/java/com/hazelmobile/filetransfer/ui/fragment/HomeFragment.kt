@@ -14,6 +14,7 @@ import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.ui.activity.SettingsActivity
 import com.hazelmobile.filetransfer.ui.adapter.SmartFragmentPagerAdapter
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport
+import com.hazelmobile.filetransfer.util.LogUtils
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment(), TitleSupport, Activity.OnBackPressedListener {
@@ -73,7 +74,9 @@ class HomeFragment : Fragment(), TitleSupport, Activity.OnBackPressedListener {
         mViewPager.adapter = mAdapter
 
         mViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+
             override fun onPageScrollStateChanged(state: Int) {}
+
             override fun onPageScrolled(
                 position: Int,
                 positionOffset: Float,
@@ -82,8 +85,13 @@ class HomeFragment : Fragment(), TitleSupport, Activity.OnBackPressedListener {
             }
 
             override fun onPageSelected(position: Int) {
+                if (position == 2) {
+                    bottomNavigationView.selectedItemId = position - 1
+                    return
+                }
                 bottomNavigationView.selectedItemId = position
             }
+
         })
 
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
@@ -96,6 +104,13 @@ class HomeFragment : Fragment(), TitleSupport, Activity.OnBackPressedListener {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (bottomNavigationView.selectedItemId == 2) {
+            bottomNavigationView.selectedItemId = mViewPager.currentItem
+        }
     }
 
     override fun getTitle(context: Context): CharSequence {

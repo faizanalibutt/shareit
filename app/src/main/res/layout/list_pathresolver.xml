@@ -17,6 +17,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/list_pathresolver_text"
         style="?borderlessButtonStyle"
+        android:textColor="@color/black_gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
