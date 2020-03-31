@@ -215,7 +215,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_small_size"
                     android:text="@string/text_history"
-                    android:textColor="@color/black_dominant"
+                    android:textColor="@color/new_black"
                     android:textSize="@dimen/font_size_primary"
                     app:layout_constraintBottom_toBottomOf="@id/history"
                     app:layout_constraintLeft_toRightOf="@id/history"
@@ -230,7 +230,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_history_icon_grey_24dp" />
+                    app:srcCompat="@drawable/ic_history_icon_grey_24dp_fill" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -274,7 +274,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_small_size"
                     android:text="@string/text_settings"
-                    android:textColor="@color/black_dominant"
+                    android:textColor="@color/new_black"
                     android:textSize="@dimen/font_size_primary"
                     app:layout_constraintBottom_toBottomOf="@+id/settings"
                     app:layout_constraintLeft_toRightOf="@+id/settings"
@@ -289,7 +289,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_settings_icon_grey_24dp" />
+                    app:srcCompat="@drawable/ic_settings_icon_grey_24dp_fill" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -333,7 +333,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_small_size"
                     android:text="@string/text_rate"
-                    android:textColor="@color/black_dominant"
+                    android:textColor="@color/new_black"
                     android:textSize="@dimen/font_size_primary"
                     app:layout_constraintBottom_toBottomOf="@+id/rateus"
                     app:layout_constraintLeft_toRightOf="@+id/rateus"
@@ -348,7 +348,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_rate_us_icon_grey_24dp" />
+                    app:srcCompat="@drawable/ic_rateus_icon_grey_24dp_fill" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -361,9 +361,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/margin_small_size"
                     android:text="@string/text_privacy"
-                    android:textColor="@color/black_dominant"
+                    android:textColor="@color/new_black"
                     android:textSize="@dimen/font_size_primary"
                     app:layout_constraintBottom_toBottomOf="@+id/privacy"
                     app:layout_constraintLeft_toRightOf="@+id/privacy"
@@ -371,14 +371,14 @@
 
                 <ImageView
                     android:id="@+id/privacy"
-                    android:layout_width="@dimen/dp_24"
-                    android:layout_height="@dimen/dp_24"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
                     android:layout_marginStart="@dimen/margin_small_size"
                     android:contentDescription="@string/text_privacy"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_privacy_policy_grey_24dp" />
+                    app:srcCompat="@drawable/ic_privacy_policy_icon_grey_24dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -5,4 +5,7 @@
     <dimen name="activity_horizontal_margin">64dp</dimen>
     <dimen name="app_icon_size">160dp</dimen>
     <dimen name="transfer_icon_size_80dp">80dp</dimen>
+    <dimen name="preparations_icon_size">12dp</dimen>
+    <dimen name="side_menu_icon_size">20dp</dimen>
+    <dimen name="settings_icon_size">@dimen/dp_20</dimen>
 </resources>

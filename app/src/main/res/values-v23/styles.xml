@@ -11,6 +11,7 @@
 
     <style name="Theme.Hazel.White" parent="Theme.Hazel.Base.White">
         <item name="colorPrimary">@color/white</item>
+        <item name="buttonStyle">@style/Widget.Hazel.ButtonStyle.Custom</item>
     </style>
 
     <style name="Theme.Hazel.Dark.Base" parent="Theme.Prototype.Hazel.Dark.Base">

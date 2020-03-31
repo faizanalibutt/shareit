@@ -36,9 +36,10 @@
     <color name="demo_color">#59ABA7</color>
     <color name="hazel_text_color">#3C4043</color>
     <color name="text_color_gray">#A6A8A9</color>
+    <color name="text_main_button_color">#999999</color>
     <color name="color_content_share_button">#E8E8E8</color>
     <color name="black_transparent">#54000000</color>
-
+    <color name="color_transparent">#00000000</color>
 
     <color name="dark_colorShadowBeginning">#000E171A</color>
 
@@ -46,6 +47,9 @@
     <color name="user_icon_color_default">#EEEEEE</color>
     <color name="black_surface">#1a1a1a</color>
     <color name="black_gray">#202020</color>
+    <color name="colorPreparations">#584F60</color>
+    <color name="icons_default_color">#5F6368</color>
+    <color name="new_black">#262626</color>
 
 
 
@@ -60,8 +64,6 @@
     <color name="user_profile_8">#894f1b</color>
     <color name="user_profile_9">#3638a3</color>
     <color name="user_profile_0">#ab47bc</color>
-    <color name="colorPreparations">#584F60</color>
-    <color name="icons_default_color">#5F6368</color>
     <array name="colorsList">
         <item>@color/user_profile_0</item>
         <item>@color/user_profile_1</item>

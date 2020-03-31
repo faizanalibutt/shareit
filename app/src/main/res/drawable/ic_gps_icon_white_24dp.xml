@@ -1,0 +1,9 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/preparations_icon_size"
+    android:height="@dimen/preparations_icon_size"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M11.64,23.84C11.74,23.94 11.87,24 12,24s0.26,-0.06 0.36,-0.16c0.16,-0.18 2.08,-2.34 4.03,-5.18c2.11,-3.07 4.25,-6.95 4.25,-10.02C20.64,3.87 16.77,0 12,0S3.36,3.87 3.36,8.64c0,3.07 2.15,6.95 4.25,10.02C9.56,21.5 11.48,23.66 11.64,23.84zM12,3.36c2.91,0 5.28,2.37 5.28,5.28s-2.37,5.28 -5.28,5.28s-5.28,-2.37 -5.28,-5.28S9.09,3.36 12,3.36z"
+      android:fillColor="#FFFFFF"/>
+</vector>
