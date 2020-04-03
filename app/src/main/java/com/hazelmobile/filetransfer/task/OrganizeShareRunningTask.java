@@ -12,6 +12,7 @@ import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.activity.PreparationsActivity;
 import com.hazelmobile.filetransfer.ui.activity.ShareActivity;
+import com.hazelmobile.filetransfer.util.LogUtils;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
         if (getAnchorListener() != null) {
             //getAnchorListener().getProgressBar().setMax(mFileUris.size());
             getAnchorListener().updateText(thisTask, getService().getString(R.string.mesg_organizingFiles));
+            LogUtils.getLogTask("OrganizeShareRunningTask", String.format
+                    ("onRun(): Anchor called %s", getService().getString(R.string.mesg_organizingFiles)));
         }
 
         final List<ShareActivity.SelectableStream> measuredObjects = new ArrayList<>();
@@ -45,10 +48,13 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
 
             publishStatusText(getService().getString(R.string.text_transferStatusFiles,
                     position, mFileUris.size()));
+            LogUtils.getLogTask("OrganizeShareRunningTask", String.format("onRun(): Calculating Files %s",
+                    getService().getString(R.string.text_transferStatusFiles,
+                            position, mFileUris.size())));
 
             /*if (getAnchorListener() != null) {
                 getAnchorListener().updateProgress(getAnchorListener().getProgressBar().getMax(),
-                        getAnchorListener().getProgressBar().getProgress() + 1);
+                        getAnchorListener().getProgress Bar().getProgress() + 1);
             }*/
 
             Uri fileUri = mFileUris.get(position);
@@ -95,13 +101,21 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
         }
 
         if (getAnchorListener() != null)
+        {
             getAnchorListener().updateText(thisTask, getService().getString(R.string.mesg_completing));
+            LogUtils.getLogTask("OrganizeShareRunningTask", String.format("onRun(): Anchor called %s",
+                    getService().getString(R.string.mesg_completing)));
+        }
 
         AppUtils.getDatabase(getService()).insert(pendingObjects, new SQLiteDatabase.ProgressUpdater() {
             @Override
             public void onProgressChange(int total, int current) {
                 if (getAnchorListener() != null)
+                {
                     getAnchorListener().updateProgress(total, current);
+                    LogUtils.getLogTask("OrganizeShareRunningTask", String.format
+                            ("onRun(): Anchor called Data Inserting Total: %s, Current: %s", total, current));
+                }
             }
 
             @Override
@@ -116,6 +130,8 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
                             String.valueOf(groupInstance.groupId)));
         } else {
             AppUtils.getDatabase(getService()).insert(groupInstance);
+            LogUtils.getLogTask("OrganizeShareRunningTask", String.format("onRun(): Group inserted Date: %s ID: %s",
+                    groupInstance.dateCreated, groupInstance.groupId));
 
             // it will be changed and move to its own activity.
             //ViewTransferActivity.startInstance(getService(), groupInstance.groupId);
@@ -129,5 +145,6 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
 
         /*if (getAnchorListener() != null)
             getAnchorListener().finish();*/
+        LogUtils.getLogTask("OrganizeShareRunningTask", "onRun(): Anchor called commented code");
     }
 }

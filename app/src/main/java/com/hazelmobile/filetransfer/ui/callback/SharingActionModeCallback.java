@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.widget.EditableListAdapterImpl;
 import com.hazelmobile.filetransfer.app.EditableListFragment;
 import com.hazelmobile.filetransfer.app.EditableListFragmentImpl;
@@ -100,6 +101,7 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
 
     public boolean sendFiles() {
         List<T> selectedItemList = new ArrayList<>(getFragment().getSelectionConnection().getSelectedItemList());
+        LogUtils.getLogTask("Sharing", String.format("sendFiles(): selection list size is: %s", selectedItemList.size()));
 
         if (selectedItemList.size() > 0) {
             Intent shareIntent = new Intent()

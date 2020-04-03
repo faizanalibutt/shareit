@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -37,6 +38,7 @@ import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.task.OrganizeShareRunningTask;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.util.ConnectionUtils;
+import com.hazelmobile.filetransfer.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,7 @@ import static com.hazelmobile.filetransfer.ui.activity.ShareActivity.EXTRA_FILEN
 public class PreparationsActivity extends Activity
         implements SnackbarSupport, WorkerService.OnAttachListener {
 
+    public static final String TASK_UPDATE = "taskINProgress";
     private static final int LOCATION_PERMISSION_RESULT = 3;
     public static final int LOCATION_SERVICE_RESULT = 2;
     public static final String EXTRA_CLOSE_PERMISSION_SCREEN = "permissions";
@@ -63,6 +66,7 @@ public class PreparationsActivity extends Activity
     private ImageView bluetoothStatus, wifiStatus, gpsStatus, hotspotStatus;
     private AppCompatButton gpsButton, nextScreen, bluetoothButton, wifiButton, hotspotButton, button;
     private ProgressBar bluetoothPbr, wifiPbr, gpsPbr, hotspotPbr;
+    private Group groupBluetooth;
     private boolean isWifi, isBluetooth, isGps, isAllEnabled, isHotspot = false;
     private boolean isSender = false;
     private boolean isReceiver = false;
@@ -107,16 +111,18 @@ public class PreparationsActivity extends Activity
         mIntentFilter.addAction(ACTION_HOTSPOT_STATUS);
         mIntentFilter.addAction(NetworkStatusReceiver.WIFI_AP_STATE_CHANGED);
 
-        init();
         setAction();
+        init();
 
         // bluetooth check
         if (isReceiver && !UIConnectionUtils.isOreoAbove()) {
             isBluetooth = true;
-            bluetoothButton.setEnabled(false);
+            groupBluetooth.setVisibility(View.GONE);
+            bluetoothButton.setVisibility(View.GONE);
             getConnectionUtils().getBluetoothAdapter().disable();
-        } else if (getConnectionUtils().getBluetoothAdapter().enable())
+        } else if (getConnectionUtils().getBluetoothAdapter().enable()) {
             enableBluetooth(bluetoothButton);
+        }
         // wifi check
         if (ConnectionUtils.getInstance(this).getWifiManager().isWifiEnabled()) {
             enableWifi(wifiButton);
@@ -221,6 +227,7 @@ public class PreparationsActivity extends Activity
         hotspotButton = findViewById(R.id.hotspotClick);
         hotspotPbr = findViewById(R.id.hotspotPbr);
         nextScreen = findViewById(R.id.button);
+        groupBluetooth = findViewById(R.id.bluetoothGroup);
         nextScreen.setText(getString(R.string.next));
         nextScreen.setEnabled(false);
         enableButton();
@@ -554,12 +561,15 @@ public class PreparationsActivity extends Activity
 
     private List<Uri> mFileUris;
     private List<CharSequence> mFileNames;
-    private OrganizeShareRunningTask mTask;
 
     public void updateText(WorkerService.RunningTask runningTask, final String text) {
-        if (isFinishing())
+        /*if (isFinishing())
+        {
+            LogUtils.getLogTask("Preparations", "updateText(): Activity about to close, DON'T SHOW NOTIFICATION");
             return;
+        }*/
 
+        LogUtils.getLogTask("Preparations", "updateText(): Activity about to close, BUT SHOW NOTIFICATION");
         runningTask.publishStatusText(text);
 
         runOnUiThread(new Runnable() {
@@ -603,12 +613,14 @@ public class PreparationsActivity extends Activity
     protected void onPreviousRunningTask(@Nullable WorkerService.RunningTask task) {
         super.onPreviousRunningTask(task);
 
+        OrganizeShareRunningTask mTask;
         if (task instanceof OrganizeShareRunningTask) {
             mTask = ((OrganizeShareRunningTask) task);
             mTask.setAnchorListener(this);
+            LogUtils.getLogTask("Preparations", "onPreviousRunningTask(): Task is alreadycreated");
         } else {
             mTask = new OrganizeShareRunningTask(mFileUris, mFileNames);
-
+            LogUtils.getLogTask("Preparations", "onPreviousRunningTask(): Task is created");
             mTask.setTitle(getString(R.string.mesg_organizingFiles))
                     .setAnchorListener(this)
                     .setContentIntent(this, getIntent())

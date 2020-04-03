@@ -316,6 +316,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="CondensedTitleStyle.Custom">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <style name="LightTitleStyle" parent="CondensedTitleStyle">
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">#5F6368</item>

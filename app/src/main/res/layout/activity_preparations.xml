@@ -61,6 +61,17 @@
                 app:layout_constraintStart_toEndOf="@+id/i1"
                 app:layout_constraintTop_toBottomOf="@+id/v0" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bluetoothClick"
+                android:layout_width="@dimen/preparation_button_width"
+                android:layout_height="@dimen/preparation_button_height"
+                android:layout_marginEnd="@dimen/margin_small_size"
+                android:onClick="openBluetooth"
+                android:text="OPEN"
+                app:layout_constraintBottom_toBottomOf="@+id/bluetooth"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/bluetooth" />
+
             <ImageView
                 android:id="@+id/bluetoothStatus"
                 android:layout_width="20dp"
@@ -81,17 +92,6 @@
                 android:layout_marginEnd="@dimen/margin_small_size"
                 android:indeterminate="true"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/bluetooth"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/bluetooth" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/bluetoothClick"
-                android:layout_width="@dimen/preparation_button_width"
-                android:layout_height="@dimen/preparation_button_height"
-                android:layout_marginEnd="@dimen/margin_small_size"
-                android:onClick="openBluetooth"
-                android:text="OPEN"
                 app:layout_constraintBottom_toBottomOf="@+id/bluetooth"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/bluetooth" />
@@ -320,6 +320,11 @@
                 app:layout_constraintStart_toStartOf="@+id/hotspot"
                 app:layout_constraintTop_toBottomOf="@+id/hotspot" />
 
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/bluetoothGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="v1,bluetooth,i1" />
             <!---->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
