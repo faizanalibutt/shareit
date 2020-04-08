@@ -2,6 +2,7 @@ package com.hazelmobile.filetransfer.ui.activity
 
 import android.content.Intent
 import android.graphics.drawable.ShapeDrawable
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +13,7 @@ import androidx.transition.TransitionManager
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.util.AppUtils
+import com.hazelmobile.filetransfer.util.NetworkDeviceLoader
 import kotlinx.android.synthetic.main.activity_welcome.*
 
 
@@ -27,10 +29,27 @@ class WelcomeActivity : Activity() {
         setContentView(R.layout.activity_welcome)
 
         setWelcomePageDisallowed(true)
-        defaultPreferences.edit().putBoolean("introduction_shown", true).apply()
         colorsList = resources.getIntArray(R.array.colorsList)
-        setProfilePicture()
+        val welcome = defaultPreferences.getBoolean("introduction_shown", false)
+        if (!welcome)
+        {
+            defaultPreferences.edit().putString("device_name",
+                AppUtils.getLocalDeviceName(this@WelcomeActivity)).apply()
 
+            userProfileColor = (colorsList.indices).random()
+
+            defaultPreferences.edit().putInt("device_name_color",
+                colorsList[userProfileColor]).apply()
+
+            if (userProfileImage.drawable is ShapeDrawable) {
+                val shapeDrawable: ShapeDrawable =
+                    userProfileImage.drawable as ShapeDrawable
+                shapeDrawable.paint.color = colorsList[userProfileColor]
+            }
+            editText.setText(AppUtils.getLocalDeviceName(this@WelcomeActivity))
+        }
+        defaultPreferences.edit().putBoolean("introduction_shown", true).apply()
+        setProfilePicture()
 
         editText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -111,7 +130,12 @@ class WelcomeActivity : Activity() {
                 view.isClickable = false
             } else {
                 view.isClickable = true
-                startActivity(Intent(this@WelcomeActivity, MainActivity::class.java))
+                val closeIt = intent.getBooleanExtra("reverse_menu", false) ||
+                        intent.getBooleanExtra("reverse_settings", false)
+                if (closeIt)
+                    finish()
+                else
+                    startActivity(Intent(this@WelcomeActivity, MainActivity::class.java))
                 finish()
             }
         }

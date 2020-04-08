@@ -428,7 +428,7 @@ public class UIConnectionUtils {
             new AlertDialog.Builder(getConnectionUtils().getContext())
                     .setMessage(R.string.mesg_locationPermissionRequiredSelfHotspot)
                     .setNegativeButton(R.string.butn_cancel, defaultNegativeListener)
-                    .setPositiveButton(R.string.butn_ask, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.butn_allow, new DialogInterface.OnClickListener() {
                         @SuppressLint("NewApi")
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

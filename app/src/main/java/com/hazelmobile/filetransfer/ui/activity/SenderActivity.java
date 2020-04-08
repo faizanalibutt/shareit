@@ -12,12 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.app.Activity;
+import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.object.TransferGroup;
@@ -72,7 +74,10 @@ public class SenderActivity extends Activity
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if (Callback.getQrCode().getValue() != null && Callback.getQrCode().getValue())
+                    Callback.setQrCode(false);
+                else
+                    finish();
             }
         });
     }

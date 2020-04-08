@@ -291,6 +291,19 @@
         </item>
     </style>
 
+    <style name="ListContentIconStyle.Custom">
+        <item name="android:layout_width">@dimen/icon_size_list_normal_extend</item>
+        <item name="android:layout_height">@dimen/icon_size_list_normal_extend</item>
+        <item name="android:layout_marginLeft">@dimen/padding_list_content_icon_main_margin_left
+        </item>
+        <item name="android:layout_marginStart">@dimen/padding_list_content_icon_main_margin_left
+        </item>
+        <item name="android:layout_marginEnd">@dimen/margin_smallest_size
+        </item>
+        <item name="android:layout_marginRight">@dimen/margin_smallest_size
+        </item>
+    </style>
+
     <style name="ListContentIconStyleExtended">
         <item name="android:layout_width">@dimen/icon_size_list_normal_extend</item>
         <item name="android:layout_height">@dimen/icon_size_list_normal_extend</item>

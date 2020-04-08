@@ -137,7 +137,10 @@ public class ReceiverActivity extends Activity
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if (Callback.getQrCode().getValue() != null && Callback.getQrCode().getValue())
+                    Callback.setQrCode(false);
+                else
+                    finish();
             }
         });
         pulse = findViewById(R.id.content);

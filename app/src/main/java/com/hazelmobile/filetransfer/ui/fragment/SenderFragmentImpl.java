@@ -259,6 +259,7 @@ public class SenderFragmentImpl
 
             closeDialog();
             Callback.setSenderAction(ActionType.UNKNOWN);
+            Callback.setQrCode(false);
             Callback.getSenderAction().removeObservers(this);
             isThreadAlive = false;
             isSocketClosed = false;
@@ -686,21 +687,30 @@ public class SenderFragmentImpl
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_TO_SHOW_SCAN_RESULT), 12000);
         user_retry.setOnClickListener(
                 v -> {
-                    if (!isSocketClosed) {
-                        //retryConnection();
-                        isSocketClosed = true;
-                        bluetoothDiscoveryStatus(false);
-                        standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        bluetoothAdapter.disable();
-                        updateState();
+                    if (!isSocketClosed && Callback.getQrCode().getValue() != null && !Callback.getQrCode().getValue()) {
+                        Callback.setQrCode(true);
                         return;
                     }
-                    isSocketClosed = false;
-                    bluetoothAdapter.enable();
-                    bluetoothDiscoveryStatus(true);
-                    user_image.setVisibility(View.VISIBLE);
-                    updateState();
+                    Callback.setQrCode(false);
                 });
+
+        final Observer<Boolean> showQrObserver = qr_status -> {
+            if (qr_status) {
+                isSocketClosed = true;
+                bluetoothDiscoveryStatus(false);
+                standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                bluetoothAdapter.disable();
+                updateState();
+            } else {
+                isSocketClosed = false;
+                bluetoothAdapter.enable();
+                bluetoothDiscoveryStatus(true);
+                user_image.setVisibility(View.VISIBLE);
+                updateState();
+            }
+        };
+        Callback.getQrCode().observe(getViewLifecycleOwner(), showQrObserver);
+
     }
 
     private void updateState(boolean isConnecting, final Interrupter interrupter) {

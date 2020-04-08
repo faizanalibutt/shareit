@@ -99,8 +99,21 @@
 
         <FrameLayout
             android:id="@+id/layout_image"
+            style="@style/ListContentIconStyle.Custom"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <include
+                layout="@layout/generic_view_selection_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/layout_image1"
             style="@style/ListContentIconStyle"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/detail"
             app:layout_constraintStart_toStartOf="parent"

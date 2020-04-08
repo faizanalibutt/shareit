@@ -64,7 +64,7 @@ class HomeFragment : Fragment(), TitleSupport, Activity.OnBackPressedListener {
         mAdapter.add(
             SmartFragmentPagerAdapter.Companion.StableItem(
                 2,
-                PremiumFragment::class.java,
+                TransferGroupListFragment::class.java,
                 null
             )
         )
@@ -85,32 +85,16 @@ class HomeFragment : Fragment(), TitleSupport, Activity.OnBackPressedListener {
             }
 
             override fun onPageSelected(position: Int) {
-                if (position == 2) {
-                    bottomNavigationView.selectedItemId = position - 1
-                    return
-                }
                 bottomNavigationView.selectedItemId = position
             }
 
         })
 
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
-            if (menuItem.order == 2) {
-                startActivity(Intent(context, SettingsActivity::class.java))
-                true
-            } else {
-                mViewPager.currentItem = menuItem.order
-                true
-            }
+            mViewPager.currentItem = menuItem.order
+            true
         }
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (bottomNavigationView.selectedItemId == 2) {
-            bottomNavigationView.selectedItemId = mViewPager.currentItem
-        }
     }
 
     override fun getTitle(context: Context): CharSequence {

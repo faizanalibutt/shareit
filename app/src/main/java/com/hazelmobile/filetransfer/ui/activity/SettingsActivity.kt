@@ -30,7 +30,8 @@ class SettingsActivity : Activity(), View.OnClickListener {
         when(v?.id) {
             R.id.shareUserName ->
                 if (checkPermissionsState())
-                    startActivity(Intent(this@SettingsActivity, WelcomeActivity::class.java))
+                    startActivity(Intent(this@SettingsActivity, WelcomeActivity::class.java)
+                        .putExtra("reverse_settings", true))
                 else
                     requestRequiredPermissions(false)
         }

@@ -19,6 +19,8 @@ import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
+import com.hazelmobile.filetransfer.ui.callback.IconSupport;
+import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
 import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.app.EditableListFragment;
 import com.hazelmobile.filetransfer.app.EditableListFragmentImpl;
@@ -27,6 +29,8 @@ import com.hazelmobile.filetransfer.app.GroupEditableListFragment;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.ui.activity.ViewTransferActivity;
 import com.hazelmobile.filetransfer.ui.adapter.TransferGroupListAdapter;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -38,7 +42,8 @@ import java.util.Map;
 
 public class TransferGroupListFragment
         extends GroupEditableListFragment<TransferGroupListAdapter.PreloadedGroup,
-        GroupEditableListAdapter.GroupViewHolder, TransferGroupListAdapter> {
+        GroupEditableListAdapter.GroupViewHolder, TransferGroupListAdapter>
+        implements TitleSupport, IconSupport {
     private SQLQuery.Select mSelect;
     private IntentFilter mFilter = new IntentFilter();
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -179,6 +184,17 @@ public class TransferGroupListFragment
     public TransferGroupListFragment setSelect(SQLQuery.Select select) {
         mSelect = select;
         return this;
+    }
+
+    @NotNull
+    @Override
+    public CharSequence getTitle(@NotNull Context context) {
+        return context.getString(R.string.text_history);
+    }
+
+    @Override
+    public int getIconRes() {
+        return R.drawable.ic_history_grey_24dp;
     }
 
     private static class SelectionCallback extends EditableListFragment.SelectionCallback<TransferGroupListAdapter.PreloadedGroup> {

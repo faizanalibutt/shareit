@@ -225,7 +225,7 @@ public class ViewTransferActivity
                 Toast.makeText(this, R.string.mesg_notValidTransfer, Toast.LENGTH_SHORT).show();
             }
         } else if (ACTION_LIST_TRANSFERS.equals(getIntent().getAction()) && getIntent().hasExtra(EXTRA_GROUP_ID)) {
-            TransferGroup group = new TransferGroup(getDefaultPreferences().getLong("add_devices_to_transfer", -1));
+            TransferGroup group = new TransferGroup(getIntent().getLongExtra(EXTRA_GROUP_ID, -1));
 
             try {
                 getDatabase().reconstruct(group);

@@ -142,33 +142,41 @@ public class HotspotManagerFragment
                 hotspot_name.setText(hotspot_nam);
             }
         };
-        Callback.getHotspotName().observe(this, hotspotNameChanger);
+        Callback.getHotspotName().observe(getViewLifecycleOwner(), hotspotNameChanger);
 
 
         if (UIConnectionUtils.isOreoAbove()) {
             getorUpdateBluetoothDiscoverable();
             mHandle.sendMessageDelayed(mHandle.obtainMessage(STATE_BLUETOOTH_DISCOVERABLE_REQUESTING), 60000);
         }
-        mColorPassiveState = ColorStateList.valueOf(ContextCompat.getColor(Objects.requireNonNull(getContext()), AppUtils.getReference(getContext(), R.attr.colorPassive)));
+        mColorPassiveState = ColorStateList.valueOf(ContextCompat
+                .getColor(Objects.requireNonNull(getContext()), AppUtils.getReference(getContext(), R.attr.colorPassive)));
         mCodeView = view.findViewById(R.id.layout_hotspot_manager_qr_image);
         userProfileImageRetry.setOnClickListener(
                 v -> {
 
                     if (Callback.getQrCode().getValue() != null && !Callback.getQrCode().getValue())
                     {
-                        mCodeView.setVisibility(View.VISIBLE);
-                        hotspot_name.setVisibility(View.VISIBLE);
-                        qr_container.setVisibility(View.VISIBLE);
                         Callback.setQrCode(true);
                         return;
                     }
 
-                    mCodeView.setVisibility(View.GONE);
-                    hotspot_name.setVisibility(View.GONE);
-                    qr_container.setVisibility(View.GONE);
                     Callback.setQrCode(false);
                 }
         );
+
+        final Observer<Boolean> showQrObserver = qr_status -> {
+            if (qr_status) {
+                mCodeView.setVisibility(View.VISIBLE);
+                hotspot_name.setVisibility(View.VISIBLE);
+                qr_container.setVisibility(View.VISIBLE);
+            } else {
+                mCodeView.setVisibility(View.GONE);
+                hotspot_name.setVisibility(View.GONE);
+                qr_container.setVisibility(View.GONE);
+            }
+        };
+        Callback.getQrCode().observe(getViewLifecycleOwner(), showQrObserver);
 
     }
 
@@ -634,10 +642,11 @@ public class HotspotManagerFragment
                         Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Callback.setQrCode(true);
+                                //Callback.setQrCode(true);
+                                // we will see the update later.
                             }
                         });
-                        createSnackbar(R.string.text_qrPromptRequired).show();
+                        createSnackbar(R.string.text_interfaceBluetoothFailed).show();
                     }
                     break;
                 }

@@ -546,7 +546,7 @@ public class PreparationsActivity extends Activity
                                 ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
                 finish();
             } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1) {
-                ViewTransferActivity.startInstance(this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
+                ViewTransferActivity.startInstance(PreparationsActivity.this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
                 startActivity(new Intent(PreparationsActivity.this, SenderActivity.class)
                         .putExtra(Keyword.EXTRA_SEND, true)
                         .putExtra(SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))

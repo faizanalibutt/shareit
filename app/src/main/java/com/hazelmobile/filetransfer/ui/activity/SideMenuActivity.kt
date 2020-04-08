@@ -81,7 +81,8 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
 
     fun setProfileImage(view: View) {
         if (checkPermissionsState()) {
-            startActivity(Intent(this@SideMenuActivity, WelcomeActivity::class.java))
+            startActivity(Intent(this@SideMenuActivity, WelcomeActivity::class.java)
+                .putExtra("reverse_menu", true))
         } else
             requestRequiredPermissions(false)
     }
