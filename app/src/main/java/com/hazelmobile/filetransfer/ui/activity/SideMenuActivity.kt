@@ -6,14 +6,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.browser.customtabs.CustomTabsIntent
+import com.code4rox.adsmanager.AdmobUtils
 import com.google.android.material.snackbar.Snackbar
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.`object`.NetworkDevice
 import com.hazelmobile.filetransfer.app.Activity
-import com.hazelmobile.filetransfer.callback.Callback
 import com.hazelmobile.filetransfer.ui.callback.SnackbarSupport
 import com.hazelmobile.filetransfer.util.AppUtils
 import kotlinx.android.synthetic.main.activity_side_menu.*
+import kotlinx.android.synthetic.main.banner_ads_layout_tag.*
 
 class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
 
@@ -37,6 +38,8 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
         menu_rateus.setOnClickListener(this@SideMenuActivity)
         menu_privacy.setOnClickListener(this@SideMenuActivity)
         //menu_about.setOnClickListener(this@SideMenu)
+        val admobUtils = AdmobUtils(this)
+        admobUtils.loadBannerAd(banner_ad_view)
     }
 
     override fun onClick(v: View?) {
@@ -45,9 +48,12 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
             //R.id.menu_help -> createSnackbar(R.string.menu_generic_text)?.show()
             R.id.menu_settings -> startActivity(Intent(this@SideMenuActivity, SettingsActivity::class.java))
             //R.id.menu_feedback -> createSnackbar(R.string.menu_generic_text)?.show()
-            R.id.menu_rateus -> showRateExitDialogue(this@SideMenuActivity)
+            R.id.menu_rateus -> {
+                dialog = showRateExitDialogue(this@SideMenuActivity)
+                dialog.show()
+            }
             R.id.menu_privacy -> {
-                val url = "https://fiverr.com/faizistudio"
+                val url = "https://www.freeprivacypolicy.com/privacy/view/50c5621471755f1548917ebbe5e90160"
                 val builder = CustomTabsIntent.Builder()
                 val customTabsIntent = builder.build()
                 customTabsIntent.launchUrl(this, Uri.parse(url))
@@ -86,4 +92,5 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
         } else
             requestRequiredPermissions(false)
     }
+
 }

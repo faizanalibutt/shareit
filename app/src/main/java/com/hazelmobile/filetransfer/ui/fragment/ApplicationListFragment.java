@@ -24,6 +24,7 @@ import com.hazelmobile.filetransfer.app.EditableListAdapter;
 import com.hazelmobile.filetransfer.app.EditableListFragment;
 import com.hazelmobile.filetransfer.ui.adapter.ApplicationListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
+import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -82,7 +83,7 @@ public class ApplicationListFragment
                 }
             }
         };
-        Callback.getColor().observe(ApplicationListFragment.this, selectObserver);
+        Callback.getColor().observe(getViewLifecycleOwner(), selectObserver);
     }
 
     @Override
@@ -131,6 +132,13 @@ public class ApplicationListFragment
             @NonNull
             @Override
             public EditableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+                EditableViewHolder holder = super.onCreateViewHolder(parent, viewType);
+                if (viewType == GroupEditableListAdapter.VIEW_TYPE_ADS_GRID) {
+                    registerLayoutViewClicks(holder);
+                    return holder;
+                }
+
                 return AppUtils.quickAction(super.onCreateViewHolder(parent, viewType), quickActions);
             }
         };

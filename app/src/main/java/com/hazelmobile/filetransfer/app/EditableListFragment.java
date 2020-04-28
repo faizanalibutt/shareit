@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,14 +27,17 @@ import com.genonbeta.android.framework.widget.recyclerview.FastScroller;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.dialog.SelectionEditorDialog;
 import com.hazelmobile.filetransfer.object.Editable;
 import com.hazelmobile.filetransfer.ui.callback.DetachListener;
+import com.hazelmobile.filetransfer.util.LogUtils;
 import com.hazelmobile.filetransfer.widget.EditableListAdapterImpl;
 import com.hazelmobile.filetransfer.view.LongTextBubbleFastScrollViewProvider;
 import com.hazelmobile.filetransfer.exception.NotReadyException;
 import com.hazelmobile.filetransfer.ui.callback.PowerfulActionModeSupport;
 import com.hazelmobile.filetransfer.object.Shareable;
+import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
 import com.hazelmobile.filetransfer.widget.recyclerview.PaddingItemDecoration;
 import com.hazelmobile.filetransfer.widget.recyclerview.SwipeTouchSelectionListener;
 import com.hazelmobile.filetransfer.ui.fragment.ApplicationListFragment;
@@ -134,6 +138,23 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
         getFastScroller().setViewProvider(new LongTextBubbleFastScrollViewProvider());
         setDividerVisible(true);
         getListView().addOnItemTouchListener(new SwipeTouchSelectionListener<>(this));
+        final Observer<Object> appAction = action -> {
+            if (action instanceof Boolean) {
+                if ((Boolean) action) {
+                    try {
+                        int globalListSize = getSelectionConnection().getSelectedItemList().size();
+                        LogUtils.getLogInformation("Selection",
+                                String.format("List size is: %s", globalListSize));
+                        if (globalListSize == 0) {
+                            Callback.setColor(false);
+                            getPowerfulActionMode().finish(getSelectionCallback());
+                            Callback.setAppAction(false);
+                        }
+                    } catch (Exception exp) {}
+                }
+            }
+        };
+        Callback.getAppAction().observe(getViewLifecycleOwner(), appAction);
     }
 
     @Override
@@ -352,9 +373,16 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
                 // should be reserved so it can occupy all the available space of a line
                 int viewType = getAdapter().getItemViewType(position);
 
-                return viewType == EditableListAdapter.VIEW_TYPE_DEFAULT
-                        ? 1
-                        : onGridSpanSize(viewType, optimalGridSize);
+                switch (viewType) {
+                    case EditableListAdapter.VIEW_TYPE_DEFAULT:
+                    case GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR:
+                        return 1;
+                    case GroupEditableListAdapter.VIEW_TYPE_ADS_GRID:
+                        return optimalGridSize;
+                    default:
+                        return onGridSpanSize(viewType, optimalGridSize);
+                }
+
             }
         });
 
@@ -484,7 +512,7 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
     }
 
     public int getOrderingCriteria() {
-        return /*ImageListAdapter.MODE_SORT_ORDER_DESCENDING;*/getViewPreferences().getInt(getUniqueSettingKey("SortOrder"),
+        return getViewPreferences().getInt(getUniqueSettingKey("SortOrder"),
                 mDefaultOrderingCriteria);
     }
 
@@ -509,7 +537,7 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
     }
 
     public int getSortingCriteria() {
-        return /*ImageListAdapter.MODE_SORT_BY_DATE;*/getViewPreferences().getInt(getUniqueSettingKey("SortBy"), mDefaultSortingCriteria);
+        return getViewPreferences().getInt(getUniqueSettingKey("SortBy"), mDefaultSortingCriteria);
     }
 
     public PowerfulActionMode getPowerfulActionMode() {

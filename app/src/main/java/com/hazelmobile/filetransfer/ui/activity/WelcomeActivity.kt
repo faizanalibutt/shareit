@@ -10,11 +10,13 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.transition.TransitionManager
+import com.code4rox.adsmanager.AdmobUtils
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.util.AppUtils
 import com.hazelmobile.filetransfer.util.NetworkDeviceLoader
 import kotlinx.android.synthetic.main.activity_welcome.*
+import kotlinx.android.synthetic.main.banner_ads_layout_tag.*
 
 
 class WelcomeActivity : Activity() {
@@ -160,6 +162,9 @@ class WelcomeActivity : Activity() {
                 )
             )
         }
+
+        val admobUtils = AdmobUtils(this)
+        admobUtils.loadBannerAd(banner_ad_view)
     }
 
     private fun setProfilePicture() {

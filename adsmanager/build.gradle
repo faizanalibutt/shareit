@@ -1,0 +1,116 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.1"
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+
+
+            resValue "string", "splash_native_am", "ca-app-pub-1968566737616361/5440565186"
+            resValue "string", "splash_native_fb", "371474843734396_371478570400690"
+            resValue "string", "mm_native_am", "ca-app-pub-1968566737616361/8122568843"
+            resValue "string", "mm_native_fb", "371474843734396_371479207067293"
+            resValue "string", "adjust_native_am", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "adjust_native_fb", "YOUR_PLACEMENT_ID"
+            resValue "string", "exit_native_am", "ca-app-pub-1968566737616361/3558499697"
+            resValue "string", "splash_inter_am", "ca-app-pub-1968566737616361/3518492318"
+            resValue "string", "splash_inter_fb", "371474843734396_371475540400993"
+            resValue "string", "inter_am", "ca-app-pub-1968566737616361/2943777249"
+            resValue "string", "inter_fb", "371474843734396_371477787067435"
+            resValue "string", "banner_am", "ca-app-pub-1968566737616361/6308307185"
+            resValue "string", "banner_fb", "YOUR_PLACEMENT_ID"
+
+//            resValue "string", "ad_app_id", "ca-app-pub-2474744788384396~3320783164"
+            resValue "string", "ad_app_id", "ca-app-pub-1968566737616361~3698100497"
+
+            //mopub
+            resValue "string", "ad_app_id_mp", "b439cab50b014c47bc2ddf7b80898377"
+
+            resValue "string", "lighter_list_native_mp", "3e1fd7cd95bb45db8e16dd43e04787f4"
+            resValue "string", "torch_on_inter_mp", "ae8c0b97b4ea4efb80efc29bf0782d99"
+
+
+            resValue "string", "banner_mp", "b439cab50b014c47bc2ddf7b80898377"
+            resValue "string", "splash_inter_mp", "59e094387d4343daa66dfd7c635e7a99"
+            resValue "string", "mm_native_mp", "eb5196c502b344f48eb1cdec3aab5e89"
+            resValue "string", "adjust_native_mp", "32f22368f9e046b2bf261a906ebb334d"
+            resValue "string", "exit_native_mp", "2a02dffd3efe47f9af9ea4462cf17863"
+            resValue "string", "splash_native_mp", "a560ec95918240e6ac4166bb5ced117e"
+            resValue "string", "inter_mp", "36979c0f155648cb930e41e324f88cc9"
+
+        }
+
+        debug {
+
+            resValue "string", "ad_app_id", "ca-app-pub-3940256099942544~3347511713"
+            resValue "string", "splash_native_am", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "splash_native_fb", "YOUR_PLACEMENT_ID"
+            resValue "string", "mm_native_am", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "mm_native_fb", "YOUR_PLACEMENT_ID"
+            resValue "string", "adjust_native_am", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "adjust_native_fb", "YOUR_PLACEMENT_ID"
+            resValue "string", "exit_native_am", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "splash_inter_am", "ca-app-pub-3940256099942544/1033173712"
+            resValue "string", "splash_inter_fb", "YOUR_PLACEMENT_ID"
+            resValue "string", "inter_am", "ca-app-pub-3940256099942544/1033173712"
+            resValue "string", "inter_fb", "YOUR_PLACEMENT_ID"
+            resValue "string", "banner_am", "ca-app-pub-3940256099942544/6300978111"
+            resValue "string", "banner_fb", "YOUR_PLACEMENT_ID"
+
+
+            resValue "string", "ad_app_id_mp", "19a889e327a34297915053d7a9e3cd15"
+            resValue "string", "splash_native_mp", "af940436a0db4e2cadf1c81c5ccf6208"
+            resValue "string", "mm_native_mp", "af940436a0db4e2cadf1c81c5ccf6208"
+            resValue "string", "adjust_native_mp", "af940436a0db4e2cadf1c81c5ccf6208"
+            resValue "string", "exit_native_mp", "af940436a0db4e2cadf1c81c5ccf6208"
+
+            resValue "string", "lighter_list_native_mp", "af940436a0db4e2cadf1c81c5ccf6208"
+            resValue "string", "torch_on_inter_mp", "43e15d28dc934bf6ab3006b930e7f2fe"
+
+            resValue "string", "splash_inter_mp", "43e15d28dc934bf6ab3006b930e7f2fe"
+            resValue "string", "inter_mp", "43e15d28dc934bf6ab3006b930e7f2fe"
+            resValue "string", "banner_mp", "19a889e327a34297915053d7a9e3cd15"
+        }
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.google.firebase:firebase-config:19.1.3'
+    api 'com.google.firebase:firebase-ads:19.1.0'
+
+
+      /*  api('com.mopub:mopub-sdk:+@aar') {
+            transitive = true
+            exclude module: 'libAvid-mopub' // To exclude AVID
+            exclude module: 'moat-mobile-app-kit' // To exclude Moat
+        }
+
+        api 'com.mopub.mediation:admob:18.3.0.2'
+
+        // Facebook Audience Network
+        api 'com.facebook.android:audience-network-sdk:5.6.1'
+        api 'com.mopub.mediation:facebookaudiencenetwork:5.6.1.0'*/
+
+}

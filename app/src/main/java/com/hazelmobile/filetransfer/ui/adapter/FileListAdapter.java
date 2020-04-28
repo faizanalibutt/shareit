@@ -22,6 +22,7 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.config.AppConfig;
 import com.hazelmobile.filetransfer.object.FileShortcutObject;
 import com.hazelmobile.filetransfer.object.WritablePathObject;
+import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
 import com.hazelmobile.filetransfer.exception.NotReadyException;
@@ -107,9 +108,10 @@ public class FileListAdapter
                     getContext().getString(R.string.text_music), R.drawable.ic_music_note_white_24dp));
 
 
-            lister.offerObliged(this, new PublicDirectoryHolder(Environment
-                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                    getContext().getString(R.string.text_downloads), R.drawable.ic_file_download_white_24dp));
+            if (UIConnectionUtils.isOSAbove(Build.VERSION_CODES.M))
+                lister.offerObliged(this, new PublicDirectoryHolder(Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                        getContext().getString(R.string.text_downloads), R.drawable.ic_file_download_white_24dp));
 
 
             List<File> referencedDirectoryList = new ArrayList<>();
@@ -617,7 +619,7 @@ public class FileListAdapter
         public PublicDirectoryHolder(File file, String info, int iconRes) {
             this(DocumentFile.fromFile(file), info, iconRes);
 
-            String[] files = file.list();
+            String[] files = file.list() != null ? file.list() : new String[]{};
             int fileCount = files != null ? files.length : 0;
 
             this.friendlyName = info;

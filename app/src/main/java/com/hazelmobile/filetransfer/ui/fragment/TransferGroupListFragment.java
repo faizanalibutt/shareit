@@ -155,6 +155,14 @@ public class TransferGroupListFragment
             @NonNull
             @Override
             public GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+                GroupViewHolder holder = super.onCreateViewHolder(parent, viewType);
+
+                if (viewType == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR) {
+                    registerLayoutViewClicks(holder);
+                    return holder;
+                }
+
                 return AppUtils.quickAction(super.onCreateViewHolder(parent, viewType), quickActions);
             }
         }.setSelect(getSelect());

@@ -8,6 +8,7 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.object.TransferObject;
+import com.hazelmobile.filetransfer.ui.activity.ViewTransferActivity;
 import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.service.WorkerService;
 import com.hazelmobile.filetransfer.ui.activity.PreparationsActivity;
@@ -32,7 +33,7 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
         final WorkerService.RunningTask thisTask = this;
 
         if (getAnchorListener() != null) {
-            //getAnchorListener().getProgressBar().setMax(mFileUris.size());
+            getAnchorListener().getProgressBar().setMax(mFileUris.size());
             getAnchorListener().updateText(thisTask, getService().getString(R.string.mesg_organizingFiles));
             LogUtils.getLogTask("OrganizeShareRunningTask", String.format
                     ("onRun(): Anchor called %s", getService().getString(R.string.mesg_organizingFiles)));
@@ -52,10 +53,10 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
                     getService().getString(R.string.text_transferStatusFiles,
                             position, mFileUris.size())));
 
-            /*if (getAnchorListener() != null) {
+            if (getAnchorListener() != null) {
                 getAnchorListener().updateProgress(getAnchorListener().getProgressBar().getMax(),
-                        getAnchorListener().getProgress Bar().getProgress() + 1);
-            }*/
+                        getAnchorListener().getProgressBar().getProgress() + 1);
+            }
 
             Uri fileUri = mFileUris.get(position);
             String fileName = mFileNames != null ? String.valueOf(mFileNames.get(position)) : null;
@@ -139,8 +140,10 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
             /* IMPLEMENT PREFERENCES HERE */
             AppUtils.getDefaultPreferences(getService()).edit().putLong
                     ("add_devices_to_transfer", groupInstance.groupId).apply();
-
-            //AddDevicesToTransferActivity.startInstance(getService(), groupInstance.groupId);
+            getAnchorListener().setDBProgress(true);
+            if (getAnchorListener().isAllEnabled) {
+                getAnchorListener().btnOnClick();
+            }
         }
 
         /*if (getAnchorListener() != null)

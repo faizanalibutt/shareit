@@ -21,6 +21,7 @@ import com.hazelmobile.filetransfer.app.EditableListAdapter;
 import com.hazelmobile.filetransfer.app.EditableListFragment;
 import com.hazelmobile.filetransfer.ui.adapter.VideoListAdapter;
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport;
+import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -65,7 +66,7 @@ public class VideoListFragment
                 }
             }
         };
-        Callback.getColor().observe(VideoListFragment.this, selectObserver);
+        Callback.getColor().observe(getViewLifecycleOwner(), selectObserver);
 
 
     }
@@ -132,6 +133,13 @@ public class VideoListFragment
             @NonNull
             @Override
             public EditableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+                EditableViewHolder holder = super.onCreateViewHolder(parent, viewType);
+                if (viewType == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR) {
+                    registerLayoutViewClicks(holder);
+                    return holder;
+                }
+
                 return AppUtils.quickAction(super.onCreateViewHolder(parent, viewType), quickActions);
             }
         };

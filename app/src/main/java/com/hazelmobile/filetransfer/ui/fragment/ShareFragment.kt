@@ -7,13 +7,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.code4rox.adsmanager.AdmobUtils
+import com.code4rox.adsmanager.NativeAdsIdType
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.config.Keyword
 import com.hazelmobile.filetransfer.ui.activity.ContentSharingActivity
 import com.hazelmobile.filetransfer.ui.activity.PreparationsActivity
 import com.hazelmobile.filetransfer.ui.callback.IconSupport
 import com.hazelmobile.filetransfer.ui.callback.TitleSupport
+import com.hazelmobile.filetransfer.util.NetworkUtils
 import kotlinx.android.synthetic.main.fragment_share.*
+import kotlinx.android.synthetic.main.fragment_share.receive_button
+import kotlinx.android.synthetic.main.fragment_share.send_button
+import kotlinx.android.synthetic.main.fragment_share_new.*
 
 class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
 
@@ -28,15 +34,37 @@ class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
         super.onViewCreated(view, savedInstanceState)
 
         send_button.setOnClickListener {
-            startActivity(Intent(context, ContentSharingActivity::class.java))
+            startActivity(Intent(view.context, ContentSharingActivity::class.java))
+            send_button.isEnabled = false
         }
 
         receive_button.setOnClickListener {
             startActivity(
-                Intent(context, PreparationsActivity::class.java)
+                Intent(view.context, PreparationsActivity::class.java)
                     .putExtra(Keyword.EXTRA_RECEIVE, true)
             )
+            receive_button.isEnabled = false
         }
+
+        if (NetworkUtils.isOnline(view.context)) {
+            val admobUtils = AdmobUtils(view.context)
+            admobUtils.loadNativeAd(fl_adplaceholder, R.layout.ad_unified, NativeAdsIdType.ADJUST_NATIVE_AM)
+            admobUtils.setNativeAdListener(object : AdmobUtils.NativeAdListener {
+                override fun onNativeAdLoaded() {
+
+                }
+                override fun onNativeAdError() {
+
+                }
+            })
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        send_button.isEnabled = true
+        receive_button.isEnabled = true
     }
 
     override fun getIconRes(): Int {

@@ -30,6 +30,8 @@ abstract public class GroupEditableListAdapter<T extends GroupEditableListAdapte
         extends EditableListAdapter<T, V> {
     public static final int VIEW_TYPE_REPRESENTATIVE = 100;
     public static final int VIEW_TYPE_ACTION_BUTTON = 110;
+    public static final int VIEW_TYPE_ADS_LINEAR = 111;
+    public static final int VIEW_TYPE_ADS_GRID = 222;
 
     public static final int MODE_GROUP_BY_NOTHING = 100;
     public static final int MODE_GROUP_BY_DATE = 110;

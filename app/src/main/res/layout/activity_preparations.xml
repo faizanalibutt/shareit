@@ -8,10 +8,12 @@
     tools:context=".ui.activity.PreparationsActivity"
     tools:ignore="HardcodedText">
 
-
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/c1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -329,11 +331,60 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/showDBProgress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_transparent"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_margin="@dimen/margin_small_size"
+            android:background="@drawable/background_content_share_button">
+
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:padding="10dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/text2"
+                android:layout_toEndOf="@id/text1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_smaller_size"
+                android:textColor="@color/black_dominant"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/progressBar"
+                android:text="Please wait..." />
+
+        </RelativeLayout>
+    </LinearLayout>
+
     <include
-        android:id="@+id/c1"
         layout="@layout/file_transfer_general_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

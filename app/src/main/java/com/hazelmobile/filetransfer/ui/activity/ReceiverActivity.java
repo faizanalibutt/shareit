@@ -13,12 +13,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
+import com.code4rox.adsmanager.AdmobUtils;
+import com.code4rox.adsmanager.NativeAdsIdType;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.snackbar.Snackbar;
@@ -123,7 +126,6 @@ public class ReceiverActivity extends Activity
     public Snackbar createSnackbar(int resId, Object... objects) {
         return null;
     }
-
     public UIConnectionUtils getUIConnectionUtils() {
         if (mConnectionUtils == null) {
             mConnectionUtils = new UIConnectionUtils(ConnectionUtils.getInstance(this), this);
@@ -131,8 +133,8 @@ public class ReceiverActivity extends Activity
 
         return mConnectionUtils;
     }
-
     private void initViews() {
+
         final ImageView back = findViewById(R.id.receiver_back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +181,7 @@ public class ReceiverActivity extends Activity
             }
         };
         Callback.getQrCode().observe(this, showQrObserver);
+
     }
 
     private void setProfilePicture() {

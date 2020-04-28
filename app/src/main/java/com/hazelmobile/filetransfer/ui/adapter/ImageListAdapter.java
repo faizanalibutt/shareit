@@ -7,13 +7,17 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.code4rox.adsmanager.AdmobUtils;
+import com.code4rox.adsmanager.NativeAdsIdType;
 import com.hazelmobile.filetransfer.GlideApp;
 import com.hazelmobile.filetransfer.R;
+import com.hazelmobile.filetransfer.util.NetworkUtils;
 import com.hazelmobile.filetransfer.util.TimeUtils;
 import com.hazelmobile.filetransfer.widget.GalleryGroupEditableListAdapter;
 import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
@@ -59,7 +63,7 @@ public class ImageListAdapter
                             cursor.getLong(sizeIndex),
                             Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI + "/" + cursor.getInt(idIndex)));
 
-                    holder.dateTakenString = String.valueOf(TimeUtils.INSTANCE.formatDateTime(getContext(), holder.date));
+                    holder.dateTakenString = TimeUtils.INSTANCE.getFriendlyElapsedTime(getContext(), holder.date);
 
                     lister.offerObliged(this, holder);
                 }
@@ -67,6 +71,8 @@ public class ImageListAdapter
             }
 
             cursor.close();
+            if (NetworkUtils.isOnline(getContext()))
+                lister.offerObliged(this, new AdsModel());
         }
     }
 
@@ -75,6 +81,8 @@ public class ImageListAdapter
     public GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_REPRESENTATIVE)
             return new GroupViewHolder(getInflater().inflate(R.layout.layout_list_title, parent, false), R.id.layout_list_title_text);
+        else if (viewType == VIEW_TYPE_ADS_GRID)
+            return new GroupViewHolder(getInflater().inflate(R.layout.ad_unified_7, parent, false), R.id.ad_call_to_action);
 
         return new GroupViewHolder(getInflater().inflate(isGridLayoutRequested()
                 ? R.layout.list_image_grid_ext
@@ -103,6 +111,21 @@ public class ImageListAdapter
                         .override(300)
                         .centerCrop()
                         .into(image);
+            } else if (holder.getItemViewType() == GroupEditableListAdapter.VIEW_TYPE_ADS_GRID) {
+                AdmobUtils admobUtils = new AdmobUtils(holder.getView().getContext());
+                admobUtils.loadNativeAd((FrameLayout) holder.getView(),
+                        R.layout.ad_unified_7, NativeAdsIdType.ADJUST_NATIVE_AM);
+                admobUtils.setNativeAdListener(new AdmobUtils.NativeAdListener() {
+                    @Override
+                    public void onNativeAdLoaded() {
+
+                    }
+
+                    @Override
+                    public void onNativeAdError() {
+
+                    }
+                });
             }
         } catch (Exception e) {
 
@@ -122,12 +145,54 @@ public class ImageListAdapter
     public static class ImageHolder extends GalleryGroupEditableListAdapter.GalleryGroupShareable {
         public String dateTakenString;
 
+        public ImageHolder() {}
+
         public ImageHolder(String representativeText) {
             super(VIEW_TYPE_REPRESENTATIVE, representativeText);
         }
 
         public ImageHolder(long id, String title, String fileName, String albumName, String mimeType, long date, long size, Uri uri) {
             super(id, title, fileName, albumName, mimeType, date, size, uri);
+        }
+    }
+
+    public static class AdsModel extends ImageHolder {
+
+        public int viewType;
+
+        public AdsModel() {
+            this.viewType = GroupEditableListAdapter.VIEW_TYPE_ADS_GRID;
+        }
+
+        @Override
+        public String getRepresentativeText() {
+            return "ADS_VIEW";
+        }
+
+        @Override
+        public int getViewType() {
+            return viewType;
+        }
+
+        @Override
+        public long getComparableDate() {
+            return System.currentTimeMillis();
+        }
+
+        @Override
+        public boolean comparisonSupported() {
+            return getViewType() != GroupEditableListAdapter.VIEW_TYPE_ADS_GRID && super.comparisonSupported();
+        }
+
+        @Override
+        public boolean isSelectableSelected() {
+            return false;
+        }
+
+        // Don't let ADS to be selected
+        @Override
+        public boolean setSelectableSelected(boolean selected) {
+            return false;
         }
     }
 }

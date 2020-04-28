@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="text_appName" translatable="false">File Transfer</string>
-    <string name="app_name">File Transfer</string>
+    <string name="text_appName" translatable="false">Share Cloud</string>
+    <string name="app_name">Share Cloud</string>
     <string name="home_title">Fast file sharing\nwithout Internet</string>
     <string name="home_desc">Securely send videos, apps,\nmusics, photos and more\nto nearby friends</string>
     <string name="home_send">Send</string>
@@ -15,7 +15,7 @@
     <string name="text_image">Image</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="text_file_transfer">File Transfer 0.0.32</string>
+    <string name="text_file_transfer">Share Cloud 0.0.47</string>
     <string name="text_slide_menu">text_slide_menu</string>
     <string name="text_notification_icon">notify user for updateds</string>
     <string name="text_back_arrow_icon">text_back_arrow_icon</string>
@@ -36,7 +36,7 @@
     <string name="title_activity_tab">TabActivity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
-    <string name="title_activity_content_sharing">File Transfer</string>
+    <string name="title_activity_content_sharing">Share Cloud</string>
     <string name="text_files">Files</string>
     <string name="text_video">Video</string>
     <string name="text_application">Apps</string>
@@ -118,7 +118,7 @@
     <string name="butn_stopHotspot">Stop hotspot</string>
 
     <!-- SHARE TEXT -->
-    <string name="butn_shareWithTrebleshot">Share with File Transfer</string>
+    <string name="butn_shareWithTrebleshot">Share with Share Cloud</string>
     <string name="butn_shareWithOtherApps">Share with other apps</string>
 
     <!-- TRANSFER TEXT -->
@@ -144,7 +144,7 @@
     <string name="butn_reject">Reject</string>
     <string name="butn_allow">Allow</string>
     <string name="butn_deny">Deny</string>
-    <string name="mesg_hotspotCreatedInfo">Connect to \"%s\" in \"Wi-Fi settings\" or send files via \"%s\" inside File Transfer</string>
+    <string name="mesg_hotspotCreatedInfo">Connect to \"%s\" in \"Wi-Fi settings\" or send files via \"%s\" inside Share Cloud</string>
 
     <!-- UTILS TEXT -->
     <string name="text_interfaceWireless">Wi-Fi</string>
@@ -185,14 +185,14 @@
     <string name="butn_saveAnyway">Save anyway</string>
     <string name="mesg_completing">Completing</string>
     <string name="butn_feedbackContact">Feedback &amp; contact</string>
-    <string name="text_requestPermissionStorageSummary">This permission allows File Transfer to read and write to your device\'s storage for receiving and sharing files.</string>
+    <string name="text_requestPermissionStorageSummary">This permission allows Share Cloud to read and write to your device\'s storage for receiving and sharing files.</string>
     <string name="text_requestPermissionStorage">Storage permission</string>
     <string name="text_requestPermissionReadPhoneState">Permission to read phone state</string>
-    <string name="text_requestPermissionReadPhoneStateSummary">File Transfer needs to access your device\'s serial number to create a long-term identity number, helping other devices recognize you</string>
+    <string name="text_requestPermissionReadPhoneStateSummary">Share Cloud needs to access your device\'s serial number to create a long-term identity number, helping other devices recognize you</string>
     <string name="text_notAllowedHelp">Check if you are allowed on %1$s \n\nDevices &gt; %2$s &gt; Allow to connect &gt; (check it)</string>
 
     <!-- ADAPTER TEXT -->
-    <string name="text_trebleshotHotspot">File Transfer hotspot</string>
+    <string name="text_trebleshotHotspot">Share Cloud hotspot</string>
 
     <!-- FRAGMENT TEXT -->
     <string name="butn_startHotspot">Set up hotspot</string>
@@ -358,7 +358,7 @@
 
     <string name="text_shareTextShort">Text</string>
     <string name="butn_connectionList">Connections</string>
-    <string name="text_automaticNetworkConnectionFailed">Could not connect the device. Its address may have changed. Try reconnecting to the network while File Transfer is open.</string>
+    <string name="text_automaticNetworkConnectionFailed">Could not connect the device. Its address may have changed. Try reconnecting to the network while Share Cloud is open.</string>
     <string name="text_automaticNetworkConnectionOngoing">Choosing the best connection</string>
 
     <string name="text_permissionRequest">Permission request</string>
@@ -371,7 +371,7 @@
     <string name="text_usedConnection">Used connection</string>
 
     <string name="butn_copyToClipboard">Copy to clipboard</string>
-    <string name="text_communicationServiceRunning">File Transfer can share files now</string>
+    <string name="text_communicationServiceRunning">Share Cloud can share files now</string>
     <string name="text_communicationServiceStop">Tap to end session</string>
     <string name="text_remainingTime">ETA %s</string>
     <string name="butn_showFiles">Show files</string>
@@ -389,23 +389,23 @@
     <string name="mesg_textShareLimit">Only one text can be shared at a time</string>
 
     <string name="mesg_providerNotAllowedError">The default folder is not accessible to other apps</string>
-    <string name="mesg_errorHotspotPermission">File Transfer needs permission to set up a hotspot</string>
+    <string name="mesg_errorHotspotPermission">Share Cloud needs permission to set up a hotspot</string>
 
     <string name="butn_connect">Connect</string>
     <string name="butn_disconnect">Disconnect</string>
-    <string name="text_trebleshotHotspotDescription">You can send files directly via this open network created by a nearby File Transfer device.</string>
-    <string name="mesg_connectingToSelfHotspot">Connecting to the File Transfer hotspot</string>
+    <string name="text_trebleshotHotspotDescription">You can send files directly via this open network created by a nearby Share Cloud device.</string>
+    <string name="mesg_connectingToSelfHotspot">Connecting to the Share Cloud hotspot</string>
     <string name="mesg_warningHotspotMobileActive">Connected devices may use your cellular data. You may want to turn it off.</string>
     <string name="butn_skip">Skip</string>
-    <string name="mesg_scanningSelfHotspot">Searching for File Transfer hotspot</string>
-    <string name="mesg_suggestSelfHotspot">You can enable Wi-Fi to search for a File Transfer hotspot</string>
+    <string name="mesg_scanningSelfHotspot">Searching for Share Cloud hotspot</string>
+    <string name="mesg_suggestSelfHotspot">You can enable Wi-Fi to search for a Share Cloud hotspot</string>
     <string name="butn_enable">Enable</string>
-    <string name="mesg_locationPermissionRequiredSelfHotspot">Allow File Transfer to search and create hotspot</string>
+    <string name="mesg_locationPermissionRequiredSelfHotspot">Allow Share Cloud to search and create hotspot?</string>
     <string name="butn_locationSettings">Location</string>
     <string name="mesg_locationDisabledSelfHotspot">Enable location service to see scan results and create hotspot</string>
-    <string name="mesg_scanningDevicesSelfHotspot">Looking for devices over a File Transfer hotspot</string>
-    <string name="mesg_stoppingSelfHotspot">Stopping the File Transfer hotspot</string>
-    <string name="mesg_startingSelfHotspot">Starting the File Transfer hotspot</string>
+    <string name="mesg_scanningDevicesSelfHotspot">Looking for devices over a Share Cloud hotspot</string>
+    <string name="mesg_stoppingSelfHotspot">Stopping the Share Cloud hotspot</string>
+    <string name="mesg_startingSelfHotspot">Starting the Share Cloud hotspot</string>
     <string name="butn_check">Check</string>
     <string name="butn_uncheck">Uncheck</string>
     <string name="text_previewAndEditList">Preview &amp; edit</string>
@@ -420,7 +420,7 @@
     <string name="butn_selectNone">Select none</string>
     <string name="butn_previewSelections">Preview selections</string>
     <string name="mesg_deviceConnectionError">Connection with \"%s\" over \"%s\" failed</string>
-    <string name="mesg_retryReceivingNotice">File Transfer will retry receiving interrupted transfers</string>
+    <string name="mesg_retryReceivingNotice">Share Cloud will retry receiving interrupted transfers</string>
     <string name="mesg_transferConnectionNotSetUpFix">Please choose the connection method first</string>
     <string name="butn_setUp">Set up</string>
     <string name="text_location">Location</string>
@@ -505,7 +505,7 @@
 
     <string name="butn_changelog">Changelog</string>
     <string name="text_changelog">Changelog</string>
-    <string name="mesg_versionUpdatedChangelog">You have updated File Transfer, would you like to see what\'s new\?</string>
+    <string name="mesg_versionUpdatedChangelog">You have updated Share Cloud, would you like to see what\'s new\?</string>
     <string name="mesg_versionUpdatedChangelogRejected">You can always find \'Changelog\' in the \'About\' section</string>
     <string name="mesg_noInternetConnection">This requires internet connection</string>
     <string name="text_applyDarkTheme">Dark mode</string>
@@ -578,14 +578,14 @@
     <string name="text_or">or</string>
     <string name="text_visitWebShareAddress">Visit this link with your browser</string>
     <string name="text_webShareInfo">Enable web-sharing for transfers individually and visit any web-link shown below with a device that is connected to the same network.</string>
-    <string name="text_dowloadTrebleshotAndroid">Download File Transfer for Android</string>
+    <string name="text_dowloadTrebleshotAndroid">Download Share Cloud for Android</string>
     <string name="text_listEmptyConnection">Networks you connect appear here</string>
     <string name="mesg_errorNotAnIpAddress">Not an IP Address
 \n(like 192.168.1.2)</string>
     <string name="ques_shareAsApkOrLink">Share as APK or link?</string>
     <string name="butn_asApk">As APK</string>
     <string name="butn_asLink">As a link</string>
-    <string name="text_linkTrebleshot">Share files with File Transfer! Download here: %s</string>
+    <string name="text_linkTrebleshot">Share files with Share Cloud! Download here: %s</string>
     <string name="butn_downloadAllAsZip">Download all as ZIP (single, uncompressed)</string>
     <string name="text_unrecognizedQrCode">Unrecognized code</string>
     <string name="mesg_textStreamSaved">Text saved</string>
@@ -608,7 +608,7 @@
     <string name="transfer_time">(%s)</string>
     <string name="text_send_status">Ask your friend to open the app and tap RECEIVE</string>
     <string name="text_receive_status">Ask your friend to open the app and tap SEND</string>
-    <string name="mesg_cancelTransfer">Do you want to Cancel the Transfer</string>
+    <string name="mesg_cancelTransfer">Do you want to Cancel the Transfer?</string>
     <string name="text_qrPromptRequired">Please click on retry icon to make connection with QR</string>
     <string name="rate_us_desc">Your good rating is very Valuable for us. Please support our work.</string>
     <string name="rate_us_title">Rate us</string>

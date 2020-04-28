@@ -42,7 +42,7 @@
             android:layout_gravity="center_horizontal"
             android:minHeight="?attr/actionBarSize"
             app:tabSelectedTextColor="@color/colorPrimary"
-            app:tabMode="scrollable" />
+            app:tabMode="fixed" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

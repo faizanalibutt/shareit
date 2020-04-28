@@ -6,12 +6,15 @@ import android.view.View
 import android.widget.RatingBar
 import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
+import com.code4rox.adsmanager.AdmobUtils
+import com.code4rox.adsmanager.NativeAdsIdType
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.callback.Callback
+import com.hazelmobile.filetransfer.util.NetworkUtils
 import kotlinx.android.synthetic.main.layout_exit_rating_dialog.view.*
 
-class RateExitDialog(val activity: Activity, val title: String, val adsVisible: Boolean) :
+class ExitDialogue(val activity: Activity, val title: String, val adsVisible: Boolean) :
     AlertDialog.Builder(activity, R.style.Widget_Hazel_AppCompat_DialogTheme) {
 
     init {
@@ -22,8 +25,18 @@ class RateExitDialog(val activity: Activity, val title: String, val adsVisible: 
             setView(mRootView)
             setTitle(title)
 
-            if (adsVisible) {
+            if (adsVisible && NetworkUtils.isOnline(activity)) {
                 mRootView.rating_group.visibility = View.VISIBLE
+                val admobUtils = AdmobUtils(activity)
+                admobUtils.loadNativeAd(mRootView.fl_adplaceholder, R.layout.ad_unified_3, NativeAdsIdType.EXIT_NATIVE_AM)
+                admobUtils.setNativeAdListener(object : AdmobUtils.NativeAdListener {
+                    override fun onNativeAdLoaded() {
+                        mRootView.rate_exit_ads_view.visibility = View.GONE
+                    }
+                    override fun onNativeAdError() {
+
+                    }
+                })
             }
 
             setPositiveButton(title) { _, _ ->

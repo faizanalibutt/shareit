@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.genonbeta.android.framework.object.Selectable;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +38,15 @@ public class PowerfulActionEngine<ReturningObject extends PowerfulActionEngine.P
 
         if (selected)
             getHolder(callback).getSelectionList().add(selectable);
-        else
+        else {
             getHolder(callback).getSelectionList().remove(selectable);
+            try {
+                Method setColor = Class.forName("com.hazelmobile.filetransfer.callback.Callback")
+                        .getDeclaredMethod("setAppAction", Object.class);
+                boolean select = (boolean) setColor.invoke(null, true);
+            } catch (Exception e) {
+            }
+        }
 
         callback.onItemChecked(getContext(), mEngineCallback.onReturningObject(), selectable, position);
 

@@ -48,7 +48,8 @@ public class CommunicationNotificationHelper {
 
         builder.append(getContext().getString(R.string.text_communicationServiceRunning));
 
-        notification.setSmallIcon(R.drawable.ic_trebleshot_rounded_white_24dp_static)
+        // change it to static icon if problem occurs.
+        notification.setSmallIcon(R.mipmap.ic_launcher_new_round)
                 .setContentTitle(builder.toString())
                 .setContentText(getContext().getString(R.string.text_communicationServiceStop))
                 .setAutoCancel(true)

@@ -15,7 +15,10 @@ import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +29,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
+import com.code4rox.adsmanager.AdmobUtils;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
 import com.hazelmobile.filetransfer.R;
@@ -66,14 +70,20 @@ public class PreparationsActivity extends Activity
     private ImageView bluetoothStatus, wifiStatus, gpsStatus, hotspotStatus;
     private AppCompatButton gpsButton, nextScreen, bluetoothButton, wifiButton, hotspotButton, button;
     private ProgressBar bluetoothPbr, wifiPbr, gpsPbr, hotspotPbr;
+    private ProgressBar mProgressBar;
+    private TextView mProgressTextLeft;
+    private TextView mProgressTextRight;
+    private LinearLayout showProgressDB;
     private Group groupBluetooth;
-    private boolean isWifi, isBluetooth, isGps, isAllEnabled, isHotspot = false;
+    private boolean isWifi, isBluetooth, isGps, isHotspot = false;
+    public boolean isAllEnabled;
     private boolean isSender = false;
     private boolean isReceiver = false;
 
     IntentFilter mIntentFilter = new IntentFilter();
 
     private UIConnectionUtils mConnectionUtils;
+    private boolean dbInsertion;
 
     public UIConnectionUtils getUIConnectionUtils() {
         if (mConnectionUtils == null)
@@ -98,6 +108,7 @@ public class PreparationsActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        dbInsertion = false;
         // Camera Permission goes here
         hasCameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED;
@@ -183,37 +194,28 @@ public class PreparationsActivity extends Activity
                 finish();
             } else {
 
-                /*mProgressBar = findViewById(R.id.progressBar);
-                mProgressTextLeft = findViewById(R.id.text1);
-                mProgressTextRight = findViewById(R.id.text2);
-                mTextMain = findViewById(R.id.textMain);
-                mCancelButton = findViewById(R.id.cancelButton);
-
-                mCancelButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mTask != null)
-                            mTask.getInterrupter().interrupt(true);
-                    }
-                });*/
-
-
                 mFileUris = fileUris;
                 mFileNames = fileNames;
 
                 checkForTasks();
             }
 
-        } /*else {
-            Toast.makeText(this, R.string.mesg_formatNotSupported, Toast.LENGTH_SHORT).show();
-            finish();
-        }*/
+        } else {
+            if (isSender) {
+                Toast.makeText(this, R.string.mesg_formatNotSupported, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 
     private void init() {
         setContentView(R.layout.activity_preparations);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        showProgressDB = findViewById(R.id.showDBProgress);
+        mProgressBar = findViewById(R.id.progressBar);
+        mProgressTextLeft = findViewById(R.id.text1);
+        mProgressTextRight = findViewById(R.id.text2);
         bluetoothStatus = findViewById(R.id.bluetoothStatus);
         bluetoothButton = findViewById(R.id.bluetoothClick);
         bluetoothPbr = findViewById(R.id.bluetoothPbr);
@@ -231,6 +233,8 @@ public class PreparationsActivity extends Activity
         nextScreen.setText(getString(R.string.next));
         nextScreen.setEnabled(false);
         enableButton();
+        AdmobUtils admobUtils = new AdmobUtils(this);
+        admobUtils.loadBannerAd(findViewById(R.id.banner_ad_view));
     }
 
     public void openBluetooth(View view) {
@@ -545,7 +549,7 @@ public class PreparationsActivity extends Activity
                         .putExtra(EXTRA_REQUEST_TYPE,
                                 ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
                 finish();
-            } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1) {
+            } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1 && dbInsertion) {
                 ViewTransferActivity.startInstance(PreparationsActivity.this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
                 startActivity(new Intent(PreparationsActivity.this, SenderActivity.class)
                         .putExtra(Keyword.EXTRA_SEND, true)
@@ -553,8 +557,15 @@ public class PreparationsActivity extends Activity
                         .putExtra(SenderActivity.EXTRA_REQUEST_TYPE,
                                 SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
                 finish();
+            } else {
+                if (isAllEnabled)
+                    showProgressDB.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    public void btnOnClick() {
+        btnOnClick(nextScreen);
     }
 
     /* SHARE ACTIVITY CODE WILL BE ON THIS CLASS FOR SURE */
@@ -563,11 +574,11 @@ public class PreparationsActivity extends Activity
     private List<CharSequence> mFileNames;
 
     public void updateText(WorkerService.RunningTask runningTask, final String text) {
-        /*if (isFinishing())
+        if (isFinishing())
         {
             LogUtils.getLogTask("Preparations", "updateText(): Activity about to close, DON'T SHOW NOTIFICATION");
             return;
-        }*/
+        }
 
         LogUtils.getLogTask("Preparations", "updateText(): Activity about to close, BUT SHOW NOTIFICATION");
         runningTask.publishStatusText(text);
@@ -587,17 +598,20 @@ public class PreparationsActivity extends Activity
 
     }
 
-    /*public ProgressBar getProgressBar() {
-        return null;
-    }*/
+    public ProgressBar getProgressBar()
+    {
+        return mProgressBar;
+    }
+
+    public void setDBProgress(boolean dbInsertion) {
+        this.dbInsertion = dbInsertion;
+    }
 
     public void updateProgress(final int total, final int current) {
         if (isFinishing())
             return;
 
-        String FUCKED_SITUATION = "DON'T GO THERE OTHERWISE YOU KNOW WHAT WILL HAPPEN";
-
-        /*runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mProgressTextLeft.setText(String.valueOf(current));
@@ -606,7 +620,7 @@ public class PreparationsActivity extends Activity
         });
 
         mProgressBar.setProgress(current);
-        mProgressBar.setMax(total);*/
+        mProgressBar.setMax(total);
     }
 
     @Override

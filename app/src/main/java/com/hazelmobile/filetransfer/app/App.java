@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 
+import com.code4rox.adsmanager.AdmobUtils;
+import com.code4rox.adsmanager.InterAdsIdType;
 import com.genonbeta.android.framework.preference.DbSharablePreferences;
 import com.hazelmobile.filetransfer.util.AppUtils;
 
@@ -18,6 +20,12 @@ import com.hazelmobile.filetransfer.util.AppUtils;
 public class App extends Application {
     public static final String TAG = App.class.getSimpleName();
     public static final String ACTION_REQUEST_PREFERENCES_SYNC = "com.genonbeta.intent.action.REQUEST_PREFERENCES_SYNC";
+
+    public AdmobUtils getMainAdmobUtils() {
+        return mainAdmobUtils;
+    }
+
+    private AdmobUtils mainAdmobUtils;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -36,6 +44,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        mainAdmobUtils = new AdmobUtils(this);
+        mainAdmobUtils.loadInterstitial(null, InterAdsIdType.SPLASH_INTER_AM);
         //initializeSettings();
         getApplicationContext().registerReceiver(mReceiver, new IntentFilter(ACTION_REQUEST_PREFERENCES_SYNC));
 

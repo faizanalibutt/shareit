@@ -25,6 +25,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
+import com.code4rox.adsmanager.AdmobUtils;
+import com.code4rox.adsmanager.InterAdsIdType;
 import com.genonbeta.android.database.CursorItem;
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.framework.io.StreamInfo;
@@ -96,6 +98,7 @@ public class ViewTransferActivity
     //private TextView dataTransferTime;
     //private TextView dataTransferSpeed;
     private boolean isHistroy = false;
+    AdmobUtils admobUtils;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -336,6 +339,10 @@ public class ViewTransferActivity
 
         }
 
+        admobUtils = new AdmobUtils(this);
+        admobUtils.loadInterstitial(null, InterAdsIdType.INTER_AM);
+        admobUtils.loadBannerAd(findViewById(R.id.banner_ad_view));
+
     }
 
     @Override
@@ -511,6 +518,7 @@ public class ViewTransferActivity
                         public void onClick(DialogInterface dialog, int which) {
                             toggleTask();
                             Callback.setTransferProgress(false);
+                            admobUtils.showInterstitialAd();
                             finish();
                         }
                     })

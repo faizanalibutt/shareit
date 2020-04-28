@@ -33,7 +33,7 @@ import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.callback.Callback;
 import com.hazelmobile.filetransfer.config.AppConfig;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
-import com.hazelmobile.filetransfer.dialog.RateExitDialog;
+import com.hazelmobile.filetransfer.dialog.ExitDialogue;
 import com.hazelmobile.filetransfer.dialog.RationalePermissionRequest;
 import com.hazelmobile.filetransfer.service.CommunicationService;
 import com.hazelmobile.filetransfer.service.WorkerService;
@@ -60,6 +60,7 @@ public abstract class Activity extends AppCompatActivity {
     private boolean mSkipPermissionRequest = false;
     private boolean mWelcomePageDisallowed = false;
     private boolean mExitAppRequested = false;
+    protected AlertDialog dialog = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -418,12 +419,12 @@ public abstract class Activity extends AppCompatActivity {
         Bundle passPreLoadingArguments();
     }
 
-    protected void showRateExitDialogue(Activity activity) {
-        RateExitDialog rateUsDialog = new RateExitDialog(this,
+    protected AlertDialog showRateExitDialogue(Activity activity) {
+        ExitDialogue rateUsDialog = new ExitDialogue(this,
                 activity instanceof SideMenuActivity ? getString(R.string.rate_us_title) : getString(R.string.butn_exit),
                 activity instanceof MainActivity);
         Callback.setRating(0f);
-        AlertDialog dialog = rateUsDialog.show();
+        AlertDialog dialog = rateUsDialog.create();
         Objects.requireNonNull(dialog.getWindow()).
                 setBackgroundDrawable(getDrawable(R.drawable.background_rate_exit_dialog));
         Observer<Float> rating =
@@ -447,11 +448,14 @@ public abstract class Activity extends AppCompatActivity {
                     }
                 };
         Callback.getRating().observe(this, rating);
+        return dialog;
     }
 
     public void changeDialogButtonState(AlertDialog dialog, int buttonType, String title, boolean isDisable) {
-        dialog.getButton(buttonType).setText(title);
-        dialog.getButton(buttonType).setEnabled(isDisable);
+        if (dialog != null && dialog.isShowing()) {
+            dialog.getButton(buttonType).setText(title);
+            dialog.getButton(buttonType).setEnabled(isDisable);
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +17,8 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.code4rox.adsmanager.AdmobUtils;
+import com.code4rox.adsmanager.NativeAdsIdType;
 import com.genonbeta.android.database.SQLQuery;
 import com.hazelmobile.filetransfer.R;
 import com.hazelmobile.filetransfer.database.AccessDatabase;
@@ -23,6 +26,7 @@ import com.hazelmobile.filetransfer.object.ShowingAssignee;
 import com.hazelmobile.filetransfer.object.TransferGroup;
 import com.hazelmobile.filetransfer.util.AppUtils;
 import com.hazelmobile.filetransfer.util.FileUtils;
+import com.hazelmobile.filetransfer.util.NetworkUtils;
 import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
 
 import java.text.NumberFormat;
@@ -68,6 +72,8 @@ public class TransferGroupListAdapter
     protected void onLoad(GroupLister<PreloadedGroup> lister) {
         List<Long> activeList = new ArrayList<>(mRunningTasks);
 
+        if (NetworkUtils.isOnline(getContext()))
+            lister.offerObliged(this, new AdsModel());
         for (PreloadedGroup group : mDatabase.castQuery(getSelect(), PreloadedGroup.class)) {
             mDatabase.calculateTransactionSize(group.groupId, group.index);
 
@@ -100,6 +106,7 @@ public class TransferGroupListAdapter
                     && !(group.totalPercent < 1.00)) {
                 lister.offerObliged(this, group);
             }
+
         }
     }
 
@@ -124,6 +131,8 @@ public class TransferGroupListAdapter
     public GroupEditableListAdapter.GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_REPRESENTATIVE)
             return new GroupViewHolder(getInflater().inflate(R.layout.layout_list_title_no_padding_ext, parent, false), R.id.layout_list_title_text);
+        else if (viewType == VIEW_TYPE_ADS_LINEAR)
+            return new GroupViewHolder(getInflater().inflate(R.layout.ad_unified_4, parent, false), R.id.ad_call_to_action);
 
         return new GroupEditableListAdapter.GroupViewHolder(getInflater().inflate(R.layout.list_transfer_group_ext, parent, false));
     }
@@ -221,6 +230,22 @@ public class TransferGroupListAdapter
                     progressBar.setProgressDrawable(DrawableCompat.unwrap(wrapDrawable));
                 } else*/
                 //progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
+            } else if (holder.getItemViewType() == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR
+                    && NetworkUtils.isOnline(holder.getView().getContext())) {
+                AdmobUtils admobUtils = new AdmobUtils(holder.getView().getContext());
+                admobUtils.loadNativeAd((FrameLayout) holder.getView(),
+                        R.layout.ad_unified_4, NativeAdsIdType.ADJUST_NATIVE_AM);
+                admobUtils.setNativeAdListener(new AdmobUtils.NativeAdListener() {
+                    @Override
+                    public void onNativeAdLoaded() {
+
+                    }
+
+                    @Override
+                    public void onNativeAdError() {
+
+                    }
+                });
             }
         } catch (Exception e) {
         }
@@ -341,6 +366,40 @@ public class TransferGroupListAdapter
         @Override
         public void setSize(long size) {
             this.totalCount = ((Long) size).intValue();
+        }
+    }
+
+    public static class AdsModel extends PreloadedGroup {
+
+        public int viewType;
+
+        public AdsModel() {
+            this.viewType = GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR;
+        }
+
+        @Override
+        public String getRepresentativeText() {
+            return "ADS_VIEW";
+        }
+
+        @Override
+        public int getViewType() {
+            return viewType;
+        }
+
+        @Override
+        public long getComparableDate() {
+            return System.currentTimeMillis();
+        }
+
+        @Override
+        public boolean comparisonSupported() {
+            return getViewType() != GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR && super.comparisonSupported();
+        }
+
+        @Override
+        public boolean isSelectableSelected() {
+            return false;
         }
     }
 }

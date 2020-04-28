@@ -199,6 +199,7 @@ public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivi
                                     /*if (AppUtils.getDefaultPreferences(getAnchorListener()).getLong("add_devices_to_transfer", -1) != -1)
                                         ViewTransferActivity.startInstance(getAnchorListener(),
                                                 AppUtils.getDefaultPreferences(getAnchorListener()).getLong("add_devices_to_transfer", -1));*/
+                                    getAnchorListener().getAdmobUtils().showInterstitialAd();
                                     getAnchorListener().finish();
                                 }
                             } else if (getAnchorListener() != null) {

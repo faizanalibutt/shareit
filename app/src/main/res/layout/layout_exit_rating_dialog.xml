@@ -26,7 +26,7 @@
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="rate_exit_ads_view, view" />
+        app:constraint_referenced_ids="view, fl_adplaceholder, rate_exit_ads_view" />
 
     <TextView
         android:id="@+id/rate_us_title"
@@ -47,7 +47,7 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/rate_exit_ads_view"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="180dp"
         android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end"
@@ -55,6 +55,16 @@
         app:layout_constraintTop_toBottomOf="@+id/view"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@color/colorPrimary" />
+
+    <FrameLayout
+        android:id="@+id/fl_adplaceholder"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+        app:layout_constraintStart_toEndOf="@+id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!--
     use it when you can
@@ -72,7 +82,7 @@
         app:layout_constraintBottom_toTopOf="@+id/dialog_desc"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end"
         app:layout_constraintStart_toEndOf="@+id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/rate_exit_ads_view" />
+        app:layout_constraintTop_toBottomOf="@+id/fl_adplaceholder" />
 
     <TextView
         android:id="@+id/dialog_desc"

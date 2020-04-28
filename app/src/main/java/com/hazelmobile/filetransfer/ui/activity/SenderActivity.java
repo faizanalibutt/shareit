@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
+import com.code4rox.adsmanager.AdmobUtils;
+import com.code4rox.adsmanager.InterAdsIdType;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.snackbar.Snackbar;
@@ -56,6 +58,8 @@ public class SenderActivity extends Activity
     public static final String EXTRA_GROUP_ID = "extraGroupId";
     private IntentFilter mFilter = new IntentFilter(AccessDatabase.ACTION_DATABASE_CHANGE);
 
+    AdmobUtils admobUtils;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +84,10 @@ public class SenderActivity extends Activity
                     finish();
             }
         });
+
+        admobUtils = new AdmobUtils(this);
+        admobUtils.loadInterstitial(null, InterAdsIdType.INTER_AM);
+        admobUtils.loadBannerAd(findViewById(R.id.banner_ad_view));
     }
 
     @Override
@@ -327,6 +335,10 @@ public class SenderActivity extends Activity
         RETURN_RESULT,
         MAKE_ACQUAINTANCE;
 
+    }
+
+    public AdmobUtils getAdmobUtils() {
+        return admobUtils;
     }
 
 }

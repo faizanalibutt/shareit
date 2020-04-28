@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.provider.Settings
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
+import com.hazelmobile.filetransfer.app.App
 import com.hazelmobile.filetransfer.service.CommunicationService
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils
 import com.hazelmobile.filetransfer.ui.fragment.HomeFragment
@@ -19,6 +20,10 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        dialog = showRateExitDialogue(this@MainActivity)
+
+        val loadingAd = (application as App).mainAdmobUtils
+        loadingAd?.showInterstitialAd()
 
         slide_menu.setOnClickListener {
             startActivity(Intent(this@MainActivity, SideMenuActivity::class.java))
@@ -39,7 +44,7 @@ class MainActivity : Activity() {
         if (mHomeFragment!!.onBackPressed())
             return
 
-        showRateExitDialogue(this@MainActivity)
+        dialog.show()
     }
 
     companion object {

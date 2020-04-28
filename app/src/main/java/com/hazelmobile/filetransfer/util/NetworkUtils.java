@@ -1,6 +1,9 @@
 package com.hazelmobile.filetransfer.util;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 
 import java.io.BufferedInputStream;
@@ -169,11 +172,17 @@ public class NetworkUtils {
     static boolean ping(String ipAddress, int timeout) {
         try {
             return InetAddress.getByName(ipAddress).isReachable(timeout);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            try {
+                Process process = Runtime.getRuntime().exec("/system/bin/ping -c 1 -w 100 " + ipAddress);
+                int status = process.waitFor();
+                return status == 0;
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            return false;
         }
-
-        return false;
     }
 
     public static boolean ping(String ipAddress) {
@@ -200,5 +209,13 @@ public class NetworkUtils {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    public static boolean isOnline(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        return networkInfo != null && networkInfo.isConnected();
     }
 }

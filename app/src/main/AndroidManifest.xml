@@ -24,17 +24,29 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-    <uses-feature android:name="android.hardware.bluetooth_ble" android:required="true" />
+    <uses-feature
+        android:name="android.hardware.bluetooth_ble"
+        android:required="true" />
 
     <application
         android:name=".app.App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_new"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
+
         android:theme="@style/Theme.Hazel"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
+        <activity android:name=".ui.activity.SplashActivity"
+            android:theme="@style/Theme.Hazel.Base.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.activity.HistoryActivity"
             android:label="@string/text_history"
@@ -46,28 +58,17 @@
             android:name=".ui.activity.WelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar"
-            android:windowSoftInputMode="adjustResize">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.ReceiverActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
-        <!-- MAIN ACTIVITY HERE -->
         <activity
             android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <!-- MAIN ACTIVITY ENDS HERE -->
-
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar"> <!-- MAIN ACTIVITY HERE -->
+        </activity> <!-- MAIN ACTIVITY ENDS HERE -->
         <activity
             android:name=".ui.activity.SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -84,9 +85,7 @@
             android:launchMode="singleTask"
             android:parentActivityName=".ui.activity.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
-
-        </activity>
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar"></activity>
         <activity
             android:name=".ui.activity.PreparationsActivity"
             android:screenOrientation="portrait"
@@ -136,9 +135,7 @@
         <activity
             android:name=".ui.activity.SenderActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
-
-        <!-- SERVICES WILL BE HERE -->
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" /> <!-- SERVICES WILL BE HERE -->
         <service
             android:name=".service.CommunicationService"
             android:enabled="true"
@@ -147,6 +144,16 @@
         <service
             android:name=".service.WorkerService"
             android:label="@string/text_workerService" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

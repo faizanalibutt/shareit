@@ -156,7 +156,7 @@ public class TransferListFragment
                 }
             }
         };
-        Callback.getAppAction().observe(this, appAction);
+        Callback.getAppAction().observe(getViewLifecycleOwner(), appAction);
 
     }
 

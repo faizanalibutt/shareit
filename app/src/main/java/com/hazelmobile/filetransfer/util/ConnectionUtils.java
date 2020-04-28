@@ -156,8 +156,7 @@ public class ConnectionUtils {
                     /*remoteAddress = testedRemoteAddress;
                     break;*/
 
-                    if (UIConnectionUtils.isOSAbove(Build.VERSION_CODES.M)?
-                            NetworkUtils.ping(testedRemoteAddress, pingTimeout) : NetworkUtils.ping(testedRemoteAddress)) {
+                    if (NetworkUtils.ping(testedRemoteAddress, pingTimeout)) {
                         Log.d(TAG, "establishHotspotConnection(): AP has been reached. Returning OK state.");
                         remoteAddress = testedRemoteAddress;
                         break;

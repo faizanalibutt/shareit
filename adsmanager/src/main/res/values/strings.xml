@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AdsManager</string>
+    <string name="ad_attribution">AD</string>
+
+    <string name="fb_test_id">b5cca306-5309-4bc0-8e7e-2c2f8b8ac9ec</string>
+    <string name="sponsored">Sponsored</string>
+
+</resources>

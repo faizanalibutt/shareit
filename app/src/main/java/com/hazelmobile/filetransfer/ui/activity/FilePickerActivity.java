@@ -43,6 +43,7 @@ public class FilePickerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filepicker);
 
+
         mFileExplorerFragment = (FileExplorerFragment) getSupportFragmentManager().findFragmentById(R.id.activitiy_filepicker_fragment_files);
         mFAB = findViewById(R.id.content_fab);
     }

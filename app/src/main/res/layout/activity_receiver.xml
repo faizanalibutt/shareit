@@ -118,6 +118,15 @@
             android:layout_marginTop="@dimen/margin_absolute_size"
             android:gravity="center" />
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <include layout="@layout/banner_ads_layout_tag" />
+
+        </FrameLayout>
+
     </com.hazelmobile.filetransfer.library.RippleBackground>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

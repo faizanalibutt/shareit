@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/c1"
-    android:layout_width="match_parent"
-    android:layout_height="62dp"
-    app:cardCornerRadius="0dp"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="@+id/content_sharing_viewPager"
-    app:layout_constraintStart_toStartOf="@+id/content_sharing_viewPager"
-    app:layout_constraintTop_toBottomOf="@id/content_sharing_viewPager"
-    tools:showIn="@layout/content_sharing">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button"
-        android:onClick="btnOnClick"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textColor="@color/button_text_color_selector"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_10"
-        android:layout_marginEnd="@dimen/dp_16"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:text="@string/home_send" />
+        android:layout_height="62dp"
+        app:cardCornerRadius="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/banner_ad_view"
+        tools:showIn="@layout/content_sharing">
 
-</androidx.cardview.widget.CardView>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:onClick="btnOnClick"
+            android:text="@string/home_send"
+            android:textColor="@color/button_text_color_selector" />
+
+    </androidx.cardview.widget.CardView>
+
+    <include layout="@layout/banner_ads_layout_tag" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

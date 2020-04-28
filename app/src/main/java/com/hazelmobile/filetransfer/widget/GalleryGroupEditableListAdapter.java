@@ -51,6 +51,10 @@ abstract public class GalleryGroupEditableListAdapter<T extends GalleryGroupEdit
     public static class GalleryGroupShareable extends GroupShareable {
         public String albumName;
 
+        public GalleryGroupShareable() {
+            super();
+        }
+
         public GalleryGroupShareable(int viewType, String representativeText) {
             super(viewType, representativeText);
         }

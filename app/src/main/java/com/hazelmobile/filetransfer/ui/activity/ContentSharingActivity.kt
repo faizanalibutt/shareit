@@ -7,6 +7,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
+import com.code4rox.adsmanager.AdmobUtils
 import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
 import com.hazelmobile.filetransfer.R
@@ -21,6 +22,7 @@ import com.hazelmobile.filetransfer.ui.callback.PowerfulActionModeSupport
 import com.hazelmobile.filetransfer.ui.callback.SharingActionModeCallback
 import com.hazelmobile.filetransfer.ui.fragment.*
 import kotlinx.android.synthetic.main.activity_content_sharing.*
+import kotlinx.android.synthetic.main.banner_ads_layout_tag.*
 import kotlinx.android.synthetic.main.content_sharing.*
 import kotlinx.android.synthetic.main.file_transfer_general_button.*
 
@@ -151,6 +153,9 @@ class ContentSharingActivity : Activity(),
 
         val selectObserver = Observer<Boolean> { select -> selectionCallback(select) }
         Callback.getColor().observe(this, selectObserver)
+
+        val admobUtils = AdmobUtils(this)
+        admobUtils.loadBannerAd(banner_ad_view)
 
     }
 

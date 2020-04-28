@@ -3,11 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragmentContainer"
     tools:context=".ui.activity.HistoryActivity">
+
     <fragment
         android:id="@+id/activitiy_home_fragment"
         android:name="com.hazelmobile.filetransfer.ui.fragment.TransferGroupListFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/banner_ad_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+
+        layout="@layout/banner_ads_layout_tag" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

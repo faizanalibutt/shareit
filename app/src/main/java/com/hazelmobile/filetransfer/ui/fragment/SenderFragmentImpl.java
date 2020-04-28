@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -37,6 +38,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 
+import com.code4rox.adsmanager.AdmobUtils;
+import com.code4rox.adsmanager.NativeAdsIdType;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
@@ -56,6 +59,7 @@ import com.hazelmobile.filetransfer.model.Bluetooth;
 import com.hazelmobile.filetransfer.object.NetworkDevice;
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils;
 import com.hazelmobile.filetransfer.ui.UITask;
+import com.hazelmobile.filetransfer.ui.activity.ReceiverActivity;
 import com.hazelmobile.filetransfer.ui.activity.SenderActivity;
 import com.hazelmobile.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.hazelmobile.filetransfer.ui.adapter.SenderListAdapter;
@@ -155,6 +159,20 @@ public class SenderFragmentImpl
         View view = inflater.inflate(R.layout.demo_fragment_impl_sender, container, false);
         mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
         lv_send = view.findViewById(R.id.lv_send);
+        FrameLayout fl_adplaceholder = view.findViewById(R.id.fl_adplaceholder);
+        AdmobUtils admobUtils = new AdmobUtils(view.getContext());
+        admobUtils.loadNativeAd(fl_adplaceholder, R.layout.ad_unified_2, NativeAdsIdType.ADJUST_NATIVE_AM);
+        admobUtils.setNativeAdListener(new AdmobUtils.NativeAdListener() {
+            @Override
+            public void onNativeAdLoaded() {
+
+            }
+
+            @Override
+            public void onNativeAdError() {
+
+            }
+        });
         return view;
     }
 
@@ -219,7 +237,7 @@ public class SenderFragmentImpl
             }
         };
 
-        Callback.getSenderAction().observe(this, senderAction);
+        Callback.getSenderAction().observe(getViewLifecycleOwner(), senderAction);
 
     }
 
