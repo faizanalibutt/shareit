@@ -435,9 +435,9 @@ public class AppUtils {
     }
 
     public static void startForegroundService(Context context, Intent intent) {
-        if (Build.VERSION.SDK_INT >= 26)
+        /*if (Build.VERSION.SDK_INT >= 26)
             context.startForegroundService(intent);
-        else
+        else*/
             context.startService(intent);
     }
 

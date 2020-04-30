@@ -162,6 +162,7 @@ public class ImageListAdapter
 
         public AdsModel() {
             this.viewType = GroupEditableListAdapter.VIEW_TYPE_ADS_GRID;
+            albumName = "Camera";
         }
 
         @Override
@@ -175,8 +176,18 @@ public class ImageListAdapter
         }
 
         @Override
+        public boolean isGroupRepresentative() {
+            return false;
+        }
+
+        @Override
         public long getComparableDate() {
             return System.currentTimeMillis();
+        }
+
+        @Override
+        public String getComparableName() {
+            return "ADS";
         }
 
         @Override

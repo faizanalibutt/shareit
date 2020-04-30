@@ -154,7 +154,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:863203365808:android:55579e9dd337d9d1573c75",
         "android_client_info": {
-          "package_name": "com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer"
+          "package_name": "com.hazelmobile.filetransfer"
         }
       },
       "oauth_client": [
