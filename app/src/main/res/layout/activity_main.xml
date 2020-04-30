@@ -49,7 +49,7 @@
 
     <fragment
         android:id="@+id/activitiy_home_fragment"
-        android:name="com.hazelmobile.filetransfer.ui.fragment.HomeFragment"
+        android:name="com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.fragment.HomeFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

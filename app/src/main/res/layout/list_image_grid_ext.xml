@@ -1,4 +1,4 @@
-<com.hazelmobile.filetransfer.view.ComparativeRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.view.ComparativeRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -77,4 +77,4 @@
         android:textColor="@android:color/white"
         android:visibility="gone" />
 
-</com.hazelmobile.filetransfer.view.ComparativeRelativeLayout>
+</com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.view.ComparativeRelativeLayout>

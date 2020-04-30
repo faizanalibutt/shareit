@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.hazelmobile.filetransfer">
+    package="com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer">
 
     <dist:module dist:instant="true" />
 
@@ -85,7 +85,7 @@
             android:launchMode="singleTask"
             android:parentActivityName=".ui.activity.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar"></activity>
+            android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
         <activity
             android:name=".ui.activity.PreparationsActivity"
             android:screenOrientation="portrait"

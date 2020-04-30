@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer
+package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.hazelmobile.filetransfer", appContext.packageName)
+        assertEquals("com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer", appContext.packageName)
     }
 }

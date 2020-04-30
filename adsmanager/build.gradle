@@ -17,23 +17,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
 
-
-            resValue "string", "splash_native_am", "ca-app-pub-1968566737616361/5440565186"
+            resValue "string", "splash_native_am", "ca-app-pub-8620219021552434/1656999046"
             resValue "string", "splash_native_fb", "371474843734396_371478570400690"
-            resValue "string", "mm_native_am", "ca-app-pub-1968566737616361/8122568843"
+            resValue "string", "mm_native_am", "ca-app-pub-8620219021552434/6717754036"
             resValue "string", "mm_native_fb", "371474843734396_371479207067293"
-            resValue "string", "adjust_native_am", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "adjust_native_am", "ca-app-pub-8620219021552434/6717754036"
             resValue "string", "adjust_native_fb", "YOUR_PLACEMENT_ID"
-            resValue "string", "exit_native_am", "ca-app-pub-1968566737616361/3558499697"
-            resValue "string", "splash_inter_am", "ca-app-pub-1968566737616361/3518492318"
+            resValue "string", "exit_native_am", "ca-app-pub-8620219021552434/6717754036"
+            resValue "string", "splash_inter_am", "ca-app-pub-8620219021552434/1848570732"
             resValue "string", "splash_inter_fb", "371474843734396_371475540400993"
-            resValue "string", "inter_am", "ca-app-pub-1968566737616361/2943777249"
+            resValue "string", "inter_am", "ca-app-pub-8620219021552434/5787815748"
             resValue "string", "inter_fb", "371474843734396_371477787067435"
-            resValue "string", "banner_am", "ca-app-pub-1968566737616361/6308307185"
+            resValue "string", "banner_am", "ca-app-pub-8620219021552434/3353224097"
             resValue "string", "banner_fb", "YOUR_PLACEMENT_ID"
 
 //            resValue "string", "ad_app_id", "ca-app-pub-2474744788384396~3320783164"
-            resValue "string", "ad_app_id", "ca-app-pub-1968566737616361~3698100497"
+            resValue "string", "ad_app_id", "ca-app-pub-8620219021552434~3083946579"
 
             //mopub
             resValue "string", "ad_app_id_mp", "b439cab50b014c47bc2ddf7b80898377"

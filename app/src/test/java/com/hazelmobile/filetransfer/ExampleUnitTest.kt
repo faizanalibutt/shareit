@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer
+package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer
 
 import org.junit.Test
 

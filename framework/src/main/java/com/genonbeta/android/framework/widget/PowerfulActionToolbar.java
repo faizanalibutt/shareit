@@ -108,7 +108,7 @@ abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject e
                     mEngine.finish(callback);
                     // make LiveData and call it when click on it.
                     try {
-                        Method setColor = Class.forName("com.hazelmobile.filetransfer.callback.Callback")
+                        Method setColor = Class.forName("com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback")
                                 .getDeclaredMethod("setColor", boolean.class);
                         boolean select = (boolean) setColor.invoke(null, false);
                     } catch (Exception e) {
@@ -118,7 +118,7 @@ abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject e
         }
 
         try {
-            Method setColor = Class.forName("com.hazelmobile.filetransfer.callback.Callback")
+            Method setColor = Class.forName("com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback")
                     .getDeclaredMethod("setColor", boolean.class);
             boolean select = (boolean) setColor.invoke(null, true);
         } catch (Exception e) {

@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/activitiy_home_fragment"
-        android:name="com.hazelmobile.filetransfer.ui.fragment.TransferGroupListFragment"
+        android:name="com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.fragment.TransferGroupListFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/banner_ad_view"

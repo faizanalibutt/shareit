@@ -41,7 +41,7 @@ public class PowerfulActionEngine<ReturningObject extends PowerfulActionEngine.P
         else {
             getHolder(callback).getSelectionList().remove(selectable);
             try {
-                Method setColor = Class.forName("com.hazelmobile.filetransfer.callback.Callback")
+                Method setColor = Class.forName("com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback")
                         .getDeclaredMethod("setAppAction", Object.class);
                 boolean select = (boolean) setColor.invoke(null, true);
             } catch (Exception e) {
