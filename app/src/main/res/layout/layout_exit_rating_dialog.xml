@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/dp_18"
     android:paddingStart="@dimen/dp_18"
+    android:paddingTop="@dimen/dp_18"
     android:paddingEnd="@dimen/dp_18">
 
     <androidx.constraintlayout.widget.Guideline
@@ -23,36 +24,18 @@
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/rating_group"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="view, fl_adplaceholder, rate_exit_ads_view" />
-
-    <TextView
-        android:id="@+id/rate_us_title"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/dp_44"
-        android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:text="Rate Us"
-        android:textColor="@color/white"
-        android:textSize="@dimen/font_size_big"
         android:visibility="gone"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintBottom_toTopOf="@id/rating_group"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:constraint_referenced_ids="view, fl_adplaceholder, rate_exit_ads_view" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/rate_exit_ads_view"
         android:layout_width="0dp"
         android:layout_height="180dp"
         android:contentDescription="@string/app_name"
-        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end"
         app:layout_constraintStart_toEndOf="@+id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/view"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@color/colorPrimary" />
 
@@ -60,10 +43,8 @@
         android:id="@+id/fl_adplaceholder"
         android:layout_width="0dp"
         android:layout_height="200dp"
-        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end"
         app:layout_constraintStart_toEndOf="@+id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/view"
         app:layout_constraintTop_toTopOf="parent" />
 
     <!--
@@ -79,7 +60,6 @@
         android:layout_marginTop="@dimen/margin_smaller_size"
         android:layout_marginBottom="15dp"
         android:background="@color/contentShowingBackground"
-        app:layout_constraintBottom_toTopOf="@+id/dialog_desc"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end"
         app:layout_constraintStart_toEndOf="@+id/guideline_start"
         app:layout_constraintTop_toBottomOf="@+id/fl_adplaceholder" />
@@ -92,7 +72,6 @@
         android:text="@string/rate_us_desc"
         android:textColor="@color/black_gray"
         android:textSize="@dimen/font_size_primary_normal"
-        app:layout_constraintBottom_toTopOf="@+id/rating_bar_value"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end"
         app:layout_constraintStart_toEndOf="@+id/guideline_start"
         app:layout_constraintTop_toBottomOf="@id/view" />
@@ -113,23 +92,40 @@
 
     <me.zhanghai.android.materialratingbar.MaterialRatingBar
         android:id="@+id/rating_bar_value"
+        style="@style/Widget.MaterialRatingBar.RatingBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="40dp"
+        android:layout_marginTop="@dimen/margin_small_size"
         android:maxHeight="40dp"
+        android:minHeight="40dp"
         android:numStars="5"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
-        android:stepSize="1"
-        android:theme="@style/RatingBar"
-        style="@style/Widget.MaterialRatingBar.RatingBar"
         android:progressBackgroundTint="@color/rating_bar_color"
         android:progressTint="@color/colorPrimary"
-        android:layout_marginTop="@dimen/margin_small_size"
+        android:stepSize="1"
+        android:theme="@style/RatingBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end"
         app:layout_constraintStart_toEndOf="@+id/guideline_start"
         app:layout_constraintTop_toBottomOf="@+id/dialog_desc"
-        app:mrb_fillBackgroundStars="true"/>
+        app:mrb_fillBackgroundStars="true" />
+
+    <TextView
+        android:id="@+id/exit_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="20dp"
+        android:textAlignment="center"
+        android:text="Do you want to exit?"
+        android:layout_marginTop="@dimen/margin_small_size"
+        android:textColor="@color/black_gray"
+        android:textSize="@dimen/font_size_primary_normal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+        app:layout_constraintStart_toEndOf="@+id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_desc"
+        tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

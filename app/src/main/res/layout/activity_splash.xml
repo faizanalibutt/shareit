@@ -36,16 +36,17 @@
         app:layout_constraintGuide_percent="0.75" />
 
     <ImageView
-        android:id="@+id/appIcon"
+        android:id="@+id/appIconsplash"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toTopOf="@+id/appText"
         app:layout_constraintEnd_toEndOf="@+id/adGroup"
         android:layout_marginTop="@dimen/margin_small_size"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/adGroup"
         app:layout_constraintTop_toBottomOf="@+id/guideline_start"
-        app:srcCompat="@drawable/app_icon_blue" />
+        app:srcCompat="@drawable/ic_start_app_icon_124dp" />
 
     <TextView
         android:id="@+id/appText"
@@ -54,11 +55,12 @@
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textAllCaps="true"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="@dimen/margin_smaller_size"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appIcon" />
+        app:layout_constraintTop_toBottomOf="@+id/appIconsplash" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -73,5 +75,8 @@
         app:layout_constraintEnd_toEndOf="@+id/adGroup"
         app:layout_constraintStart_toStartOf="@+id/adGroup"
         app:layout_constraintTop_toBottomOf="@+id/appText" />
+
+    <include
+        layout="@layout/layout_gdp_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

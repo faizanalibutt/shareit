@@ -2,6 +2,7 @@ package com.hazelmobile.filetransfer.app;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -15,13 +16,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.lifecycle.Observer;
 
 import com.bumptech.glide.request.Request;
@@ -59,6 +63,7 @@ public abstract class Activity extends AppCompatActivity {
     private boolean mCustomFontsEnabled = false;
     private boolean mSkipPermissionRequest = false;
     private boolean mWelcomePageDisallowed = false;
+    private boolean mPrivacyPageDisallowed = false;
     private boolean mExitAppRequested = false;
     protected AlertDialog dialog = null;
 
@@ -434,16 +439,57 @@ public abstract class Activity extends AppCompatActivity {
                             changeDialogButtonState(dialog, AlertDialog.BUTTON_POSITIVE, getString(R.string.text_rate), false);
                         } else if (ratingValue < 4f) {
                             changeDialogButtonState(dialog, AlertDialog.BUTTON_POSITIVE, getString(R.string.txt_feedback), true);
+                            if (dialog.isShowing()) {
+                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        composeEmail(new String[]{"appswingstudio@gmail.com"}, "Share Cloud, Your valuable feedback.");
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
                         } else {
                             changeDialogButtonState(dialog, AlertDialog.BUTTON_POSITIVE, getString(R.string.text_rate), true);
+                            if (dialog.isShowing()) {
+                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String url = getString(R.string.app_link);
+                                        CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder().build();
+                                        customTabsIntent.launchUrl(activity, Uri.parse(url));
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
                         }
                     } else {
                         if (ratingValue == 0f)
                             changeDialogButtonState(dialog, AlertDialog.BUTTON_NEGATIVE, getString(R.string.butn_cancel), true);
                         else if (ratingValue < 4f) {
                             changeDialogButtonState(dialog, AlertDialog.BUTTON_NEGATIVE, getString(R.string.txt_feedback), true);
+                            if (dialog.isShowing()) {
+                                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        composeEmail(new String[]{"appswingstudio@gmail.com"}, "Share Cloud, Your valuable feedback.");
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
                         } else {
                             changeDialogButtonState(dialog, AlertDialog.BUTTON_NEGATIVE, getString(R.string.text_rate), true);
+                            if (dialog.isShowing()) {
+                                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        getDefaultPreferences().edit().putBoolean("hide_rating", true).apply();
+                                        String url = getString(R.string.app_link);
+                                        CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder().build();
+                                        customTabsIntent.launchUrl(activity, Uri.parse(url));
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
                         }
                     }
                 };
@@ -455,6 +501,16 @@ public abstract class Activity extends AppCompatActivity {
         if (dialog != null && dialog.isShowing()) {
             dialog.getButton(buttonType).setText(title);
             dialog.getButton(buttonType).setEnabled(isDisable);
+        }
+    }
+
+    public void composeEmail(String[] addresses, String subject) {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
         }
     }
 

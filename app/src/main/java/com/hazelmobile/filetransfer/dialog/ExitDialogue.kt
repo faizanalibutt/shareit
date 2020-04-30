@@ -3,14 +3,17 @@ package com.hazelmobile.filetransfer.dialog
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.RatingBar
 import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.view.marginTop
 import com.code4rox.adsmanager.AdmobUtils
 import com.code4rox.adsmanager.NativeAdsIdType
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.callback.Callback
+import com.hazelmobile.filetransfer.util.AppUtils
 import com.hazelmobile.filetransfer.util.NetworkUtils
 import kotlinx.android.synthetic.main.layout_exit_rating_dialog.view.*
 
@@ -43,7 +46,7 @@ class ExitDialogue(val activity: Activity, val title: String, val adsVisible: Bo
                 if (adsVisible) {
                     activity.finish()
                 } else {
-                    val url = "https://play.google.com"
+                    val url = activity.getString(R.string.app_link)
                     val builderTab = CustomTabsIntent.Builder()
                     val customTabsIntent = builderTab.build()
                     customTabsIntent.launchUrl(context, Uri.parse(url))
@@ -52,12 +55,18 @@ class ExitDialogue(val activity: Activity, val title: String, val adsVisible: Bo
 
             setNegativeButton("Cancel", null)
 
+            if (adsVisible && AppUtils.getDefaultPreferences(activity).getBoolean("hide_rating", false)) {
+                mRootView.rating_bar_value.visibility = View.GONE
+                mRootView.view.visibility = View.GONE
+                mRootView.dialog_desc.visibility = View.GONE
+                mRootView.exit_desc.visibility = View.VISIBLE
+            } else if (adsVisible) {
+                mRootView.view.visibility = View.VISIBLE
+            }
+
             mRootView.rating_bar_value.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
-                    if (rating < 4)
-                        Callback.setRating(rating)
-                    else
-                        Callback.setRating(rating)
-                }
+                Callback.setRating(rating)
+            }
 
         }.onFailure {
             // here you can send developer message

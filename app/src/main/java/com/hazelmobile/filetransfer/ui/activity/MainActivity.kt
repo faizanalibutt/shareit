@@ -6,11 +6,14 @@ import android.provider.Settings
 import com.hazelmobile.filetransfer.R
 import com.hazelmobile.filetransfer.app.Activity
 import com.hazelmobile.filetransfer.app.App
+import com.hazelmobile.filetransfer.callback.Callback
 import com.hazelmobile.filetransfer.service.CommunicationService
 import com.hazelmobile.filetransfer.ui.UIConnectionUtils
 import com.hazelmobile.filetransfer.ui.fragment.HomeFragment
 import com.hazelmobile.filetransfer.util.AppUtils
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_exit_rating_dialog.*
+import kotlinx.android.synthetic.main.layout_exit_rating_dialog.view.*
 
 class MainActivity : Activity() {
 
@@ -45,6 +48,9 @@ class MainActivity : Activity() {
             return
 
         dialog.show()
+        dialog.setOnDismissListener {
+            dialog = showRateExitDialogue(this@MainActivity)
+        }
     }
 
     companion object {
