@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer.ui.activity
+package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -14,9 +14,9 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import com.code4rox.adsmanager.AdmobUtils
 import com.code4rox.adsmanager.NativeAdsIdType
-import com.hazelmobile.filetransfer.R
-import com.hazelmobile.filetransfer.util.AppUtils
-import com.hazelmobile.filetransfer.util.NetworkUtils
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.android.synthetic.main.layout_gdp_view.*
 

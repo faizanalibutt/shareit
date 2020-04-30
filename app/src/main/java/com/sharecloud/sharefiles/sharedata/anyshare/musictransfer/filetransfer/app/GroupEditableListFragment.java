@@ -1,4 +1,4 @@
-package com.hazelmobile.filetransfer.app;
+package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,9 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
 
-import com.hazelmobile.filetransfer.R;
-import com.hazelmobile.filetransfer.ui.adapter.ImageListAdapter;
-import com.hazelmobile.filetransfer.widget.GroupEditableListAdapter;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.miscpkg.GroupEditable;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.adapter.ImageListAdapter;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.GroupEditableListAdapter;
 
 import java.util.Map;
 
@@ -21,7 +22,7 @@ import java.util.Map;
  * date: 30.03.2018 16:10
  */
 
-public abstract class GroupEditableListFragment<T extends GroupEditableListAdapter.GroupEditable, V extends GroupEditableListAdapter.GroupViewHolder, E extends GroupEditableListAdapter<T, V>>
+public abstract class GroupEditableListFragment<T extends GroupEditable, V extends GroupEditableListAdapter.GroupViewHolder, E extends GroupEditableListAdapter<T, V>>
         extends EditableListFragment<T, V, E> {
     private Map<String, Integer> mGroupingOptions = new ArrayMap<>();
     private int mDefaultGroupingCriteria = GroupEditableListAdapter.MODE_GROUP_BY_NOTHING;
