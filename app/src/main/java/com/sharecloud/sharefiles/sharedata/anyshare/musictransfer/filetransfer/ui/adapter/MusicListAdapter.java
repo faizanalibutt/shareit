@@ -100,7 +100,7 @@ public class MusicListAdapter
     @Override
     public EditableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR)
-            return new EditableViewHolder(getInflater().inflate(R.layout.ad_unified_4, parent, false));
+            return new EditableViewHolder(getInflater().inflate(R.layout.ad_unified_5, parent, false));
 
         return new EditableViewHolder(getInflater().inflate(R.layout.music_item_layout, parent, false));
     }
@@ -112,7 +112,7 @@ public class MusicListAdapter
             if (holder.getItemViewType() == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR) {
                 AdmobUtils admobUtils = new AdmobUtils(holder.getView().getContext());
                 admobUtils.loadNativeAd((FrameLayout) holder.getView(),
-                        R.layout.ad_unified_4, NativeAdsIdType.ADJUST_NATIVE_AM);
+                        R.layout.ad_unified_5, NativeAdsIdType.ADJUST_NATIVE_AM);
                 admobUtils.setNativeAdListener(new AdmobUtils.NativeAdListener() {
                     @Override
                     public void onNativeAdLoaded() {
