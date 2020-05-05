@@ -14,6 +14,7 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import com.code4rox.adsmanager.AdmobUtils
 import com.code4rox.adsmanager.NativeAdsIdType
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils
@@ -25,7 +26,21 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        initFbRemoteConfig()
         getSplashViews()
+    }
+
+    private var mFirebaseRemoteConfig: FirebaseRemoteConfig? = null
+
+    private fun initFbRemoteConfig() {
+
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+        mFirebaseRemoteConfig?.setDefaultsAsync(R.xml.firebase_config)
+        mFirebaseRemoteConfig?.fetch(1)?.addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                mFirebaseRemoteConfig?.activate()
+            }
+        }
     }
 
     private fun getSplashViews() {
