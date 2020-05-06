@@ -96,9 +96,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    api 'com.google.firebase:firebase-ads:19.1.0'
     api 'com.google.firebase:firebase-config:19.1.4'
     api 'com.google.firebase:firebase-core:17.4.0'
-    api 'com.google.firebase:firebase-ads:19.1.0'
 
 
       /*  api('com.mopub:mopub-sdk:+@aar') {

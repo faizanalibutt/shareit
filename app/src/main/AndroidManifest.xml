@@ -109,7 +109,7 @@
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar" />
         <activity
             android:name=".ui.activity.ViewTransferActivity"
-            android:label="File Transfer"
+            android:label="@string/app_name"
             android:parentActivityName=".ui.activity.PreparationsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Hazel.NoActionBar.StaticStatusBar">
