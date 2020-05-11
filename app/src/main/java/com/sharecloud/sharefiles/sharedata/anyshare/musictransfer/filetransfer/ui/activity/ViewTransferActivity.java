@@ -35,7 +35,6 @@ import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.google.android.material.snackbar.Snackbar;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.bluetooth.ActionType;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.dialog.TransferInfoDialog;
@@ -340,7 +339,8 @@ public class ViewTransferActivity
         }
 
         admobUtils = new AdmobUtils(this);
-        admobUtils.loadInterstitial(null, InterAdsIdType.INTER_AM);
+        if (!isHistroy)
+            admobUtils.loadInterstitial(null, InterAdsIdType.INTER_AM);
         admobUtils.loadBannerAd(findViewById(R.id.banner_ad_view));
 
     }

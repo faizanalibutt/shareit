@@ -14,6 +14,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaDrm;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Base64;
@@ -44,10 +45,9 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.d
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.dialog.RationalePermissionRequest;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.graphics.drawable.TextDrawable;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.NetworkDevice;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AddressedInterface;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.FileUtils;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UIConnectionUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -59,7 +59,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class AppUtils {
     public static final String TAG = AppUtils.class.getSimpleName();
@@ -265,9 +267,45 @@ public class AppUtils {
     }
 
     public static String getDeviceSerial(Context context) {
-        return Build.VERSION.SDK_INT < 26
-                ? Build.SERIAL
-                : (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED ? Build.getSerial() : null);
+        if (Build.VERSION.SDK_INT < 26)
+            return Build.SERIAL;
+        else {
+            if (ActivityCompat.checkSelfPermission(context,
+                    Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+            ) {
+                if (Build.VERSION.SDK_INT < 29)
+                    return Build.getSerial();
+                else
+                    return getUniqueID();
+            } else
+                return "what should i do here :(";
+        }
+    }
+
+    @NotNull
+    public static String getUniqueID() {
+        UUID wideVineUuid = new UUID(-0x121074568629b532L, -0x5c37d8232ae2de13L);
+        MediaDrm wvDrm = null;
+        try {
+            wvDrm = new MediaDrm(wideVineUuid);
+            byte[] wideVineId = wvDrm.getPropertyByteArray(MediaDrm.PROPERTY_DEVICE_UNIQUE_ID);
+            return Arrays.toString(wideVineId);
+        } catch (Exception e) {
+            // Inspect exception
+            return "what should i do here :(";
+        } finally {
+            if (UIConnectionUtils.isOSAbove(29)) {
+                if (wvDrm != null) {
+                    wvDrm.close();
+                }
+            } else {
+                if (wvDrm != null) {
+                    wvDrm.release();
+                }
+            }
+        }
+        // Close resources with close() or release() depending on platform API
+        // Use ARM on Android P platform or higher, where MediaDrm has the close() method
     }
 
     public static String getFriendlySSID(String ssid) {

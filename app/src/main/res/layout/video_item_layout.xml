@@ -9,6 +9,7 @@
         android:id="@+id/videoThumbnail"
         android:layout_width="@dimen/video_thumbnail_size_width"
         android:layout_height="@dimen/video_thumbnail_size"
+        android:layout_marginStart="@dimen/margin_smaller_size"
         app:layout_constraintBottom_toTopOf="@+id/layer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -95,6 +96,7 @@
         style="@style/ListContentIconStyleExtended"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/margin_smaller_size"
         app:layout_constraintTop_toTopOf="parent">
 
         <include layout="@layout/generic_view_selection_rounded_custom" />

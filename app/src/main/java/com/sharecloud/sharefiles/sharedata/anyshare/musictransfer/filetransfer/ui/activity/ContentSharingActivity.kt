@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.code4rox.adsmanager.AdmobUtils
 import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.`object`.Editable
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.`object`.Shareable
@@ -154,8 +155,11 @@ class ContentSharingActivity : Activity(),
         val selectObserver = Observer<Boolean> { select -> selectionCallback(select) }
         Callback.getColor().observe(this, selectObserver)
 
-        val admobUtils = AdmobUtils(this)
-        admobUtils.loadBannerAd(banner_ad_view)
+        val isSingleAd = FirebaseRemoteConfig.getInstance().getBoolean("is_show_single_ad")
+        if (!isSingleAd) {
+            val admobUtils = AdmobUtils(this)
+            admobUtils.loadBannerAd(banner_ad_view)
+        }
 
     }
 

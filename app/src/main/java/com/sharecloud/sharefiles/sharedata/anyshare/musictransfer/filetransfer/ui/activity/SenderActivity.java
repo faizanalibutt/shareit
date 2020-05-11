@@ -12,26 +12,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 
 import com.code4rox.adsmanager.AdmobUtils;
 import com.code4rox.adsmanager.InterAdsIdType;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.NetworkDevice;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.TransferGroup;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.WorkerService;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.task.AddDeviceRunningTask;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UIConnectionUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UITask;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.callback.NetworkDeviceSelectedListener;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.fragment.SenderFragmentImpl;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.ConnectionUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.LogUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkDeviceLoader;
@@ -87,7 +87,10 @@ public class SenderActivity extends Activity
 
         admobUtils = new AdmobUtils(this);
         admobUtils.loadInterstitial(null, InterAdsIdType.INTER_AM);
-        admobUtils.loadBannerAd(findViewById(R.id.banner_ad_view));
+        boolean isSingleAd = FirebaseRemoteConfig.getInstance().getBoolean("is_show_single_ad");
+        if (!isSingleAd) {
+            admobUtils.loadBannerAd(findViewById(R.id.banner_ad_view));
+        }
     }
 
     @Override
@@ -333,7 +336,7 @@ public class SenderActivity extends Activity
 
     public enum RequestType {
         RETURN_RESULT,
-        MAKE_ACQUAINTANCE;
+        MAKE_ACQUAINTANCE
 
     }
 

@@ -81,11 +81,11 @@
 
                 <LinearLayout
                     android:id="@+id/thumbnail"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="16dp"
                     android:background="@drawable/background_content_share_button_select"
                     android:backgroundTint="@color/colorPrimary"
                     android:gravity="center"
@@ -94,8 +94,8 @@
 
                     <ImageView
                         android:id="@+id/ad_app_icon"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:adjustViewBounds="true" />
 
                 </LinearLayout>
@@ -177,7 +177,7 @@
                     android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginEnd="16dp"
                     android:textSize="13sp" />
 
             </RelativeLayout>
