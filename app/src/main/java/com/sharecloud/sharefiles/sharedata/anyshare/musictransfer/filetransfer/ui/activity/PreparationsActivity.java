@@ -83,6 +83,7 @@ public class PreparationsActivity extends Activity
 
     private UIConnectionUtils mConnectionUtils;
     private boolean dbInsertion;
+    private OrganizeShareRunningTask mTask;
 
     public UIConnectionUtils getUIConnectionUtils() {
         if (mConnectionUtils == null)
@@ -623,7 +624,6 @@ public class PreparationsActivity extends Activity
     protected void onPreviousRunningTask(@Nullable WorkerService.RunningTask task) {
         super.onPreviousRunningTask(task);
 
-        OrganizeShareRunningTask mTask;
         if (task instanceof OrganizeShareRunningTask) {
             mTask = ((OrganizeShareRunningTask) task);
             mTask.setAnchorListener(this);
@@ -638,5 +638,12 @@ public class PreparationsActivity extends Activity
 
             attachRunningTask(mTask);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (mTask != null)
+            mTask.getInterrupter().interrupt(true);
     }
 }
