@@ -8,11 +8,10 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.TransferGroup;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.TransferObject;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ViewTransferActivity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.WorkerService;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.PreparationsActivity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ShareActivity;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.LogUtils;
 
 import java.io.FileNotFoundException;
@@ -140,9 +139,12 @@ public class OrganizeShareRunningTask extends WorkerService.RunningTask<Preparat
             /* IMPLEMENT PREFERENCES HERE */
             AppUtils.getDefaultPreferences(getService()).edit().putLong
                     ("add_devices_to_transfer", groupInstance.groupId).apply();
-            getAnchorListener().setDBProgress(true);
-            if (getAnchorListener().isAllEnabled) {
-                getAnchorListener().btnOnClick();
+            if (getAnchorListener() != null)
+            {
+                getAnchorListener().setDBProgress(true);
+                if (getAnchorListener().isAllEnabled) {
+                    getAnchorListener().btnOnClick();
+                }
             }
         }
 

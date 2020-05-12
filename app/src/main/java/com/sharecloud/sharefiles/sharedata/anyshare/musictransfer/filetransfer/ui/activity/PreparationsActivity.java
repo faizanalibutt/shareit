@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,16 +33,13 @@ import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ReceiverActivity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.SenderActivity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ViewTransferActivity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.Keyword;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.receiver.NetworkStatusReceiver;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.CommunicationService;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.WorkerService;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.task.OrganizeShareRunningTask;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UIConnectionUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.ConnectionUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.LogUtils;
 
@@ -182,7 +178,7 @@ public class PreparationsActivity extends Activity
 
                 fileUris.addAll(pendingFileUris);
             } else {
-                fileUris.add((Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM));
+                fileUris.add(getIntent().getParcelableExtra(Intent.EXTRA_STREAM));
 
                 if (getIntent().hasExtra(EXTRA_FILENAME_LIST)) {
                     fileNames = new ArrayList<>();
@@ -577,8 +573,7 @@ public class PreparationsActivity extends Activity
     private List<CharSequence> mFileNames;
 
     public void updateText(WorkerService.RunningTask runningTask, final String text) {
-        if (isFinishing())
-        {
+        if (isFinishing()) {
             LogUtils.getLogTask("Preparations", "updateText(): Activity about to close, DON'T SHOW NOTIFICATION");
             return;
         }
@@ -601,8 +596,7 @@ public class PreparationsActivity extends Activity
 
     }
 
-    public ProgressBar getProgressBar()
-    {
+    public ProgressBar getProgressBar() {
         return mProgressBar;
     }
 
@@ -619,11 +613,10 @@ public class PreparationsActivity extends Activity
             public void run() {
                 mProgressTextLeft.setText(String.valueOf(current));
                 mProgressTextRight.setText(String.valueOf(total));
+                mProgressBar.setProgress(current);
+                mProgressBar.setMax(total);
             }
         });
-
-        mProgressBar.setProgress(current);
-        mProgressBar.setMax(total);
     }
 
     @Override
@@ -634,7 +627,7 @@ public class PreparationsActivity extends Activity
         if (task instanceof OrganizeShareRunningTask) {
             mTask = ((OrganizeShareRunningTask) task);
             mTask.setAnchorListener(this);
-            LogUtils.getLogTask("Preparations", "onPreviousRunningTask(): Task is alreadycreated");
+            LogUtils.getLogTask("Preparations", "onPreviousRunningTask(): Task is already created");
         } else {
             mTask = new OrganizeShareRunningTask(mFileUris, mFileNames);
             LogUtils.getLogTask("Preparations", "onPreviousRunningTask(): Task is created");
