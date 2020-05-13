@@ -467,6 +467,15 @@ public class PreparationsActivity extends Activity
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (mTask != null) {
+            mTask.setAnchorListener(this);
+            btnOnClick();
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
