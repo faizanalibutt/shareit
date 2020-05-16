@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
 import com.code4rox.adsmanager.AdmobUtils;
+import com.code4rox.adsmanager.TinyDB;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
@@ -164,13 +165,13 @@ public class PreparationsActivity extends Activity
         }
         String action = getIntent() != null ? getIntent().getAction() : null;
 
+        ArrayList<Uri> fileUris = new ArrayList<>();
+        ArrayList<CharSequence> fileNames = null;
+
         if (ACTION_SEND.equals(action)
                 || ACTION_SEND_MULTIPLE.equals(action)
                 || Intent.ACTION_SEND.equals(action)
                 || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-
-            ArrayList<Uri> fileUris = new ArrayList<>();
-            ArrayList<CharSequence> fileNames = null;
 
             if (ACTION_SEND_MULTIPLE.equals(action)
                     || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
@@ -203,7 +204,20 @@ public class PreparationsActivity extends Activity
         } else {
             if (isSender) {
                 Toast.makeText(this, R.string.mesg_formatNotSupported, Toast.LENGTH_SHORT).show();
-                finish();
+                TinyDB tinyDB = new TinyDB(this);
+                fileUris = tinyDB.getListObjectUri("selection_list_uri", Uri.class);
+                fileNames = tinyDB.getListObjectChar("selection_list_nameList", CharSequence.class);
+
+                /*if (fileUris.size() == 0) {
+                    Toast.makeText(this, R.string.text_listEmpty, Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+
+                    mFileUris = fileUris;
+                    mFileNames = fileNames;
+
+                    checkForTasks();
+                }*/
             }
         }
     }

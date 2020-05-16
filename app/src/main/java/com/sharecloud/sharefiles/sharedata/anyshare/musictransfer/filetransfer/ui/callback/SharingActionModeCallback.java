@@ -7,16 +7,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.code4rox.adsmanager.TinyDB;
 import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.LogUtils;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.EditableListAdapterImpl;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.EditableListFragment;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.EditableListFragmentImpl;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.Keyword;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.Shareable;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.PreparationsActivity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ShareActivity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.fragment.ShareableListFragment;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.LogUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.EditableListAdapterImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,9 +106,15 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
         LogUtils.getLogTask("Sharing", String.format("sendFiles(): selection list size is: %s", selectedItemList.size()));
 
         if (selectedItemList.size() > 0) {
-            Intent shareIntent = new Intent()
-                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    .setAction((selectedItemList.size() > 1 ? ShareActivity.ACTION_SEND_MULTIPLE : ShareActivity.ACTION_SEND));
+            Intent shareIntent;
+            if (selectedItemList.size() < 1000)
+            {
+                shareIntent = new Intent()
+                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        .setAction((selectedItemList.size() > 1 ? ShareActivity.ACTION_SEND_MULTIPLE : ShareActivity.ACTION_SEND));
+            } else {
+                shareIntent = new Intent(getFragment().getContext(), PreparationsActivity.class);
+            }
 
             if (selectedItemList.size() > 1) {
                 ShareableListFragment.MIMEGrouper mimeGrouper = new ShareableListFragment.MIMEGrouper();
@@ -121,10 +129,17 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
                         mimeGrouper.process(sharedItem.mimeType);
                 }
 
-                shareIntent.setType(mimeGrouper.toString())
-                        .putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList)
-                        .putCharSequenceArrayListExtra(ShareActivity.EXTRA_FILENAME_LIST, nameList)
-                        .putExtra(Keyword.EXTRA_SEND, true);
+                if (uriList.size() < 1000) {
+                    shareIntent.setType(mimeGrouper.toString())
+                            .putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList)
+                            .putCharSequenceArrayListExtra(ShareActivity.EXTRA_FILENAME_LIST, nameList)
+                            .putExtra(Keyword.EXTRA_SEND, true);
+                } else {
+                    TinyDB tinyDB = new TinyDB(getFragment().getContext());
+                    tinyDB.putListObjectURI("selection_list_uri", uriList);
+                    tinyDB.putListObjectChar("selection_list_nameList", nameList);
+                    shareIntent.putExtra(Keyword.EXTRA_SEND, true);
+                }
             } else if (selectedItemList.size() == 1) {
                 T sharedItem = selectedItemList.get(0);
 
@@ -135,7 +150,10 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
             }
 
             try {
-                getFragment().getContext().startActivity(shareIntent);
+                if (selectedItemList.size() < 1000)
+                    getFragment().getContext().startActivity(shareIntent);
+                else
+                    getFragment().getContext().startActivity(shareIntent);
             } catch (Throwable e) {
                 e.printStackTrace();
                 Toast.makeText(getFragment().getActivity(), R.string.mesg_somethingWentWrong, Toast.LENGTH_SHORT).show();
