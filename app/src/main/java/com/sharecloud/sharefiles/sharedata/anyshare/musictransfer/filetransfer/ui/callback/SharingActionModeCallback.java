@@ -118,11 +118,13 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
 
             if (selectedItemList.size() > 1) {
                 ShareableListFragment.MIMEGrouper mimeGrouper = new ShareableListFragment.MIMEGrouper();
+                ArrayList<String> uriLists = new ArrayList<>();
                 ArrayList<Uri> uriList = new ArrayList<>();
                 ArrayList<CharSequence> nameList = new ArrayList<>();
 
                 for (T sharedItem : selectedItemList) {
                     uriList.add(sharedItem.uri);
+                    uriLists.add(sharedItem.uri.toString());
                     nameList.add(sharedItem.fileName);
 
                     if (!mimeGrouper.isLocked())
@@ -135,9 +137,9 @@ public class SharingActionModeCallback<T extends Shareable> extends EditableList
                             .putCharSequenceArrayListExtra(ShareActivity.EXTRA_FILENAME_LIST, nameList)
                             .putExtra(Keyword.EXTRA_SEND, true);
                 } else {
-                    TinyDB tinyDB = new TinyDB(getFragment().getContext());
-                    tinyDB.putListObjectURI("selection_list_uri", uriList);
-                    tinyDB.putListObjectChar("selection_list_nameList", nameList);
+                    TinyDB tinyDB = TinyDB.getInstance(getFragment().getContext());
+                    tinyDB.putListString("selection_list_uri", uriLists);
+                    tinyDB.putListChar("selection_list_nameList", nameList);
                     shareIntent.putExtra(Keyword.EXTRA_SEND, true);
                 }
             } else if (selectedItemList.size() == 1) {

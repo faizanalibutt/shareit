@@ -203,12 +203,14 @@ public class PreparationsActivity extends Activity
 
         } else {
             if (isSender) {
-                Toast.makeText(this, R.string.mesg_formatNotSupported, Toast.LENGTH_SHORT).show();
                 TinyDB tinyDB = new TinyDB(this);
-                fileUris = tinyDB.getListObjectUri("selection_list_uri", Uri.class);
-                fileNames = tinyDB.getListObjectChar("selection_list_nameList", CharSequence.class);
+                List<String> uriPathList = tinyDB.getListString("selection_list_uri");
+                for (String uriPath: uriPathList) {
+                    fileUris.add(Uri.parse(uriPath));
+                }
+                fileNames = tinyDB.getListChar("selection_list_nameList");
 
-                /*if (fileUris.size() == 0) {
+                if (fileUris.size() == 0) {
                     Toast.makeText(this, R.string.text_listEmpty, Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
@@ -217,7 +219,7 @@ public class PreparationsActivity extends Activity
                     mFileNames = fileNames;
 
                     checkForTasks();
-                }*/
+                }
             }
         }
     }
