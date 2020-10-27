@@ -42,7 +42,7 @@ abstract public class GroupEditableListAdapter<T extends GroupEditable, V extend
         mGroupBy = groupBy;
     }
 
-    abstract protected void onLoad(GroupLister<T> lister);
+    abstract protected void onLoad(GroupLister<T> lister) throws Exception;
 
     abstract protected T onGenerateRepresentative(String representativeText);
 
@@ -51,7 +51,10 @@ abstract public class GroupEditableListAdapter<T extends GroupEditable, V extend
         List<T> loadedList = new ArrayList<>();
         GroupLister<T> groupLister = createLister(loadedList, getGroupBy());
 
-        onLoad(groupLister);
+        try {
+            onLoad(groupLister);
+        }catch (Exception e)
+        {e.printStackTrace();}
 
         if (groupLister.getList().size() > 0) {
             Collections.sort(groupLister.getList(), new Comparator<ComparableMerger<T>>() {
@@ -170,6 +173,10 @@ abstract public class GroupEditableListAdapter<T extends GroupEditable, V extend
 
             return true;
         }
+
+        /*public void setSelected(boolean isSelected) {
+            itemView.setSelected(isSelected);
+        }*/
     }
 
     public static class GroupLister<T extends GroupEditable> extends Lister<T, ComparableMerger<T>> {

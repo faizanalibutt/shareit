@@ -1,1 +1,4 @@
 include ':app', ':framework', ':adsmanager'
+
+
+rootProject.name = "Share_Cloud"

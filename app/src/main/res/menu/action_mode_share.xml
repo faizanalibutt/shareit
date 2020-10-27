@@ -1,6 +1,5 @@
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/action_mode_share_trebleshot"
         android:icon="@drawable/ic_send_white_24dp"
@@ -11,5 +10,6 @@
     <item
         android:id="@+id/action_mode_share_all_apps"
         android:icon="@drawable/ic_share_white_24dp"
-        android:title="@string/butn_shareWithOtherApps" />
+        android:title="@string/butn_shareWithOtherApps"
+        android:visible="false" />
 </menu>

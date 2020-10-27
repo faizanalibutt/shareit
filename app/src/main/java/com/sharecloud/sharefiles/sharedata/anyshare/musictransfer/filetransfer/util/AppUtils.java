@@ -65,14 +65,13 @@ import java.util.UUID;
 
 public class AppUtils {
     public static final String TAG = AppUtils.class.getSimpleName();
-
+    private static final String SETTINGS_PACKAGE = "com.android.settings";
+    private static final String HOTSPOT_SETTINGS_CLASS = "com.android.settings.TetherSettings"/*"com.android.settings.Settings$TetherWifiSettingsActivity"*/;
     private static int mUniqueNumber = 0;
     private static AccessDatabase mDatabase;
     private static SuperPreferences mDefaultPreferences;
     private static SuperPreferences mDefaultLocalPreferences;
     private static SuperPreferences mViewingPreferences;
-    private static final String SETTINGS_PACKAGE = "com.android.settings";
-    private static final String HOTSPOT_SETTINGS_CLASS = "com.android.settings.TetherSettings"/*"com.android.settings.Settings$TetherWifiSettingsActivity"*/;
 
     public static void applyAdapterName(NetworkDevice.Connection connection) {
         if (connection.ipAddress == null) {
@@ -471,7 +470,7 @@ public class AppUtils {
                     .into(imageView);
         } catch (FileNotFoundException e) {
             //e.printStackTrace();
-            imageView.setImageDrawable(AppUtils.getDefaultIconBuilder(context).buildRect(deviceName));
+            imageView.setImageDrawable(AppUtils.getDefaultIconBuilder(context).buildRound(deviceName));
         }
     }
 
@@ -479,7 +478,11 @@ public class AppUtils {
         /*if (Build.VERSION.SDK_INT >= 26)
             context.startForegroundService(intent);
         else*/
-            context.startService(intent);
+        try {
+             context.startService(intent);
+        } catch (Exception e) {
+            Log.e(TAG, "start service exception", e);
+        }
     }
 
     public interface QuickActions<T> {

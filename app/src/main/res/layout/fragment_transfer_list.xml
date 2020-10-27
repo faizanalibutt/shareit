@@ -68,7 +68,7 @@
         app:layout_constraintTop_toBottomOf="@+id/progressBar"
         app:srcCompat="@drawable/ic_cross_blue_24dp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/callHome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

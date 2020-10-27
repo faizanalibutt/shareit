@@ -34,6 +34,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
@@ -189,8 +190,26 @@ public class SenderFragmentImpl
         sender_status = view.findViewById(R.id.sender_status);
         setProfilePicture();
 
-        LinearLayout standardBottomSheet = view.findViewById(R.id.standardBottomSheet);
+        ConstraintLayout standardBottomSheet = view.findViewById(R.id.standardBottomSheet);
         standardBottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet);
+//        standardBottomSheetBehavior.setHideable(false);
+        standardBottomSheetBehavior.setFitToContents(false);
+        standardBottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                Log.e(TAG, "sheet state" + newState);
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//                Log.e(TAG, "sheet offset" + slideOffset);
+            }
+        });
+        mView.postDelayed(() -> {
+            standardBottomSheetBehavior.setPeekHeight((int) (mView.getHeight() * standardBottomSheetBehavior.getHalfExpandedRatio()));
+        }, 1000);
+
+        standardBottomSheetBehavior.setSaveFlags(BottomSheetBehavior.SAVE_PEEK_HEIGHT);
 
         ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) pulse.getLayoutParams();
         btm_margin = lp.bottomMargin;
@@ -205,7 +224,7 @@ public class SenderFragmentImpl
                 float h = bottomSheet.getHeight();
                 float off = h * slideOffset;
                 int finalVal = (int) (off * 0.85F);
-                AppUtils.setMargins(pulse, 0, 0, 0,
+                AppUtils.setMargins(mBarcodeView, 0, 0, 0,
                         finalVal + AppUtils.pxToDp(standardBottomSheetBehavior.getPeekHeight() + btm_margin));
             }
         };
@@ -248,6 +267,12 @@ public class SenderFragmentImpl
             getContext().registerReceiver(mReceiver, mIntentFilter);
             if (bluetoothAdapter != null && !bluetoothAdapter.isDiscovering() && bluetoothAdapter.isEnabled())
                 bluetoothAdapter.startDiscovery();
+        }
+
+        try {
+            mBarcodeView.resume();
+        } catch (Exception e) {
+            Log.e(TAG, "onresume barcode ");
         }
         // it goes behind the interface so don't need to call it every time.
         //updateState();
@@ -567,9 +592,9 @@ public class SenderFragmentImpl
     }
 
     private void getWifiScanResults(WifiManager wifiManager) {
+        if (wifiManager == null) return;
 
         if (mGenericList.size() > 0) {
-
             try {
                 for (Object object : mGenericList) {
                     try {
@@ -607,7 +632,7 @@ public class SenderFragmentImpl
                 && mGenericList.size() > 0
                 && !isSocketClosed) {
             //user_retry.setVisibility(View.VISIBLE);
-            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+//            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
         }
     }
 
@@ -618,13 +643,24 @@ public class SenderFragmentImpl
 
     private void openDialog(Object object) {
         if (!Objects.requireNonNull(getActivity()).isFinishing()) {
-            senderWaitingDialog = new SenderWaitingDialog
-                    ((Activity) Objects.requireNonNull(getActivity()), object);
-            Callback.setDialogInfo(Objects.requireNonNull(getContext())
-                    .getString(R.string.mesg_waiting));
-            senderWaitingDialog.show();
+            try {
+                senderWaitingDialog = new SenderWaitingDialog
+                        ((Activity) Objects.requireNonNull(getActivity()), object);
+                Callback.setDialogInfo(Objects.requireNonNull(getContext())
+                        .getString(R.string.mesg_waiting));
+                mBarcodeView.pauseAndWait();
+                senderWaitingDialog.show();
 
-            senderWaitingDialog.setCanceledOnTouchOutside(false);
+                senderWaitingDialog.setCanceledOnTouchOutside(false);
+                senderWaitingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        mBarcodeView.resume();
+                    }
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "DIALOG_ERROR", e);
+            }
         }
     }
 
@@ -651,7 +687,7 @@ public class SenderFragmentImpl
             if (bluetoothAdapter.isDiscovering())
                 bluetoothAdapter.cancelDiscovery();
 
-            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
                     "ClientSocket: SHEET_STATE " + standardBottomSheetBehavior.getState());
 
@@ -689,6 +725,7 @@ public class SenderFragmentImpl
         mBarcodeView.decodeContinuous(new BarcodeCallback() {
             @Override
             public void barcodeResult(BarcodeResult result) {
+                Log.e(TAG,"scanning results " + result.toString());
                 try {
                     openDialog("");
                     connectToHotspot(new JSONObject(result.getResult().getText()));
@@ -712,22 +749,25 @@ public class SenderFragmentImpl
                     Callback.setQrCode(false);
                 });
 
+//        user_retry.postDelayed(() -> Callback.setQrCode(true), 200);
+
         final Observer<Boolean> showQrObserver = qr_status -> {
-            if (qr_status) {
+            /*if (qr_status) {
                 isSocketClosed = true;
                 bluetoothDiscoveryStatus(false);
                 standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 bluetoothAdapter.disable();
-                updateState();
             } else {
                 isSocketClosed = false;
                 bluetoothAdapter.enable();
                 bluetoothDiscoveryStatus(true);
                 user_image.setVisibility(View.VISIBLE);
-                updateState();
-            }
+            }*/
+            updateState();
         };
         Callback.getQrCode().observe(getViewLifecycleOwner(), showQrObserver);
+
+        standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
 
     }
 
@@ -743,7 +783,7 @@ public class SenderFragmentImpl
             //setConductItemsShowing(false);
         } else {
             mBarcodeView.resume();
-            updateState();
+//            updateState();
         }
 
         //mTaskContainer.setVisibility(!isConnecting ? View.VISIBLE : View.GONE);
@@ -770,35 +810,35 @@ public class SenderFragmentImpl
             ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
                     new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
         } else {
-            if (isSocketClosed) {
-                closeDialog();
-                user_image.setVisibility(View.GONE);
-                mBarcodeView.resume();
-                //mConductText.setText(R.string.text_scanQRCodeHelp);
-                //createSnackbar(R.string.text_send_status).show();
-            }
-        }
-        if (isSocketClosed) {
-            if (pulse.isRippleAnimationRunning())
-                pulse.stopRippleAnimation();
-            mBarcodeView.setVisibility(hasCameraPermission ? View.VISIBLE : View.GONE);
+//            if (isSocketClosed) {
+            closeDialog();
             user_image.setVisibility(View.GONE);
-        } else {
+            mBarcodeView.resume();
+            //mConductText.setText(R.string.text_scanQRCodeHelp);
+            //createSnackbar(R.string.text_send_status).show();
+//            }
+        }
+//        if (isSocketClosed) {
+        if (pulse.isRippleAnimationRunning())
+            pulse.stopRippleAnimation();
+//        mBarcodeView.setVisibility(hasCameraPermission ? View.VISIBLE : View.GONE);
+        user_image.setVisibility(View.GONE);
+        /*} else {
             pulse.startRippleAnimation();
             mBarcodeView.pauseAndWait();
             user_image.setVisibility(View.VISIBLE);
             mBarcodeView.setVisibility(hasCameraPermission ? View.GONE : View.VISIBLE);
-        }
+        }*/
     }
 
     private UIConnectionUtils.RequestWatcher mPermissionWatcher = new UIConnectionUtils.RequestWatcher() {
         @Override
         public void onResultReturned(boolean result, boolean shouldWait) {
-            if (isResumed()) // isResumed
+            /*if (isResumed()) // isResumed
                 updateState();
             else {
                 mBarcodeView.pauseAndWait();
-            }
+            }*/
 
             // We don't want to keep this when the result is ok
             // or not asked to wait
@@ -853,7 +893,7 @@ public class SenderFragmentImpl
                                     device.getAddress().equals(((Bluetooth) device1).getDevice().getAddress()) &&
                                     device.getName().equals(((Bluetooth) device1).getDevice().getName())) {
                                 if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED && !isSocketClosed) {
-                                    standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+//                                    standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
                                 }
                                 return;
                             }
@@ -862,7 +902,7 @@ public class SenderFragmentImpl
                                 + "\n" + device.getAddress()
                         ));
                         if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED && !isSocketClosed)
-                            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
+//                            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
                         if (senderListAdapter != null)
                             senderListAdapter.notifyDataSetChanged();
                         else {
@@ -889,8 +929,12 @@ public class SenderFragmentImpl
                             String.format("wifi state is monitored: %s", state));
 
                     if (state == WifiManager.WIFI_STATE_ENABLED) {
-                        wifiManager.startScan();
-                        sender_status.setText(R.string.text_send_status);
+                        try {
+                            wifiManager.startScan();
+                            sender_status.setText(R.string.text_send_status);
+                        } catch (Exception e) {
+                            Log.e(TAG, "WIFI_STATE_ENABLED", e);
+                        }
                     }
                     if (state == WifiManager.WIFI_STATE_DISABLED)
                         sender_status.setText(String.format("%s", "Wifi is disabled, Kindly open it to start the Process"));

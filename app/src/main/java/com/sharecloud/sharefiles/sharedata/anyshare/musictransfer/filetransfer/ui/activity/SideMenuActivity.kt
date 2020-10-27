@@ -56,7 +56,7 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
                 val url = "https://www.freeprivacypolicy.com/privacy/view/50c5621471755f1548917ebbe5e90160"
                 val builder = CustomTabsIntent.Builder()
                 val customTabsIntent = builder.build()
-                customTabsIntent.launchUrl(this, Uri.parse(url))
+                runCatching {  customTabsIntent.launchUrl(this, Uri.parse(url))}
             }
             //R.id.menu_about -> createSnackbar(R.string.menu_generic_text)?.show()
             else -> return

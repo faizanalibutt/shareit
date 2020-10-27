@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +21,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +40,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.o
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.TransferObject;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.EditableListFragment;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.LogUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.GroupEditableListAdapter;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.GroupEditableListFragment;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.Keyword;
@@ -76,6 +81,8 @@ public class TransferListFragment
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.e(TAG, "action::%%" + intent.getAction() +
+                    "\n " + bundleToString(intent.getExtras()));
             if (AccessDatabase.ACTION_DATABASE_CHANGE.equals(intent.getAction())
                     && (AccessDatabase.TABLE_TRANSFER.equals(intent.getStringExtra(AccessDatabase.EXTRA_TABLE_NAME))
                     || AccessDatabase.TABLE_TRANSFERGROUP.equals(intent.getStringExtra(AccessDatabase.EXTRA_TABLE_NAME))
@@ -90,6 +97,7 @@ public class TransferListFragment
                         intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false)) {
                     callHome.setVisibility(View.VISIBLE);
                     hideTransferProgress(View.INVISIBLE);
+                    Log.e(TAG, "changeViews");
                 }
 
             } else if (CommunicationService.ACTION_RECEIVER_PROGRESS.equals(intent.getAction())) {
@@ -101,6 +109,7 @@ public class TransferListFragment
                         intent.getBooleanExtra(Keyword.DATA_TRANSFER_COMPLETED, false)) {
                     callHome.setVisibility(View.VISIBLE);
                     hideTransferProgress(View.INVISIBLE);
+                    Log.e(TAG, "changeViews");
                 }
             }
         }
@@ -138,7 +147,7 @@ public class TransferListFragment
 
         Bundle args = getArguments();
 
-        if  (args != null && args.containsKey(ARG_GROUP_ID)) {
+        if (args != null && args.containsKey(ARG_GROUP_ID)) {
             goPath(args.getLong(ARG_GROUP_ID), args.getString(ARG_PATH),
                     args.getString(ARG_DEVICE_ID));
         }
@@ -227,6 +236,7 @@ public class TransferListFragment
     }
 
     private AlertDialog dialog;
+
     @Override
     public boolean onDefaultClickAction(GroupEditableListAdapter.GroupViewHolder holder) {
         try {
@@ -462,6 +472,27 @@ public class TransferListFragment
         totalTransfer = adaptedView.findViewById(R.id.dataTransferStatus);
         callHome = adaptedView.findViewById(R.id.callHome);
 
+        /*
+         * button color setting
+         * */
+        callHome.setTextColor(Color.WHITE);
+        callHome.setBackgroundResource(R.drawable.background_content_share_button_select);
+        ViewCompat.setBackgroundTintList(
+                callHome, ContextCompat.getColorStateList(
+                        callHome.getContext(), R.color.text_button_text_color_selector_blue
+                )
+        );
+
+
+        LogUtils.getLogWarning("CALLback", "transferCompleted = " + "inst" + Callback.getTransferCompleted());
+        Callback.getTransferCompleted().observe(TransferListFragment.this, isDone -> {
+            Log.e(TAG, "transferCompleted =" + isDone);
+            if (isDone) {
+                callHome.setVisibility(View.VISIBLE);
+                hideTransferProgress(View.INVISIBLE);
+            }
+        });
+
         crackProgress.setMax(100);
         cancelTransfer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -591,5 +622,17 @@ public class TransferListFragment
 
             return true;
         }
+    }
+
+    public static String bundleToString(Bundle bundle) {
+        if (bundle == null) {
+            return null;
+        }
+        String string = "Bundle{";
+        for (String key : bundle.keySet()) {
+            string += " " + key + " => " + bundle.get(key) + ";";
+        }
+        string += " }::Bundle";
+        return string;
     }
 }

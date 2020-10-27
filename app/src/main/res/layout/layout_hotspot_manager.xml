@@ -3,25 +3,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_hotspot_status_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
-    <androidx.cardview.widget.CardView
+    <ImageView
+        android:id="@+id/layout_hotspot_manager_qr_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:adjustViewBounds="true"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_qrcode_white_128dp" />
+    <!--<androidx.cardview.widget.CardView
         android:id="@+id/qr_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_Large_size"
+        android:layout_height="match_parent"
         android:background="@color/colorShadowEnd"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/layout_hotspot_manager_qr_text"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
-        <include
+        &lt;!&ndash;<include
             layout="@layout/include_layout_hotspot_status_image_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" />&ndash;&gt;
 
-    </androidx.cardview.widget.CardView>
+
+
+    </androidx.cardview.widget.CardView>-->
 
     <TextView
         android:id="@+id/layout_hotspot_manager_qr_text"
@@ -31,8 +44,8 @@
         android:textColor="@color/black_dominant"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/qr_container" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/userProfileImageRetry"
@@ -41,6 +54,7 @@
         android:layout_marginTop="@dimen/margin_smaller_size"
         android:layout_marginEnd="@dimen/margin_smaller_size"
         android:orientation="horizontal"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

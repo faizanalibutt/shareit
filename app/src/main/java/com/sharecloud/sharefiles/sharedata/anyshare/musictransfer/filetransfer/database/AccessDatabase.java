@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.util.Log;
 
 import androidx.collection.ArrayMap;
 
@@ -444,11 +445,17 @@ public class AccessDatabase extends SQLiteDatabase {
 
     @Override
     public int update(android.database.sqlite.SQLiteDatabase database, SQLQuery.Select select, ContentValues values) {
-        int returnedItems = super.update(database, select, values);
+        try {
+            int returnedItems = super.update(database, select, values);
+
 
         broadcast(database, select, TYPE_UPDATE);
 
         return returnedItems;
+        } catch (Exception e){
+            Log.e(TAG,"update_EXC",e);
+            return 0;
+        }
     }
 
     @Override

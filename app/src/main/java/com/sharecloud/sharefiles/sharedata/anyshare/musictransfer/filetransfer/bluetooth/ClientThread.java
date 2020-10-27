@@ -58,7 +58,7 @@ public class ClientThread extends Thread implements SnackbarSupport {
 
             getHandlerMessage(STATE_CONNECTED);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
 
             try {
                 mSocket.close();

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.DeviceConnectionState;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.NetworkDevice;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.TransferGroup;
@@ -81,7 +83,8 @@ public class SenderActivity extends Activity
                 if (Callback.getQrCode().getValue() != null && Callback.getQrCode().getValue())
                     Callback.setQrCode(false);
                 else
-                    finish();
+//                    finish();
+                    onBackPressed();
             }
         });
 
@@ -104,7 +107,8 @@ public class SenderActivity extends Activity
         super.onResume();
         registerReceiver(mReceiver, mFilter);
         if (!checkGroupIntegrity())
-            finish();
+//            finish();
+            onBackPressed();
     }
 
     @Override
@@ -153,7 +157,8 @@ public class SenderActivity extends Activity
     public void onBackPressed() {
         setResult(RESULT_OK, new Intent()
                 .putExtra(EXTRA_CLOSE_PERMISSION_SCREEN, true));
-        finish();
+//        finish();
+        Callback.isDeviceConnected(DeviceConnectionState.NOT_CONNECTED);
         super.onBackPressed();
     }
 
@@ -242,7 +247,8 @@ public class SenderActivity extends Activity
             return true;
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            finish();
+//            finish();
+            onBackPressed();
         }
 
         return false;
@@ -259,7 +265,8 @@ public class SenderActivity extends Activity
                 if (intent.hasExtra(AccessDatabase.EXTRA_TABLE_NAME)
                         && AccessDatabase.TABLE_TRANSFERGROUP.equals(intent.getStringExtra(AccessDatabase.EXTRA_TABLE_NAME)))
                     if (!checkGroupIntegrity())
-                        finish();
+//                        finish();
+                        onBackPressed();
         }
     };
 
@@ -276,12 +283,14 @@ public class SenderActivity extends Activity
                             String.format("ConnectionManagerActivity: onActivityResult() DeviceInfo + ConnectionInfo is \n%s \n%s",
                                     networkDevice.deviceId, connection.adapterName));
                     doCommunicate(networkDevice, connection);
+                    Callback.isDeviceConnected(DeviceConnectionState.CONNECTED);
                 } catch (Exception e) {
                     Toast.makeText(SenderActivity.this,
                             R.string.mesg_somethingWentWrong, Toast.LENGTH_SHORT).show();
                 }
 
                 finish();
+//                onBackPressed();
             } else {
                 ConnectionUtils connectionUtils = ConnectionUtils.getInstance(SenderActivity.this);
                 UIConnectionUtils uiConnectionUtils = new UIConnectionUtils(connectionUtils, SenderActivity.this);

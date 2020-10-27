@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,16 +33,13 @@ import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ReceiverActivity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.SenderActivity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ViewTransferActivity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.Keyword;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.receiver.NetworkStatusReceiver;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.CommunicationService;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.WorkerService;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.task.OrganizeShareRunningTask;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UIConnectionUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.ConnectionUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.LogUtils;
 
@@ -62,14 +58,15 @@ public class PreparationsActivity extends Activity
         implements SnackbarSupport, WorkerService.OnAttachListener {
 
     public static final String TASK_UPDATE = "taskINProgress";
-    private static final int LOCATION_PERMISSION_RESULT = 3;
     public static final int LOCATION_SERVICE_RESULT = 2;
     public static final String EXTRA_CLOSE_PERMISSION_SCREEN = "permissions";
     public static final String EXTRA_DEVICE_ID = "extraDeviceId";
     public static final String EXTRA_REQUEST_TYPE = "extraRequestType";
     public static final String EXTRA_ACTIVITY_SUBTITLE = "extraActivitySubtitle";
     public static final String EXTRA_CONNECTION_ADAPTER = "extraConnectionAdapter";
-
+    private static final int LOCATION_PERMISSION_RESULT = 3;
+    public boolean isAllEnabled;
+    IntentFilter mIntentFilter = new IntentFilter();
     private ImageView bluetoothStatus, wifiStatus, gpsStatus, hotspotStatus;
     private AppCompatButton gpsButton, nextScreen, bluetoothButton, wifiButton, hotspotButton, button;
     private ProgressBar bluetoothPbr, wifiPbr, gpsPbr, hotspotPbr;
@@ -79,14 +76,53 @@ public class PreparationsActivity extends Activity
     private LinearLayout showProgressDB;
     private Group groupBluetooth;
     private boolean isWifi, isBluetooth, isGps, isHotspot = false;
-    public boolean isAllEnabled;
     private boolean isSender = false;
     private boolean isReceiver = false;
-
-    IntentFilter mIntentFilter = new IntentFilter();
-
     private UIConnectionUtils mConnectionUtils;
     private boolean dbInsertion;
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equalsIgnoreCase(action)) {
+                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
+                switch (state) {
+                    /*case BluetoothAdapter.STATE_TURNING_ON:*/
+                    case BluetoothAdapter.STATE_ON:
+                        if ((isReceiver || isSender) && UIConnectionUtils.isOreoAbove())
+                            enableBluetooth(bluetoothButton);
+                        break;
+                    case BluetoothAdapter.STATE_OFF:
+                        if (isReceiver && UIConnectionUtils.isOreoAbove())
+                            disableBluetooth(bluetoothButton);
+                        break;
+                }
+            } else if (WifiManager.WIFI_STATE_CHANGED_ACTION.equalsIgnoreCase(action)) {
+                int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
+                switch (state) {
+                    case WifiManager.WIFI_STATE_ENABLED:
+                        /*case WifiManager.WIFI_STATE_ENABLING:*/
+                        enableWifi(wifiButton);
+                        break;
+                    case WifiManager.WIFI_STATE_DISABLED:
+                        disableWifi(wifiButton);
+                        break;
+                }
+            } else if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction()))
+                updateHotspotState();
+            else if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
+                if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false)) {
+                    isHotspot = true;
+                } else if (getConnectionUtils().getHotspotUtils().isEnabled()
+                        && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
+                    isHotspot = false;
+                    disableHostspot(hotspotButton);
+                }
+            }
+        }
+    };
+    private List<Uri> mFileUris;
+    private List<CharSequence> mFileNames;
 
     public UIConnectionUtils getUIConnectionUtils() {
         if (mConnectionUtils == null)
@@ -105,20 +141,12 @@ public class PreparationsActivity extends Activity
     }
 
     public static final int REQUEST_PERMISSION_CAMERA = 0;
-    boolean hasCameraPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         dbInsertion = false;
-        // Camera Permission goes here
-        hasCameraPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED;
-
-        if (!hasCameraPermission) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
-        }
 
         mIntentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         mIntentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
@@ -180,7 +208,7 @@ public class PreparationsActivity extends Activity
                 List<Uri> pendingFileUris = getIntent().getParcelableArrayListExtra(Intent.EXTRA_STREAM);
                 fileNames = getIntent().hasExtra(EXTRA_FILENAME_LIST) ? getIntent().getCharSequenceArrayListExtra(EXTRA_FILENAME_LIST) : null;
 
-                fileUris.addAll(pendingFileUris);
+                if (pendingFileUris!= null) fileUris.addAll(pendingFileUris);
             } else {
                 fileUris.add((Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM));
 
@@ -454,10 +482,10 @@ public class PreparationsActivity extends Activity
                     }
                 }
                 break;
-            case REQUEST_PERMISSION_CAMERA:
-                if (isAllEnabled)
-                    btnOnClick(nextScreen);
-                break;
+//            case REQUEST_PERMISSION_CAMERA:
+//                if (isAllEnabled)
+//                    btnOnClick(nextScreen);
+//                break;
             default:
                 break;
         }
@@ -472,50 +500,8 @@ public class PreparationsActivity extends Activity
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(mReceiver);
+        unregisterReceiver(mReceiver);  // TODO: 7/27/20 here is ANR
     }
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (BluetoothAdapter.ACTION_STATE_CHANGED.equalsIgnoreCase(action)) {
-                int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
-                switch (state) {
-                    /*case BluetoothAdapter.STATE_TURNING_ON:*/
-                    case BluetoothAdapter.STATE_ON:
-                        if ((isReceiver || isSender) && UIConnectionUtils.isOreoAbove())
-                            enableBluetooth(bluetoothButton);
-                        break;
-                    case BluetoothAdapter.STATE_OFF:
-                        if (isReceiver && UIConnectionUtils.isOreoAbove())
-                            disableBluetooth(bluetoothButton);
-                        break;
-                }
-            } else if (WifiManager.WIFI_STATE_CHANGED_ACTION.equalsIgnoreCase(action)) {
-                int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, -1);
-                switch (state) {
-                    case WifiManager.WIFI_STATE_ENABLED:
-                        /*case WifiManager.WIFI_STATE_ENABLING:*/
-                        enableWifi(wifiButton);
-                        break;
-                    case WifiManager.WIFI_STATE_DISABLED:
-                        disableWifi(wifiButton);
-                        break;
-                }
-            } else if (NetworkStatusReceiver.WIFI_AP_STATE_CHANGED.equals(intent.getAction()))
-                updateHotspotState();
-            else if (ACTION_HOTSPOT_STATUS.equals(intent.getAction())) {
-                if (intent.getBooleanExtra(EXTRA_HOTSPOT_ENABLED, false)) {
-                    isHotspot = true;
-                } else if (getConnectionUtils().getHotspotUtils().isEnabled()
-                        && !intent.getBooleanExtra(EXTRA_HOTSPOT_DISABLING, false)) {
-                    isHotspot = false;
-                    disableHostspot(hotspotButton);
-                }
-            }
-        }
-    };
 
     private void updateHotspotState() {
         boolean isEnabled = getUIConnectionUtils().getConnectionUtils().getHotspotUtils().isEnabled();
@@ -540,11 +526,16 @@ public class PreparationsActivity extends Activity
         return true;
     }
 
+    /* SHARE ACTIVITY CODE WILL BE ON THIS CLASS FOR SURE */
+
     public void btnOnClick(View view) {
-        if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED))
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
-        else {
+        /*if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA))
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION_CAMERA);
+            else
+                Snackbar.make(view, R.string.text_cameraPermissionRequired, Snackbar.LENGTH_LONG).setAction(R.string.text_settings,v ->{}).show();
+        } else {*/
             if (isReceiver) {
                 startActivity(new Intent(PreparationsActivity.this, com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ReceiverActivity.class)
                         .putExtra(Keyword.EXTRA_RECEIVE, true)
@@ -564,21 +555,15 @@ public class PreparationsActivity extends Activity
                 if (isAllEnabled)
                     showProgressDB.setVisibility(View.VISIBLE);
             }
-        }
+//        }
     }
 
     public void btnOnClick() {
         btnOnClick(nextScreen);
     }
 
-    /* SHARE ACTIVITY CODE WILL BE ON THIS CLASS FOR SURE */
-
-    private List<Uri> mFileUris;
-    private List<CharSequence> mFileNames;
-
     public void updateText(WorkerService.RunningTask runningTask, final String text) {
-        if (isFinishing())
-        {
+        if (isFinishing()) {
             LogUtils.getLogTask("Preparations", "updateText(): Activity about to close, DON'T SHOW NOTIFICATION");
             return;
         }
@@ -601,8 +586,7 @@ public class PreparationsActivity extends Activity
 
     }
 
-    public ProgressBar getProgressBar()
-    {
+    public ProgressBar getProgressBar() {
         return mProgressBar;
     }
 

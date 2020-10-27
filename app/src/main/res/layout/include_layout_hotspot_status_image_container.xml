@@ -10,7 +10,7 @@
         android:id="@+id/layout_hotspot_manager_qr_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         app:srcCompat="@drawable/ic_qrcode_white_128dp" />
 
 </com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.view.ComparativeRelativeLayout>

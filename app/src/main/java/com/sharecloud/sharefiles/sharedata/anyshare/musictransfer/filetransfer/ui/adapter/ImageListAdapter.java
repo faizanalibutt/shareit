@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -17,12 +18,13 @@ import com.code4rox.adsmanager.AdmobUtils;
 import com.code4rox.adsmanager.NativeAdsIdType;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.GlideApp;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.miscpkg.GalleryGroupShareable;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TimeUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.GalleryGroupEditableListAdapter;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.GroupEditableListAdapter;
 
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.miscpkg.GalleryGroupShareable;
+import java.util.List;
 
 /**
  * created by: Veli
@@ -41,7 +43,7 @@ public class ImageListAdapter
     }
 
     @Override
-    protected void onLoad(GroupLister<ImageHolder> lister) {
+    protected void onLoad(GroupLister<ImageHolder> lister) throws Exception {
         Cursor cursor = mResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
 
         if (cursor != null) {
@@ -134,6 +136,19 @@ public class ImageListAdapter
         }
     }
 
+    /*@Override
+    public void onBindViewHolder(@NonNull GroupViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) super.onBindViewHolder(holder, position, payloads);
+        else {
+            try {
+                if (holder.getView() != null && payloads.get(0) != null)
+                    holder.setSelected(((boolean) payloads.get(0)));
+            } catch (Exception e) {
+                Log.e("NEW_ONBIND", ":::", e);
+            }
+        }
+    }*/
+
     @Override
     protected ImageHolder onGenerateRepresentative(String representativeText) {
         return new ImageHolder(representativeText);
@@ -147,7 +162,8 @@ public class ImageListAdapter
     public static class ImageHolder extends GalleryGroupShareable {
         public String dateTakenString;
 
-        public ImageHolder() {}
+        public ImageHolder() {
+        }
 
         public ImageHolder(String representativeText) {
             super(VIEW_TYPE_REPRESENTATIVE, representativeText);

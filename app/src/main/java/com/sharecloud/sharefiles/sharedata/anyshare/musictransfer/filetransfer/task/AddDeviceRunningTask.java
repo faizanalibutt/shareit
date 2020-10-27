@@ -12,6 +12,8 @@ import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.database.SQLiteDatabase;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.DeviceConnectionState;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.Keyword;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.NetworkDevice;
@@ -200,6 +202,7 @@ public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivi
                                         ViewTransferActivity.startInstance(getAnchorListener(),
                                                 AppUtils.getDefaultPreferences(getAnchorListener()).getLong("add_devices_to_transfer", -1));*/
                                     getAnchorListener().getAdmobUtils().showInterstitialAd();
+                                    Callback.isDeviceConnected(DeviceConnectionState.CONNECTED);
                                     getAnchorListener().finish();
                                 }
                             } else if (getAnchorListener() != null) {
@@ -215,12 +218,16 @@ public class AddDeviceRunningTask extends WorkerService.RunningTask<SenderActivi
                                     getAnchorListener().runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            new AlertDialog.Builder(getAnchorListener())
-                                                    .setMessage(context.getString(R.string.mesg_fileSendError,
-                                                            context.getString(R.string.mesg_connectionProblem)))
-                                                    .setNegativeButton(R.string.butn_close, null)
-                                                    .setPositiveButton(R.string.butn_retry, retryButtonListener)
-                                                    .show();
+                                            try {
+                                                new AlertDialog.Builder(getAnchorListener())
+                                                        .setMessage(context.getString(R.string.mesg_fileSendError,
+                                                                context.getString(R.string.mesg_connectionProblem)))
+                                                        .setNegativeButton(R.string.butn_close, null)
+                                                        .setPositiveButton(R.string.butn_retry, retryButtonListener)
+                                                        .show();
+                                            } catch (Exception e) {
+                                                Log.e("AddDeviceTask", "alertDialog", e);
+                                            }
                                         }
                                     });
                             }

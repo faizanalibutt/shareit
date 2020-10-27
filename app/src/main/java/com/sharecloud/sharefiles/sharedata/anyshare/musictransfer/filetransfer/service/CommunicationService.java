@@ -28,6 +28,7 @@ import com.genonbeta.android.framework.io.StreamInfo;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Service;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.AppConfig;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.Keyword;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
@@ -40,6 +41,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.o
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.TransferInstance;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.TransferObject;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UIConnectionUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ViewTransferActivity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.fragment.FileListFragment;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.CommunicationBridge;
@@ -182,8 +184,10 @@ public class CommunicationService extends Service {
 
         if (!AppUtils.checkRunningConditions(this)
                 || !mCommunicationServer.start()
-                || !mSeamlessServer.start())
+                || !mSeamlessServer.start()) {
             stopSelf();
+            LogUtils.getLogWarning(TAG_TRANSFER, "stopSelf(): communication not started");
+        }
 
         if (getHotspotUtils() instanceof HotspotUtils.OreoAPI && Build.VERSION.SDK_INT >= 26)
             ((HotspotUtils.OreoAPI) getHotspotUtils()).setSecondaryCallback(new WifiManager.LocalOnlyHotspotCallback() {
@@ -194,8 +198,7 @@ public class CommunicationService extends Service {
 
                     sendHotspotStatus(reservation.getWifiConfiguration());
 
-                    if (getDefaultPreferences().getBoolean("hotspot_trust", false))
-                    {
+                    if (getDefaultPreferences().getBoolean("hotspot_trust", false)) {
                         Log.w(TAG_LOCAL, "onCreate(): seamLessMode is true");
 
                     }
@@ -302,6 +305,7 @@ public class CommunicationService extends Service {
                 }*/
             } else if (ACTION_END_SESSION.equals(intent.getAction())) {
                 stopSelf();
+                LogUtils.getLogWarning(TAG_TRANSFER, "stopSelf(): session ended");
             } else if (ACTION_SEAMLESS_RECEIVE.equals(intent.getAction())
                     && intent.hasExtra(EXTRA_GROUP_ID)
                     && intent.hasExtra(EXTRA_DEVICE_ID)) {
@@ -386,7 +390,7 @@ public class CommunicationService extends Service {
                             if (mDestroyApproved
                                     && !getHotspotUtils().isStarted()
                                     && !hasOngoingTasks()
-                                    /*&& getDefaultPreferences().getBoolean("kill_service_on_exit", false)*/) {
+                                /*&& getDefaultPreferences().getBoolean("kill_service_on_exit", false)*/) {
                                 stopSelf();
                                 Log.d(TAG, "onStartCommand(): Destroy state has been applied");
                             }
@@ -587,25 +591,25 @@ public class CommunicationService extends Service {
             ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(), "hotspot wifi configured for above oreo");
             if (UIConnectionUtils.isOSAbove(Build.VERSION_CODES.M))
                 LogUtils.getLogDebug("Server",
-                    String.format(Locale.getDefault(),
-                            "WifiConfiguration is: SSID: %s, preSharedKey: %s, BSSID: %s, networkId: %d, providerFriendlyName: %s, allowedAuthAlgorithms: %s," +
-                                    " allowedGroupCiphers: %s, allowedKeyManagement: %s, allowedPairwiseCiphers: %s, allowedProtocols: %s, hiddenSSID: %b, enterpriseConfig: %s," +
-                                    " status: %d, FQDN: %s, roamingConsortiumIds: %s",
-                    wifiConfiguration.SSID,
-                    wifiConfiguration.preSharedKey,
-                    wifiConfiguration.BSSID,
-                    wifiConfiguration.networkId,
-                    wifiConfiguration.providerFriendlyName,
-                            Arrays.toString(wifiConfiguration.allowedAuthAlgorithms.toLongArray()),
-                            Arrays.toString(wifiConfiguration.allowedGroupCiphers.toLongArray()),
-                            Arrays.toString(wifiConfiguration.allowedKeyManagement.toLongArray()),
-                            Arrays.toString(wifiConfiguration.allowedPairwiseCiphers.toLongArray()),
-                            wifiConfiguration.allowedProtocols.toString(),
-                    wifiConfiguration.hiddenSSID,
-                    wifiConfiguration.enterpriseConfig.toString(),
-                    wifiConfiguration.status,
-                    wifiConfiguration.FQDN,
-                            Arrays.toString(wifiConfiguration.roamingConsortiumIds)));
+                        String.format(Locale.getDefault(),
+                                "WifiConfiguration is: SSID: %s, preSharedKey: %s, BSSID: %s, networkId: %d, providerFriendlyName: %s, allowedAuthAlgorithms: %s," +
+                                        " allowedGroupCiphers: %s, allowedKeyManagement: %s, allowedPairwiseCiphers: %s, allowedProtocols: %s, hiddenSSID: %b, enterpriseConfig: %s," +
+                                        " status: %d, FQDN: %s, roamingConsortiumIds: %s",
+                                wifiConfiguration.SSID,
+                                wifiConfiguration.preSharedKey,
+                                wifiConfiguration.BSSID,
+                                wifiConfiguration.networkId,
+                                wifiConfiguration.providerFriendlyName,
+                                Arrays.toString(wifiConfiguration.allowedAuthAlgorithms.toLongArray()),
+                                Arrays.toString(wifiConfiguration.allowedGroupCiphers.toLongArray()),
+                                Arrays.toString(wifiConfiguration.allowedKeyManagement.toLongArray()),
+                                Arrays.toString(wifiConfiguration.allowedPairwiseCiphers.toLongArray()),
+                                wifiConfiguration.allowedProtocols.toString(),
+                                wifiConfiguration.hiddenSSID,
+                                wifiConfiguration.enterpriseConfig.toString(),
+                                wifiConfiguration.status,
+                                wifiConfiguration.FQDN,
+                                Arrays.toString(wifiConfiguration.roamingConsortiumIds)));
             statusIntent.putExtra(EXTRA_HOTSPOT_NAME, wifiConfiguration.SSID)
                     .putExtra(EXTRA_HOTSPOT_PASSWORD, wifiConfiguration.preSharedKey)
                     .putExtra(EXTRA_HOTSPOT_KEY_MGMT, NetworkUtils.getAllowedKeyManagement(wifiConfiguration));
@@ -700,8 +704,7 @@ public class CommunicationService extends Service {
         }
 
         @Override
-        protected void onConnected(final ActiveConnection activeConnection)
-        {
+        protected void onConnected(final ActiveConnection activeConnection) {
             if (getConnectionCountByAddress(activeConnection.getAddress()) > 3)
                 return;
 
@@ -721,11 +724,9 @@ public class CommunicationService extends Service {
                         && Keyword.BACK_COMP_REQUEST_SEND_UPDATE.equals(responseJSON.getString(Keyword.REQUEST))) {
                     activeConnection.reply(replyJSON.put(Keyword.RESULT, true).toString());
 
-                    getSelfExecutor().submit(new Runnable()
-                    {
+                    getSelfExecutor().submit(new Runnable() {
                         @Override
-                        public void run()
-                        {
+                        public void run() {
                             try {
                                 UpdateUtils.sendUpdate(getApplicationContext(), activeConnection.getClientAddress());
                                 Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): " + "update sent");
@@ -744,10 +745,10 @@ public class CommunicationService extends Service {
                 final int networkPin = getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1);
                 final boolean isSecureConnection = UIConnectionUtils.isOSBelow(Build.VERSION_CODES.N_MR1)
                         || (
-                                networkPin != -1
+                        networkPin != -1
                                 && responseJSON.has(Keyword.DEVICE_SECURE_KEY)
                                 && responseJSON.getInt(Keyword.DEVICE_SECURE_KEY) == networkPin
-                        );
+                );
 
                 /*getDefaultPreferences().getInt(Keyword.NETWORK_PIN, -1): %s
                 UIConnectionUtils.isOSBelow(Build.VERSION_CODES.N_MR1) ?
@@ -815,8 +816,7 @@ public class CommunicationService extends Service {
 
                         LogUtils.getLogInformation(TAG_LOCAL, "CommunicationServer.onConnected(): " + "Device Restricted Output " + device.isRestricted);
 
-                        if (device.isRestricted)
-                        {
+                        if (device.isRestricted) {
                             getNotificationHelper().notifyConnectionRequest(device);
                             Log.d(TAG_LOCAL,
                                     "CommunicationServer.onConnected(): " + "Device Restricted Output "
@@ -855,11 +855,9 @@ public class CommunicationService extends Service {
 
                                     result = true;
 
-                                    getSelfExecutor().submit(new Runnable()
-                                    {
+                                    getSelfExecutor().submit(new Runnable() {
                                         @Override
-                                        public void run()
-                                        {
+                                        public void run() {
                                             final JSONArray jsonArray;
                                             final Interrupter interrupter = new Interrupter();
                                             TransferGroup group = new TransferGroup(groupId);
@@ -929,13 +927,11 @@ public class CommunicationService extends Service {
                                                 }
                                             }
 
-                                            SQLiteDatabase.ProgressUpdater progressUpdater = new SQLiteDatabase.ProgressUpdater()
-                                            {
+                                            SQLiteDatabase.ProgressUpdater progressUpdater = new SQLiteDatabase.ProgressUpdater() {
                                                 long lastNotified = System.currentTimeMillis();
 
                                                 @Override
-                                                public void onProgressChange(int total, int current)
-                                                {
+                                                public void onProgressChange(int total, int current) {
                                                     if ((System.currentTimeMillis() - lastNotified) > 1000) {
                                                         lastNotified = System.currentTimeMillis();
                                                         notification.updateProgress(total, current, false);
@@ -943,8 +939,7 @@ public class CommunicationService extends Service {
                                                 }
 
                                                 @Override
-                                                public boolean onProgressState()
-                                                {
+                                                public boolean onProgressState() {
                                                     return !interrupter.interrupted();
                                                 }
                                             };
@@ -976,8 +971,7 @@ public class CommunicationService extends Service {
                                                     } catch (Exception e) {
                                                         e.printStackTrace();
                                                     }
-                                                else
-                                                {
+                                                else {
                                                     getNotificationHelper().notifyTransferRequest(transferObject, finalDevice, pendingRegistry.size());
                                                     LogUtils.getLogDebug(TAG_LOCAL, "onCommunicationServer(): SealessServer is not Available");
                                                 }
@@ -1029,11 +1023,10 @@ public class CommunicationService extends Service {
                                 result = true;
                                 break;
                             case (Keyword.REQUEST_START_TRANSFER):
-                                if (!device.isTrusted){
+                                if (!device.isTrusted) {
                                     replyJSON.put(Keyword.ERROR, Keyword.ERROR_REQUIRE_TRUSTZONE);
                                     Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): process was not null and file transfer not started");
-                                }
-                                else if (responseJSON.has(Keyword.TRANSFER_GROUP_ID)) {
+                                } else if (responseJSON.has(Keyword.TRANSFER_GROUP_ID)) {
                                     int groupId = responseJSON.getInt(Keyword.TRANSFER_GROUP_ID);
 
                                     try {
@@ -1046,8 +1039,7 @@ public class CommunicationService extends Service {
                                             startFileReceiving(groupId, device.deviceId);
                                             result = true;
                                             Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): process was null and file transfer started");
-                                        } else
-                                        {
+                                        } else {
                                             responseJSON.put(Keyword.ERROR,
                                                     Keyword.ERROR_NOT_ACCESSIBLE);
                                             Log.d(TAG_LOCAL, "CommunicationServer.onConnected(): process was not null and file transfer not started");
@@ -1187,6 +1179,9 @@ public class CommunicationService extends Service {
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
+                                    // TODO: 8/8/20 JOB Done
+//                                    Callback.isTransferCompleted(true);
+                                    sendBroadcast(new Intent(ViewTransferActivity.newReceiverAction));
                                 } else
                                     processHolder.builder.getTransferProgress().interrupt();
 
@@ -1557,6 +1552,9 @@ public class CommunicationService extends Service {
                                 Log.d(TAG, "SeamlessClientHandler.onConnect(): Notify user");
 
                                 sendBroadcastCustom(processHolder.builder.getTransferProgress(), ACTION_RECEIVER_PROGRESS, true);
+                                // TODO: 8/8/20 JOB Done
+//                                Callback.isTransferCompleted(true);
+                                sendBroadcast(new Intent(ViewTransferActivity.newReceiverAction));
 
                             } else {
                                 getNotificationHelper().notifyReceiveError(processHolder);

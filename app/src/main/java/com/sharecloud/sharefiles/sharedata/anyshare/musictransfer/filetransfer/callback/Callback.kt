@@ -1,29 +1,45 @@
 package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.model.CrackTransfer
 
 object Callback {
 
+    @JvmStatic
+    public val transferCompleted = MutableLiveData<Boolean?>()
+
     @JvmField
     val mutableLiveData = MutableLiveData<Boolean>()
+
     @JvmField
     val transferMutableLiveData = MutableLiveData<CrackTransfer>()
+
     @JvmField
     val updateDialogMutable = MutableLiveData<Any>()
+
     @JvmField
     val showHotspot = MutableLiveData<String>()
+
     @JvmField
     val showQr = MutableLiveData<Boolean>()
+
     @JvmField
     val transferProgress = MutableLiveData<Boolean>()
+
     @JvmField
     val onSenderActionNeed = MutableLiveData<Any>()
+
     @JvmField
     val ratingData = MutableLiveData<Float>()
+
     @JvmField
     val onAppAction = MutableLiveData<Any>()
+
+    @JvmField
+    val deviceConnected =
+        MutableLiveData<DeviceConnectionState?>().apply { postValue(DeviceConnectionState.IDLE) }
 
     @JvmStatic
     fun getColor(): LiveData<Boolean> {
@@ -115,4 +131,21 @@ object Callback {
         onAppAction.postValue(any)
     }
 
+    @JvmStatic
+    fun isDeviceConnected(state: DeviceConnectionState) {
+        deviceConnected.postValue(state)
+    }
+
+    @JvmStatic
+    fun isTransferCompleted(bool: Boolean) {
+        transferCompleted.postValue(bool);
+        Log.e("CALLback", "transferCompleted = $bool inst = $transferCompleted")
+    }
+
+}
+
+enum class DeviceConnectionState {
+    IDLE,
+    CONNECTED,
+    NOT_CONNECTED
 }

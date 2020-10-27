@@ -36,6 +36,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.DeviceConnectionState;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.dialog.TransferInfoDialog;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.NetworkDevice;
@@ -316,7 +317,7 @@ public class ViewTransferActivity
                                     public void onClick(DialogInterface dialog, int which) {
                                         toggleTask();
                                         Callback.setTransferProgress(false);
-                                        finish();
+                                        finish(); // todo ...
                                     }
                                 })
                                 .show();
@@ -343,12 +344,37 @@ public class ViewTransferActivity
             admobUtils.loadInterstitial(null, InterAdsIdType.INTER_AM);
         admobUtils.loadBannerAd(findViewById(R.id.banner_ad_view));
 
+        registerReceiver(newReceiver, new IntentFilter(newReceiverAction));
     }
+
+    public static String newReceiverAction = "hello_this_is_new_inspector";
+
+    BroadcastReceiver newReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.e("NewReceiver", " message done " + intent.getAction());
+            if (intent.getAction().equals(newReceiverAction)){
+                Log.e("NewReceiver", " message done in condition" + intent.getAction());
+                Callback.isTransferCompleted(true);
+            }
+        }
+    };
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
+        Callback.deviceConnected.observe(this, state -> {
+            switch (state) {
+                case IDLE:
+                case CONNECTED:
+                    break;
+                case NOT_CONNECTED:
+                    finish();
+                    break;
+            }
+        });
         IntentFilter filter = new IntentFilter();
 
         filter.addAction(AccessDatabase.ACTION_DATABASE_CHANGE);
@@ -373,6 +399,10 @@ public class ViewTransferActivity
         super.onDestroy();
         Callback.setTransferProgress(false);
         Callback.setColor(false);
+
+        unregisterReceiver(newReceiver);
+
+        Callback.isTransferCompleted(false);
     }
 
     @Override
@@ -718,7 +748,14 @@ public class ViewTransferActivity
                         if (mTransferObject != null) {
                             new TransferInfoDialog(ViewTransferActivity.this, mTransferObject).show();
                             mTransferObject = null;
-                        }
+                        } /*else {
+                            try {
+                                ViewTransferActivity.this.finish();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Log.e(TAG, "%%%%%else");
+                        }*/
                 }
             });
 

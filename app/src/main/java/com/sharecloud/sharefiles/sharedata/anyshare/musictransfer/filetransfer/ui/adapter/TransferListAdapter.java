@@ -96,7 +96,7 @@ public class TransferListAdapter
 
         try {
             AppUtils.getDatabase(getContext()).reconstruct(mGroup);
-        } catch (ReconstructionFailedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }

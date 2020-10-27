@@ -150,7 +150,8 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
                             getPowerfulActionMode().finish(getSelectionCallback());
                             Callback.setAppAction(false);
                         }
-                    } catch (Exception exp) {}
+                    } catch (Exception exp) {
+                    }
                 }
             }
         };
@@ -791,7 +792,7 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
 
             // One-by-one calling caused an ANR
             getAdapter().syncSelectionList();
-            getAdapter().notifyItemRangeChanged(0, getSelectableList().size());
+            getAdapter().notifyItemRangeChanged(0, getSelectableList().size(), selection);
         }
 
         public void updateProvider(EditableListFragmentImpl<T> fragment) {
@@ -824,7 +825,8 @@ abstract public class EditableListFragment<T extends Editable, V extends Editabl
 
             if (position != -1) {
                 getAdapter().syncSelectionList();
-                getAdapter().notifyItemChanged(position);
+//                getAdapter().notifyItemChanged(position);
+                getAdapter().notifyItemChanged(position, selectable.isSelectableSelected());
             }
         }
 

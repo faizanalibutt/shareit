@@ -33,10 +33,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.lifecycle.Observer;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.GlideApp;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
@@ -52,7 +54,6 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.LogUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.ExtensionsUtils;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.json.JSONObject;
 
@@ -78,19 +79,18 @@ public class HotspotManagerFragment
         extends com.genonbeta.android.framework.app.Fragment
         implements TitleSupport, IconSupport {
 
-    private static final int REQUEST_LOCATION_PERMISSION_FOR_HOTSPOT = 643;
     public static final int STATE_PROGRESS = 644;
+    private static final int REQUEST_LOCATION_PERMISSION_FOR_HOTSPOT = 643;
+    private static final int STATE_BLUETOOTH_DISCOVERABLE_REQUESTING = 23;
+    String hotspotName;
     private IntentFilter mIntentFilter = new IntentFilter();
     private StatusReceiver mStatusReceiver = new StatusReceiver();
     private UIConnectionUtils mConnectionUtils;
-    String hotspotName;
-
     //private boolean openWifiOnce = false;
     private MenuItem mHelpMenuItem;
     private boolean mWaitForHotspot = false;
     private boolean mWaitForWiFi = false;
     private boolean mHotspotStartedExternally = false;
-    private static final int STATE_BLUETOOTH_DISCOVERABLE_REQUESTING = 23;
     //private ProgressBar progressBar;
     private TextView dataTransferSpeed;
     private TextView dataTransferTime;
@@ -100,9 +100,36 @@ public class HotspotManagerFragment
     private MyHandler mHandle = new MyHandler();
     private ImageView mCodeView;
     private TextView hotspot_name;
-    private View qr_container;
+    //    private View qr_container;
     private ColorStateList mColorPassiveState;
     private ViewGroup userProfileImageRetry;
+    private UIConnectionUtils.RequestWatcher mHotspotWatcher = new UIConnectionUtils.RequestWatcher() {
+        @Override
+        public void onResultReturned(boolean result, boolean shouldWait) {
+            mWaitForHotspot = shouldWait;
+        }
+    };
+    private UIConnectionUtils.RequestWatcher mWiFiWatcher = new UIConnectionUtils.RequestWatcher() {
+        @Override
+        public void onResultReturned(boolean result, boolean shouldWait) {
+            mWaitForWiFi = shouldWait;
+        }
+    };
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String duration = intent.getStringExtra(Keyword.DATA_TRANSFER_TIME);
+            String speed = intent.getStringExtra(Keyword.DATA_TRANSFER_SPEED);
+            dataTransferTime.setText(duration);
+            dataTransferSpeed.setText(speed);
+            //int progress = intent.getIntExtra("Status", -1);
+            //progressBar.setProgress(progress);
+        }
+    };
+
+    private static void showMessage(String message) {
+        Log.d(ConnectionUtils.TAG, message);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,7 +152,7 @@ public class HotspotManagerFragment
         dataTransferTime = view.findViewById(R.id.cancelTransfer);
         dataTransferSpeed = view.findViewById(R.id.dataTransferStatus);
         hotspot_name = view.findViewById(R.id.layout_hotspot_manager_qr_text);
-        qr_container = view.findViewById(R.id.qr_container);
+//        qr_container = view.findViewById(R.id.qr_container);
         userProfileImageRetry = view.findViewById(R.id.userProfileImageRetry);
 
         return view;
@@ -155,8 +182,7 @@ public class HotspotManagerFragment
         userProfileImageRetry.setOnClickListener(
                 v -> {
 
-                    if (Callback.getQrCode().getValue() != null && !Callback.getQrCode().getValue())
-                    {
+                    if (Callback.getQrCode().getValue() != null && !Callback.getQrCode().getValue()) {
                         Callback.setQrCode(true);
                         return;
                     }
@@ -165,18 +191,18 @@ public class HotspotManagerFragment
                 }
         );
 
-        final Observer<Boolean> showQrObserver = qr_status -> {
+        /*final Observer<Boolean> showQrObserver = qr_status -> {
             if (qr_status) {
                 mCodeView.setVisibility(View.VISIBLE);
                 hotspot_name.setVisibility(View.VISIBLE);
-                qr_container.setVisibility(View.VISIBLE);
+//                qr_container.setVisibility(View.VISIBLE);
             } else {
                 mCodeView.setVisibility(View.GONE);
                 hotspot_name.setVisibility(View.GONE);
-                qr_container.setVisibility(View.GONE);
+//                qr_container.setVisibility(View.GONE);
             }
         };
-        Callback.getQrCode().observe(getViewLifecycleOwner(), showQrObserver);
+        Callback.getQrCode().observe(getViewLifecycleOwner(), showQrObserver);*/
 
     }
 
@@ -372,10 +398,6 @@ public class HotspotManagerFragment
         }
     }
 
-    private static void showMessage(String message) {
-        Log.d(ConnectionUtils.TAG, message);
-    }
-
     private void updateViewsWithBlank() {
         mHotspotStartedExternally = false;
 
@@ -392,7 +414,6 @@ public class HotspotManagerFragment
         updateViews(null, getString(R.string.text_hotspotStartedExternallyNotice),
                 null, null, R.string.butn_stopHotspot);
     }
-
 
     private void updateViews(String networkName, String password, int keyManagement) {
         mHotspotStartedExternally = false;
@@ -460,6 +481,7 @@ public class HotspotManagerFragment
                 Bitmap bitmap = encoder.createBitmap(bitMatrix);
                 GlideApp.with(getContext())
                         .load(bitmap)
+                        .transition(DrawableTransitionOptions.withCrossFade())
                         .into(mCodeView);
 
             } else
@@ -528,32 +550,6 @@ public class HotspotManagerFragment
         }
     }
 
-    private UIConnectionUtils.RequestWatcher mHotspotWatcher = new UIConnectionUtils.RequestWatcher() {
-        @Override
-        public void onResultReturned(boolean result, boolean shouldWait) {
-            mWaitForHotspot = shouldWait;
-        }
-    };
-
-    private UIConnectionUtils.RequestWatcher mWiFiWatcher = new UIConnectionUtils.RequestWatcher() {
-        @Override
-        public void onResultReturned(boolean result, boolean shouldWait) {
-            mWaitForWiFi = shouldWait;
-        }
-    };
-
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String duration = intent.getStringExtra(Keyword.DATA_TRANSFER_TIME);
-            String speed = intent.getStringExtra(Keyword.DATA_TRANSFER_SPEED);
-            dataTransferTime.setText(duration);
-            dataTransferSpeed.setText(speed);
-            //int progress = intent.getIntExtra("Status", -1);
-            //progressBar.setProgress(progress);
-        }
-    };
-
     @SuppressLint("HandlerLeak")
     public class MyHandler extends Handler {
 
@@ -585,14 +581,6 @@ public class HotspotManagerFragment
         private final BluetoothServerSocket serverSocket;
         private JSONObject hotspotInformation;
 
-        JSONObject getHotspotInformation() {
-            return hotspotInformation;
-        }
-
-        void setHotspotInformation(JSONObject hotspotInformation) {
-            this.hotspotInformation = hotspotInformation;
-        }
-
         ServerClass(JSONObject hotspotInformations) {
             BluetoothServerSocket tmp = null;
 
@@ -615,6 +603,14 @@ public class HotspotManagerFragment
             serverSocket = tmp;
         }
 
+        JSONObject getHotspotInformation() {
+            return hotspotInformation;
+        }
+
+        void setHotspotInformation(JSONObject hotspotInformation) {
+            this.hotspotInformation = hotspotInformation;
+        }
+
         public void run() {
             BluetoothSocket socket;
 
@@ -635,7 +631,7 @@ public class HotspotManagerFragment
                                 " ServerSocket: Could not close the connect socket \n" + e.getMessage() + "\n").show();
                     }
 
-                    if (Objects.requireNonNull(getActivity()).
+                    if (getActivity() != null && getActivity().
                             findViewById(R.id.layout_hotspot_status_container) != null) {
                         createSnackbar(R.string.msg_merg_send,
                                 " ServerSocket: Socket's accept() method failed \n" + e.getMessage()).show();
@@ -704,7 +700,8 @@ public class HotspotManagerFragment
             outputStream = tempOut;
         }
 
-        public void run() {}
+        public void run() {
+        }
 
         void write(byte[] bytes) {
             try {

@@ -1,8 +1,8 @@
 package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget;
 
 import com.genonbeta.android.framework.widget.ListAdapterImpl;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.Editable;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.exception.NotReadyException;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.Editable;
 
 import java.util.List;
 
@@ -21,7 +21,11 @@ public interface EditableListAdapterImpl<T extends Editable> extends ListAdapter
 
     void notifyItemRangeChanged(int positionStart, int itemCount);
 
+    void notifyItemRangeChanged(int positionStart, int itemCount, Object selectable);
+
     void syncSelectionList();
 
     void syncSelectionList(List<T> itemList);
+
+    void notifyItemChanged(int position, Object selectable);
 }

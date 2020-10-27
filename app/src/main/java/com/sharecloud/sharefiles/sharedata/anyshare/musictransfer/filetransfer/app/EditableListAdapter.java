@@ -2,6 +2,7 @@ package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.
 
 import android.content.Context;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -264,6 +265,19 @@ abstract public class EditableListAdapter<T extends Editable, V extends Editable
             item.setSelectableSelected(mFragment.getSelectionConnection().isSelected(item));
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull V holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) super.onBindViewHolder(holder, position, payloads);
+        else {
+            try {
+                if (holder.getView() != null && payloads.get(0) != null)
+                    holder.setSelected(((boolean) payloads.get(0)));
+            } catch (Exception e) {
+                Log.e("NEW_ONBIND", ":::", e);
+            }
+        }
+    }
+
     public static class EditableViewHolder extends ViewHolder {
         private View mClickableView;
 
@@ -282,6 +296,10 @@ abstract public class EditableListAdapter<T extends Editable, V extends Editable
         public EditableViewHolder setClickableView(View clickableLayout) {
             mClickableView = clickableLayout;
             return this;
+        }
+
+        public void setSelected(boolean isSelected) {
+            itemView.setSelected(isSelected);
         }
     }
 }

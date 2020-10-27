@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/standardBottomSheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/scanned_devices_list_bottomsheet"
     android:orientation="vertical"
+    app:behavior_halfExpandedRatio="0.3"
     app:behavior_hideable="false"
     app:behavior_peekHeight="0dp"
-    app:behavior_halfExpandedRatio="0.4"
-    app:behavior_fitToContents="false"
-    app:behavior_skipCollapsed="false"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    app:layout_behavior="@string/bottom_sheet_behavior">
 
+    <!--
+
+    app:behavior_draggable="true"
+    app:behavior_fitToContents="true"
+    app:behavior_halfExpandedRatio="0.3"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="0dp"
+    app:behavior_skipCollapsed="true"
+    -->
     <!--
     android:paddingTop="5dp"
         app:behavior_expandedOffset="0"
@@ -25,22 +32,52 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
     -->
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_sheet_clip"
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/sheet_clip"
+        app:layout_constraintBottom_toTopOf="@+id/tv_p_nearby"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
-        android:id="@+id/sheetText"
+        android:id="@+id/tv_p_nearby"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="left"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:text="PEOPLE NEARBY"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_sheet_clip"
         tools:ignore="HardcodedText" />
 
     <ListView
         android:id="@+id/lv_send"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:divider="@null"
-        android:visibility="visible" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/lav_loading_anim"
+        app:layout_constraintTop_toBottomOf="@+id/tv_p_nearby" />
 
-</LinearLayout>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_loading_anim"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lv_send"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loading_anim" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
