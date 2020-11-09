@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.bluetooth.ActionType;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.callback.SnackbarSupport;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.fragment.SenderFragmentImpl;
@@ -62,7 +61,7 @@ public class ClientThread extends Thread implements SnackbarSupport {
 
             try {
                 mSocket.close();
-            } catch (IOException ex) {
+            } catch (NullPointerException | IOException ex) {
                 ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "Could not close the client mSocket \n" + ex.getMessage());
             }
@@ -107,7 +106,7 @@ public class ClientThread extends Thread implements SnackbarSupport {
     public void cancel() {
         try {
             mSocket.close();
-        } catch (IOException e) {
+        } catch (NullPointerException | IOException e) {
             ExtensionsUtils.getLog_W(ExtensionsUtils.getBLUETOOTH_TAG(),
                     String.format("Could not close the connect mSocket %s", e.getMessage()));
         }

@@ -24,7 +24,13 @@ abstract public class Service extends android.app.Service {
 
     public NotificationUtils getNotificationUtils() {
         if (mNotificationUtils == null)
-            mNotificationUtils = new NotificationUtils(getApplicationContext(), getDatabase(), getDefaultPreferences());
+        {
+            try {
+                mNotificationUtils = new NotificationUtils(getApplicationContext(), getDatabase(), getDefaultPreferences());
+            } catch (Exception exp) {
+                exp.printStackTrace();
+            }
+        }
 
         return mNotificationUtils;
     }

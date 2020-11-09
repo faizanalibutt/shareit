@@ -633,16 +633,20 @@ public class HotspotManagerFragment
 
                     if (getActivity() != null && getActivity().
                             findViewById(R.id.layout_hotspot_status_container) != null) {
-                        createSnackbar(R.string.msg_merg_send,
-                                " ServerSocket: Socket's accept() method failed \n" + e.getMessage()).show();
-                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //Callback.setQrCode(true);
-                                // we will see the update later.
-                            }
-                        });
-                        createSnackbar(R.string.text_interfaceBluetoothFailed).show();
+                        try {
+                            createSnackbar(R.string.msg_merg_send,
+                                    " ServerSocket: Socket's accept() method failed \n" + e.getMessage()).show();
+                            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //Callback.setQrCode(true);
+                                    // we will see the update later.
+                                }
+                            });
+                            createSnackbar(R.string.text_interfaceBluetoothFailed).show();
+                        } catch (NullPointerException npe) {
+                            npe.getMessage();
+                        }
                     }
                     break;
                 }
@@ -660,7 +664,10 @@ public class HotspotManagerFragment
             if (sendReceive == null) {
                 sendReceive = new SendReceive(socket);
                 sendReceive.start();
-                sendReceive.write(getHotspotInformation().toString().getBytes());
+                sendReceive.write(
+                        getHotspotInformation() != null
+                                ? getHotspotInformation().toString().getBytes() : null
+                );
 
                 ExtensionsUtils.getLog_I(ExtensionsUtils.getBLUETOOTH_TAG(),
                         "ServerSocket: Received Request To Give HOTSPOT_INFORMATION" + "\n");
@@ -706,7 +713,7 @@ public class HotspotManagerFragment
         void write(byte[] bytes) {
             try {
                 outputStream.write(bytes);
-            } catch (IOException e) {
+            } catch (NullPointerException | IOException e) {
                 e.printStackTrace();
             }
         }

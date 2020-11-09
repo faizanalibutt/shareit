@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -149,12 +150,14 @@ public class AppUtils {
     }
 
     public static void launchHotspotSettings(AppCompatActivity activity) {
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        ComponentName componentName = new ComponentName(SETTINGS_PACKAGE, HOTSPOT_SETTINGS_CLASS);
-        intent.setComponent(componentName);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(intent);
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN, null);
+            ComponentName componentName = new ComponentName(SETTINGS_PACKAGE, HOTSPOT_SETTINGS_CLASS);
+            intent.setComponent(componentName);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+        } catch (ActivityNotFoundException ane) {ane.getMessage();}
     }
 
     public static DocumentFile createLog(Context context) {

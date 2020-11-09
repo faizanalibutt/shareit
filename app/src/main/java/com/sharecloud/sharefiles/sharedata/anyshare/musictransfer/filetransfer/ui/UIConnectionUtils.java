@@ -3,6 +3,7 @@ package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,7 +29,6 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.d
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.NetworkDevice;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.CommunicationService;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.WorkerService;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UITask;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.PreparationsActivity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
@@ -341,10 +341,11 @@ public class UIConnectionUtils {
                         .setPositiveButton(R.string.butn_settings, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                activity.startActivity(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
-                                        .setData(Uri.parse("package:" + getConnectionUtils().getContext().getPackageName()))
-                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-
+                                try {
+                                    activity.startActivity(new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS)
+                                            .setData(Uri.parse("package:" + getConnectionUtils().getContext().getPackageName()))
+                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                } catch (ActivityNotFoundException afe) {afe.getMessage();}
                                 watcher.onResultReturned(false, true);
                             }
                         })

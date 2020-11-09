@@ -34,8 +34,11 @@ public class App extends Application {
                 if (ACTION_REQUEST_PREFERENCES_SYNC.equals(intent.getAction())) {
                     SharedPreferences preferences = AppUtils.getDefaultPreferences(context).getWeakManager();
 
-                    if (preferences instanceof DbSharablePreferences)
-                        ((DbSharablePreferences) preferences).sync();
+                    if (preferences instanceof DbSharablePreferences) {
+                        try {
+                            ((DbSharablePreferences) preferences).sync();
+                        } catch (Exception exp) {exp.getMessage();}
+                    }
                 }
         }
     };

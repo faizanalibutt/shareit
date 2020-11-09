@@ -22,6 +22,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.android.synthetic.main.layout_gdp_view.*
+import java.lang.IllegalStateException
 
 class SplashActivity : AppCompatActivity() {
 
@@ -35,19 +36,20 @@ class SplashActivity : AppCompatActivity() {
     private var mFirebaseRemoteConfig: FirebaseRemoteConfig? = null
 
     private fun initFbRemoteConfig() {
-
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        val configSettings = FirebaseRemoteConfigSettings.Builder()
-            .setMinimumFetchIntervalInSeconds(3600)
-            .build()
-        mFirebaseRemoteConfig?.setConfigSettingsAsync(configSettings)
-        mFirebaseRemoteConfig?.setDefaultsAsync(R.xml.firebase_config)
-        mFirebaseRemoteConfig?.fetchAndActivate()?.addOnCompleteListener(this) { task ->
-            if (task.isSuccessful) {
-                val updated = task.result
-                Log.d("Firebase", "Config params updated: $updated")
+        try {
+            mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+            val configSettings = FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build()
+            mFirebaseRemoteConfig?.setConfigSettingsAsync(configSettings)
+            mFirebaseRemoteConfig?.setDefaultsAsync(R.xml.firebase_config)
+            mFirebaseRemoteConfig?.fetchAndActivate()?.addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val updated = task.result
+                    Log.d("Firebase", "Config params updated: $updated")
+                }
             }
-        }
+        } catch (iexp: IllegalStateException) {iexp.message}
     }
 
     private fun getSplashViews() {

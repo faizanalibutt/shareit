@@ -13,13 +13,12 @@ import com.genonbeta.android.framework.util.listing.Merger;
 import com.genonbeta.android.framework.util.listing.merger.StringMerger;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.EditableListAdapter;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.exception.NotReadyException;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.miscpkg.GroupEditable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.miscpkg.GroupEditable;
 
 /**
  * created by: Veli
@@ -75,7 +74,7 @@ abstract public class GroupEditableListAdapter<T extends GroupEditable, V extend
 
                 generated.setSize(thisMerger.getBelongings().size());
                 generated.setDate(firstEditable.getComparableDate());
-                generated.setId(~generated.getRepresentativeText().hashCode());
+                generated.setId(generated.getRepresentativeText().hashCode());
 
                 loadedList.addAll(thisMerger.getBelongings());
             }
