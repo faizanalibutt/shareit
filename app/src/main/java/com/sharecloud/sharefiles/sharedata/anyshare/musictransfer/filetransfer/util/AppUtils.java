@@ -36,7 +36,6 @@ import com.genonbeta.android.framework.io.DocumentFile;
 import com.genonbeta.android.framework.preference.DbSharablePreferences;
 import com.genonbeta.android.framework.preference.SuperPreferences;
 import com.genonbeta.android.framework.util.PreferenceUtils;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.BuildConfig;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.GlideApp;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App;
@@ -221,7 +220,7 @@ public class AppUtils {
         return mDatabase;
     }
 
-    public static Keyword.Flavor getBuildFlavor() {
+    /*public static Keyword.Flavor getBuildFlavor() {
         try {
             return Keyword.Flavor.valueOf(BuildConfig.FLAVOR);
         } catch (Exception e) {
@@ -229,7 +228,7 @@ public class AppUtils {
                     "the vocab. Is this a custom build?");
             return Keyword.Flavor.unknown;
         }
-    }
+    }*/
 
     public static SuperPreferences getDefaultPreferences(final Context context) {
         if (mDefaultPreferences == null) {
@@ -276,7 +275,7 @@ public class AppUtils {
                     Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
             ) {
                 if (Build.VERSION.SDK_INT < 29)
-                    return Build.getSerial();
+                    return Build.SERIAL;
                 else
                     return getUniqueID();
             } else

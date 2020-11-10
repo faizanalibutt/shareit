@@ -6,6 +6,7 @@ package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,50 +67,56 @@ public class ImageListFragment
     public ImageListAdapter onAdapter() {
         final AppUtils.QuickActions<GroupEditableListAdapter.GroupViewHolder> quickActions =
                 new AppUtils.QuickActions<GroupEditableListAdapter.GroupViewHolder>() {
-            @Override
-            public void onQuickActions(final GroupEditableListAdapter.GroupViewHolder clazz) {
-                if (!clazz.isRepresentative()) {
-                    registerLayoutViewClicks(clazz);
+                    @Override
+                    public void onQuickActions(final GroupEditableListAdapter.GroupViewHolder clazz) {
+                        if (!clazz.isRepresentative()) {
+                            registerLayoutViewClicks(clazz);
 
-                    View visitView = clazz.getView().findViewById(R.id.visitView);
-                    visitView.setOnClickListener(
-                            new View.OnClickListener() {
+                            View visitView = clazz.getView().findViewById(R.id.visitView);
+                            visitView.setOnClickListener(
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            try {
+                                                new Handler().post(() -> {
+                                                    if (getSelectionConnection() != null) {
+                                                        getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                                        Callback.setColor(true);
+                                                    } else {
+                                                        performLayoutClick(clazz);
+                                                        Callback.setColor(false);
+                                                    }
+                                                });
+                                            } catch (Exception exp) {
+                                            }
+                                        }
+                                    });
+
+                            visitView.setOnLongClickListener(new View.OnLongClickListener() {
                                 @Override
-                                public void onClick(View v) {
-                                    if (getSelectionConnection() != null) {
-                                        getSelectionConnection().setSelected(clazz.getAdapterPosition());
-                                        Callback.setColor(true);
-                                    } else{
-                                        performLayoutClick(clazz);
-                                        Callback.setColor(false);
-                                    }
-
+                                public boolean onLongClick(View v) {
+                                    performLayoutClickOpen(clazz);
+                                    return true;
                                 }
                             });
 
-                    visitView.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            performLayoutClickOpen(clazz);
-                            return true;
+                            clazz.getView().findViewById(getAdapter().isGridLayoutRequested()
+                                    ? R.id.selectorContainer : R.id.selector)
+                                    .setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            new Handler().post(() -> {
+                                                if (getSelectionConnection() != null) {
+                                                    getSelectionConnection().setSelected(clazz.getAdapterPosition());
+                                                    Callback.setColor(true);
+                                                } else
+                                                    Callback.setColor(false);
+                                            });
+                                        }
+                                    });
                         }
-                    });
-
-                    clazz.getView().findViewById(getAdapter().isGridLayoutRequested()
-                            ? R.id.selectorContainer : R.id.selector)
-                            .setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (getSelectionConnection() != null) {
-                                        getSelectionConnection().setSelected(clazz.getAdapterPosition());
-                                        Callback.setColor(true);
-                                    } else
-                                        Callback.setColor(false);
-                                }
-                            });
-                }
-            }
-        };
+                    }
+                };
 
         return new ImageListAdapter(getActivity()) {
             @NonNull

@@ -1,6 +1,7 @@
 package com.genonbeta.android.framework.widget;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -129,23 +130,28 @@ abstract public class PowerfulActionToolbar<E extends Toolbar, ReturningObject e
 
         // As we can't define the !?*_- listener with ease I had to hack into it using this
         if (result) {
-            MenuItem.OnMenuItemClickListener defListener = new MenuItem.OnMenuItemClickListener() {
+            new Handler().post(new Runnable() {
                 @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    boolean didTrigger = callback instanceof ToolbarCallback
-                            && ((ToolbarCallback) callback).onActionMenuItemSelected(getContext(), onReturningObject(), menuItem);
+                public void run() {
+                    MenuItem.OnMenuItemClickListener defListener = new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            boolean didTrigger = callback instanceof ToolbarCallback
+                                    && ((ToolbarCallback) callback).onActionMenuItemSelected(getContext(), onReturningObject(), menuItem);
 
-                    if (didTrigger && mFinishAllowed)
-                        mEngine.finish(callback);
+                            if (didTrigger && mFinishAllowed)
+                                mEngine.finish(callback);
 
-                    return didTrigger;
+                            return didTrigger;
+                        }
+                    };
+
+                    for (int menuPos = 0; menuPos < getToolbar().getMenu().size(); menuPos++)
+                        getToolbar().getMenu()
+                                .getItem(menuPos)
+                                .setOnMenuItemClickListener(defListener);
                 }
-            };
-
-            for (int menuPos = 0; menuPos < getToolbar().getMenu().size(); menuPos++)
-                getToolbar().getMenu()
-                        .getItem(menuPos)
-                        .setOnMenuItemClickListener(defListener);
+            });
         }
 
         return true;

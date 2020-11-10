@@ -28,7 +28,6 @@ import com.genonbeta.android.framework.io.StreamInfo;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Service;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.AppConfig;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.Keyword;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
@@ -440,9 +439,11 @@ public class CommunicationService extends Service {
             ContentValues values = new ContentValues();
 
             values.put(AccessDatabase.FIELD_TRANSFERGROUP_ISSHAREDONWEB, 0);
-            getDatabase().update(new SQLQuery.Select(AccessDatabase.TABLE_TRANSFERGROUP)
-                    .setWhere(String.format("%s = ?", AccessDatabase.FIELD_TRANSFERGROUP_ISSHAREDONWEB),
-                            String.valueOf(1)), values);
+            try {
+                getDatabase().update(new SQLQuery.Select(AccessDatabase.TABLE_TRANSFERGROUP)
+                        .setWhere(String.format("%s = ?", AccessDatabase.FIELD_TRANSFERGROUP_ISSHAREDONWEB),
+                                String.valueOf(1)), values);
+            } catch (RuntimeException rxp) {rxp.printStackTrace();}
         }
 
         setWebShareEnabled(false, false);

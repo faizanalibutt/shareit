@@ -652,7 +652,8 @@ public class HotspotManagerFragment
                 }
 
                 ExtensionsUtils.getLog_D(ExtensionsUtils.getBLUETOOTH_TAG(),
-                        "ServerSocket: When Server Thread Enabled AND HOTSPOT_INFORMATION is " + "\n" + getHotspotInformation());
+                        "ServerSocket: When Server Thread Enabled AND HOTSPOT_INFORMATION is " + "\n"
+                                + getHotspotInformation().toString());
                 if (socket != null) {
                     manageServerSocket(socket);
                     break;

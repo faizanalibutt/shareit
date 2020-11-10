@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -45,12 +44,15 @@ import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.zxing.ResultPoint;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.bluetooth.ActionType;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.bluetooth.BluetoothDataTransferThread;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.bluetooth.ClientThread;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.bluetooth.MyHandler;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.bluetooth.ActionType;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.Keyword;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
@@ -60,7 +62,6 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.m
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.NetworkDevice;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UIConnectionUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UITask;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ReceiverActivity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.SenderActivity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.adapter.NetworkDeviceListAdapter;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.adapter.SenderListAdapter;
@@ -73,9 +74,6 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.LogUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkDeviceLoader;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.ExtensionsUtils;
-import com.journeyapps.barcodescanner.BarcodeCallback;
-import com.journeyapps.barcodescanner.BarcodeResult;
-import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -880,7 +878,7 @@ public class SenderFragmentImpl
 
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     //showMessage("Others device name is " + device.getName() + " " + device.getAddress());
-                    if (device.getName() != null &&
+                    if (device != null && device.getName() != null &&
                             (device.getName().startsWith("TS") ||
                                     device.getName().startsWith("AndroidShare"))) {
 
