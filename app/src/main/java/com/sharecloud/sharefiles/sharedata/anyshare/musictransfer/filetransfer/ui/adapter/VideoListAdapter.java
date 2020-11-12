@@ -24,6 +24,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.o
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.FileUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TimeUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TinyDB;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.GroupEditableListAdapter;
 
 import java.util.ArrayList;
@@ -102,7 +103,7 @@ public class VideoListAdapter
     public int getItemViewType(int position) {
         try {
             return getItem(position) instanceof AdsModel
-                    ? ((AdsModel)getItem(position)).getViewType()
+                    ? ((AdsModel) getItem(position)).getViewType()
                     : super.getItemViewType(position);
         } catch (NotReadyException | ClassCastException e) {
             e.printStackTrace();
@@ -129,7 +130,8 @@ public class VideoListAdapter
                 int typeIndex = cursor.getColumnIndex(MediaStore.Video.Media.MIME_TYPE);
 
                 do {
-                    if (videoList.size() == 4 && NetworkUtils.isOnline(getContext()))
+                    if (videoList.size() == 4 && getContext() != null && NetworkUtils.isOnline(getContext())
+                            && !TinyDB.getInstance(getContext()).getBoolean(getContext().getString(R.string.is_premium)))
                         videoList.add(new AdsModel());
                     else {
                         videoList.add(new VideoHolder(
@@ -148,11 +150,14 @@ public class VideoListAdapter
 
             cursor.close();
 
-            if (videoList.size() == 0)
-                videoList.add(new AdsModel());
-            else if (videoList.size() < 4) {
-                int size = videoList.size();
-                videoList.add(size, new AdsModel());
+            if (getContext() != null && NetworkUtils.isOnline(getContext())
+                    && !TinyDB.getInstance(getContext()).getBoolean(getContext().getString(R.string.is_premium))) {
+                if (videoList.size() == 0)
+                    videoList.add(new AdsModel());
+                else if (videoList.size() < 4) {
+                    int size = videoList.size();
+                    videoList.add(size, new AdsModel());
+                }
             }
 
         }
@@ -166,7 +171,8 @@ public class VideoListAdapter
     public static class VideoHolder extends Shareable {
         public String duration;
 
-        public VideoHolder() {}
+        public VideoHolder() {
+        }
 
         public VideoHolder(long id, String friendlyName, String fileName, String mimeType, long duration, long date, long size, Uri uri) {
             super(id, friendlyName, fileName, mimeType, date, size, uri);

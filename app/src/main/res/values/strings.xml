@@ -616,5 +616,9 @@
     <string name="app_link">https://play.google.com/store/apps/details?id=com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer</string>
     <string name="privacy_policy">By proceeding you agree\nto Privacy Policy</string>
     <string name="mesg_Exit">Do you want to exit?</string>
+    <string name="is_premium" translatable="false">is_premium</string>
+    <string name="remove_ads">Remove Ads</string>
+    <string name="text_remove_ads_desc">Compass is supported by Ads but now you can remove this!</string>
+    <string name="text_btn_remove_now">Remove Now</string>
 
 </resources>

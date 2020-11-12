@@ -20,8 +20,10 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/sharebanner"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:visibility="visible"
+            android:layout_gravity="top"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
             app:srcCompat="@drawable/backgroun_illustration" />
 

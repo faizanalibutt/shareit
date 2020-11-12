@@ -73,6 +73,8 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.ListUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.LogUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkDeviceLoader;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TinyDB;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.ExtensionsUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -158,20 +160,23 @@ public class SenderFragmentImpl
         View view = inflater.inflate(R.layout.demo_fragment_impl_sender, container, false);
         mBarcodeView = view.findViewById(R.id.layout_barcode_connect_barcode_view);
         lv_send = view.findViewById(R.id.lv_send);
-        FrameLayout fl_adplaceholder = view.findViewById(R.id.fl_adplaceholder);
-        AdmobUtils admobUtils = new AdmobUtils(view.getContext());
-        admobUtils.loadNativeAd(fl_adplaceholder, R.layout.ad_unified_2, NativeAdsIdType.ADJUST_NATIVE_AM);
-        admobUtils.setNativeAdListener(new AdmobUtils.NativeAdListener() {
-            @Override
-            public void onNativeAdLoaded() {
+        if (getContext() != null && NetworkUtils.isOnline(getContext())
+                && !TinyDB.getInstance(getContext()).getBoolean(getContext().getString(R.string.is_premium))) {
+            FrameLayout fl_adplaceholder = view.findViewById(R.id.fl_adplaceholder);
+            AdmobUtils admobUtils = new AdmobUtils(view.getContext());
+            admobUtils.loadNativeAd(fl_adplaceholder, R.layout.ad_unified_2, NativeAdsIdType.ADJUST_NATIVE_AM);
+            admobUtils.setNativeAdListener(new AdmobUtils.NativeAdListener() {
+                @Override
+                public void onNativeAdLoaded() {
 
-            }
+                }
 
-            @Override
-            public void onNativeAdError() {
+                @Override
+                public void onNativeAdError() {
 
-            }
-        });
+                }
+            });
+        }
         return view;
     }
 
@@ -723,7 +728,7 @@ public class SenderFragmentImpl
         mBarcodeView.decodeContinuous(new BarcodeCallback() {
             @Override
             public void barcodeResult(BarcodeResult result) {
-                Log.e(TAG,"scanning results " + result.toString());
+                Log.e(TAG, "scanning results " + result.toString());
                 try {
                     openDialog("");
                     connectToHotspot(new JSONObject(result.getResult().getText()));
@@ -901,13 +906,13 @@ public class SenderFragmentImpl
                         ));
                         if (standardBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HALF_EXPANDED && !isSocketClosed)
 //                            standardBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
-                        if (senderListAdapter != null)
-                            senderListAdapter.notifyDataSetChanged();
-                        else {
-                            senderListAdapter = new SenderListAdapter(getContext(), mGenericList,
-                                    ((SenderActivity) Objects.requireNonNull(getActivity())));
-                            lv_send.setAdapter(senderListAdapter);
-                        }
+                            if (senderListAdapter != null)
+                                senderListAdapter.notifyDataSetChanged();
+                            else {
+                                senderListAdapter = new SenderListAdapter(getContext(), mGenericList,
+                                        ((SenderActivity) Objects.requireNonNull(getActivity())));
+                                lv_send.setAdapter(senderListAdapter);
+                            }
                     }
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:

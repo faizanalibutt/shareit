@@ -66,7 +66,7 @@ public class AdmobUtils {
         this.context = context;
     }
 
-    public void loadInterstitial(AdmobInterstitialListener admobListener , InterAdsIdType interAdsIdType) {
+    public void loadInterstitial(AdmobInterstitialListener admobListener, InterAdsIdType interAdsIdType) {
         this.interAdsIdType = interAdsIdType;
         this.admobListener = admobListener;
         mInterstitialAd = newInterstitialAd();
@@ -102,14 +102,14 @@ public class AdmobUtils {
                     if (adView.getVisibility() == View.GONE) {
                         adView.setVisibility(View.VISIBLE);
                     }
-                    if(admobBannerListener != null){
+                    if (admobBannerListener != null) {
                         admobBannerListener.onBannerAdLoaded();
                     }
                 }
 
                 @Override
                 public void onAdFailedToLoad(int i) {
-                    if(admobBannerListener != null){
+                    if (admobBannerListener != null) {
                         admobBannerListener.onBannerAdFailedLoaded();
                     }
                 }
@@ -118,7 +118,7 @@ public class AdmobUtils {
         }
     }
 
-    public void setAdmobBannerListener(AdmobBannerListener admobBannerListener){
+    public void setAdmobBannerListener(AdmobBannerListener admobBannerListener) {
         this.admobBannerListener = admobBannerListener;
     }
 
@@ -264,7 +264,8 @@ public class AdmobUtils {
 
     private UnifiedNativeAd loadNativeAd(int actionBtn) {
 
-        if ((nativeAdLayout == -1 && frameLayout == null) || TinyDB.getInstance(context).getBoolean(Constants.IS_PREMIUM)) {
+        if ((nativeAdLayout == -1 && frameLayout == null)
+                || (context != null && TinyDB.getInstance(context).getBoolean(Constants.IS_PREMIUM))) {
             return null;
         }
 
@@ -385,7 +386,7 @@ public class AdmobUtils {
         }
 
         if (nativeAd.getIcon() == null) {
-                adView.getIconView().setVisibility(View.INVISIBLE);
+            adView.getIconView().setVisibility(View.INVISIBLE);
         } else {
             ((ImageView) adView.getIconView()).setImageDrawable(
                     nativeAd.getIcon().getDrawable());
@@ -473,23 +474,27 @@ public class AdmobUtils {
 
     public interface AdmobInterstitialListener {
         void onInterstitialAdClose();
+
         void onInterstitialAdLoaded();
+
         void onInterstitialAdFailed();
     }
 
     public interface NativeAdListener {
         void onNativeAdLoaded();
+
         void onNativeAdError();
     }
 
     public interface AdmobBannerListener {
         void onBannerAdLoaded();
+
         void onBannerAdFailedLoaded();
     }
 
 
-    public void destroyNativeAd(){
-        if(nativeAd != null){
+    public void destroyNativeAd() {
+        if (nativeAd != null) {
             nativeAd.destroy();
         }
     }

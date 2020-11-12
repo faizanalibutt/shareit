@@ -15,6 +15,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.a
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TinyDB
 import kotlinx.android.synthetic.main.layout_exit_rating_dialog.view.*
 
 class ExitDialogue(val activity: Activity, val title: String, val adsVisible: Boolean) :
@@ -28,16 +29,23 @@ class ExitDialogue(val activity: Activity, val title: String, val adsVisible: Bo
             setView(mRootView)
             setTitle(title)
 
-            if (adsVisible && NetworkUtils.isOnline(activity)) {
-                mRootView.rating_group.visibility = View.VISIBLE
+            if (adsVisible && NetworkUtils.isOnline(activity) && !TinyDB.getInstance(activity)
+                    .getBoolean(activity.getString(R.string.is_premium))
+            ) {
                 val admobUtils = AdmobUtils(activity)
-                admobUtils.loadNativeAd(mRootView.fl_adplaceholder, R.layout.ad_unified_3, NativeAdsIdType.EXIT_NATIVE_AM)
+                admobUtils.loadNativeAd(
+                    mRootView.fl_adplaceholder,
+                    R.layout.ad_unified_3,
+                    NativeAdsIdType.EXIT_NATIVE_AM
+                )
                 admobUtils.setNativeAdListener(object : AdmobUtils.NativeAdListener {
                     override fun onNativeAdLoaded() {
-                        mRootView.rate_exit_ads_view.visibility = View.GONE
+                        mRootView.rating_group.visibility = View.VISIBLE
+                        mRootView.view.visibility = View.VISIBLE
                     }
-                    override fun onNativeAdError() {
 
+                    override fun onNativeAdError() {
+                        mRootView.view.visibility = View.GONE
                     }
                 })
             }
@@ -55,18 +63,23 @@ class ExitDialogue(val activity: Activity, val title: String, val adsVisible: Bo
 
             setNegativeButton("Cancel", null)
 
-            if (adsVisible && AppUtils.getDefaultPreferences(activity).getBoolean("hide_rating", false)) {
+            if (adsVisible && AppUtils.getDefaultPreferences(activity)
+                    .getBoolean("hide_rating", false)
+            ) {
                 mRootView.rating_bar_value.visibility = View.GONE
                 mRootView.view.visibility = View.GONE
                 mRootView.dialog_desc.visibility = View.GONE
                 mRootView.exit_desc.visibility = View.VISIBLE
-            } else if (adsVisible) {
+            } else if (adsVisible && !TinyDB.getInstance(activity)
+                    .getBoolean(activity.getString(R.string.is_premium))
+            ) {
                 mRootView.view.visibility = View.VISIBLE
             }
 
-            mRootView.rating_bar_value.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
-                Callback.setRating(rating)
-            }
+            mRootView.rating_bar_value.onRatingBarChangeListener =
+                RatingBar.OnRatingBarChangeListener { _, rating, _ ->
+                    Callback.setRating(rating)
+                }
 
         }.onFailure {
             // here you can send developer message

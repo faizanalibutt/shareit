@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.DeviceConnectionState;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
@@ -124,7 +124,9 @@ public class SenderActivity extends Activity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
+        if (App.bp != null && !(App.bp.handleActivityResult(requestCode, resultCode, data)))
+            super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CHOOSE_DEVICE)
             if (resultCode == RESULT_OK && data != null) {

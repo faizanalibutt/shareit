@@ -24,7 +24,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.Group;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
@@ -33,6 +32,7 @@ import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.Keyword;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.receiver.NetworkStatusReceiver;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.CommunicationService;
@@ -208,7 +208,7 @@ public class PreparationsActivity extends Activity
                 List<Uri> pendingFileUris = getIntent().getParcelableArrayListExtra(Intent.EXTRA_STREAM);
                 fileNames = getIntent().hasExtra(EXTRA_FILENAME_LIST) ? getIntent().getCharSequenceArrayListExtra(EXTRA_FILENAME_LIST) : null;
 
-                if (pendingFileUris!= null) fileUris.addAll(pendingFileUris);
+                if (pendingFileUris != null) fileUris.addAll(pendingFileUris);
             } else {
                 fileUris.add((Uri) getIntent().getParcelableExtra(Intent.EXTRA_STREAM));
 
@@ -433,6 +433,10 @@ public class PreparationsActivity extends Activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (App.bp != null && !(App.bp.handleActivityResult(requestCode, resultCode, data)))
+            super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == Activity.RESULT_OK || ConnectionUtils.getInstance(this).isLocationServiceEnabled()) {
             if (requestCode == LOCATION_SERVICE_RESULT) {
                 if (ConnectionUtils.getInstance(this).isLocationServiceEnabled()) {
@@ -536,25 +540,25 @@ public class PreparationsActivity extends Activity
             else
                 Snackbar.make(view, R.string.text_cameraPermissionRequired, Snackbar.LENGTH_LONG).setAction(R.string.text_settings,v ->{}).show();
         } else {*/
-            if (isReceiver) {
-                startActivity(new Intent(PreparationsActivity.this, com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ReceiverActivity.class)
-                        .putExtra(Keyword.EXTRA_RECEIVE, true)
-                        .putExtra(EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
-                        .putExtra(EXTRA_REQUEST_TYPE,
-                                ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
-                finish();
-            } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1 && dbInsertion) {
-                ViewTransferActivity.startInstance(PreparationsActivity.this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
-                startActivity(new Intent(PreparationsActivity.this, com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.SenderActivity.class)
-                        .putExtra(Keyword.EXTRA_SEND, true)
-                        .putExtra(com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
-                        .putExtra(com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.SenderActivity.EXTRA_REQUEST_TYPE,
-                                SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
-                finish();
-            } else {
-                if (isAllEnabled)
-                    showProgressDB.setVisibility(View.VISIBLE);
-            }
+        if (isReceiver) {
+            startActivity(new Intent(PreparationsActivity.this, com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ReceiverActivity.class)
+                    .putExtra(Keyword.EXTRA_RECEIVE, true)
+                    .putExtra(EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
+                    .putExtra(EXTRA_REQUEST_TYPE,
+                            ReceiverActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
+            finish();
+        } else if (isSender && getDefaultPreferences().getLong("add_devices_to_transfer", -1) != -1 && dbInsertion) {
+            ViewTransferActivity.startInstance(PreparationsActivity.this, getDefaultPreferences().getLong("add_devices_to_transfer", -1));
+            startActivity(new Intent(PreparationsActivity.this, com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.SenderActivity.class)
+                    .putExtra(Keyword.EXTRA_SEND, true)
+                    .putExtra(com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.SenderActivity.EXTRA_ACTIVITY_SUBTITLE, getString(R.string.text_receive))
+                    .putExtra(com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.SenderActivity.EXTRA_REQUEST_TYPE,
+                            SenderActivity.RequestType.MAKE_ACQUAINTANCE.toString()));
+            finish();
+        } else {
+            if (isAllEnabled)
+                showProgressDB.setVisibility(View.VISIBLE);
+        }
 //        }
     }
 

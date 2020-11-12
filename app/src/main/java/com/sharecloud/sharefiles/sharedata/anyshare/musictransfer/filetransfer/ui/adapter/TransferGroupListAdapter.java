@@ -22,19 +22,19 @@ import com.code4rox.adsmanager.NativeAdsIdType;
 import com.genonbeta.android.database.SQLQuery;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.miscpkg.GroupEditable;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.ShowingAssignee;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.TransferGroup;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.FileUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TinyDB;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.GroupEditableListAdapter;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.miscpkg.GroupEditable;
 
 /**
  * created by: Veli
@@ -74,7 +74,8 @@ public class TransferGroupListAdapter
     protected void onLoad(GroupLister<PreloadedGroup> lister) {
         List<Long> activeList = new ArrayList<>(mRunningTasks);
 
-        if (NetworkUtils.isOnline(getContext()))
+        if (getContext() != null && NetworkUtils.isOnline(getContext())
+                && !TinyDB.getInstance(getContext()).getBoolean(getContext().getString(R.string.is_premium)))
             lister.offerObliged(this, new AdsModel());
         for (PreloadedGroup group : mDatabase.castQuery(getSelect(), PreloadedGroup.class)) {
             mDatabase.calculateTransactionSize(group.groupId, group.index);
@@ -174,8 +175,7 @@ public class TransferGroupListAdapter
                         image.setImageResource(object.index.outgoingCount > 0
                                 ? R.drawable.ic_compare_arrows_white_24dp
                                 : R.drawable.ic_error_outline_white_24dp);
-                    else
-                    {
+                    else {
                         image.setImageResource(object.index.outgoingCount > 0
                                 ? R.drawable.ic_arrow_up_white_24dp
                                 : R.drawable.ic_arrow_down_white_24dp);

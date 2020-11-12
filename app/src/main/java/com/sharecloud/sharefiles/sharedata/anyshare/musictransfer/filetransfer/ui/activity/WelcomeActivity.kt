@@ -13,6 +13,7 @@ import androidx.transition.TransitionManager
 import com.code4rox.adsmanager.AdmobUtils
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkDeviceLoader
 import kotlinx.android.synthetic.main.activity_welcome.*
@@ -165,6 +166,14 @@ class WelcomeActivity : Activity() {
 
         val admobUtils = AdmobUtils(this)
         admobUtils.loadBannerAd(banner_ad_view)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (App.bp != null && !(App.bp!!.handleActivityResult(
+                requestCode, resultCode, data
+            ))
+        )
+            super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun setProfilePicture() {

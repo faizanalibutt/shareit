@@ -13,33 +13,30 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 
-import com.code4rox.adsmanager.AdmobUtils;
-import com.code4rox.adsmanager.NativeAdsIdType;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.snackbar.Snackbar;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.library.RippleBackground;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.NetworkDevice;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ViewTransferActivity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.receiver.NetworkStatusReceiver;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.CommunicationService;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UIConnectionUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.UITask;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.callback.NetworkDeviceSelectedListener;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.fragment.SenderFragmentImpl;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.fragment.HotspotManagerFragment;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.fragment.SenderFragmentImpl;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.ConnectionUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkDeviceLoader;
 
@@ -124,9 +121,16 @@ public class ReceiverActivity extends Activity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (App.bp != null && !(App.bp.handleActivityResult(requestCode, resultCode, data)))
+            super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     public Snackbar createSnackbar(int resId, Object... objects) {
         return null;
     }
+
     public UIConnectionUtils getUIConnectionUtils() {
         if (mConnectionUtils == null) {
             mConnectionUtils = new UIConnectionUtils(ConnectionUtils.getInstance(this), this);
@@ -134,6 +138,7 @@ public class ReceiverActivity extends Activity
 
         return mConnectionUtils;
     }
+
     private void initViews() {
 
         final ImageView back = findViewById(R.id.receiver_back);

@@ -9,6 +9,7 @@ import com.code4rox.adsmanager.AdmobUtils
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.`object`.NetworkDevice
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.banner_ads_layout_tag.*
@@ -58,6 +59,14 @@ class SettingsActivity : Activity(), View.OnClickListener {
     override fun onRestart() {
         super.onRestart()
         setUsername()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (App.bp != null && !(App.bp!!.handleActivityResult(
+                requestCode, resultCode, data
+            ))
+        )
+            super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

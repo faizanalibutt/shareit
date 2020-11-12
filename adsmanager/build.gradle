@@ -99,6 +99,8 @@ dependencies {
     api 'com.google.firebase:firebase-ads:19.1.0'
     api 'com.google.firebase:firebase-config:19.1.4'
     api 'com.google.firebase:firebase-core:17.4.0'
+    api 'com.anjlab.android.iab.v3:library:1.1.0'
+    api 'com.jakewharton.timber:timber:4.7.1'
 
 
       /*  api('com.mopub:mopub-sdk:+@aar') {

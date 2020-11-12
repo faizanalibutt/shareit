@@ -35,8 +35,8 @@ import com.genonbeta.android.framework.widget.PowerfulActionMode;
 import com.google.android.material.snackbar.Snackbar;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.DeviceConnectionState;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.dialog.TransferInfoDialog;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.NetworkDevice;
@@ -353,7 +353,7 @@ public class ViewTransferActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.e("NewReceiver", " message done " + intent.getAction());
-            if (intent.getAction().equals(newReceiverAction)){
+            if (intent.getAction().equals(newReceiverAction)) {
                 Log.e("NewReceiver", " message done in condition" + intent.getAction());
                 Callback.isTransferCompleted(true);
             }
@@ -561,6 +561,13 @@ public class ViewTransferActivity
             super.onBackPressed();
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (App.bp != null && !(App.bp.handleActivityResult(
+                requestCode, resultCode, data)))
+            super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void attachListeners(Fragment initiatedItem) {

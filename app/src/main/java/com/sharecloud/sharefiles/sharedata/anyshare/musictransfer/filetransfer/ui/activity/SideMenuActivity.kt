@@ -11,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.`object`.NetworkDevice
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.callback.SnackbarSupport
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils
 import kotlinx.android.synthetic.main.activity_side_menu.*
@@ -28,6 +29,14 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
     override fun onRestart() {
         super.onRestart()
         setProfilePicture()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (App.bp != null && !(App.bp!!.handleActivityResult(
+                requestCode, resultCode, data
+            ))
+        )
+            super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun init() {

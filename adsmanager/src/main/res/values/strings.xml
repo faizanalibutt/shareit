@@ -4,5 +4,6 @@
 
     <string name="fb_test_id">b5cca306-5309-4bc0-8e7e-2c2f8b8ac9ec</string>
     <string name="sponsored">Sponsored</string>
+    <string name="text_ad_call_action">INSTALL</string>
 
 </resources>

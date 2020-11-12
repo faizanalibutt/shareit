@@ -20,6 +20,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TinyDB
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.android.synthetic.main.layout_gdp_view.*
 import java.lang.IllegalStateException
@@ -49,7 +50,9 @@ class SplashActivity : AppCompatActivity() {
                     Log.d("Firebase", "Config params updated: $updated")
                 }
             }
-        } catch (iexp: IllegalStateException) {iexp.message}
+        } catch (iexp: IllegalStateException) {
+            iexp.message
+        }
     }
 
     private fun getSplashViews() {
@@ -93,11 +96,13 @@ class SplashActivity : AppCompatActivity() {
         }
 
         AppUtils.getDefaultPreferences(this@SplashActivity).edit().putBoolean(
-            "show_rating_dialog", true).apply()
+            "show_rating_dialog", true
+        ).apply()
 
         startbutton.setOnClickListener {
             AppUtils.getDefaultPreferences(this@SplashActivity).edit().putBoolean(
-                "is_First_Launch", true).apply()
+                "is_First_Launch", true
+            ).apply()
             showSplashView()
         }
     }
@@ -124,9 +129,10 @@ class SplashActivity : AppCompatActivity() {
             override fun onNativeAdError() {}
         })
 
-        val isOnline = NetworkUtils.isOnline(this@SplashActivity)
+        val isOnline = NetworkUtils.isOnline(this@SplashActivity) && (!TinyDB.getInstance(this)
+            .getBoolean(getString(R.string.is_premium)))
         val stuckLimit: Long = if (isOnline) 8000 else 3000
-        var skip = 8
+        var skip = if (isOnline) 8 else 3
         Thread {
             for ((progress, _) in (1..
                     if (isOnline) 8 else 3).withIndex()) {
@@ -138,21 +144,16 @@ class SplashActivity : AppCompatActivity() {
                     progressBar.max = if (isOnline) 8 else 3
                     progressBar.progress = progress + 1
                     skip -= 1
-                    skipText.text = String.format("Skip ${skip}")
+                    skipText.text = String.format("Skip $skip")
                 }
             }
         }.start()
 
-        if (isOnline)
-            Handler().postDelayed({
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                finish()
-            }, stuckLimit)
-        else
-            Handler().postDelayed({
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                finish()
-            }, stuckLimit)
+
+        Handler().postDelayed({
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            finish()
+        }, stuckLimit)
     }
 
 }

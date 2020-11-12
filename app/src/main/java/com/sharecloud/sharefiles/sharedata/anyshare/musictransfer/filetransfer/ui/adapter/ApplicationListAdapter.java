@@ -23,6 +23,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.e
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.object.Shareable;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.FileUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TinyDB;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.GroupEditableListAdapter;
 
 import java.io.File;
@@ -49,7 +50,8 @@ public class ApplicationListAdapter
         for (PackageInfo packageInfo : getContext().getPackageManager().getInstalledPackages(PackageManager.GET_META_DATA)) {
             ApplicationInfo appInfo = packageInfo.applicationInfo;
 
-            if (list.size() == 4 && NetworkUtils.isOnline(getContext()))
+            if (list.size() == 4 && getContext() != null && NetworkUtils.isOnline(getContext())
+                    && !TinyDB.getInstance(getContext()).getBoolean(getContext().getString(R.string.is_premium)))
                 list.add(new AdsModel());
             else if ((appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 1 || showSystemApps) {
                 PackageHolder packageHolder = new PackageHolder(appInfo.loadLabel(mManager).toString(),
@@ -64,7 +66,8 @@ public class ApplicationListAdapter
             }
         }
 
-        if (NetworkUtils.isOnline(getContext())) {
+        if (getContext() != null && NetworkUtils.isOnline(getContext())
+                && !TinyDB.getInstance(getContext()).getBoolean(getContext().getString(R.string.is_premium))) {
             if (list.size() == 0)
                 list.add(new AdsModel());
             else if (list.size() < 4) {
@@ -134,7 +137,7 @@ public class ApplicationListAdapter
     public int getItemViewType(int position) {
         try {
             return getItem(position) instanceof AdsModel
-                    ? ((AdsModel)getItem(position)).getViewType()
+                    ? ((AdsModel) getItem(position)).getViewType()
                     : super.getItemViewType(position);
         } catch (NotReadyException | ClassCastException e) {
             e.printStackTrace();
@@ -151,7 +154,8 @@ public class ApplicationListAdapter
         public String packageName;
         public String appSize;
 
-        public PackageHolder() {}
+        public PackageHolder() {
+        }
 
         public PackageHolder(String friendlyName, ApplicationInfo appInfo, String version,
                              String packageName, File executableFile, String appSize) {

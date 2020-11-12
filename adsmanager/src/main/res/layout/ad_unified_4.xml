@@ -124,7 +124,6 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorPrimary"
                             android:textSize="16sp"
-                            android:text="@string/adjust_native_am"
                             android:maxLines="1"
                             android:textAllCaps="true"
                             android:textStyle="bold" />

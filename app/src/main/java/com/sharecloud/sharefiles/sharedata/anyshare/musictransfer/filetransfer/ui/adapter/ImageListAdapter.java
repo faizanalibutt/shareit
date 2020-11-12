@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -21,10 +20,9 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.miscpkg.GalleryGroupShareable;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TimeUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TinyDB;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.GalleryGroupEditableListAdapter;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.GroupEditableListAdapter;
-
-import java.util.List;
 
 /**
  * created by: Veli
@@ -75,7 +73,8 @@ public class ImageListAdapter
             }
 
             cursor.close();
-            if (NetworkUtils.isOnline(getContext()))
+            if (getContext() != null && NetworkUtils.isOnline(getContext())
+                    && !TinyDB.getInstance(getContext()).getBoolean(getContext().getString(R.string.is_premium)))
                 lister.offerObliged(this, new AdsModel());
         }
     }

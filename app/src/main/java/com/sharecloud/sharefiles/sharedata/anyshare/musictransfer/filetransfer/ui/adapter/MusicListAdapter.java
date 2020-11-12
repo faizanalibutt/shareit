@@ -21,6 +21,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.o
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.FileUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TimeUtils;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TinyDB;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.widget.GroupEditableListAdapter;
 
 import java.util.ArrayList;
@@ -59,7 +60,8 @@ public class MusicListAdapter
                 int typeIndex = songCursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE);
 
                 do {
-                    if (audioList.size() == 4 && NetworkUtils.isOnline(getContext()))
+                    if (audioList.size() == 4 && getContext() != null && NetworkUtils.isOnline(getContext())
+                            && !TinyDB.getInstance(getContext()).getBoolean(getContext().getString(R.string.is_premium)))
                         audioList.add(new AdsModel());
                     else {
                         audioList.add(new SongHolder(
@@ -80,7 +82,8 @@ public class MusicListAdapter
 
             songCursor.close();
 
-            if (NetworkUtils.isOnline(getContext())) {
+            if (getContext() != null && NetworkUtils.isOnline(getContext())
+                    && !TinyDB.getInstance(getContext()).getBoolean(getContext().getString(R.string.is_premium))) {
                 if (audioList.size() == 0)
                     audioList.add(new AdsModel());
                 else if (audioList.size() < 4) {
@@ -145,7 +148,7 @@ public class MusicListAdapter
     public int getItemViewType(int position) {
         try {
             return getItem(position) instanceof AdsModel
-                    ? ((AdsModel)getItem(position)).getViewType()
+                    ? ((AdsModel) getItem(position)).getViewType()
                     : super.getItemViewType(position);
         } catch (NotReadyException | ClassCastException e) {
             e.printStackTrace();
@@ -158,7 +161,8 @@ public class MusicListAdapter
         public String datesize;
         public String song;
 
-        public SongHolder() {}
+        public SongHolder() {
+        }
 
         public SongHolder(long id, String displayName, String artist, String song, String mimeType, long date, long size, Uri uri, String datesize) {
             super(id, song + " - " + artist, displayName, mimeType, date, size, uri);

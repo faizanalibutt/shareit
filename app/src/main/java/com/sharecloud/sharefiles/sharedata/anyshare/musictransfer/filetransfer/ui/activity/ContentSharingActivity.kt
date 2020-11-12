@@ -1,5 +1,6 @@
 package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,6 +16,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.`object`.Editable
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.`object`.Shareable
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.EditableListFragment
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.EditableListFragmentImpl
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback
@@ -240,6 +242,14 @@ class ContentSharingActivity : Activity(),
             } else
                 super.onBackPressed()
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (App.bp != null && !(App.bp!!.handleActivityResult(
+                requestCode, resultCode, data
+            ))
+        )
+            super.onActivityResult(requestCode, resultCode, data)
     }
 
     fun attachListeners(fragment: EditableListFragmentImpl<Editable>) {
