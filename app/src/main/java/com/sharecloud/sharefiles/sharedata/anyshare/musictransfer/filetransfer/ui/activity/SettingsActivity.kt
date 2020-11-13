@@ -32,21 +32,38 @@ class SettingsActivity : Activity(), View.OnClickListener {
         privacyPolicy.setOnClickListener(this@SettingsActivity)
         val admobUtils = AdmobUtils(this)
         admobUtils.loadBannerAd(banner_ad_view)
+        switch_file.isChecked =
+            AppUtils.getDefaultPreferences(this).getBoolean("show_system_apps", false)
     }
 
     override fun onClick(v: View?) {
-        when(v?.id) {
+        when (v?.id) {
             R.id.shareUserName ->
                 if (checkPermissionsState())
-                    startActivity(Intent(this@SettingsActivity, WelcomeActivity::class.java)
-                        .putExtra("reverse_settings", true))
+                    startActivity(
+                        Intent(this@SettingsActivity, WelcomeActivity::class.java)
+                            .putExtra("reverse_settings", true)
+                    )
                 else
                     requestRequiredPermissions(false)
             R.id.privacyPolicy -> {
-                val url = "https://www.freeprivacypolicy.com/privacy/view/50c5621471755f1548917ebbe5e90160"
+                val url =
+                    "https://www.freeprivacypolicy.com/privacy/view/50c5621471755f1548917ebbe5e90160"
                 val builder = CustomTabsIntent.Builder()
                 val customTabsIntent = builder.build()
                 customTabsIntent.launchUrl(this, Uri.parse(url))
+            }
+            R.id.showHiddenFiles -> {
+                if (switch_file.isChecked) {
+                    switch_file.isChecked = false
+                    AppUtils.getDefaultPreferences(this).edit()
+                        .putBoolean("show_system_apps", false)
+                        .apply()
+                    return
+                }
+                switch_file.isChecked = true
+                AppUtils.getDefaultPreferences(this).edit().putBoolean("show_system_apps", true)
+                    .apply()
             }
         }
     }

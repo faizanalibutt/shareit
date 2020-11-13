@@ -95,6 +95,13 @@ public class ApplicationListFragment
             return false;
     }
 
+    @Override
+    protected void onListRefreshed() {
+        super.onListRefreshed();
+        if (getAdapter() != null && appsSize != null)
+            appsSize.setText(getApplicationListSize(getAdapter()));
+    }
+
     private String getApplicationListSize(ApplicationListAdapter adapter) {
         return "My Apps ( " + adapter.onLoad().size() + " )";
     }

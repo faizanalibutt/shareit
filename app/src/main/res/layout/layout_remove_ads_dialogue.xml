@@ -52,7 +52,7 @@
             app:layout_constraintBottom_toTopOf="@+id/btn_remove"
             app:layout_constraintTop_toBottomOf="@+id/iv_icon_remove" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             style="@style/Widget.Hazel.ButtonStyle.Custom"
             android:id="@+id/btn_remove"
             android:layout_width="match_parent"
