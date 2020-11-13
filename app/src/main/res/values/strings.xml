@@ -618,7 +618,8 @@
     <string name="mesg_Exit">Do you want to exit?</string>
     <string name="is_premium" translatable="false">is_premium</string>
     <string name="remove_ads">Remove Ads</string>
-    <string name="text_remove_ads_desc">Compass is supported by Ads but now you can remove this!</string>
+    <string name="text_remove_ads_desc">Share Cloud - File Transfer is supported by ads but now you can remove them!</string>
     <string name="text_btn_remove_now">Remove Now</string>
+    <string name="i_ll_try_later">I\'ll Try Later</string>
 
 </resources>

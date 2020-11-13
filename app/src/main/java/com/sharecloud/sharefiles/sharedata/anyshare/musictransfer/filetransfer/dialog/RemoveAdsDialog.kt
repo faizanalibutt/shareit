@@ -23,6 +23,7 @@ class RemoveAdsDialog(private var ctx: Context) : Dialog(ctx) {
         kotlin.runCatching {
             setContentView(R.layout.layout_remove_ads_dialogue)
             findViewById<View>(R.id.iv_close_remove_ads).setOnClickListener { dismiss() }
+            findViewById<View>(R.id.try_later).setOnClickListener { dismiss() }
             findViewById<View>(R.id.btn_remove).setOnClickListener {
                 (ctx as? MainActivity)?.let { App.bp?.purchaseRemoveAds(it) }
             }
