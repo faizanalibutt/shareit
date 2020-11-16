@@ -122,7 +122,7 @@ public class App extends Application {
                     .apply();
     }*/
 
-    public static BillingProcessor bp;
+    public BillingProcessor bp;
 
     void initBP() {
         bp = BillingUtilsKt.initBilling(getApplicationContext(),

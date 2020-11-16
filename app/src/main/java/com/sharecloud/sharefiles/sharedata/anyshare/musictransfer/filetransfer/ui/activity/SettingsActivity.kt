@@ -79,9 +79,9 @@ class SettingsActivity : Activity(), View.OnClickListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (App.bp != null && !(App.bp!!.handleActivityResult(
+        if ((application as? App)?.bp != null && ((application as? App)?.bp?.handleActivityResult(
                 requestCode, resultCode, data
-            ))
+            ) == false)
         )
             super.onActivityResult(requestCode, resultCode, data)
     }

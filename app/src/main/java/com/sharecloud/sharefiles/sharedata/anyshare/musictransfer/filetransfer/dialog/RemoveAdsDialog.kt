@@ -25,7 +25,7 @@ class RemoveAdsDialog(private var ctx: Context) : Dialog(ctx) {
             findViewById<View>(R.id.iv_close_remove_ads).setOnClickListener { dismiss() }
             findViewById<View>(R.id.try_later).setOnClickListener { dismiss() }
             findViewById<View>(R.id.btn_remove).setOnClickListener {
-                (ctx as? MainActivity)?.let { App.bp?.purchaseRemoveAds(it) }
+                (ctx as? MainActivity)?.let { (it.application as? App)?.bp?.purchaseRemoveAds(it) }
             }
         }.onFailure {}
 

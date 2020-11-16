@@ -207,6 +207,36 @@
             app:layout_constraintTop_toBottomOf="@+id/v2">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/menu_pro"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?rectSelector">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small_size"
+                    android:text="@string/text_pro_now"
+                    android:textColor="#FFB600"
+                    android:textSize="@dimen/font_size_primary"
+                    app:layout_constraintBottom_toBottomOf="@id/pro"
+                    app:layout_constraintLeft_toRightOf="@id/pro"
+                    app:layout_constraintTop_toTopOf="@id/pro" />
+
+                <ImageView
+                    android:id="@+id/pro"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/margin_small_size"
+                    android:contentDescription="@string/text_history"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_pro_side_icon" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_histroy"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -266,6 +296,36 @@
             </androidx.constraintlayout.widget.ConstraintLayout>-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/menu_rateus"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?rectSelector">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small_size"
+                    android:text="@string/text_rate"
+                    android:textColor="@color/new_black"
+                    android:textSize="@dimen/font_size_primary"
+                    app:layout_constraintBottom_toBottomOf="@+id/rateus"
+                    app:layout_constraintLeft_toRightOf="@+id/rateus"
+                    app:layout_constraintTop_toTopOf="@+id/rateus" />
+
+                <ImageView
+                    android:id="@+id/rateus"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/margin_small_size"
+                    android:contentDescription="@string/text_rate"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_rateus_icon_grey_24dp_fill" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_settings"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -323,36 +383,6 @@
                     app:srcCompat="@drawable/ic_feedback_icon" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/menu_rateus"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?rectSelector">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_small_size"
-                    android:text="@string/text_rate"
-                    android:textColor="@color/new_black"
-                    android:textSize="@dimen/font_size_primary"
-                    app:layout_constraintBottom_toBottomOf="@+id/rateus"
-                    app:layout_constraintLeft_toRightOf="@+id/rateus"
-                    app:layout_constraintTop_toTopOf="@+id/rateus" />
-
-                <ImageView
-                    android:id="@+id/rateus"
-                    android:layout_width="@dimen/dp_20"
-                    android:layout_height="@dimen/dp_20"
-                    android:layout_marginStart="@dimen/margin_small_size"
-                    android:contentDescription="@string/text_rate"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_rateus_icon_grey_24dp_fill" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/menu_privacy"

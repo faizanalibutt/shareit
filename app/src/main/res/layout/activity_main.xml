@@ -42,6 +42,17 @@
                 android:padding="@dimen/dp_8"
                 app:srcCompat="@drawable/ic_drawer_icon_black_24dp" />
 
+            <ImageView
+                android:id="@+id/main_pro_now"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/dp_18"
+                android:adjustViewBounds="true"
+                app:srcCompat="@drawable/ic_pro_side_icon" />
+
+
         </RelativeLayout>
 
 

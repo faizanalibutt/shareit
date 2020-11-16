@@ -14,6 +14,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.fragment.HomeFragment
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TinyDB
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.purchaseRemoveAds
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_exit_rating_dialog.*
 import kotlinx.android.synthetic.main.layout_exit_rating_dialog.view.*
@@ -36,7 +37,11 @@ class MainActivity : Activity() {
             startActivity(Intent(this@MainActivity, SideMenuActivity::class.java))
         }
 
-        showRemoveAdsDialogue();
+        main_pro_now.setOnClickListener {
+            RemoveAdsDialog.show(this)
+        }
+
+        showRemoveAdsDialogue()
 
         mHomeFragment =
             supportFragmentManager.findFragmentById(R.id.activitiy_home_fragment) as HomeFragment?
@@ -69,9 +74,9 @@ class MainActivity : Activity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (App.bp != null && !(App.bp!!.handleActivityResult(
+        if ((application as? App)?.bp != null && ((application as? App)?.bp?.handleActivityResult(
                 requestCode, resultCode, data
-            ))
+            ) == false)
         )
             super.onActivityResult(requestCode, resultCode, data)
     }

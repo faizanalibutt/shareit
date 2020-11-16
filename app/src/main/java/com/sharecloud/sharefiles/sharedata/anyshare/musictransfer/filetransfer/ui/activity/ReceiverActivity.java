@@ -122,7 +122,8 @@ public class ReceiverActivity extends Activity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (App.bp != null && !(App.bp.handleActivityResult(requestCode, resultCode, data)))
+        if (getApplication() != null && ((App) getApplication()).bp != null
+                && !(((App) getApplication()).bp.handleActivityResult(requestCode, resultCode, data)))
             super.onActivityResult(requestCode, resultCode, data);
     }
 

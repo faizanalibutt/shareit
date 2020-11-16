@@ -125,7 +125,8 @@ public class SenderActivity extends Activity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (App.bp != null && !(App.bp.handleActivityResult(requestCode, resultCode, data)))
+        if (getApplication() != null && ((App) getApplication()).bp != null
+                && !(((App) getApplication()).bp.handleActivityResult(requestCode, resultCode, data)))
             super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CHOOSE_DEVICE)

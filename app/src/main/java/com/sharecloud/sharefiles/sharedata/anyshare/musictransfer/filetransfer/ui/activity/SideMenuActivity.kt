@@ -14,6 +14,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.a
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.callback.SnackbarSupport
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.purchaseRemoveAds
 import kotlinx.android.synthetic.main.activity_side_menu.*
 import kotlinx.android.synthetic.main.banner_ads_layout_tag.*
 
@@ -32,14 +33,15 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (App.bp != null && !(App.bp!!.handleActivityResult(
+        if ((application as? App)?.bp != null && ((application as? App)?.bp?.handleActivityResult(
                 requestCode, resultCode, data
-            ))
+            ) == false)
         )
             super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun init() {
+        menu_pro.setOnClickListener(this@SideMenuActivity)
         menu_histroy.setOnClickListener(this@SideMenuActivity)
         //menu_help.setOnClickListener(this@SideMenu)
         menu_settings.setOnClickListener(this@SideMenuActivity)
@@ -53,6 +55,7 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.menu_pro -> (application as? App)?.bp?.purchaseRemoveAds(this)
             R.id.menu_histroy -> startActivity(Intent(this@SideMenuActivity, HistoryActivity::class.java))
             //R.id.menu_help -> createSnackbar(R.string.menu_generic_text)?.show()
             R.id.menu_settings -> startActivity(Intent(this@SideMenuActivity, SettingsActivity::class.java))
