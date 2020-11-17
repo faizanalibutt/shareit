@@ -6,7 +6,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.browser.customtabs.CustomTabsIntent
-import com.code4rox.adsmanager.AdmobUtils
+import com.dev.bytes.adsmanager.BannerPlacements
+import com.dev.bytes.adsmanager.loadBannerAd
+
 import com.google.android.material.snackbar.Snackbar
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.`object`.NetworkDevice
@@ -49,8 +51,7 @@ class SideMenuActivity : Activity(), View.OnClickListener, SnackbarSupport {
         menu_rateus.setOnClickListener(this@SideMenuActivity)
         menu_privacy.setOnClickListener(this@SideMenuActivity)
         //menu_about.setOnClickListener(this@SideMenu)
-        val admobUtils = AdmobUtils(this)
-        admobUtils.loadBannerAd(banner_ad_view)
+        ad_container_banner.loadBannerAd(BannerPlacements.BANNER_AD)
     }
 
     override fun onClick(v: View?) {

@@ -90,7 +90,7 @@
 
     <style name="Widget.Hazel.ButtonStyle.Custom.Ads" parent="Widget.Hazel.ButtonStyle.Custom">
         <item name="backgroundTint">@color/text_button_text_color_selector_blue</item>
-        <item name="android:background">@drawable/bg_ads</item>
+        <!--<item name="android:background">@drawable/bg_ads</item>-->
         <item name="android:textColor">@color/white</item>
         <item name="android:gravity">center</item>
         <item name="android:textAlignment">center</item>

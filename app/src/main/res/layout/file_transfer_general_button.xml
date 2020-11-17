@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="62dp"
         app:cardCornerRadius="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/banner_ad_view"
+        app:layout_constraintBottom_toTopOf="@+id/ad_container_banner"
         tools:showIn="@layout/content_sharing">
 
         <androidx.appcompat.widget.AppCompatButton

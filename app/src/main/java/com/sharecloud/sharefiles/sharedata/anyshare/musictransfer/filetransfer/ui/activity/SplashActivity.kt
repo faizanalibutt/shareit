@@ -13,11 +13,15 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
-import com.code4rox.adsmanager.AdmobUtils
-import com.code4rox.adsmanager.NativeAdsIdType
+import com.dev.bytes.adsmanager.ADUnitPlacements
+import com.dev.bytes.adsmanager.loadInterstitialAd
+
+/*import com.code4rox.adsmanager.NativeAdsIdType*/
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.AppDelegate
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NetworkUtils
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TinyDB
@@ -114,7 +118,7 @@ class SplashActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         layout_gdp.visibility = View.GONE
 
-        val admobUtils = AdmobUtils(this@SplashActivity)
+        /*val admobUtils = AdmobUtils(this@SplashActivity)
 
         admobUtils.loadNativeAd(
             adGroup,
@@ -127,7 +131,14 @@ class SplashActivity : AppCompatActivity() {
             }
 
             override fun onNativeAdError() {}
-        })
+        })*/
+
+        loadInterstitialAd(
+            ADUnitPlacements.SPLASH_INTERSTITIAL,
+            onLoaded = {
+                (application as? App)?.splashInterstitial = it
+            }
+        )
 
         val isOnline = NetworkUtils.isOnline(this@SplashActivity) && (!TinyDB.getInstance(this)
             .getBoolean(getString(R.string.is_premium)))

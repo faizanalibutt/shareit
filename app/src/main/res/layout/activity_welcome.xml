@@ -64,7 +64,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_64"
-        app:layout_constraintBottom_toTopOf="@+id/banner_ad_view">
+        app:layout_constraintBottom_toTopOf="@+id/ad_container_banner">
 
         <!--<androidx.appcompat.widget.AppCompatButton
             android:layout_width="match_parent"

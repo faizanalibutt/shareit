@@ -1,4 +1,4 @@
-include ':app', ':framework', ':adsmanager'
+include ':app', ':framework'/*, ':adsmanager2'*/, ':adsmanager'
 
 
 rootProject.name = "Share_Cloud"

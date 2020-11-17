@@ -7,13 +7,10 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.code4rox.adsmanager.AdmobUtils;
-import com.code4rox.adsmanager.NativeAdsIdType;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.EditableListAdapter;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.exception.NotReadyException;
@@ -26,6 +23,9 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.w
 
 import java.util.ArrayList;
 import java.util.List;
+
+;
+//import com.code4rox.adsmanager.NativeAdsIdType;
 
 public class MusicListAdapter
         extends EditableListAdapter<MusicListAdapter.SongHolder, EditableListAdapter.EditableViewHolder> {
@@ -102,8 +102,8 @@ public class MusicListAdapter
     @NonNull
     @Override
     public EditableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR)
-            return new EditableViewHolder(getInflater().inflate(R.layout.ad_unified_5, parent, false));
+        /*if (viewType == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR)
+            return new EditableViewHolder(getInflater().inflate(R.layout.ad_unified_5, parent, false));*/
 
         return new EditableViewHolder(getInflater().inflate(R.layout.music_item_layout, parent, false));
     }
@@ -113,7 +113,7 @@ public class MusicListAdapter
         try {
 
             if (holder.getItemViewType() == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR) {
-                AdmobUtils admobUtils = new AdmobUtils(holder.getView().getContext());
+                /*AdmobUtils admobUtils = new AdmobUtils(holder.getView().getContext());
                 admobUtils.loadNativeAd((FrameLayout) holder.getView(),
                         R.layout.ad_unified_5, NativeAdsIdType.ADJUST_NATIVE_AM);
                 admobUtils.setNativeAdListener(new AdmobUtils.NativeAdListener() {
@@ -126,7 +126,7 @@ public class MusicListAdapter
                     public void onNativeAdError() {
 
                     }
-                });
+                });*/
             } else {
                 final SongHolder object = getItem(position);
                 final View parentView = holder.getView();

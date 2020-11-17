@@ -8,8 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
-import com.code4rox.adsmanager.AdmobUtils;
-import com.code4rox.adsmanager.InterAdsIdType;
+import com.dev.bytes.adsmanager.InterAdPair;
 import com.genonbeta.android.framework.preference.DbSharablePreferences;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.BuildConfig;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.MainActivity;
@@ -18,6 +17,8 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 import timber.log.Timber;
 
 import static com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getDefaultPreferences;
+
+;
 
 /**
  * created by: Veli
@@ -28,11 +29,13 @@ public class App extends Application {
     public static final String TAG = App.class.getSimpleName();
     public static final String ACTION_REQUEST_PREFERENCES_SYNC = "com.genonbeta.intent.action.REQUEST_PREFERENCES_SYNC";
 
-    public AdmobUtils getMainAdmobUtils() {
+    /*public AdmobUtils getMainAdmobUtils() {
         return mainAdmobUtils;
     }
 
-    private AdmobUtils mainAdmobUtils;
+    private AdmobUtils mainAdmobUtils;*/
+
+    public InterAdPair splashInterstitial = null;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -57,8 +60,8 @@ public class App extends Application {
         if (BuildConfig.DEBUG)
             Timber.plant(new Timber.DebugTree());
 
-        mainAdmobUtils = new AdmobUtils(this);
-        mainAdmobUtils.loadInterstitial(null, InterAdsIdType.SPLASH_INTER_AM);
+        //mainAdmobUtils = new AdmobUtils(this);
+        //mainAdmobUtils.loadInterstitial(null, InterAdsIdType.SPLASH_INTER_AM);
         //initializeSettings();
         getApplicationContext().registerReceiver(mReceiver, new IntentFilter(ACTION_REQUEST_PREFERENCES_SYNC));
 

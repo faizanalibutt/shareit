@@ -8,8 +8,8 @@ import android.widget.RatingBar
 import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.marginTop
-import com.code4rox.adsmanager.AdmobUtils
-import com.code4rox.adsmanager.NativeAdsIdType
+
+/*import com.code4rox.adsmanager.NativeAdsIdType*/
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.callback.Callback
@@ -32,7 +32,7 @@ class ExitDialogue(val activity: Activity, val title: String, val adsVisible: Bo
             if (adsVisible && NetworkUtils.isOnline(activity) && !TinyDB.getInstance(activity)
                     .getBoolean(activity.getString(R.string.is_premium))
             ) {
-                val admobUtils = AdmobUtils(activity)
+                /*val admobUtils = AdmobUtils(activity)
                 admobUtils.loadNativeAd(
                     mRootView.fl_adplaceholder,
                     R.layout.ad_unified_3,
@@ -47,7 +47,7 @@ class ExitDialogue(val activity: Activity, val title: String, val adsVisible: Bo
                     override fun onNativeAdError() {
                         mRootView.view.visibility = View.GONE
                     }
-                })
+                })*/
             }
 
             setPositiveButton(title) { _, _ ->

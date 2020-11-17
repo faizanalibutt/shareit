@@ -3,7 +3,8 @@
     <string name="ad_attribution">AD</string>
 
     <string name="fb_test_id">b5cca306-5309-4bc0-8e7e-2c2f8b8ac9ec</string>
-    <string name="sponsored">Sponsored</string>
-    <string name="text_ad_call_action">INSTALL</string>
+    <string name="is_premium" translatable="false">is_premium</string>
+    <string name="sponsored">AD</string>
+    <string name="sponsored_exit">Sponsored</string>
 
 </resources>

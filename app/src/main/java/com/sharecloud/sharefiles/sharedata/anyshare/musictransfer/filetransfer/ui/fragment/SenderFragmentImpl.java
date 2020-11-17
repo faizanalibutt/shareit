@@ -25,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,8 +37,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 
-import com.code4rox.adsmanager.AdmobUtils;
-import com.code4rox.adsmanager.NativeAdsIdType;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
@@ -89,6 +86,8 @@ import java.util.UUID;
 
 import static com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.bluetooth.MyHandler.MSG_TO_SHOW_SCAN_RESULT;
 import static com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.PreparationsActivity.REQUEST_PERMISSION_CAMERA;
+
+;
 
 /*
  * created by: veli
@@ -162,7 +161,7 @@ public class SenderFragmentImpl
         lv_send = view.findViewById(R.id.lv_send);
         if (getContext() != null && NetworkUtils.isOnline(getContext())
                 && !TinyDB.getInstance(getContext()).getBoolean(getContext().getString(R.string.is_premium))) {
-            FrameLayout fl_adplaceholder = view.findViewById(R.id.fl_adplaceholder);
+            /*FrameLayout fl_adplaceholder = view.findViewById(R.id.fl_adplaceholder);
             AdmobUtils admobUtils = new AdmobUtils(view.getContext());
             admobUtils.loadNativeAd(fl_adplaceholder, R.layout.ad_unified_2, NativeAdsIdType.ADJUST_NATIVE_AM);
             admobUtils.setNativeAdListener(new AdmobUtils.NativeAdListener() {
@@ -175,7 +174,7 @@ public class SenderFragmentImpl
                 public void onNativeAdError() {
 
                 }
-            });
+            });*/
         }
         return view;
     }

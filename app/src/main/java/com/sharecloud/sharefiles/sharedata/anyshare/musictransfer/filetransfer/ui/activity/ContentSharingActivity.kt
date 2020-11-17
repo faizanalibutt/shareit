@@ -8,7 +8,9 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
-import com.code4rox.adsmanager.AdmobUtils
+import com.dev.bytes.adsmanager.BannerPlacements
+import com.dev.bytes.adsmanager.loadBannerAd
+
 import com.genonbeta.android.framework.widget.PowerfulActionMode
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -159,8 +161,7 @@ class ContentSharingActivity : Activity(),
 
         val isSingleAd = FirebaseRemoteConfig.getInstance().getBoolean("is_show_single_ad")
         if (!isSingleAd) {
-            val admobUtils = AdmobUtils(this)
-            admobUtils.loadBannerAd(banner_ad_view)
+            ad_container_banner.loadBannerAd(BannerPlacements.BANNER_AD)
         }
 
     }

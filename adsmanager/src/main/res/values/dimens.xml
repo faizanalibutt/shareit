@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="headline_splash">18sp</dimen>
+    <dimen name="headline_mm">15sp</dimen>
+    <dimen name="headline_images">16sp</dimen>
+    <dimen name="headline_bottom">15sp</dimen>
+    <dimen name="list_headline">14sp</dimen>
+    <dimen name="list_cta">18sp</dimen>
+    <dimen name="sponsored_splash">9sp</dimen>
+    <dimen name="sponsored_exit">9sp</dimen>
+    <dimen name="sponsored_bottom">10sp</dimen>
+    <dimen name="detail_text_size">14sp</dimen>
+</resources>

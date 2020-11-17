@@ -25,8 +25,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
-import com.code4rox.adsmanager.AdmobUtils;
-import com.code4rox.adsmanager.InterAdsIdType;
+import com.dev.bytes.adsmanager.BannerAdsManagerKt;
+import com.dev.bytes.adsmanager.BannerPlacements;
 import com.genonbeta.android.database.CursorItem;
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.framework.io.StreamInfo;
@@ -53,6 +53,8 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+;
 
 /**
  * Created by: veli
@@ -98,7 +100,7 @@ public class ViewTransferActivity
     //private TextView dataTransferTime;
     //private TextView dataTransferSpeed;
     private boolean isHistroy = false;
-    AdmobUtils admobUtils;
+    //AdmobUtils admobUtils;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -339,10 +341,12 @@ public class ViewTransferActivity
 
         }
 
-        admobUtils = new AdmobUtils(this);
-        if (!isHistroy)
-            admobUtils.loadInterstitial(null, InterAdsIdType.INTER_AM);
-        admobUtils.loadBannerAd(findViewById(R.id.banner_ad_view));
+
+        /*if (!isHistroy)
+            InterAdsManagerKt.loadInterstitialAd(ADUnitPlacements.SPLASH_INTERSTITIAL, onLoaded = {
+                    (application as? App)?.splashInterstitial = it
+            });*/
+        BannerAdsManagerKt.loadBannerAd(findViewById(R.id.ad_container_banner), BannerPlacements.BANNER_AD);
 
         registerReceiver(newReceiver, new IntentFilter(newReceiverAction));
     }
@@ -548,7 +552,7 @@ public class ViewTransferActivity
                         public void onClick(DialogInterface dialog, int which) {
                             toggleTask();
                             Callback.setTransferProgress(false);
-                            admobUtils.showInterstitialAd();
+                            //admobUtils.showInterstitialAd();
                             finish();
                         }
                     })

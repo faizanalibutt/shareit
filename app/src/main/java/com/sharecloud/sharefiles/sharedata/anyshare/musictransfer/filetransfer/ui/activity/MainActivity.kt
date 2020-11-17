@@ -18,6 +18,7 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_exit_rating_dialog.*
 import kotlinx.android.synthetic.main.layout_exit_rating_dialog.view.*
+import timber.log.Timber
 
 class MainActivity : Activity() {
 
@@ -30,8 +31,10 @@ class MainActivity : Activity() {
         setContentView(R.layout.activity_main)
         dialog = showRateExitDialogue(this@MainActivity)
 
-        val loadingAd = (application as App).mainAdmobUtils
-        loadingAd?.showInterstitialAd()
+        (application as? App)?.splashInterstitial?.let { it1 ->
+            if (it1.isLoaded())
+                it1.showAd(this)
+        }
 
         slide_menu.setOnClickListener {
             startActivity(Intent(this@MainActivity, SideMenuActivity::class.java))

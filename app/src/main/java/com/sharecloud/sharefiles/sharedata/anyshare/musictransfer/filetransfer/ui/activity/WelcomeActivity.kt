@@ -10,7 +10,10 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.transition.TransitionManager
-import com.code4rox.adsmanager.AdmobUtils
+import com.dev.bytes.adsmanager.BannerADUnit
+import com.dev.bytes.adsmanager.BannerPlacements
+import com.dev.bytes.adsmanager.loadBannerAd
+
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.App
@@ -164,8 +167,7 @@ class WelcomeActivity : Activity() {
             )
         }
 
-        val admobUtils = AdmobUtils(this)
-        admobUtils.loadBannerAd(banner_ad_view)
+        ad_container_banner.loadBannerAd(BannerPlacements.BANNER_AD)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

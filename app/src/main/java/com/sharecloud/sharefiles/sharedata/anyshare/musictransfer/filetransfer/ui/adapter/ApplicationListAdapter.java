@@ -8,14 +8,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.code4rox.adsmanager.AdmobUtils;
-import com.code4rox.adsmanager.NativeAdsIdType;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.GlideApp;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.EditableListAdapter;
@@ -29,6 +26,9 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.w
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+;
+//import com.code4rox.adsmanager.NativeAdsIdType;
 
 public class ApplicationListAdapter
         extends EditableListAdapter<ApplicationListAdapter.PackageHolder, EditableListAdapter.EditableViewHolder> {
@@ -85,8 +85,8 @@ public class ApplicationListAdapter
     @Override
     public EditableListAdapter.EditableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == GroupEditableListAdapter.VIEW_TYPE_ADS_GRID)
-            return new EditableListAdapter.EditableViewHolder(getInflater().inflate(R.layout.ad_unified_4_ext, parent, false));
+        /*if (viewType == GroupEditableListAdapter.VIEW_TYPE_ADS_GRID)
+            return new EditableListAdapter.EditableViewHolder(getInflater().inflate(R.layout.ad_unified_4_ext, parent, false));*/
 
         return new EditableListAdapter.EditableViewHolder(getInflater().inflate(R.layout.apps_item_layout, parent, false));
     }
@@ -97,7 +97,7 @@ public class ApplicationListAdapter
             if (holder.getItemViewType() == GroupEditableListAdapter.VIEW_TYPE_ADS_GRID
                     && NetworkUtils.isOnline(getContext())) {
 
-                AdmobUtils admobUtils = new AdmobUtils(holder.getView().getContext());
+               /* AdmobUtils admobUtils = new AdmobUtils(holder.getView().getContext());
                 admobUtils.loadNativeAd((FrameLayout) holder.getView(),
                         R.layout.ad_unified_4_ext, NativeAdsIdType.ADJUST_NATIVE_AM);
                 admobUtils.setNativeAdListener(new AdmobUtils.NativeAdListener() {
@@ -110,7 +110,7 @@ public class ApplicationListAdapter
                     public void onNativeAdError() {
 
                     }
-                });
+                });*/
             } else {
                 final View parentView = holder.getView();
                 final PackageHolder object = getItem(position);

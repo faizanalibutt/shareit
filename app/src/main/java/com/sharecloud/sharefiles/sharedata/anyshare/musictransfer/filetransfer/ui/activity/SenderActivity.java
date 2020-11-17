@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.code4rox.adsmanager.AdmobUtils;
-import com.code4rox.adsmanager.InterAdsIdType;
+import com.dev.bytes.adsmanager.BannerAdsManagerKt;
+import com.dev.bytes.adsmanager.BannerPlacements;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.genonbeta.android.framework.util.Interrupter;
 import com.google.android.material.snackbar.Snackbar;
@@ -40,6 +40,8 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 
 import static com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.PreparationsActivity.EXTRA_CLOSE_PERMISSION_SCREEN;
 
+;
+
 
 public class SenderActivity extends Activity
         implements SnackbarSupport, WorkerService.OnAttachListener {
@@ -60,7 +62,7 @@ public class SenderActivity extends Activity
     public static final String EXTRA_GROUP_ID = "extraGroupId";
     private IntentFilter mFilter = new IntentFilter(AccessDatabase.ACTION_DATABASE_CHANGE);
 
-    AdmobUtils admobUtils;
+    //AdmobUtils admobUtils;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,11 +90,11 @@ public class SenderActivity extends Activity
             }
         });
 
-        admobUtils = new AdmobUtils(this);
-        admobUtils.loadInterstitial(null, InterAdsIdType.INTER_AM);
+        /*admobUtils = new AdmobUtils(this);
+        admobUtils.loadInterstitial(null, InterAdsIdType.INTER_AM);*/
         boolean isSingleAd = FirebaseRemoteConfig.getInstance().getBoolean("is_show_single_ad");
         if (!isSingleAd) {
-            admobUtils.loadBannerAd(findViewById(R.id.banner_ad_view));
+            BannerAdsManagerKt.loadBannerAd(findViewById(R.id.banner_ad_view), BannerPlacements.BANNER_AD);
         }
     }
 
@@ -352,8 +354,8 @@ public class SenderActivity extends Activity
 
     }
 
-    public AdmobUtils getAdmobUtils() {
+    /*public AdmobUtils getAdmobUtils() {
         return admobUtils;
-    }
+    }*/
 
 }

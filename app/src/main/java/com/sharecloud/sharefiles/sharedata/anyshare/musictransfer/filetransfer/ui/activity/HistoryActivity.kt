@@ -2,7 +2,9 @@ package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.
 
 import android.content.Intent
 import android.os.Bundle
-import com.code4rox.adsmanager.AdmobUtils
+import com.dev.bytes.adsmanager.BannerPlacements
+import com.dev.bytes.adsmanager.loadBannerAd
+
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity
@@ -17,8 +19,7 @@ class HistoryActivity : Activity() {
 
         val isSingleAd = FirebaseRemoteConfig.getInstance().getBoolean("is_show_single_ad")
         if (!isSingleAd) {
-            val admobUtils = AdmobUtils(this)
-            admobUtils.loadBannerAd(banner_ad_view)
+            ad_container_banner.loadBannerAd(BannerPlacements.BANNER_AD)
         }
 
     }

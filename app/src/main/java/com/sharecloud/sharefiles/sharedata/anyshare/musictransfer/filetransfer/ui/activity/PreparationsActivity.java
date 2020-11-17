@@ -27,7 +27,8 @@ import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 
-import com.code4rox.adsmanager.AdmobUtils;
+import com.dev.bytes.adsmanager.BannerAdsManagerKt;
+import com.dev.bytes.adsmanager.BannerPlacements;
 import com.genonbeta.android.framework.ui.callback.SnackbarSupport;
 import com.google.android.material.snackbar.Snackbar;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
@@ -53,6 +54,8 @@ import static com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetra
 import static com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ShareActivity.ACTION_SEND;
 import static com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ShareActivity.ACTION_SEND_MULTIPLE;
 import static com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ShareActivity.EXTRA_FILENAME_LIST;
+
+;
 
 public class PreparationsActivity extends Activity
         implements SnackbarSupport, WorkerService.OnAttachListener {
@@ -264,8 +267,7 @@ public class PreparationsActivity extends Activity
         nextScreen.setText(getString(R.string.next));
         nextScreen.setEnabled(false);
         enableButton();
-        AdmobUtils admobUtils = new AdmobUtils(this);
-        admobUtils.loadBannerAd(findViewById(R.id.banner_ad_view));
+        BannerAdsManagerKt.loadBannerAd(findViewById(R.id.ad_container_banner), BannerPlacements.BANNER_AD);
     }
 
     public void openBluetooth(View view) {

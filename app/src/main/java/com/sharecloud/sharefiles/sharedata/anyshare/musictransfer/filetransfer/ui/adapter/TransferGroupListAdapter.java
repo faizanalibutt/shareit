@@ -8,7 +8,6 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,8 +16,6 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.code4rox.adsmanager.AdmobUtils;
-import com.code4rox.adsmanager.NativeAdsIdType;
 import com.genonbeta.android.database.SQLQuery;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
@@ -35,6 +32,9 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+;
+//import com.code4rox.adsmanager.NativeAdsIdType;
 
 /**
  * created by: Veli
@@ -134,8 +134,8 @@ public class TransferGroupListAdapter
     public GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_REPRESENTATIVE)
             return new GroupViewHolder(getInflater().inflate(R.layout.layout_list_title_no_padding_ext, parent, false), R.id.layout_list_title_text);
-        else if (viewType == VIEW_TYPE_ADS_LINEAR)
-            return new GroupViewHolder(getInflater().inflate(R.layout.ad_unified_4, parent, false), R.id.ad_call_to_action);
+        /*else if (viewType == VIEW_TYPE_ADS_LINEAR)
+            return new GroupViewHolder(getInflater().inflate(R.layout.ad_unified_4, parent, false), R.id.ad_call_to_action);*/
 
         return new GroupViewHolder(getInflater().inflate(R.layout.list_transfer_group_ext, parent, false));
     }
@@ -234,7 +234,7 @@ public class TransferGroupListAdapter
                 //progressBar.setProgressTintList(ColorStateList.valueOf(appliedColor));
             } else if (holder.getItemViewType() == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR
                     && NetworkUtils.isOnline(holder.getView().getContext())) {
-                AdmobUtils admobUtils = new AdmobUtils(holder.getView().getContext());
+                /*AdmobUtils admobUtils = new AdmobUtils(holder.getView().getContext());
                 admobUtils.loadNativeAd((FrameLayout) holder.getView(),
                         R.layout.ad_unified_4, NativeAdsIdType.ADJUST_NATIVE_AM);
                 admobUtils.setNativeAdListener(new AdmobUtils.NativeAdListener() {
@@ -247,7 +247,7 @@ public class TransferGroupListAdapter
                     public void onNativeAdError() {
 
                     }
-                });
+                });*/
             }
         } catch (Exception e) {
         }

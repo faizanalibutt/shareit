@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.code4rox.adsmanager.AdmobUtils
-import com.code4rox.adsmanager.NativeAdsIdType
+import com.dev.bytes.adsmanager.ADUnitPlacements
+import com.dev.bytes.adsmanager.loadNativeAd
+
+//import com.code4rox.adsmanager.NativeAdsIdType
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.config.Keyword
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ContentSharingActivity
@@ -46,7 +48,7 @@ class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
             receive_button.isEnabled = false
         }
 
-        if (NetworkUtils.isOnline(view.context)) {
+        /*if (NetworkUtils.isOnline(view.context)) {
             val admobUtils = AdmobUtils(view.context)
             admobUtils.loadNativeAd(fl_adplaceholder, R.layout.ad_unified, NativeAdsIdType.ADJUST_NATIVE_AM)
             admobUtils.setNativeAdListener(object : AdmobUtils.NativeAdListener {
@@ -57,7 +59,12 @@ class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
 
                 }
             })
-        }
+        }*/
+
+        view.context.loadNativeAd(
+            fl_adplaceholder, R.layout.ad_unified,
+            ADUnitPlacements.MAIN_MM_NATIVE_AD, false
+        )
 
     }
 

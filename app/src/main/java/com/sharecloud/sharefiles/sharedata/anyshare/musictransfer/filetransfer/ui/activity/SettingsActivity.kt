@@ -5,7 +5,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.browser.customtabs.CustomTabsIntent
-import com.code4rox.adsmanager.AdmobUtils
+
+import com.dev.bytes.adsmanager.BannerPlacements
+import com.dev.bytes.adsmanager.loadBannerAd
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.`object`.NetworkDevice
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.Activity
@@ -30,8 +32,7 @@ class SettingsActivity : Activity(), View.OnClickListener {
     private fun init() {
         shareUserName.setOnClickListener(this@SettingsActivity)
         privacyPolicy.setOnClickListener(this@SettingsActivity)
-        val admobUtils = AdmobUtils(this)
-        admobUtils.loadBannerAd(banner_ad_view)
+        ad_container_banner.loadBannerAd(BannerPlacements.BANNER_AD)
         switch_file.isChecked =
             AppUtils.getDefaultPreferences(this).getBoolean("show_system_apps", false)
     }

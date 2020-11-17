@@ -7,5 +7,6 @@
     <color name="white">#FFFFFF</color>
     <color name="grey">#BB9B9B9B</color>
     <color name="grey_trans">#3B000000</color>
+    <color name="grey_trans_15">#26000000</color>
 
 </resources>
