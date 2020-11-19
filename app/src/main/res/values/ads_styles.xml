@@ -1,0 +1,45 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <style name="AppTheme.AdAttribution">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">15dp</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:text">@string/ad_attribution</item>
+        <item name="android:background">@drawable/bg_ads_ad</item>
+        <item name="android:width">15dp</item>
+        <item name="android:height">15dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="AppTheme.AdAttribution.Bottom" parent="AppTheme.AdAttribution">
+        <item name="android:layout_gravity">bottom|right</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="AppTheme.AdAttribution.Custom" parent="AppTheme.AdAttribution">
+        <item name="android:width">75dp</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">#5F6469</item>
+        <item name="android:gravity">center|start</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+
+    <style name="customDialogNative" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">75%</item>
+        <item name="android:windowMinWidthMinor">75%</item>
+    </style>
+
+</resources>

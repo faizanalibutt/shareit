@@ -8,11 +8,14 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.dev.bytes.adsmanager.ADUnitPlacements;
+import com.dev.bytes.adsmanager.NativeAdsManagerKt;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.GlideApp;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.app.EditableListAdapter;
@@ -49,8 +52,8 @@ public class VideoListAdapter
     @NonNull
     @Override
     public EditableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        /*if (viewType == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR)
-            return new EditableViewHolder(getInflater().inflate(R.layout.ad_unified_6, parent, false));*/
+        if (viewType == GroupEditableListAdapter.VIEW_TYPE_ADS_LINEAR)
+            return new EditableViewHolder(getInflater().inflate(R.layout.ad_unified_6, parent, false));
 
         return new EditableViewHolder(getInflater().inflate(R.layout.video_item_layout, parent, false));
     }
@@ -74,6 +77,11 @@ public class VideoListAdapter
 
                     }
                 });*/
+                NativeAdsManagerKt.loadNativeAd(getContext(),
+                        (FrameLayout) holder.getView(), R.layout.ad_unified_6,
+                        ADUnitPlacements.COMMON_NATIVE_AD, true,
+                        null, null, null, null, false
+                );
             } else {
                 final VideoHolder object = this.getItem(position);
                 final View parentView = holder.getView();
@@ -96,6 +104,7 @@ public class VideoListAdapter
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

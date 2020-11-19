@@ -81,16 +81,17 @@ fun Context.loadNativeAd(
     AMCallback: ((UnifiedNativeAd) -> Unit)? = null,
     FBCallback: ((NativeAd) -> Unit)? = null,
     onError: (() -> Unit)? = null,
-    remoteConfigKey: String? = null
+    remoteConfigKey: String? = null,
+    isShowAdView: Boolean = false
 ) {
     if (checkIfPremium() || (remoteConfigKey != null && !remoteConfigKey.isEnabledRemotely())) {
         frameLayout?.visibility = View.GONE
-        frameLayout?.postDelayed({onError?.invoke()},300)
+        frameLayout?.postDelayed({ onError?.invoke() }, 300)
         return
     }
     when (ADUnit.priority) {
         AdsPriority.ADMOB, AdsPriority.ADMOB_FACEBOOK ->
-            loadNativeAM(frameLayout, adLayout, ADUnit, AMCallback, FBCallback, onError)
+            loadNativeAM(frameLayout, adLayout, ADUnit, AMCallback, FBCallback, onError, isShowAdView)
 
         AdsPriority.FACEBOOK, AdsPriority.FACEBOOK_ADMOB ->
             loadNativeFB(frameLayout, adLayout, ADUnit, FBCallback, AMCallback, onError)
@@ -105,7 +106,8 @@ private fun Context.loadNativeAM(
     frameLayout: FrameLayout?, adLayout: Int, ADUnit: ADUnitType,
     AMSuccessCallBack: ((UnifiedNativeAd) -> Unit)? = null,
     FBCallback: ((NativeAd) -> Unit)? = null,
-    onError: (() -> Unit)? = null
+    onError: (() -> Unit)? = null,
+    isShowAdView: Boolean = false
 ) {
     val builder =
         AdLoader.Builder(this, getString(ADUnit.adUnitIDAM)).withNativeAdOptions(
@@ -134,6 +136,8 @@ private fun Context.loadNativeAM(
                         loadNativeFB(frameLayout, adLayout, ADUnit, FBCallback, onError = onError)
                     else {
                         onError?.invoke()
+                        if (!isShowAdView)
+                            return
                         frameLayout?.visibility = View.GONE
                         frameLayout?.removeAllViews()
                     }

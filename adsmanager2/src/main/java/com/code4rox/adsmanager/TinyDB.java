@@ -10,7 +10,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

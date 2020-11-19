@@ -26,7 +26,6 @@
     <color name="dark_colorSecondary">#66bb6a</color>
 
     <color name="button_color">@color/colorPrimary</color>
-    <color name="white">#FFFFFF</color>
     <color name="dark_colorShadowEnd">#500E171A</color>
     <color name="black_dominant">#000000</color>
     <color name="light_grey">#737373</color>
@@ -50,7 +49,10 @@
     <color name="colorPreparations">#584F60</color>
     <color name="icons_default_color">#5F6368</color>
     <color name="new_black">#262626</color>
-
+    <color name="main_native_ad_colors">#F7F7FF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#BB9B9B9B</color>
+    <color name="grey_trans">#3B000000</color>
 
 
     <!-- User profile text colors -->

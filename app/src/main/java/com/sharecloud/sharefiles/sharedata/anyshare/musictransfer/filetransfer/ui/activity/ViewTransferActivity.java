@@ -25,8 +25,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
+import com.dev.bytes.adsmanager.ADUnitPlacements;
 import com.dev.bytes.adsmanager.BannerAdsManagerKt;
 import com.dev.bytes.adsmanager.BannerPlacements;
+import com.dev.bytes.adsmanager.InterAdPair;
+import com.dev.bytes.adsmanager.InterAdsManagerKt;
 import com.genonbeta.android.database.CursorItem;
 import com.genonbeta.android.database.SQLQuery;
 import com.genonbeta.android.framework.io.StreamInfo;
@@ -53,6 +56,9 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 ;
 
@@ -97,10 +103,11 @@ public class ViewTransferActivity
     boolean hasAnyFiles;
     boolean hasRunning;
 
+
     //private TextView dataTransferTime;
     //private TextView dataTransferSpeed;
     private boolean isHistroy = false;
-    //AdmobUtils admobUtils;
+    public InterAdPair transferInterstitial = null;
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -342,10 +349,16 @@ public class ViewTransferActivity
         }
 
 
-        /*if (!isHistroy)
-            InterAdsManagerKt.loadInterstitialAd(ADUnitPlacements.SPLASH_INTERSTITIAL, onLoaded = {
-                    (application as? App)?.splashInterstitial = it
-            });*/
+        if (!isHistroy)
+            InterAdsManagerKt.loadInterstitialAd(this,
+                    ADUnitPlacements.TRANSFER_INTERSTITIAL,
+                    false, (Function1<InterAdPair, Unit>) interAdPair -> {
+                        transferInterstitial = interAdPair;
+                        return null;
+                    }, () -> {
+                        showMenus();
+                        return null;
+                    }, null);
         BannerAdsManagerKt.loadBannerAd(findViewById(R.id.ad_container_banner), BannerPlacements.BANNER_AD);
 
         registerReceiver(newReceiver, new IntentFilter(newReceiverAction));
@@ -553,6 +566,8 @@ public class ViewTransferActivity
                             toggleTask();
                             Callback.setTransferProgress(false);
                             //admobUtils.showInterstitialAd();
+                            if (transferInterstitial != null && transferInterstitial.isLoaded())
+                                transferInterstitial.showAd(ViewTransferActivity.this, false);
                             finish();
                         }
                     })

@@ -8,6 +8,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +17,8 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.dev.bytes.adsmanager.ADUnitPlacements;
+import com.dev.bytes.adsmanager.NativeAdsManagerKt;
 import com.genonbeta.android.database.SQLQuery;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.database.AccessDatabase;
@@ -134,8 +137,8 @@ public class TransferGroupListAdapter
     public GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_REPRESENTATIVE)
             return new GroupViewHolder(getInflater().inflate(R.layout.layout_list_title_no_padding_ext, parent, false), R.id.layout_list_title_text);
-        /*else if (viewType == VIEW_TYPE_ADS_LINEAR)
-            return new GroupViewHolder(getInflater().inflate(R.layout.ad_unified_4, parent, false), R.id.ad_call_to_action);*/
+        else if (viewType == VIEW_TYPE_ADS_LINEAR)
+            return new GroupViewHolder(getInflater().inflate(R.layout.ad_unified_4, parent, false), R.id.ad_call_to_action);
 
         return new GroupViewHolder(getInflater().inflate(R.layout.list_transfer_group_ext, parent, false));
     }
@@ -248,8 +251,14 @@ public class TransferGroupListAdapter
 
                     }
                 });*/
+                NativeAdsManagerKt.loadNativeAd(getContext(),
+                        (FrameLayout) holder.getView(), R.layout.ad_unified_4_ext,
+                        ADUnitPlacements.COMMON_NATIVE_AD, true,
+                        null, null, null, null, false
+                );
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -75,7 +75,9 @@ enum class ADUnitPlacements(
     ),
     COMMON_NATIVE_AD(
         R.string.mm_native_am,
-        R.string.mm_native_fb
+        R.string.mm_native_fb,
+        mediaAspectRatio = NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE,
+        priority = AdsPriority.ADMOB
     ),
     SPLASH_INTERSTITIAL(
         R.string.splash_inter_am
@@ -84,7 +86,7 @@ enum class ADUnitPlacements(
         R.string.mm_inter_am,
         R.string.mm_inter_fb
     ),
-    PEDO_BACK_INTERSTITIAL(
+    TRANSFER_INTERSTITIAL(
         R.string.mm_inter_am,
         R.string.mm_inter_fb,
         priority = AdsPriority.FACEBOOK_ADMOB

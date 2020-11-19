@@ -7,11 +7,14 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.dev.bytes.adsmanager.ADUnitPlacements;
+import com.dev.bytes.adsmanager.NativeAdsManagerKt;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.GlideApp;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.miscpkg.GalleryGroupShareable;
@@ -84,8 +87,8 @@ public class ImageListAdapter
     public GroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_REPRESENTATIVE)
             return new GroupViewHolder(getInflater().inflate(R.layout.layout_list_title, parent, false), R.id.layout_list_title_text);
-       /* else if (viewType == VIEW_TYPE_ADS_GRID)
-            return new GroupViewHolder(getInflater().inflate(R.layout.ad_unified_7, parent, false), R.id.ad_call_to_action);*/
+        else if (viewType == VIEW_TYPE_ADS_GRID)
+            return new GroupViewHolder(getInflater().inflate(R.layout.ad_unified_4_ext, parent, false), R.id.ad_call_to_action);
 
         return new GroupViewHolder(getInflater().inflate(isGridLayoutRequested()
                 ? R.layout.list_image_grid_ext
@@ -129,9 +132,14 @@ public class ImageListAdapter
 
                     }
                 });*/
+                NativeAdsManagerKt.loadNativeAd(getContext(),
+                        (FrameLayout) holder.getView(), R.layout.ad_unified_4,
+                        ADUnitPlacements.COMMON_NATIVE_AD, true,
+                        null, null, null, null, false
+                );
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
