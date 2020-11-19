@@ -1,5 +1,6 @@
 package com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity
 
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -29,7 +30,7 @@ import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.android.synthetic.main.layout_gdp_view.*
 import java.lang.IllegalStateException
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity(), App.MainCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,27 +119,7 @@ class SplashActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         layout_gdp.visibility = View.GONE
 
-        /*val admobUtils = AdmobUtils(this@SplashActivity)
-
-        admobUtils.loadNativeAd(
-            adGroup,
-            R.layout.ad_unified_splash_ext,
-            NativeAdsIdType.SPLASH_NATIVE_AM
-        )
-        admobUtils.setNativeAdListener(object : AdmobUtils.NativeAdListener {
-            override fun onNativeAdLoaded() {
-                skipText.visibility = View.VISIBLE
-            }
-
-            override fun onNativeAdError() {}
-        })*/
-
-        loadInterstitialAd(
-            ADUnitPlacements.SPLASH_INTERSTITIAL,
-            onLoaded = {
-                (application as? App)?.splashInterstitial = it
-            }
-        )
+        (application as? App)?.setMainCallback(this)
 
         val isOnline = NetworkUtils.isOnline(this@SplashActivity) && (!TinyDB.getInstance(this)
             .getBoolean(getString(R.string.is_premium)))
@@ -159,12 +140,11 @@ class SplashActivity : AppCompatActivity() {
                 }
             }
         }.start()
+    }
 
-
-        Handler().postDelayed({
-            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            finish()
-        }, stuckLimit)
+    override fun onAdDismissed() {
+        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+        finish()
     }
 
 }

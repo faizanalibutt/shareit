@@ -9,8 +9,13 @@ import android.content.SharedPreferences;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.dev.bytes.adsmanager.InterAdPair;
+import com.dev.bytes.adsmanager.aoa.AppOpenManager;
+import com.dev.bytes.adsmanager.aoa.delay.InitialDelay;
 import com.genonbeta.android.framework.preference.DbSharablePreferences;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.appopen.AppOpenAd;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.BuildConfig;
+import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.MainActivity;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.BillingUtilsKt;
 
@@ -36,6 +41,11 @@ public class App extends Application {
     private AdmobUtils mainAdmobUtils;*/
 
     public InterAdPair splashInterstitial = null;
+    private MainCallback mMainCallback;
+
+    public interface MainCallback {
+        void onAdDismissed();
+    }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -47,11 +57,14 @@ public class App extends Application {
                     if (preferences instanceof DbSharablePreferences) {
                         try {
                             ((DbSharablePreferences) preferences).sync();
-                        } catch (Exception exp) {exp.getMessage();}
+                        } catch (Exception exp) {
+                            exp.getMessage();
+                        }
                     }
                 }
         }
     };
+
 
     @Override
     public void onCreate() {
@@ -60,12 +73,16 @@ public class App extends Application {
         if (BuildConfig.DEBUG)
             Timber.plant(new Timber.DebugTree());
 
-        //mainAdmobUtils = new AdmobUtils(this);
-        //mainAdmobUtils.loadInterstitial(null, InterAdsIdType.SPLASH_INTER_AM);
         //initializeSettings();
         getApplicationContext().registerReceiver(mReceiver, new IntentFilter(ACTION_REQUEST_PREFERENCES_SYNC));
 
         initBP();
+
+        new AppOpenManager(this, InitialDelay.NONE, getString(R.string.aoa_am), new AdRequest.Builder().build(),
+                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, () -> {
+            mMainCallback.onAdDismissed();
+            return null;
+        });
 
         /*if (!Keyword.Flavor.googlePlay.equals(AppUtils.getBuildFlavor())
                 && !UpdateUtils.hasNewVersion(getApplicationContext())
@@ -73,6 +90,10 @@ public class App extends Application {
             GitHubUpdater updater = UpdateUtils.getDefaultUpdater(getApplicationContext());
             UpdateUtils.checkForUpdates(getApplicationContext(), updater, false, null);
         }*/
+    }
+
+    public void setMainCallback(MainCallback mainCallback) {
+        mMainCallback = mainCallback;
     }
 
     @Override
