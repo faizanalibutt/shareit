@@ -59,7 +59,9 @@ enum class ADUnitPlacements(
         R.string.mm_native_am,
         R.string.mm_native_fb,
         mediaAspectRatio = NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE,
-        priority = AdsPriority.ADMOB/*when (RemoteConfigUtils.compassObjRemoteConfig?.getInt(RemoteConfigUtils.IS_MAIN_NATIVE_PRIOR)) {
+        priority = AdsPriority.ADMOB
+        /*when (RemoteConfigUtils.compassObjRemoteConfig?.getInt
+        (RemoteConfigUtils.IS_MAIN_NATIVE_PRIOR)) {
             0 -> AdsPriority.ADMOB
             1 -> AdsPriority.FACEBOOK
             2 -> AdsPriority.ADMOB_FACEBOOK
@@ -70,8 +72,7 @@ enum class ADUnitPlacements(
     EXIT_NATIVE_AD(
         R.string.exit_native_am,
         R.string.exit_native_fb,
-        mediaAspectRatio = NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE,
-        priority = AdsPriority.FACEBOOK_ADMOB
+        mediaAspectRatio = NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE
     ),
     COMMON_NATIVE_AD(
         R.string.mm_native_am,

@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/dp_18"
+    android:paddingStart="@dimen/dp_12"
     android:paddingTop="@dimen/dp_18"
-    android:paddingEnd="@dimen/dp_18">
+    android:paddingEnd="@dimen/dp_12">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_start"
@@ -47,7 +47,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="@dimen/margin_smaller_size"
+        android:layout_marginTop="@dimen/margin_smallest_size"
         android:layout_marginBottom="15dp"
         android:visibility="gone"
         android:background="@color/contentShowingBackground"
@@ -63,23 +63,11 @@
         android:text="@string/rate_us_desc"
         android:textColor="@color/black_gray"
         android:textSize="@dimen/font_size_primary_normal"
+        android:gravity="center"
+        android:paddingHorizontal="5dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end"
         app:layout_constraintStart_toEndOf="@+id/guideline_start"
         app:layout_constraintTop_toBottomOf="@id/view" />
-
-    <!--<RatingBar
-        android:id="@+id/rating_bar_value"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginTop="@dimen/margin_small_size"
-        android:numStars="5"
-        android:stepSize="1"
-        android:theme="@style/RatingBar"
-        android:progressTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
-        app:layout_constraintStart_toEndOf="@+id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_desc" />-->
 
     <me.zhanghai.android.materialratingbar.MaterialRatingBar
         android:id="@+id/rating_bar_value"
@@ -109,7 +97,6 @@
         android:minHeight="20dp"
         android:textAlignment="center"
         android:text="Do you want to exit?"
-        android:layout_marginTop="@dimen/margin_small_size"
         android:textColor="@color/black_gray"
         android:textSize="@dimen/font_size_primary_normal"
         android:visibility="gone"

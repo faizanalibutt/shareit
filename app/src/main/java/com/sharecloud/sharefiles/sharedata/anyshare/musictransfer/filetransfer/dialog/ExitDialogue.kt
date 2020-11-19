@@ -8,6 +8,9 @@ import android.widget.RatingBar
 import androidx.appcompat.app.AlertDialog
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.marginTop
+import com.dev.bytes.adsmanager.ADUnitPlacements
+import com.dev.bytes.adsmanager.loadNativeAd
+import com.facebook.ads.NativeAdsManager
 
 /*import com.code4rox.adsmanager.NativeAdsIdType*/
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.R
@@ -29,9 +32,7 @@ class ExitDialogue(val activity: Activity, val title: String, val adsVisible: Bo
             setView(mRootView)
             setTitle(title)
 
-            if (adsVisible && NetworkUtils.isOnline(activity) && !TinyDB.getInstance(activity)
-                    .getBoolean(activity.getString(R.string.is_premium))
-            ) {
+            if (adsVisible && NetworkUtils.isOnline(activity)) {
                 /*val admobUtils = AdmobUtils(activity)
                 admobUtils.loadNativeAd(
                     mRootView.fl_adplaceholder,
@@ -48,6 +49,20 @@ class ExitDialogue(val activity: Activity, val title: String, val adsVisible: Bo
                         mRootView.view.visibility = View.GONE
                     }
                 })*/
+                activity.loadNativeAd(
+                    mRootView.fl_adplaceholder,
+                    R.layout.ad_unified_3,
+                    ADUnitPlacements.EXIT_NATIVE_AD,
+                    true,
+                    AMCallback = {
+                        mRootView.view.visibility = View.VISIBLE
+                    },
+                    onError = {
+                        mRootView.view.visibility = View.GONE
+                        mRootView.rating_group.visibility = View.GONE
+                    },
+                    isShowAdView = true
+                )
             }
 
             setPositiveButton(title) { _, _ ->

@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.Keep
 import androidx.annotation.LayoutRes
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.dev.bytes.BuildConfig
 import com.dev.bytes.R
 import com.facebook.ads.*
@@ -28,6 +29,9 @@ import kotlinx.android.synthetic.main.ad_unified_splash.view.*
 /*import org.jetbrains.anko.childrenRecursiveSequence*/
 import timber.log.Timber
 import com.dev.bytes.adsmanager.events.logEvent
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerFrameLayout
+import org.jetbrains.anko.childrenRecursiveSequence
 import com.facebook.ads.MediaView as FBMediaView
 
 @Keep
@@ -98,7 +102,7 @@ fun Context.loadNativeAd(
     }
     if (isShimmer && frameLayout != null /*&& frameLayout?.childCount == 0*/) {
         frameLayout.removeAllViews()
-        //inflateShimmerView(adLayout)?.let { frameLayout.addView(it);frameLayout.visibility = View.VISIBLE }
+        inflateShimmerView(adLayout)?.let { frameLayout.addView(it);frameLayout.visibility = View.VISIBLE }
     }
 }
 
@@ -311,7 +315,7 @@ fun Context.inflateNativeAdFB(adLayout: Int): NativeAdLayout? = if (adLayout == 
     (this as? Activity)?.layoutInflater?.inflate(adLayout, null)
         ?.let { NativeAdLayout(this).apply { addView(it) } }
 
-/*fun Context.inflateShimmerView(adLayout: Int): ShimmerFrameLayout? =
+fun Context.inflateShimmerView(adLayout: Int): ShimmerFrameLayout? =
     (this as? Activity)?.layoutInflater?.inflate(adLayout, null)
         ?.let { layout ->
             layout.childrenRecursiveSequence().iterator().forEach { view ->
@@ -323,7 +327,7 @@ fun Context.inflateNativeAdFB(adLayout: Int): NativeAdLayout? = if (adLayout == 
                             is ImageView -> view.setImageDrawable(null)
                         }
                     }
-                    is AdIconView, is FBMediaView, is MediaView -> view.setBackgroundColor(Color.GRAY)
+                    is MediaView, is FBMediaView, is MediaView -> view.setBackgroundColor(Color.GRAY)
                     is ConstraintLayout -> view.setBackgroundColor(Color.TRANSPARENT)
                 }
             }
@@ -336,7 +340,7 @@ fun Context.inflateNativeAdFB(adLayout: Int): NativeAdLayout? = if (adLayout == 
                 this.stopShimmer()
                 this.showShimmer(false)
             }
-        }*/
+        }
 
 abstract class FBNativeAdListener : NativeAdListener {
     override fun onAdClicked(p0: Ad?) {}

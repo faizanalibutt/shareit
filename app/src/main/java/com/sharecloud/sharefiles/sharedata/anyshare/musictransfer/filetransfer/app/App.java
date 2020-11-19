@@ -34,12 +34,6 @@ public class App extends Application {
     public static final String TAG = App.class.getSimpleName();
     public static final String ACTION_REQUEST_PREFERENCES_SYNC = "com.genonbeta.intent.action.REQUEST_PREFERENCES_SYNC";
 
-    /*public AdmobUtils getMainAdmobUtils() {
-        return mainAdmobUtils;
-    }
-
-    private AdmobUtils mainAdmobUtils;*/
-
     public InterAdPair splashInterstitial = null;
     private MainCallback mMainCallback;
 
@@ -65,7 +59,6 @@ public class App extends Application {
         }
     };
 
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -73,23 +66,13 @@ public class App extends Application {
         if (BuildConfig.DEBUG)
             Timber.plant(new Timber.DebugTree());
 
-        //initializeSettings();
         getApplicationContext().registerReceiver(mReceiver, new IntentFilter(ACTION_REQUEST_PREFERENCES_SYNC));
-
         initBP();
-
         new AppOpenManager(this, InitialDelay.NONE, getString(R.string.aoa_am), new AdRequest.Builder().build(),
                 AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT, () -> {
-            mMainCallback.onAdDismissed();
+            if (mMainCallback != null) mMainCallback.onAdDismissed();
             return null;
         });
-
-        /*if (!Keyword.Flavor.googlePlay.equals(AppUtils.getBuildFlavor())
-                && !UpdateUtils.hasNewVersion(getApplicationContext())
-                && (System.currentTimeMillis() - UpdateUtils.getLastTimeCheckedForUpdates(getApplicationContext())) >= AppConfig.DELAY_CHECK_FOR_UPDATES) {
-            GitHubUpdater updater = UpdateUtils.getDefaultUpdater(getApplicationContext());
-            UpdateUtils.checkForUpdates(getApplicationContext(), updater, false, null);
-        }*/
     }
 
     public void setMainCallback(MainCallback mainCallback) {
@@ -101,50 +84,6 @@ public class App extends Application {
         super.onTerminate();
         getApplicationContext().unregisterReceiver(mReceiver);
     }
-
-    /*private void initializeSettings() {
-        SharedPreferences defaultPreferences = AppUtils.getDefaultLocalPreferences(this);
-        NetworkDevice localDevice = AppUtils.getLocalDevice(getApplicationContext());
-        boolean nsdDefined = defaultPreferences.contains("nsd_enabled");
-        boolean refVersion = defaultPreferences.contains("referral_version");
-
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_defaults_main, false);
-
-        if (!refVersion)
-            defaultPreferences.edit()
-                    .putInt("referral_version", localDevice.versionNumber)
-                    .apply();
-
-        // Some pre-kitkat devices were soft rebooting when this feature was turned on.
-        // So we will disable it for them and they will still be able to enable it.
-        if (!nsdDefined)
-            defaultPreferences.edit()
-                    .putBoolean("nsd_enabled", Build.VERSION.SDK_INT >= 19)
-                    .apply();
-
-        PreferenceUtils.syncDefaults(getApplicationContext());
-
-        if (defaultPreferences.contains("migrated_version")) {
-            int migratedVersion = defaultPreferences.getInt("migrated_version", localDevice.versionNumber);
-
-            if (migratedVersion < localDevice.versionNumber) {
-                // migrating to a new version
-
-                if (migratedVersion <= 67)
-                    AppUtils.getViewingPreferences(getApplicationContext()).edit()
-                            .clear()
-                            .apply();
-
-                defaultPreferences.edit()
-                        .putInt("migrated_version", localDevice.versionNumber)
-                        .putInt("previously_migrated_version", migratedVersion)
-                        .apply();
-            }
-        } else
-            defaultPreferences.edit()
-                    .putInt("migrated_version", localDevice.versionNumber)
-                    .apply();
-    }*/
 
     public BillingProcessor bp;
 

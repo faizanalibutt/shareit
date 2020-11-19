@@ -35,6 +35,7 @@ class SplashActivity : AppCompatActivity(), App.MainCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        (application as? App)?.setMainCallback(this)
         initFbRemoteConfig()
         getSplashViews()
     }
@@ -118,8 +119,6 @@ class SplashActivity : AppCompatActivity(), App.MainCallback {
         appIconsplash.visibility = View.VISIBLE
         progressBar.visibility = View.VISIBLE
         layout_gdp.visibility = View.GONE
-
-        (application as? App)?.setMainCallback(this)
 
         val isOnline = NetworkUtils.isOnline(this@SplashActivity) && (!TinyDB.getInstance(this)
             .getBoolean(getString(R.string.is_premium)))

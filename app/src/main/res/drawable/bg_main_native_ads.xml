@@ -6,10 +6,10 @@
     <solid android:color="@color/main_native_ad_colors" />
 
     <padding
-        android:bottom="2dp"
-        android:left="2dp"
-        android:right="2dp"
-        android:top="2dp" />
+        android:bottom="8dp"
+        android:left="8dp"
+        android:right="8dp"
+        android:top="8dp" />
 
     <stroke
         android:width="0.5dp"
