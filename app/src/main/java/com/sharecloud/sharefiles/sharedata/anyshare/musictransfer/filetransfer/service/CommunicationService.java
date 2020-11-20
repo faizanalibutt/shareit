@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.collection.ArrayMap;
 
+import com.dev.bytes.adsmanager.events.EventUtilsKt;
 import com.genonbeta.android.coolsocket.CoolSocket;
 import com.genonbeta.android.coolsocket.CoolTransfer;
 import com.genonbeta.android.database.SQLQuery;
@@ -443,7 +444,9 @@ public class CommunicationService extends Service {
                 getDatabase().update(new SQLQuery.Select(AccessDatabase.TABLE_TRANSFERGROUP)
                         .setWhere(String.format("%s = ?", AccessDatabase.FIELD_TRANSFERGROUP_ISSHAREDONWEB),
                                 String.valueOf(1)), values);
-            } catch (RuntimeException rxp) {rxp.printStackTrace();}
+            } catch (RuntimeException rxp) {
+                rxp.printStackTrace();
+            }
         }
 
         setWebShareEnabled(false, false);
@@ -1626,6 +1629,7 @@ public class CommunicationService extends Service {
 
             handler.getExtra().transferObject.flag = TransferObject.Flag.INTERRUPTED;
             getNotificationHelper().notifyReceiveError(handler.getExtra().transferObject);
+            EventUtilsKt.logEvent(CommunicationService.this, "Receiving Failed");
 
             return Flag.CANCEL_ALL;
         }
@@ -1634,7 +1638,10 @@ public class CommunicationService extends Service {
         public void onDestroy(TransferHandler<ProcessHolder> handler) {
             if (handler.getTransferProgress().isInterrupted()
                     && TransferObject.Flag.IN_PROGRESS.equals(handler.getExtra().transferObject.flag))
+            {
                 handler.getExtra().transferObject.flag = TransferObject.Flag.INTERRUPTED;
+                EventUtilsKt.logEvent(CommunicationService.this, "Receiving Failed");
+            }
         }
 
         @Override
@@ -1689,11 +1696,13 @@ public class CommunicationService extends Service {
                         handler.getExtra().currentFile = FileUtils.saveReceivedFile(currentFile.getParentFile(), currentFile, handler.getExtra().transferObject);
                         handler.getExtra().transferObject.file = handler.getExtra().currentFile.getName();
                         Log.d(TAG, "Receive.onTransferCompleted(): Saved as: " + handler.getExtra().currentFile.getName());
+                        EventUtilsKt.logEvent(CommunicationService.this, "File Received");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
             } else {
                 handler.getExtra().transferObject.flag = TransferObject.Flag.INTERRUPTED;
+                EventUtilsKt.logEvent(CommunicationService.this, "Receiving Failed");
                 handler.setFlag(Flag.CANCEL_CURRENT);
             }
         }
@@ -1759,6 +1768,8 @@ public class CommunicationService extends Service {
                 error.printStackTrace();
 
             handler.getExtra().transferObject.flag = TransferObject.Flag.INTERRUPTED;
+            EventUtilsKt.logEvent(CommunicationService.this,
+                    "Sending Failed");
 
             return Flag.CANCEL_ALL;
         }
@@ -1792,6 +1803,9 @@ public class CommunicationService extends Service {
             handler.getExtra().transferObject.flag = handler.getTransferProgress().getCurrentTransferredByte() == handler.getFileSize()
                     ? TransferObject.Flag.DONE
                     : TransferObject.Flag.INTERRUPTED;
+            EventUtilsKt.logEvent(CommunicationService.this,
+                    handler.getExtra().transferObject.flag == TransferObject.Flag.DONE ? "File Send" : "Sending Failed");
+
             try {
 
                 /*if (TransferObject.Flag.DONE.equals(handler.getExtra().transferObject.flag)) {
@@ -1827,8 +1841,10 @@ public class CommunicationService extends Service {
         @Override
         public void onDestroy(TransferHandler<ProcessHolder> handler) {
             if (handler.getTransferProgress().isInterrupted()
-                    && TransferObject.Flag.IN_PROGRESS.equals(handler.getExtra().transferObject.flag))
+                    && TransferObject.Flag.IN_PROGRESS.equals(handler.getExtra().transferObject.flag)) {
                 handler.getExtra().transferObject.flag = TransferObject.Flag.INTERRUPTED;
+                EventUtilsKt.logEvent(CommunicationService.this, "Sending Failed");
+            }
         }
 
         @Override

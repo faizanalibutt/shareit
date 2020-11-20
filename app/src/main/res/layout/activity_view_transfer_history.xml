@@ -44,7 +44,7 @@
             android:id="@+id/activity_transaction_content_frame"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/banner_ad_view"
+            app:layout_constraintBottom_toTopOf="@+id/ad_container_banner"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -53,45 +53,5 @@
         <include layout="@layout/banner_ads_layout_tag" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--<androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal">
-
-        <ProgressBar
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/dataTransferSpeed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_small_size"
-            android:gravity="center"
-            android:text="@string/total_transfer_time"
-            android:textColor="@color/black_dominant"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/dataTransferTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_smaller_size"
-            android:layout_marginTop="@dimen/margin_absolute_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_cross_blue_24dp" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

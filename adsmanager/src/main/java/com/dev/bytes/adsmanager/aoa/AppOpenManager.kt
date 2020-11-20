@@ -4,17 +4,21 @@ import com.dev.bytes.adsmanager.aoa.base.BaseManager
 import com.dev.bytes.adsmanager.aoa.delay.DelayType
 import com.dev.bytes.adsmanager.aoa.delay.InitialDelay
 import android.app.Application
+import android.util.StatsLog.logEvent
 import androidx.annotation.NonNull
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.dev.bytes.adsmanager.TinyDB
+import com.dev.bytes.adsmanager.events.logEvent
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import timber.log.Timber
+import kotlin.math.absoluteValue
 
 /**
  * @AppOpenManager = A class that handles all of the App Open Ad operations.
@@ -40,7 +44,7 @@ class AppOpenManager constructor(
     override var orientation: Int = AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
     val onAdDismissed: (() -> Unit)? = null
 ) : BaseManager(application),
-        LifecycleObserver {
+    LifecycleObserver {
 
     init {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
@@ -63,21 +67,50 @@ class AppOpenManager constructor(
     // Show the Ad if the conditions are met.
     private fun showAdIfAvailable() {
         if (!isShowingAd && isAdAvailable() && isInitialDelayOver() && currentActivity != null)
-            /*if (currentActivity != null)*/ appOpenAd?.show(currentActivity, getFullScreenContentCallback())
-            else {
-                Timber.e("AOA ad not available")
-                if (!isInitialDelayOver()) Timber.e("AOA The Initial Delay period is not over yet.")
-                /**
-                 *If the next session happens after the delay period is over
-                 * & under 4 Hours, we can show a cached Ad.
-                 * However the above will only work for DelayType.HOURS.
-                 */
-                if (initialDelay.delayPeriodType != DelayType.DAYS ||
-                        initialDelay.delayPeriodType == DelayType.DAYS &&
-                        isInitialDelayOver()
-                ) fetchAd()
-                onAdDismissed?.invoke()
-            }
+        /*if (currentActivity != null)*/ {
+            appOpenAd?.show(currentActivity, getFullScreenContentCallback())
+            var count_aoa =
+                TinyDB.getInstance(getApplication().applicationContext).getInt("show_aoa")
+            TinyDB.getInstance(getApplication().applicationContext).putInt("show_aoa", ++count_aoa)
+            Timber.e("${(count_aoa + 1)}")
+            if ((count_aoa + 1) > 2)
+                when {
+                    (count_aoa + 1) % 3 == 0 -> {
+                        getApplication().applicationContext.logEvent(
+                            "3_time_interstitial_show",
+                            "$count_aoa"
+                        )
+                        Timber.e("app_open_ad_event ${(count_aoa + 1)}")
+                    }
+                    (count_aoa + 1) % 5 == 0 -> {
+                        getApplication().applicationContext.logEvent(
+                            "5_time_interstitial_show",
+                            "$count_aoa"
+                        )
+                        Timber.e("app_open_ad_event ${(count_aoa + 1)}")
+                    }
+                    (count_aoa + 1) % 10 == 0 -> {
+                        getApplication().applicationContext.logEvent(
+                            "10_time_interstitial_show",
+                            "$count_aoa"
+                        )
+                        Timber.e("app_open_ad_event ${(count_aoa + 1)}")
+                    }
+                }
+        } else {
+            Timber.e("AOA ad not available")
+            if (!isInitialDelayOver()) Timber.e("AOA The Initial Delay period is not over yet.")
+            /**
+             *If the next session happens after the delay period is over
+             * & under 4 Hours, we can show a cached Ad.
+             * However the above will only work for DelayType.HOURS.
+             */
+            if (initialDelay.delayPeriodType != DelayType.DAYS ||
+                initialDelay.delayPeriodType == DelayType.DAYS &&
+                isInitialDelayOver()
+            ) fetchAd()
+            onAdDismissed?.invoke()
+        }
     }
 
     private fun loadAd() {

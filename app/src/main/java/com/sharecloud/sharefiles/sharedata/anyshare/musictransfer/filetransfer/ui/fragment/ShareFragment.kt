@@ -61,17 +61,19 @@ class ShareFragment : BaseFragment(), IconSupport, TitleSupport {
             })
         }*/
 
-        view.context.loadNativeAd(
-            ad_main_container, R.layout.ad_unified,
-            ADUnitPlacements.MAIN_MM_NATIVE_AD, false,
-            AMCallback = {
-                ad_main_placeholder.visibility = View.GONE
-            },
-            onError = {
-                ad_main_placeholder.visibility = View.VISIBLE
-            },
-            isShowAdView = true
-        )
+        ad_main_placeholder?.let{ it1 ->
+            view.context.loadNativeAd(
+                ad_main_container, R.layout.ad_unified,
+                ADUnitPlacements.MAIN_MM_NATIVE_AD, false,
+                AMCallback = {
+                    it1.visibility = View.GONE
+                },
+                onError = {
+                    it1.visibility = View.VISIBLE
+                },
+                isShowAdView = true
+            )
+        }
 
     }
 

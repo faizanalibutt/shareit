@@ -41,7 +41,7 @@ class MainActivity : Activity() {
         }
 
         main_pro_now.setOnClickListener {
-            RemoveAdsDialog.show(this)
+            (application as? App)?.bp?.purchaseRemoveAds(this)
         }
 
         showRemoveAdsDialogue()

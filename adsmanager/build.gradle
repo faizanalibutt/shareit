@@ -30,6 +30,7 @@ android {
             resValue "string", "exit_native_fb", "302217394302437_302221340968709"//
 
             resValue "string", "ad_app_id", "ca-app-pub-8620219021552434~7637658814"
+            resValue "string", "aoa_am", "ca-app-pub-8620219021552434/4477320614"
             // keys like given in remote config.
             resValue "string", "remove_ads_key", "remove_ads"
 

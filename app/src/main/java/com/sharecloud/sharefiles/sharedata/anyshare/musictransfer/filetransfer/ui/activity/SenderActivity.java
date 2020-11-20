@@ -94,7 +94,7 @@ public class SenderActivity extends Activity
         admobUtils.loadInterstitial(null, InterAdsIdType.INTER_AM);*/
         boolean isSingleAd = FirebaseRemoteConfig.getInstance().getBoolean("is_show_single_ad");
         if (!isSingleAd) {
-            BannerAdsManagerKt.loadBannerAd(findViewById(R.id.banner_ad_view), BannerPlacements.BANNER_AD);
+            BannerAdsManagerKt.loadBannerAd(findViewById(R.id.ad_container_banner), BannerPlacements.BANNER_AD);
         }
     }
 
