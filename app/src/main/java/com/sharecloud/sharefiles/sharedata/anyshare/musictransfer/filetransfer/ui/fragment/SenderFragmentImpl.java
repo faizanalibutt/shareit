@@ -741,7 +741,7 @@ public class SenderFragmentImpl
                     Callback.setQrCode(false);
                 });
 
-//        user_retry.postDelayed(() -> Callback.setQrCode(true), 200);
+        user_retry.postDelayed(() -> Callback.setQrCode(true), 200);
 
         final Observer<Boolean> showQrObserver = qr_status -> {
             /*if (qr_status) {

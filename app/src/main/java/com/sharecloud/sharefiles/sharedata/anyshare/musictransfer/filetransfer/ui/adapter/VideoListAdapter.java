@@ -78,7 +78,7 @@ public class VideoListAdapter
                     }
                 });*/
                 NativeAdsManagerKt.loadNativeAd(getContext(),
-                        (FrameLayout) holder.getView(), R.layout.ad_unified_6,
+                        (FrameLayout) holder.getView().findViewById(R.id.video_ad_container), R.layout.ad_unified_6,
                         ADUnitPlacements.COMMON_NATIVE_AD, true,
                         null, null, null, null, false
                 );

@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="50dp"
-    android:orientation="vertical"
-    android:paddingBottom="10dp">
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/video_ad_container"
+        android:background="@drawable/bg_main_native_ads"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_main_native_ads"
         android:orientation="vertical">
 
         <LinearLayout
@@ -180,7 +181,7 @@
                     android:textSize="13sp" />
             </RelativeLayout>
         </LinearLayout>
-    </LinearLayout>
+    </FrameLayout>
 
 </FrameLayout>
 
