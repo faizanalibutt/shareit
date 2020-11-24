@@ -77,21 +77,21 @@ class AppOpenManager constructor(
                 when {
                     (count_aoa + 1) % 3 == 0 -> {
                         getApplication().applicationContext.logEvent(
-                            "3_time_interstitial_show",
+                            "interstitial_show_3_time",
                             "$count_aoa"
                         )
                         Timber.e("app_open_ad_event ${(count_aoa + 1)}")
                     }
                     (count_aoa + 1) % 5 == 0 -> {
                         getApplication().applicationContext.logEvent(
-                            "5_time_interstitial_show",
+                            "interstitial_show_5_time",
                             "$count_aoa"
                         )
                         Timber.e("app_open_ad_event ${(count_aoa + 1)}")
                     }
                     (count_aoa + 1) % 10 == 0 -> {
                         getApplication().applicationContext.logEvent(
-                            "10_time_interstitial_show",
+                            "interstitial_show_10_time",
                             "$count_aoa"
                         )
                         Timber.e("app_open_ad_event ${(count_aoa + 1)}")

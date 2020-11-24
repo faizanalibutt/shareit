@@ -19,13 +19,6 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.o
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.receiver.DialogEventReceiver;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.service.CommunicationService;
 import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.ui.activity.ViewTransferActivity;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.FileUtils;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TextUtils;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TimeUtils;
-import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TransferUtils;
 
 /**
  * created by: Veli
@@ -35,16 +28,16 @@ import com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.u
 public class CommunicationNotificationHelper {
     public static final int SERVICE_COMMUNICATION_FOREGROUND_NOTIFICATION_ID = 1;
 
-    private com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils mNotificationUtils;
+    private NotificationUtils mNotificationUtils;
 
-    public CommunicationNotificationHelper(com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils notificationUtils) {
+    public CommunicationNotificationHelper(NotificationUtils notificationUtils) {
         mNotificationUtils = notificationUtils;
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification getCommunicationServiceNotification(boolean seamlessMode,
+    public DynamicNotification getCommunicationServiceNotification(boolean seamlessMode,
                                                                                                      boolean pinAccess,
                                                                                                      boolean webShare) {
-        com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notification = getUtils().buildDynamicNotification(SERVICE_COMMUNICATION_FOREGROUND_NOTIFICATION_ID, com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.NOTIFICATION_CHANNEL_LOW);
+        DynamicNotification notification = getUtils().buildDynamicNotification(SERVICE_COMMUNICATION_FOREGROUND_NOTIFICATION_ID, NotificationUtils.NOTIFICATION_CHANNEL_LOW);
         StringBuilder builder = new StringBuilder();
 
         if (webShare)
@@ -61,13 +54,13 @@ public class CommunicationNotificationHelper {
                 .setContentText(getContext().getString(R.string.text_communicationServiceStop))
                 .setAutoCancel(true)
                 .addAction(R.drawable.ic_compare_arrows_white_24dp_static, getContext().getString(seamlessMode ? R.string.butn_turnTrustZoneOff : R.string.butn_turnTrustZoneOn),
-                        PendingIntent.getService(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), new Intent(getContext(), CommunicationService.class).setAction(CommunicationService.ACTION_TOGGLE_SEAMLESS_MODE), PendingIntent.FLAG_CANCEL_CURRENT))
-                .setContentIntent(PendingIntent.getService(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), new Intent(getContext(), CommunicationService.class)
+                        PendingIntent.getService(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), CommunicationService.class).setAction(CommunicationService.ACTION_TOGGLE_SEAMLESS_MODE), PendingIntent.FLAG_CANCEL_CURRENT))
+                .setContentIntent(PendingIntent.getService(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), CommunicationService.class)
                         .setAction(CommunicationService.ACTION_END_SESSION), 0));
 
         if (pinAccess)
             notification.addAction(R.drawable.ic_autorenew_white_24dp_static, getContext().getString(R.string.butn_revokePin),
-                    PendingIntent.getService(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), new Intent(getContext(), CommunicationService.class).setAction(CommunicationService.ACTION_REVOKE_ACCESS_PIN), PendingIntent.FLAG_CANCEL_CURRENT));
+                    PendingIntent.getService(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), CommunicationService.class).setAction(CommunicationService.ACTION_REVOKE_ACCESS_PIN), PendingIntent.FLAG_CANCEL_CURRENT));
 
         return notification.show();
     }
@@ -76,33 +69,33 @@ public class CommunicationNotificationHelper {
         return getUtils().getContext();
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils getUtils() {
+    public NotificationUtils getUtils() {
         return mNotificationUtils;
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notifyConnectionRequest(NetworkDevice device) {
-        com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notification = getUtils().buildDynamicNotification(com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
+    public DynamicNotification notifyConnectionRequest(NetworkDevice device) {
+        DynamicNotification notification = getUtils().buildDynamicNotification(AppUtils.getUniqueNumber(), NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
 
         Intent acceptIntent = new Intent(getContext(), CommunicationService.class);
         Intent dialogIntent = new Intent(getContext(), DialogEventReceiver.class);
 
         acceptIntent.setAction(CommunicationService.ACTION_IP);
         acceptIntent.putExtra(CommunicationService.EXTRA_DEVICE_ID, device.deviceId);
-        acceptIntent.putExtra(com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.EXTRA_NOTIFICATION_ID, notification.getNotificationId());
+        acceptIntent.putExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, notification.getNotificationId());
 
         Intent rejectIntent = ((Intent) acceptIntent.clone());
 
         acceptIntent.putExtra(CommunicationService.EXTRA_IS_ACCEPTED, true);
         rejectIntent.putExtra(CommunicationService.EXTRA_IS_ACCEPTED, false);
 
-        PendingIntent positiveIntent = PendingIntent.getService(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), acceptIntent, 0);
-        PendingIntent negativeIntent = PendingIntent.getService(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), rejectIntent, 0);
+        PendingIntent positiveIntent = PendingIntent.getService(getContext(), AppUtils.getUniqueNumber(), acceptIntent, 0);
+        PendingIntent negativeIntent = PendingIntent.getService(getContext(), AppUtils.getUniqueNumber(), rejectIntent, 0);
 
         notification.setSmallIcon(R.drawable.ic_alert_circle_outline_white_24dp_static)
                 .setContentTitle(getContext().getString(R.string.text_connectionPermission))
                 .setContentText(getContext().getString(R.string.ques_allowDeviceToConnect))
                 .setContentInfo(device.nickname)
-                .setContentIntent(PendingIntent.getBroadcast(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), dialogIntent, 0))
+                .setContentIntent(PendingIntent.getBroadcast(getContext(), AppUtils.getUniqueNumber(), dialogIntent, 0))
                 .setDefaults(getUtils().getNotificationSettings())
                 .setDeleteIntent(negativeIntent)
                 .addAction(R.drawable.ic_check_white_24dp_static, getContext().getString(R.string.butn_accept), positiveIntent)
@@ -112,29 +105,29 @@ public class CommunicationNotificationHelper {
         return notification.show();
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notifyTransferRequest(TransferObject transferObject, NetworkDevice device, int numberOfFiles) {
-        com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notification = getUtils().buildDynamicNotification(
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TransferUtils.createUniqueTransferId(transferObject.groupId, device.deviceId, transferObject.type),
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
+    public DynamicNotification notifyTransferRequest(TransferObject transferObject, NetworkDevice device, int numberOfFiles) {
+        DynamicNotification notification = getUtils().buildDynamicNotification(
+                TransferUtils.createUniqueTransferId(transferObject.groupId, device.deviceId, transferObject.type),
+                NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
         String message = numberOfFiles > 1 ? getContext().getResources().getQuantityString(R.plurals.ques_receiveMultipleFiles, numberOfFiles, numberOfFiles) : transferObject.friendlyName;
         Intent acceptIntent = new Intent(getContext(), CommunicationService.class)
                 .setAction(CommunicationService.ACTION_FILE_TRANSFER)
                 .putExtra(CommunicationService.EXTRA_DEVICE_ID, device.deviceId)
-                .putExtra(CommunicationService.EXTRA_GROUP_ID, transferObject.groupId).putExtra(com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.EXTRA_NOTIFICATION_ID, notification.getNotificationId());
+                .putExtra(CommunicationService.EXTRA_GROUP_ID, transferObject.groupId).putExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, notification.getNotificationId());
 
         Intent rejectIntent = ((Intent) acceptIntent.clone());
 
         acceptIntent.putExtra(CommunicationService.EXTRA_IS_ACCEPTED, true);
         rejectIntent.putExtra(CommunicationService.EXTRA_IS_ACCEPTED, false);
 
-        PendingIntent positiveIntent = PendingIntent.getService(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), acceptIntent, 0);
-        PendingIntent negativeIntent = PendingIntent.getService(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), rejectIntent, 0);
+        PendingIntent positiveIntent = PendingIntent.getService(getContext(), AppUtils.getUniqueNumber(), acceptIntent, 0);
+        PendingIntent negativeIntent = PendingIntent.getService(getContext(), AppUtils.getUniqueNumber(), rejectIntent, 0);
 
         notification.setSmallIcon(android.R.drawable.stat_sys_download_done)
                 .setContentTitle(getContext().getString(R.string.ques_receiveFile))
                 .setContentText(message)
                 .setContentInfo(device.nickname)
-                .setContentIntent(PendingIntent.getActivity(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
+                .setContentIntent(PendingIntent.getActivity(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
                         .setAction(ViewTransferActivity.ACTION_LIST_TRANSFERS)
                         .putExtra(ViewTransferActivity.EXTRA_GROUP_ID, transferObject.groupId), 0))
                 .setDefaults(getUtils().getNotificationSettings())
@@ -147,7 +140,7 @@ public class CommunicationNotificationHelper {
         return notification.show();
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notifyFileTransaction(CommunicationService.ProcessHolder processHolder) throws Exception {
+    public DynamicNotification notifyFileTransaction(CommunicationService.ProcessHolder processHolder) throws Exception {
         if (processHolder.notification == null) {
             NetworkDevice device = new NetworkDevice(processHolder.deviceId);
             getUtils().getDatabase().reconstruct(device);
@@ -155,24 +148,24 @@ public class CommunicationNotificationHelper {
             boolean isIncoming = TransferObject.Type.INCOMING.equals(processHolder.transferObject.type);
 
             processHolder.notification = getUtils().buildDynamicNotification(
-                    com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TransferUtils.createUniqueTransferId(processHolder.groupId, device.deviceId, processHolder.transferObject.type),
-                    com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.NOTIFICATION_CHANNEL_LOW);
+                    TransferUtils.createUniqueTransferId(processHolder.groupId, device.deviceId, processHolder.transferObject.type),
+                    NotificationUtils.NOTIFICATION_CHANNEL_LOW);
             Intent cancelIntent = new Intent(getContext(), CommunicationService.class);
 
             cancelIntent.setAction(CommunicationService.ACTION_CANCEL_JOB);
             cancelIntent.putExtra(CommunicationService.EXTRA_REQUEST_ID, processHolder.transferObject.requestId);
             cancelIntent.putExtra(CommunicationService.EXTRA_GROUP_ID, processHolder.groupId);
             cancelIntent.putExtra(CommunicationService.EXTRA_DEVICE_ID, processHolder.deviceId);
-            cancelIntent.putExtra(com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.EXTRA_NOTIFICATION_ID, processHolder.notification.getNotificationId());
+            cancelIntent.putExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, processHolder.notification.getNotificationId());
 
             processHolder.notification.setSmallIcon(isIncoming ? android.R.drawable.stat_sys_download : android.R.drawable.stat_sys_upload)
                     .setContentText(getContext().getString(isIncoming ? R.string.text_receiving : R.string.text_sending))
                     .setContentInfo(device.nickname)
-                    .setContentIntent(PendingIntent.getActivity(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
+                    .setContentIntent(PendingIntent.getActivity(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
                             .setAction(ViewTransferActivity.ACTION_LIST_TRANSFERS)
                             .putExtra(ViewTransferActivity.EXTRA_GROUP_ID, processHolder.transferObject.groupId), 0))
                     .setOngoing(true)
-                    .addAction(R.drawable.ic_close_white_24dp_static, getContext().getString(isIncoming ? R.string.butn_cancelReceiving : R.string.butn_cancelSending), PendingIntent.getService(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), cancelIntent, 0));
+                    .addAction(R.drawable.ic_close_white_24dp_static, getContext().getString(isIncoming ? R.string.butn_cancelReceiving : R.string.butn_cancelSending), PendingIntent.getService(getContext(), AppUtils.getUniqueNumber(), cancelIntent, 0));
         }
 
         processHolder.notification.setContentTitle(processHolder.transferObject.friendlyName);
@@ -222,10 +215,10 @@ public class CommunicationNotificationHelper {
         return notification.show();
     }*/
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notifyFileReceived(CommunicationService.ProcessHolder processHolder, NetworkDevice device, DocumentFile savePath) {
-        com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notification = getUtils().buildDynamicNotification(
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TransferUtils.createUniqueTransferId(processHolder.groupId, device.deviceId, processHolder.transferObject.type),
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
+    public DynamicNotification notifyFileReceived(CommunicationService.ProcessHolder processHolder, NetworkDevice device, DocumentFile savePath) {
+        DynamicNotification notification = getUtils().buildDynamicNotification(
+                TransferUtils.createUniqueTransferId(processHolder.groupId, device.deviceId, processHolder.transferObject.type),
+                NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
         CoolTransfer.TransferProgress progress = processHolder.builder.getTransferProgress();
 
         notification
@@ -235,7 +228,7 @@ public class CommunicationNotificationHelper {
                 .setDefaults(getUtils().getNotificationSettings())
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 // todo here is total time elapsed logic pick it.
-                .setContentText(getContext().getString(R.string.text_receivedTransfer, com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.FileUtils.sizeExpression(progress.getTransferredByte(), false), TimeUtils.INSTANCE.getFriendlyElapsedTime(getContext(), progress.getTimeElapsed())));
+                .setContentText(getContext().getString(R.string.text_receivedTransfer, FileUtils.sizeExpression(progress.getTransferredByte(), false), TimeUtils.INSTANCE.getFriendlyElapsedTime(getContext(), progress.getTimeElapsed())));
 
         if (progress.getTransferredFileCount() != 1) {
             /*notification
@@ -245,7 +238,7 @@ public class CommunicationNotificationHelper {
         } else {
             try {
                 Intent openIntent = FileUtils.getOpenIntent(getContext(), processHolder.currentFile);
-                notification.setContentIntent(PendingIntent.getActivity(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), openIntent, 0));
+                notification.setContentIntent(PendingIntent.getActivity(getContext(), AppUtils.getUniqueNumber(), openIntent, 0));
             } catch (Exception e) {
             }
 
@@ -259,10 +252,10 @@ public class CommunicationNotificationHelper {
         return notification.show();
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notifyReceiveError(CommunicationService.ProcessHolder processHolder) {
-        com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notification = getUtils().buildDynamicNotification(
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TransferUtils.createUniqueTransferId(processHolder.groupId, processHolder.deviceId, processHolder.transferObject.type),
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
+    public DynamicNotification notifyReceiveError(CommunicationService.ProcessHolder processHolder) {
+        DynamicNotification notification = getUtils().buildDynamicNotification(
+                TransferUtils.createUniqueTransferId(processHolder.groupId, processHolder.deviceId, processHolder.transferObject.type),
+                NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
 
         notification.setSmallIcon(R.drawable.ic_alert_circle_outline_white_24dp_static)
                 .setContentTitle(getContext().getString(R.string.text_error))
@@ -270,15 +263,15 @@ public class CommunicationNotificationHelper {
                 .setAutoCancel(true)
                 .setDefaults(getUtils().getNotificationSettings())
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(PendingIntent.getActivity(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
+                .setContentIntent(PendingIntent.getActivity(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
                         .setAction(ViewTransferActivity.ACTION_LIST_TRANSFERS)
                         .putExtra(ViewTransferActivity.EXTRA_GROUP_ID, processHolder.groupId), 0));
 
         return notification.show();
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notifyReceiveError(TransferObject transferObject) {
-        com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notification = getUtils().buildDynamicNotification(transferObject.getId(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
+    public DynamicNotification notifyReceiveError(TransferObject transferObject) {
+        DynamicNotification notification = getUtils().buildDynamicNotification(transferObject.getId(), NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
 
         notification.setSmallIcon(R.drawable.ic_alert_circle_outline_white_24dp_static)
                 .setContentTitle(getContext().getString(R.string.text_error))
@@ -286,7 +279,7 @@ public class CommunicationNotificationHelper {
                 .setAutoCancel(true)
                 .setDefaults(getUtils().getNotificationSettings())
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(PendingIntent.getActivity(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
+                .setContentIntent(PendingIntent.getActivity(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
                         .setAction(ViewTransferActivity.ACTION_LIST_TRANSFERS)
                         .putExtra(ViewTransferActivity.EXTRA_GROUP_ID, transferObject.groupId)
                         .putExtra(ViewTransferActivity.EXTRA_REQUEST_ID, transferObject.requestId)
@@ -296,10 +289,10 @@ public class CommunicationNotificationHelper {
         return notification.show();
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notifyConnectionError(TransferInstance transferInstance, TransferObject.Type type, @Nullable String errorKey) {
-        com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notification = getUtils().buildDynamicNotification(
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TransferUtils.createUniqueTransferId(transferInstance.getGroup().groupId, transferInstance.getDevice().deviceId, type),
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
+    public DynamicNotification notifyConnectionError(TransferInstance transferInstance, TransferObject.Type type, @Nullable String errorKey) {
+        DynamicNotification notification = getUtils().buildDynamicNotification(
+                TransferUtils.createUniqueTransferId(transferInstance.getGroup().groupId, transferInstance.getDevice().deviceId, type),
+                NotificationUtils.NOTIFICATION_CHANNEL_HIGH);
         String errorMsg = getContext().getString(R.string.mesg_deviceConnectionError, transferInstance.getDevice().nickname, TextUtils.getAdapterName(getContext(), transferInstance.getConnection()));
 
         if (errorKey != null)
@@ -317,45 +310,45 @@ public class CommunicationNotificationHelper {
                 .setAutoCancel(true)
                 .setDefaults(getUtils().getNotificationSettings())
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(PendingIntent.getActivity(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
+                .setContentIntent(PendingIntent.getActivity(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
                         .setAction(ViewTransferActivity.ACTION_LIST_TRANSFERS)
                         .putExtra(ViewTransferActivity.EXTRA_GROUP_ID, transferInstance.getGroup().groupId), 0));
 
         return notification.show();
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notifyPrepareFiles(TransferGroup group, NetworkDevice device) {
-        com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notification = getUtils().buildDynamicNotification(
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.TransferUtils.createUniqueTransferId(group.groupId, device.deviceId, TransferObject.Type.INCOMING),
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.NOTIFICATION_CHANNEL_LOW);
+    public DynamicNotification notifyPrepareFiles(TransferGroup group, NetworkDevice device) {
+        DynamicNotification notification = getUtils().buildDynamicNotification(
+                TransferUtils.createUniqueTransferId(group.groupId, device.deviceId, TransferObject.Type.INCOMING),
+                NotificationUtils.NOTIFICATION_CHANNEL_LOW);
 
         Intent cancelIntent = new Intent(getContext(), CommunicationService.class)
                 .setAction(CommunicationService.ACTION_CANCEL_INDEXING)
-                .putExtra(com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.EXTRA_NOTIFICATION_ID, notification.getNotificationId())
+                .putExtra(NotificationUtils.EXTRA_NOTIFICATION_ID, notification.getNotificationId())
                 .putExtra(CommunicationService.EXTRA_GROUP_ID, group.groupId);
 
-        PendingIntent negativeIntent = PendingIntent.getService(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), cancelIntent, 0);
+        PendingIntent negativeIntent = PendingIntent.getService(getContext(), AppUtils.getUniqueNumber(), cancelIntent, 0);
 
         notification.setSmallIcon(android.R.drawable.stat_sys_download)
                 .setContentTitle(getContext().getString(R.string.text_preparingFiles))
                 .setContentText(getContext().getString(R.string.text_savingDetails))
                 .setAutoCancel(false)
                 .addAction(R.drawable.ic_close_white_24dp_static, getContext().getString(R.string.butn_cancel), negativeIntent)
-                .setContentIntent(PendingIntent.getActivity(getContext(), com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
+                .setContentIntent(PendingIntent.getActivity(getContext(), AppUtils.getUniqueNumber(), new Intent(getContext(), ViewTransferActivity.class)
                         .setAction(ViewTransferActivity.ACTION_LIST_TRANSFERS)
                         .putExtra(ViewTransferActivity.EXTRA_GROUP_ID, group.groupId), 0));
 
         return notification.show();
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notifyStuckThread(CommunicationService.ProcessHolder processHolder) {
+    public DynamicNotification notifyStuckThread(CommunicationService.ProcessHolder processHolder) {
         return notifyStuckThread(processHolder.groupId, processHolder.deviceId, processHolder.type);
     }
 
-    public com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.DynamicNotification notifyStuckThread(long groupId, String deviceId, TransferObject.Type type) {
+    public DynamicNotification notifyStuckThread(long groupId, String deviceId, TransferObject.Type type) {
         DynamicNotification notification = getUtils().buildDynamicNotification(
                 TransferUtils.createUniqueTransferId(groupId, deviceId, type),
-                com.sharecloud.sharefiles.sharedata.anyshare.musictransfer.filetransfer.util.NotificationUtils.NOTIFICATION_CHANNEL_LOW);
+                NotificationUtils.NOTIFICATION_CHANNEL_LOW);
 
         Intent killIntent = new Intent(getContext(), CommunicationService.class)
                 .setAction(CommunicationService.ACTION_CANCEL_JOB)

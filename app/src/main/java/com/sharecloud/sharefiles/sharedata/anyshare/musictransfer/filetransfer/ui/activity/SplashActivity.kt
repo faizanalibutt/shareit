@@ -109,7 +109,15 @@ class SplashActivity : AppCompatActivity(), App.MainCallback {
             AppUtils.getDefaultPreferences(this@SplashActivity).edit().putBoolean(
                 "is_First_Launch", true
             ).apply()
-            showSplashView()
+            //showSplashView()
+            startActivity(
+                Intent(
+                    this@SplashActivity,
+                    MainActivity::class.java
+                ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            )
+            finish()
         }
     }
 
@@ -142,8 +150,31 @@ class SplashActivity : AppCompatActivity(), App.MainCallback {
     }
 
     override fun onAdDismissed() {
-        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-        finish()
+        if (AppUtils.getDefaultPreferences(this@SplashActivity)
+                .getBoolean("is_First_Launch", false)
+        ) {
+            if (AppUtils.getDefaultPreferences(this)
+                    .getBoolean("introduction_shown", false)
+            ) {
+                startActivity(
+                    Intent(
+                        this@SplashActivity,
+                        MainActivity::class.java
+                    ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)/*.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)*/
+                )
+            } else {
+                startActivity(
+                    Intent(
+                        this@SplashActivity,
+                        WelcomeActivity::class.java
+                    ).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                )
+            }
+            finish()
+        }
+
     }
 
 }

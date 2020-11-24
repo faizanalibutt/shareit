@@ -37,15 +37,18 @@ class WelcomeActivity : Activity() {
         setWelcomePageDisallowed(true)
         colorsList = resources.getIntArray(R.array.colorsList)
         val welcome = defaultPreferences.getBoolean("introduction_shown", false)
-        if (!welcome)
-        {
-            defaultPreferences.edit().putString("device_name",
-                AppUtils.getLocalDeviceName(this@WelcomeActivity)).apply()
+        if (!welcome) {
+            defaultPreferences.edit().putString(
+                "device_name",
+                AppUtils.getLocalDeviceName(this@WelcomeActivity)
+            ).apply()
 
             userProfileColor = (colorsList.indices).random()
 
-            defaultPreferences.edit().putInt("device_name_color",
-                colorsList[userProfileColor]).apply()
+            defaultPreferences.edit().putInt(
+                "device_name_color",
+                colorsList[userProfileColor]
+            ).apply()
 
             if (userProfileImage.drawable is ShapeDrawable) {
                 val shapeDrawable: ShapeDrawable =
@@ -54,7 +57,7 @@ class WelcomeActivity : Activity() {
             }
             editText.setText(AppUtils.getLocalDeviceName(this@WelcomeActivity))
         }
-        defaultPreferences.edit().putBoolean("introduction_shown", true).apply()
+
         setProfilePicture()
 
         editText.addTextChangedListener(object : TextWatcher {
@@ -141,8 +144,13 @@ class WelcomeActivity : Activity() {
                 if (closeIt)
                     finish()
                 else
-                    startActivity(Intent(this@WelcomeActivity, MainActivity::class.java))
+                    startActivity(
+                        Intent(this@WelcomeActivity, MainActivity::class.java).addFlags(
+                            Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    )
                 finish()
+                defaultPreferences.edit().putBoolean("introduction_shown", true).apply()
             }
         }
 
@@ -184,7 +192,7 @@ class WelcomeActivity : Activity() {
         editText.setSelection(editText.text.length)
         loadProfilePictureInto(device_name, userProfileImage)
         val color = AppUtils.getDefaultPreferences(this@WelcomeActivity)
-                .getInt("device_name_color", -1)
+            .getInt("device_name_color", -1)
 
         if (userProfileImage.drawable is ShapeDrawable && (color != -1 or R.color.white)) {
             val shapeDrawable: ShapeDrawable = userProfileImage.drawable as ShapeDrawable
